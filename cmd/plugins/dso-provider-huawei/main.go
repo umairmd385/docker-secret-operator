@@ -52,6 +52,14 @@ func (h *HuaweiProvider) GetSecret(name string) (map[string]string, error) {
 func (h *HuaweiProvider) WatchSecret(name string, interval time.Duration) (<-chan api.SecretUpdate, error) {
 	ch := make(chan api.SecretUpdate)
 	go func() {
+		// send immediately
+		val, err := h.GetSecret(name)
+		var errMsg string
+		if err != nil {
+			errMsg = err.Error()
+		}
+		ch <- api.SecretUpdate{Name: name, Data: val, Error: errMsg}
+
 		ticker := time.NewTicker(interval)
 		for range ticker.C {
 			val, err := h.GetSecret(name)

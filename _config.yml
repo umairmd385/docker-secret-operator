@@ -1,0 +1,7 @@
+title: Docker Secret Operator (DSO)
+description: Kubernetes-style external secret management for pure Docker and Compose environments without requiring Kubernetes overhead.
+theme: jekyll-theme-hacker
+logo: /docs/assets/logo.png
+
+plugins:
+  - jekyll-seo-tag

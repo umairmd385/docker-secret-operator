@@ -64,6 +64,14 @@ func (p *AWSProvider) GetSecret(name string) (map[string]string, error) {
 func (p *AWSProvider) WatchSecret(name string, interval time.Duration) (<-chan api.SecretUpdate, error) {
 	ch := make(chan api.SecretUpdate)
 	go func() {
+		// send immediately
+		val, err := p.GetSecret(name)
+		var errMsg string
+		if err != nil {
+			errMsg = err.Error()
+		}
+		ch <- api.SecretUpdate{Name: name, Data: val, Error: errMsg}
+
 		ticker := time.NewTicker(interval)
 		for range ticker.C {
 			val, err := p.GetSecret(name)
