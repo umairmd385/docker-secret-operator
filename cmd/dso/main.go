@@ -19,8 +19,17 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+func defaultConfigPath() string {
+	// Prefer system-wide config if it exists
+	if _, err := os.Stat("/etc/dso/dso.yaml"); err == nil {
+		return "/etc/dso/dso.yaml"
+	}
+	// Fall back to local directory (for development)
+	return "dso.yaml"
+}
+
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "dso.yaml", "config file (default is dso.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", defaultConfigPath(), "config file (default: /etc/dso/dso.yaml or ./dso.yaml)")
 }
 
 func main() {
