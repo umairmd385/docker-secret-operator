@@ -9,102 +9,137 @@ It retrieves secrets from external cloud secret managers and injects them seamle
 
 ---
 
-## 1. Architecture Overview
+## 1. Quick Start
+
+Get the system running in minutes:
+
+**1. Install binaries**
+```bash
+sudo mv dso /usr/local/bin/
+sudo mv dso-agent /usr/local/bin/
+```
+
+**2. Install provider plugins**
+```bash
+sudo mkdir -p /usr/local/lib/dso/plugins
+sudo mv dso-provider-* /usr/local/lib/dso/plugins
+```
+
+**3. Create configuration file**
+Create `/etc/dso/dso.yaml` with your provider configuration:
+```yaml
+provider: aws
+config:
+  region: us-east-1
+secrets:
+  - name: my-database-secret
+    inject: env
+    mappings:
+      password: DB_PASSWORD
+```
+
+**4. Start dso-agent**
+```bash
+dso-agent --config /etc/dso/dso.yaml
+```
+
+**5. Run docker compose through dso**
+```bash
+dso compose up
+```
+
+---
+
+## 2. Architecture Overview
 
 ```mermaid
 graph TD
-    CLI[dso compose up]
-    Agent[dso-agent Daemon]
-    Socket["/var/run/dso.sock"]
-    
-    Provider[Provider Plugin]
-
-    CLI --> Agent
-    Agent --> Socket
-    Agent <-->|hashicorp/go-plugin| Provider
-    
-    Provider <--> Cloud[Secret Manager]
-    Cloud -. "Fetch/Refresh" .-> Provider
-```
-The ecosystem relies on an extensible plugin system. The `dso-agent` communicates with standalone provider plugins over `gRPC` via Unix sockets, enabling safe fetching and caching from backing cloud vaults.
-
----
-
-## 2. Installation Guide
-
-You can easily install the core binaries and cloud provider plugins onto a standard Linux server (such as an AWS EC2 instance).
-
-```bash
-# Clone the repository
-git clone https://github.com/umairmd385/docker-secret-operator.git
-cd docker-secret-operator
-
-# 1. Install standard CLI and Agent
-go build -o dso cmd/dso/*.go
-go build -o dso-agent cmd/dso-agent/*.go
-sudo mv dso dso-agent /usr/local/bin/
-
-# 2. Create the secure plugin directory
-sudo mkdir -p /usr/local/lib/dso/plugins
-sudo chmod 755 /usr/local/lib/dso/plugins
-
-# 3. Install Provider Plugins (e.g., AWS, Azure, Huawei)
-cd cmd/plugins/dso-provider-aws && go build -o ../../../dso-provider-aws main.go && cd ../../../
-cd cmd/plugins/dso-provider-azure && go build -o ../../../dso-provider-azure main.go && cd ../../../
-cd cmd/plugins/dso-provider-huawei && go build -o ../../../dso-provider-huawei main.go && cd ../../../
-
-sudo mv dso-provider-aws dso-provider-azure dso-provider-huawei /usr/local/lib/dso/plugins/
+    Cloud[Cloud Secret Managers] --> Plugins[Provider Plugins]
+    Plugins --> Agent[dso-agent]
+    Agent --> Socket[Unix Socket API: /var/run/dso.sock]
+    Socket --> CLI[dso CLI]
+    CLI --> Docker[Docker Containers]
 ```
 
 ---
 
-## 3. Agent Deployment
+## 3. Installation Guide
 
-To retrieve your secrets securely without stalling containers on API calls, DSO requires the background daemon to be active.
+To install DSO on a Linux server (e.g., AWS EC2):
 
-**Running Manually:**
+1. **Install dso and dso-agent**
+   ```bash
+   go build -o dso cmd/dso/*.go
+   go build -o dso-agent cmd/dso-agent/*.go
+   sudo mv dso dso-agent /usr/local/bin/
+   ```
+
+2. **Create plugin directory**
+   ```bash
+   sudo mkdir -p /usr/local/lib/dso/plugins
+   sudo chmod 755 /usr/local/lib/dso/plugins
+   ```
+
+3. **Install provider plugins**
+   ```bash
+   (cd cmd/plugins/dso-provider-aws && go build -o ../../../dso-provider-aws main.go)
+   (cd cmd/plugins/dso-provider-azure && go build -o ../../../dso-provider-azure main.go)
+   (cd cmd/plugins/dso-provider-huawei && go build -o ../../../dso-provider-huawei main.go)
+   
+   sudo mv dso-provider-aws dso-provider-azure dso-provider-huawei /usr/local/lib/dso/plugins/
+   ```
+
+---
+
+## 4. Agent Deployment
+
+You can run the agent daemon manually:
 ```bash
-# Run the agent locally
-sudo dso-agent --config /etc/dso/dso.yaml
+dso-agent --config /etc/dso/dso.yaml
 ```
 
-**Production systemd Service (`/etc/systemd/system/dso-agent.service`):**
-To ensure automatic startup securely, orchestrate it via `systemd`.
+For production deployments, use a systemd service.
+
+Create `/etc/systemd/system/dso-agent.service`:
 ```ini
 [Unit]
 Description=Docker Secret Operator Agent
 After=network.target
 
 [Service]
-Type=simple
 ExecStart=/usr/local/bin/dso-agent --config /etc/dso/dso.yaml
-Restart=on-failure
-RestartSec=5
-
-# Example Cloud Credentials Context (if not using IAM Profiles)
-# Environment="AWS_REGION=us-east-1"
-# Environment="AZURE_TENANT_ID=azure-tenant-id"
+Restart=always
+User=root
 
 [Install]
 WantedBy=multi-user.target
 ```
-Start and enable the agent: `sudo systemctl daemon-reload && sudo systemctl enable --now dso-agent`
+Enable and start the service: `sudo systemctl daemon-reload && sudo systemctl enable --now dso-agent`
 
 ---
 
-## 4. Configuration File Example
+## 5. Plugin Discovery
 
-You map your secret requirements in a `dso.yaml` configuration file alongside a Docker project. The `provider` flag tells the agent exactly which binary plugin to load dynamically.
+The `dso-agent` discovers provider plugins by searching the `/usr/local/lib/dso/plugins` directory. It loads binaries matching the pattern `dso-provider-*`.
 
-Example `dso.yaml`:
+The `provider` field in your configuration file determines which plugin to use. For example:
+```yaml
+provider: aws
+```
+This tells the agent to load the executable named `dso-provider-aws`.
+
+---
+
+## 6. Configuration File Examples
+
+The `dso.yaml` file configures the active cloud provider and maps secrets.
+
+### Example AWS configuration:
 ```yaml
 provider: aws
 
 config:
   region: us-east-1
-
-agent:
-  refresh_interval: 2m
 
 secrets:
   - name: my-database-secret
@@ -114,104 +149,141 @@ secrets:
       password: DB_PASSWORD
 ```
 
+### Example Azure configuration:
+```yaml
+provider: azure
+
+config:
+  vault_name: my-key-vault
+
+secrets:
+  - name: app-secret
+    inject: env
+    mappings:
+      username: APP_USER
+      password: APP_PASS
+```
+
+### Example Huawei configuration:
+```yaml
+provider: huawei
+
+config:
+  region: ap-southeast-1
+  project_id: my-project
+
+secrets:
+  - name: prod-db-secret
+    inject: env
+    mappings:
+      username: DB_USER
+      password: DB_PASSWORD
+```
+
 ---
 
-## 5. Docker Compose Example
+## 7. Secret Payload Examples
 
-DSO intercepts regular compose behavior and dynamically embeds the variables into your containers.
+Here is how secrets should be stored in the external managers and mapped to your containers.
 
-**`docker-compose.yaml`:**
+### Example AWS secret:
+Secret Name: `my-database-secret`
+
+Value:
+```json
+{
+  "username": "admin",
+  "password": "securepass123"
+}
+```
+
+How mappings convert secret keys to container environment variables: The `mappings` dictionary in `dso.yaml` translates the JSON key (`username`) into the container environment variable (`DB_USER`).
+
+---
+
+## 8. Docker Compose Example
+
+DSO dynamically injects secrets into your existing Compose stacks.
+
+**`docker-compose.yaml`**
 ```yaml
-version: '3.8'
+version: "3.9"
+
 services:
   api:
     image: node-api
     environment:
-      # Do not define the values here; leave them blank!
       - DB_USER
       - DB_PASSWORD
 ```
 
-When you execute:
+When you run:
 ```bash
-dso compose up -d
+dso compose up
 ```
-The command parses `dso.yaml`, contacts `/var/run/dso.sock`, securely fetches the secrets from the agent's memory cache, limits exposure by skipping storage to disk, and natively injects them utilizing background `syscall.Exec`.
+
+This command will automatically intercept the execution, fetch the secret from the provider via `/var/run/dso.sock`, and inject it securely into the containers in memory.
 
 ---
 
-## 6. Secret Payload Examples
-
-### AWS Secrets Manager
-Most cloud vault interfaces allow JSON key-value objects.
-```json
-{
-  "username": "admin",
-  "password": "supersecretpassword"
-}
-```
-**Mappings**: A mapping of `username: DB_USER` in `dso.yaml` explicitly extracts the JSON key `"username"` and populates your container logic with an environment variable named `$DB_USER`.
-
-### Azure Key Vault
-If Azure holds a literal connection string or API token instead of JSON:
-```text
-https://my-production-database-connection-string.com/?auth=123
-```
-**Mappings**: If the mapping block is fully omitted, DSO automatically passes the entire string value down to your container unparsed (frequently used with `inject: file`).
-
-### Huawei CSMS
-Supports JSON outputs identical to AWS. Using AK/SK system env strings or IAM Agency identities natively.
-
----
-
-## 7. Examples Directory
-See the `/examples` repository folder for fully executable sandbox stacks.
-- `examples/aws-compose/` - Outlines AssumeRole patterns and parsing JSON maps.
-- `examples/azure-compose/` - Demonstrates how API tokens are mounted invisibly as memory-backed files (`tmpfs`) to bypass `docker inspect` limitations.
-- `examples/huawei-compose/` - Outlines mapping strings for databases.
-
-Each folder contains a `README.md`, a `dso.yaml`, and a working `docker-compose.yaml`.
-
----
-
-## 8. End-to-End Example
+## 9. End-to-End Example
 
 A complete lifecycle from cloud to running container:
 
-1. **Store your Secret**: 
-   Log into AWS Secrets Manager and create a new JSON secret named `production-app-secret` containing `"api_key": "12345"`.
-2. **Setup config (`dso.yaml`)**:
-   ```yaml
-   provider: aws
-   config:
-     region: us-east-1
-   secrets:
-     - name: production-app-secret
-       inject: env
-       mappings:
-         api_key: APP_API_KEY
-   ```
-3. **Start the Agent daemon**:
-   ```bash
-   sudo systemctl start dso-agent
-   ```
-4. **Deploy the application**:
-   In the directory containing your `dso.yaml` and `docker-compose.yml`:
-   ```bash
-   dso compose up -d
-   ```
-5. **Verify Injection**:
-   Jump into the running compose container to verify insertion:
-   ```bash
-   docker exec -it my-running-api-container env | grep APP_API_KEY
-   # Output: APP_API_KEY=12345
-   ```
+**Step 1**
+Store secret in AWS Secrets Manager:
+Create a JSON secret named `my-database-secret` containing `"password": "securepass123"`.
+
+**Step 2**
+Create `dso.yaml` configuration file:
+```yaml
+provider: aws
+config:
+  region: us-east-1
+secrets:
+  - name: my-database-secret
+    inject: env
+    mappings:
+      password: DB_PASSWORD
+```
+
+**Step 3**
+Start the agent:
+```bash
+dso-agent --config /etc/dso/dso.yaml
+```
+
+**Step 4**
+Run containers:
+```bash
+dso compose up
+```
+
+**Step 5**
+Verify secrets inside container:
+```bash
+docker exec -it container env | grep DB
+```
+*(Output should reveal DB_PASSWORD=securepass123)*
 
 ---
 
-## 9. Troubleshooting Section
+## 10. Examples Directory
 
-- **"plugin not found"**: The agent dynamically looks up `/usr/local/lib/dso/plugins/dso-provider-<name>`. Ensure you spelled `aws` or `azure` correctly under `provider:` in `dso.yaml`, and that the binary exists and has `chmod +x` execution permission.
-- **"authentication failure"**: Validate the host environment variables running the `dso-agent`. For Azure, valid `AZURE_TENANT_ID` is required for `azidentity`. For AWS, standard `~/.aws/credentials` or EC2 Instance Profiles are utilized. You may restart the service to refresh the identity chain.
-- **"secret mapping errors"**: Ensure the JSON map structure requested matches the text stored in your vault. If the vault returns an unstructured string instead of JSON, the parsing will fail.
-- **"socket permission issues"**: The `dso-agent` creates `/var/run/dso.sock`. Ensure the user firing `dso compose up` belongs to a Unix user group possessing read/write permission to that `.sock` file proxy.
+The repository contains an `examples` folder with fully working setups:
+* `examples/aws-compose/`
+* `examples/azure-compose/`
+* `examples/huawei-compose/`
+
+Each example directory includes its own `dso.yaml`, `docker-compose.yaml`, and a descriptive `README.md` to quickly test configurations out of the box.
+
+---
+
+## 11. Troubleshooting Section
+
+Here are common issues and solutions:
+
+* **plugin not found**: Validate that the plugin binary (e.g., `dso-provider-aws`) exists inside `/usr/local/lib/dso/plugins` and has execution permissions (`chmod +x`). Check your `dso.yaml` `provider` block for typos.
+* **authentication failure**: Ensure the `dso-agent` background process has the correct IAM permissions. Validate `~/.aws/credentials`, Azure Managed Identity tokens, or system metrics identity roles attached to the instance executing the daemon.
+* **secret mapping errors**: Verify the secret inside your cloud provider is strictly valid JSON format, and that the keys mapped in `dso.yaml` match exactly (case-sensitive). If the stored value is not valid JSON, parsing keys via Mappings will fail.
+* **socket permission issues**: If `dso compose up` fails to connect, verify the `/var/run/dso.sock` file exists. Your current user MUST have read/write permissions to the socket. Try starting the daemon / socket with `sudo`.
