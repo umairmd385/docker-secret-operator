@@ -54,6 +54,9 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # Check for Go (Minimum 1.22)
+# Always add /usr/local/go/bin to PATH first, in case a previous install exists but isn't on PATH
+export PATH=$PATH:/usr/local/go/bin
+
 install_go() {
     echo -e "Installing Go 1.24..."
     GO_VERSION="1.24.0"
@@ -61,19 +64,25 @@ install_go() {
     rm -rf /usr/local/go && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
     rm go${GO_VERSION}.linux-amd64.tar.gz
     export PATH=$PATH:/usr/local/go/bin
-    echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+    # Persist for future sessions
+    if ! grep -q '/usr/local/go/bin' /etc/environment 2>/dev/null; then
+        echo 'PATH="/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' >> /etc/environment
+    fi
 }
 
 if ! command -v go &> /dev/null; then
+    echo -e "Go not found. Installing..."
     install_go
 else
-    CURRENT_GO_VER=$(go version | awk '{print $3}' | sed 's/go//' | cut -d. -f2)
-    if [ "$CURRENT_GO_VER" -lt 22 ]; then
-        echo -e "Current Go version is too old. Upgrading..."
+    # Parse major.minor correctly
+    CURRENT_GO_MINOR=$(go version | grep -oP 'go1\.\K[0-9]+' | head -1)
+    if [ -z "$CURRENT_GO_MINOR" ] || [ "$CURRENT_GO_MINOR" -lt 22 ]; then
+        echo -e "Go version too old (need 1.22+). Upgrading..."
         install_go
+    else
+        echo -e "${GREEN}Go $(go version | awk '{print $3}') already installed. Skipping.${NC}"
     fi
 fi
-export PATH=$PATH:/usr/local/go/bin
 
 # 3. Download Project Files
 echo -e "${GREEN}[2/7] Downloading DSO source...${NC}"
@@ -89,7 +98,7 @@ go build -ldflags="-s -w" -o dso-agent cmd/dso-agent/main.go
 
 mv dso dso-agent $INSTALL_DIR/
 
-# 5. Build and Install Plugins
+# 5. Build and Install Plugins (user selects which providers they need)
 echo -e "${GREEN}[4/7] Setting up provider plugins...${NC}"
 mkdir -p $LIB_DIR/plugins
 
@@ -97,12 +106,28 @@ build_plugin() {
     local name=$1
     echo "Building dso-provider-$name..."
     go build -ldflags="-s -w" -o $LIB_DIR/plugins/dso-provider-$name cmd/plugins/dso-provider-$name/main.go
+    echo -e "${GREEN}  ✓ dso-provider-$name built.${NC}"
 }
 
-build_plugin "aws"
-build_plugin "azure"
-build_plugin "huawei"
-build_plugin "vault"
+echo ""
+echo -e "${BLUE}Which cloud providers do you need? (Press ENTER to select/skip each)${NC}"
+read -p "  Install AWS Secrets Manager plugin? [Y/n]: " DO_AWS
+read -p "  Install Azure Key Vault plugin?      [Y/n]: " DO_AZURE
+read -p "  Install Huawei CSMS plugin?          [Y/n]: " DO_HUAWEI
+read -p "  Install HashiCorp Vault plugin?      [Y/n]: " DO_VAULT
+echo ""
+
+[ "${DO_AWS:-Y}" != "n" ] && [ "${DO_AWS:-Y}" != "N" ] && build_plugin "aws"
+[ "${DO_AZURE:-Y}" != "n" ] && [ "${DO_AZURE:-Y}" != "N" ] && build_plugin "azure"
+[ "${DO_HUAWEI:-Y}" != "n" ] && [ "${DO_HUAWEI:-Y}" != "N" ] && build_plugin "huawei"
+[ "${DO_VAULT:-Y}" != "n" ] && [ "${DO_VAULT:-Y}" != "N" ] && build_plugin "vault"
+
+# Track which plugins were selected for rootfs
+SELECTED_PROVIDERS=""
+[ "${DO_AWS:-Y}" != "n" ] && [ "${DO_AWS:-Y}" != "N" ] && SELECTED_PROVIDERS="$SELECTED_PROVIDERS aws"
+[ "${DO_AZURE:-Y}" != "n" ] && [ "${DO_AZURE:-Y}" != "N" ] && SELECTED_PROVIDERS="$SELECTED_PROVIDERS azure"
+[ "${DO_HUAWEI:-Y}" != "n" ] && [ "${DO_HUAWEI:-Y}" != "N" ] && SELECTED_PROVIDERS="$SELECTED_PROVIDERS huawei"
+[ "${DO_VAULT:-Y}" != "n" ] && [ "${DO_VAULT:-Y}" != "N" ] && SELECTED_PROVIDERS="$SELECTED_PROVIDERS vault"
 
 # 6. Configure dso-agent (create /etc/dso/dso.yaml if not present)
 echo -e "${GREEN}[5a/7] Setting up DSO configuration...${NC}"
