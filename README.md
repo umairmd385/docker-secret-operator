@@ -11,6 +11,43 @@
 
 ---
 
+## Prerequisites
+
+> **Before running the installer**, you must create the DSO configuration file. This is the most important step.
+
+```bash
+sudo mkdir -p /etc/dso
+```
+
+Create `/etc/dso/dso.yaml` with your cloud provider details:
+
+```yaml
+provider: aws            # Options: aws | azure | huawei | vault | file | env
+
+config:
+  region: us-east-1      # AWS region where your secrets live
+
+secrets:
+  - name: my-secret       # The exact name or ARN of your secret in AWS Secrets Manager
+                          # Example: prod/database/credentials
+    inject: env
+    mappings:
+      password: DB_PASSWORD   # Maps the JSON key "password" → container ENV "DB_PASSWORD"
+      username: DB_USER       # Maps the JSON key "username" → container ENV "DB_USER"
+```
+
+> **Where to find the secret name on AWS**: Go to **AWS Console → Secrets Manager → Your Secret → Secret name** (e.g., `prod/database/credentials`). Use that exact value in `name:` above.
+
+Set secure permissions on the config file:
+
+```bash
+sudo chmod 600 /etc/dso/dso.yaml
+```
+
+Once this file exists you can run the installer.
+
+---
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
@@ -40,33 +77,41 @@
 
 ## Quick Start
 
-Install DSO with a single command on Ubuntu/Debian:
+### Step 1 — Create your configuration (required before installing)
+
+```bash
+sudo mkdir -p /etc/dso
+
+sudo tee /etc/dso/dso.yaml > /dev/null << 'EOF'
+provider: aws
+config:
+  region: us-east-1          # Change to your AWS region
+secrets:
+  - name: my-secret-name     # Exact name from AWS Secrets Manager
+    inject: env
+    mappings:
+      password: DB_PASSWORD  # JSON key "password" → ENV variable DB_PASSWORD
+EOF
+
+sudo chmod 600 /etc/dso/dso.yaml
+```
+
+### Step 2 — Run the installer
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/install.sh | bash
 ```
 
-Start the agent:
+The installer will detect your existing config and skip the interactive prompt.
+
+### Step 3 — Start the agent
 
 ```bash
 sudo systemctl start dso-agent
 sudo systemctl status dso-agent
 ```
 
-Create your configuration at `/etc/dso/dso.yaml`:
-
-```yaml
-provider: aws
-config:
-  region: us-east-1
-secrets:
-  - name: prod/database/credentials
-    inject: env
-    mappings:
-      password: DB_PASSWORD
-```
-
-Deploy your application:
+### Step 4 — Deploy your application
 
 ```bash
 dso compose up -d

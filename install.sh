@@ -104,8 +104,56 @@ build_plugin "azure"
 build_plugin "huawei"
 build_plugin "vault"
 
-# 6. Create systemd service
-echo -e "${GREEN}[5/7] Configuring dso-agent service...${NC}"
+# 6. Configure dso-agent (create /etc/dso/dso.yaml if not present)
+echo -e "${GREEN}[5a/7] Setting up DSO configuration...${NC}"
+
+mkdir -p /etc/dso
+
+if [ ! -f /etc/dso/dso.yaml ]; then
+    echo -e "${BLUE}No configuration file found at /etc/dso/dso.yaml.${NC}"
+    echo -e "We will create one now. Press ENTER to accept defaults."
+    echo ""
+
+    read -p "Cloud provider [aws/azure/huawei/vault/file] (default: aws): " PROVIDER
+    PROVIDER=${PROVIDER:-aws}
+
+    read -p "AWS Region (e.g. us-east-1) [only for AWS provider]: " REGION
+    REGION=${REGION:-us-east-1}
+
+    read -p "Secret name (e.g. prod/database/credentials): " SECRET_NAME
+    SECRET_NAME=${SECRET_NAME:-my-secret}
+
+    read -p "Secret JSON key to inject (e.g. password): " SECRET_KEY
+    SECRET_KEY=${SECRET_KEY:-password}
+
+    read -p "Container ENV variable name (e.g. DB_PASSWORD): " ENV_NAME
+    ENV_NAME=${ENV_NAME:-DB_PASSWORD}
+
+    cat << EOF > /etc/dso/dso.yaml
+# Docker Secret Operator (DSO) Configuration
+# Full docs: https://github.com/umairmd385/docker-secret-operator
+
+provider: ${PROVIDER}
+
+config:
+  region: ${REGION}  # For Azure: vault_name | For Vault: address + token
+
+secrets:
+  - name: ${SECRET_NAME}   # Secret name / ARN in the cloud provider
+    inject: env
+    mappings:
+      ${SECRET_KEY}: ${ENV_NAME}
+EOF
+
+    echo -e "${GREEN}Created /etc/dso/dso.yaml successfully!${NC}"
+else
+    echo -e "${GREEN}Existing /etc/dso/dso.yaml found - skipping config creation.${NC}"
+fi
+
+chmod 600 /etc/dso/dso.yaml
+
+# 6b. Create systemd service
+echo -e "${GREEN}[5b/7] Configuring dso-agent service...${NC}"
 cat << EOF > /etc/systemd/system/dso-agent.service
 [Unit]
 Description=Docker Secret Operator Agent
@@ -114,10 +162,10 @@ Requires=docker.service
 
 [Service]
 Type=simple
-ExecStart=$INSTALL_DIR/dso-agent
+ExecStart=$INSTALL_DIR/dso-agent --config /etc/dso/dso.yaml
 Restart=on-failure
 RestartSec=5
-# Allow security permissions for socket
+EnvironmentFile=-/etc/dso/agent.env
 RuntimeDirectory=dso
 UMask=0007
 
@@ -131,20 +179,22 @@ systemctl enable --now dso-agent
 # 7. Setup Docker Secret Driver (V2 Plugin)
 echo -e "${GREEN}[6/7] Installing Docker Secret Plugin...${NC}"
 
-# Create a temporary rootfs for the plugin
 ROOTFS="$BUILD_DIR/rootfs"
-mkdir -p "$ROOTFS/usr/local/bin"
+mkdir -p "$ROOTFS/usr/local/bin" "$ROOTFS/usr/local/lib/dso/plugins"
 cp $INSTALL_DIR/dso-agent "$ROOTFS/usr/local/bin/"
+cp $LIB_DIR/plugins/* "$ROOTFS/usr/local/lib/dso/plugins/" 2>/dev/null || true
 cp $BUILD_DIR/plugin/config.json "$BUILD_DIR/config.json"
 
 docker plugin disable $PLUGIN_NAME --force &> /dev/null || true
 docker plugin rm $PLUGIN_NAME --force &> /dev/null || true
 
-# We use the local directory to create the plugin
-# In a real CD, this would be a pre-built image
 cd $BUILD_DIR
-docker plugin create $PLUGIN_NAME .
-docker plugin enable $PLUGIN_NAME
+if docker plugin create $PLUGIN_NAME . && docker plugin enable $PLUGIN_NAME; then
+    echo -e "${GREEN}Docker Secret Plugin installed and enabled.${NC}"
+else
+    echo -e "${YELLOW}Warning: Docker Secret Plugin could not be enabled. This is optional.${NC}"
+    echo -e "${YELLOW}The dso CLI (dso compose up) still works without the plugin.${NC}"
+fi
 
 echo -e "${GREEN}[7/7] Verifying installation...${NC}"
 
