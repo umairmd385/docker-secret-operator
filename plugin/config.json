@@ -1,0 +1,32 @@
+{
+  "description": "Docker Secret Operator - External Secret Driver",
+  "documentation": "https://github.com/umairmd385/docker-secret-operator",
+  "interface": {
+    "types": [
+      "docker.secret_driver/1.0"
+    ],
+    "socket": "dso-driver.sock"
+  },
+  "entrypoint": [
+    "/usr/local/bin/dso-agent",
+    "--config",
+    "/etc/dso/dso.yaml",
+    "--mode",
+    "driver"
+  ],
+  "network": {
+    "type": "host"
+  },
+  "mounts": [
+    {
+      "source": "/etc/dso",
+      "destination": "/etc/dso",
+      "type": "bind",
+      "options": [
+        "rbind",
+        "ro"
+      ]
+    }
+  ],
+  "propogatedMount": "/var/run/dso"
+}

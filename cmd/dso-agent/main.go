@@ -5,23 +5,28 @@ import (
 	"os"
 	"time"
 
-	"github.com/docker-secret-operator/dso/internal/observability"
-	"github.com/docker-secret-operator/dso/pkg/agent"
+	"github.com/docker-secret-operator/dso/internal/agent"
+	"github.com/docker-secret-operator/dso/internal/server"
 	"github.com/docker-secret-operator/dso/pkg/config"
+	"github.com/docker-secret-operator/dso/pkg/observability"
 	"go.uber.org/zap"
 )
 
 func main() {
-	logger, _ := zap.NewProduction()
+	logger, _ := observability.NewLogger("info", true)
 	defer logger.Sync()
 
 	cfgFile := flag.String("config", "", "Path to dso.yaml config file")
-	flag.Parse()
-
 	socketPath := "/var/run/dso.sock"
+	driverSocket := "/var/run/dso-driver.sock"
+
 	if custom := os.Getenv("DSO_SOCKET_PATH"); custom != "" {
 		socketPath = custom
 	}
+	if custom := os.Getenv("DSO_DRIVER_SOCKET"); custom != "" {
+		driverSocket = custom
+	}
+	flag.Parse()
 
 	logger.Info("Starting dso-agent...")
 
@@ -54,6 +59,21 @@ func main() {
 
 	go observability.StartMetricsServer(":9090", logger)
 
+	// Start the Docker Secret Driver HTTP server in the background
+	go func() {
+		if err := agent.StartDriverServer(driverSocket, cache, logger); err != nil {
+			logger.Error("Driver server failed", zap.Error(err))
+		}
+	}()
+
+	// Start the administrative REST API (background)
+	apiAddr := ":8080"
+	if custom := os.Getenv("DSO_API_ADDR"); custom != "" {
+		apiAddr = custom
+	}
+	go server.StartRESTServer(apiAddr, cache, logger)
+
+	// Start the internal RPC server (main thread)
 	if err := agent.StartSocketServer(socketPath, cache, logger); err != nil {
 		logger.Fatal("Agent stopped with error", zap.Error(err))
 	}

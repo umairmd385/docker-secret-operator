@@ -7,21 +7,36 @@ import (
 	"path/filepath"
 
 	"github.com/docker-secret-operator/dso/pkg/api"
+	"github.com/docker-secret-operator/dso/pkg/backend/env"
+	"github.com/docker-secret-operator/dso/pkg/backend/file"
 	"github.com/hashicorp/go-plugin"
 )
 
 // LoadProvider dynamically executes the provider binary and dispenses the RPC client
 func LoadProvider(providerName string, providerConfig map[string]string) (api.SecretProvider, *plugin.Client, error) {
+	// 1. Check for native local backends first
+	switch providerName {
+	case "file":
+		prov := &file.FileProvider{}
+		if providerConfig == nil {
+			providerConfig = make(map[string]string)
+		}
+		if err := prov.Init(providerConfig); err != nil {
+			return nil, nil, fmt.Errorf("local file provider failed to initialize: %w", err)
+		}
+		return prov, nil, nil
+	case "env":
+		prov := &env.EnvProvider{}
+		return prov, nil, nil
+	}
+
+	// 2. Load external plugins
 	pluginDir := os.Getenv("DSO_PLUGIN_DIR")
 	if pluginDir == "" {
 		pluginDir = "/usr/local/lib/dso/plugins"
 	}
 	pluginName := fmt.Sprintf("dso-provider-%s", providerName)
 	pluginPath := filepath.Join(pluginDir, pluginName)
-
-	// In a complete production scenario, here is where one would implement
-	// SecureConfig: &plugin.SecureConfig{Checksum: providedSha256}
-	// to cryptographically verify the plugin binary before execution.
 
 	client := plugin.NewClient(&plugin.ClientConfig{
 		HandshakeConfig: Handshake,

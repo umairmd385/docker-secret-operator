@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  # The DSO Agent can be run inside Docker as well, though the installer
+  # sets it up as a systemd service for better host integration.
+  dso-agent:
+    image: umairmd385/dso-agent:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/dso/dso.yaml:/etc/dso/dso.yaml:ro
+    environment:
+      - AWS_REGION=us-east-1
+    restart: always
+
+  # Sample Application utilizing DSO
+  web:
+    image: nginx:latest
+    environment:
+      - DB_PASSWORD
+    # When running dso compose up, DB_PASSWORD will be injected automatically
