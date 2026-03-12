@@ -1,0 +1,9 @@
+provider: huawei
+config:
+  region: ap-southeast-3
+
+secrets:
+  - name: app-cache-secret
+    inject: env
+    mappings:
+      redis_pass: REDIS_PASSWORD

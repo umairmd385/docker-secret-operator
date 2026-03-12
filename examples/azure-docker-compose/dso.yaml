@@ -1,0 +1,14 @@
+provider: azure
+config:
+  vault_url: "https://my-company-vault.vault.azure.net/"
+
+agent:
+  refresh_interval: 5m
+
+secrets:
+  # Fetches a literal string secret from Azure named 'api-token'
+  - name: api-token
+    inject: file
+    path: /run/secrets/api_token
+    # Notice `mappings` is omitted. The raw string value of `api-token` 
+    # will be written directly to the file payload inside the tmpfs mount.
