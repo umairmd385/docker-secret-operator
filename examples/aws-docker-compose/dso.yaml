@@ -1,0 +1,16 @@
+provider: aws
+config:
+  region: us-east-1
+
+agent:
+  refresh_interval: 2m
+  cache: true
+
+secrets:
+  # Fetches an AWS Secret named 'production-web-app'
+  # JSON Structure expected in AWS: {"db_user": "admin", "db_pass": "1234"}
+  - name: production-web-app
+    inject: env
+    mappings:
+      db_user: DB_USER       # Maps JSON key 'db_user' to OS Env 'DB_USER'
+      db_pass: DB_PASSWORD
