@@ -1,22 +1,11 @@
-<p align="center">
-  <img src="docs/assets/logo.png" alt="Docker Secret Operator Logo" width="300">
-</p>
+# Docker Secret Operator (DSO)
 
-<h1 align="center">Docker Secret Operator (DSO)</h1>
+**A lightweight, production-grade secret management layer for Docker environments — no Kubernetes required.**
 
-<p align="center">
-  <strong>A lightweight, production-grade secret management layer for Docker environments — no Kubernetes required.</strong>
-</p>
-
-<p align="center">
-  <a href="https://go.dev/"><img src="https://img.shields.io/badge/Go-1.22+-00ADD8?logo=go&logoColor=white" alt="Go Version"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-  <a href="https://github.com/umairmd385/docker-secret-operator/releases"><img src="https://img.shields.io/github/v/release/umairmd385/docker-secret-operator?color=blue" alt="Latest Release"></a>
-  <a href="https://github.com/umairmd385/docker-secret-operator/stargazers"><img src="https://img.shields.io/github/stars/umairmd385/docker-secret-operator?style=social" alt="GitHub Stars"></a>
-  <a href="https://github.com/umairmd385/docker-secret-operator/actions"><img src="https://github.com/umairmd385/docker-secret-operator/actions/workflows/lint-test.yml/badge.svg" alt="CI Status"></a>
-</p>
-
----
+[![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?logo=go&logoColor=white)](https://go.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Latest Release](https://img.shields.io/github/v/release/umairmd385/docker-secret-operator?color=blue)](https://github.com/umairmd385/docker-secret-operator/releases)
+[![CI Status](https://github.com/umairmd385/docker-secret-operator/actions/workflows/lint-test.yml/badge.svg)](https://github.com/umairmd385/docker-secret-operator/actions)
 
 **Docker Secret Operator (DSO)** securely retrieves secrets from external cloud secret managers — such as **AWS Secrets Manager**, **Azure Key Vault**, **Huawei CSMS**, and **HashiCorp Vault** — and injects them into your Docker containers at runtime. It brings a Kubernetes External Secrets-like experience to pure Docker and Docker Compose workflows, with zero infrastructure overhead.
 
@@ -29,6 +18,11 @@
 - [Architecture](#architecture)
 - [Installation](#installation)
 - [Configuration](#configuration)
+  - [AWS Secrets Manager](#aws-secrets-manager)
+  - [Azure Key Vault](#azure-key-vault)
+  - [HashiCorp Vault](#hashicorp-vault)
+  - [Huawei CSMS](#huawei-csms)
+  - [Local File Backend](#local-file-backend)
 - [Usage](#usage)
 - [CLI Commands](#cli-commands)
 - [Docker Compose Integration](#docker-compose-integration)
@@ -37,9 +31,10 @@
 - [Examples](#examples)
 - [Troubleshooting](#troubleshooting)
 - [Project Structure](#project-structure)
+- [Service Management](#service-management)
 - [Contributing](#contributing)
 - [License](#license)
-- [Documentation](#documentation)
+- [Documentation Website](#documentation-website)
 
 ---
 
@@ -110,28 +105,31 @@ graph TD
     end
 
     subgraph DSO Host
-        Plugins[Provider Plugins\ndso-provider-aws, dso-provider-azure, ...]
-        Agent["dso-agent (Daemon)\nCache · Rotator · REST API\n:8080 · :9090/metrics"]
-        Socket[Unix Socket\n/var/run/dso.sock]
+        Plugins[Provider Plugins]
+        Agent[dso-agent Daemon]
+        Socket[Unix Socket /var/run/dso.sock]
     end
 
     subgraph Docker
-        CLI["dso CLI\ndso compose · dso fetch"]
+        CLI[dso CLI]
         Container[Your Application Container]
     end
 
-    Cloud Providers --> Plugins
+    AWS --> Plugins
+    Azure --> Plugins
+    Vault --> Plugins
+    Huawei --> Plugins
     Plugins --> Agent
     Agent --> Socket
     Socket --> CLI
-    CLI -->|"ENV injection at startup"| Container
+    CLI --> Container
 ```
 
 ### How it works
 
 1. **`dso-agent`** starts as a background daemon (systemd service). It loads provider plugins and polls the cloud provider for secrets on a configurable interval, storing them in an in-memory cache.
-2. **When you run `dso compose up`**, the CLI connects to the agent via the Unix socket (`/var/run/dso.sock`), retrieves the required secrets, and injects them as environment variables before invoking the underlying `docker compose` command.
-3. **For Docker Swarm**, the DSO native V2 Secret Driver API resolves secrets on-demand when the Swarm manager calls `docker secret create`.
+2. **When you run `dso compose up`**, the CLI connects to the agent via Unix socket (`/var/run/dso.sock`), retrieves the required secrets, and injects them as environment variables before invoking the underlying `docker compose` command.
+3. **For Docker Swarm**, the DSO native V2 Secret Driver API resolves secrets on-demand when the Swarm manager requests them.
 
 ---
 
@@ -180,27 +178,37 @@ DSO is configured via a YAML file at `/etc/dso/dso.yaml` (or any path passed wit
 ### Configuration Schema
 
 ```yaml
-# Cloud provider to use. Options: aws | azure | huawei | vault | file | env
+# Cloud provider to use
+# Options: aws | azure | huawei | vault | file | env
 provider: aws
 
 # Provider-specific configuration
 config:
-  region: us-east-1   # AWS: region | Azure: vault_name | Vault: address, token
+  region: us-east-1
 
 # Secret mappings
 secrets:
   - name: prod/database/credentials   # Secret name in the cloud provider
     inject: env                       # Injection method: env | file
     mappings:
-      # <cloud-json-key>: <container-env-var-name>
+      # cloud-json-key: container-env-var-name
       username: DB_USER
       password: DB_PASSWORD
 ```
 
-### Provider Examples
+### How Mappings Work
 
-<details>
-<summary><strong>AWS Secrets Manager</strong></summary>
+Secrets stored in cloud providers are JSON objects. The `mappings` field translates JSON keys into container environment variable names:
+
+```
+Cloud Secret JSON key  →  dso.yaml mapping    →  Container ENV variable
+─────────────────────     ─────────────────     ──────────────────────
+"password": "s3cr3t"   →  password: DB_PASS  →  DB_PASS=s3cr3t
+```
+
+---
+
+### AWS Secrets Manager
 
 ```yaml
 provider: aws
@@ -214,12 +222,11 @@ secrets:
       password: DB_PASSWORD
 ```
 
-> Credentials are sourced automatically from `~/.aws/credentials`, environment variables, or EC2 Instance Profile / IAM Role.
+Credentials are sourced automatically from `~/.aws/credentials`, environment variables, or your EC2 Instance Profile / IAM Role.
 
-</details>
+---
 
-<details>
-<summary><strong>Azure Key Vault</strong></summary>
+### Azure Key Vault
 
 ```yaml
 provider: azure
@@ -233,12 +240,11 @@ secrets:
       password: APP_PASS
 ```
 
-> Uses Azure Managed Identity, environment variables (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`), or `az login`.
+Uses Azure Managed Identity, environment variables (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`), or `az login`.
 
-</details>
+---
 
-<details>
-<summary><strong>HashiCorp Vault</strong></summary>
+### HashiCorp Vault
 
 ```yaml
 provider: vault
@@ -253,10 +259,9 @@ secrets:
       password: DB_PASSWORD
 ```
 
-</details>
+---
 
-<details>
-<summary><strong>Huawei Cloud CSMS</strong></summary>
+### Huawei CSMS
 
 ```yaml
 provider: huawei
@@ -271,15 +276,14 @@ secrets:
       password: DB_PASSWORD
 ```
 
-</details>
+---
 
-<details>
-<summary><strong>Local File (Development)</strong></summary>
+### Local File Backend
 
 ```yaml
 provider: file
 config:
-  path: /etc/dso/secrets/   # Directory containing <secret-name>.json files
+  path: /etc/dso/secrets/
 secrets:
   - name: database
     inject: env
@@ -287,17 +291,7 @@ secrets:
       password: DB_PASSWORD
 ```
 
-</details>
-
-### How Mappings Work
-
-Secrets stored in cloud providers are JSON objects. The `mappings` field translates JSON keys into container environment variable names:
-
-```
-Cloud Secret                 dso.yaml mapping             Container ENV
-─────────────────────────    ──────────────────────────   ────────────────────
-{ "password": "s3cr3t" }  →  password: DB_PASSWORD     →  DB_PASSWORD=s3cr3t
-```
+Place a file at `/etc/dso/secrets/database.json` containing `{"password": "my-secret"}`.
 
 ---
 
@@ -336,7 +330,7 @@ dso compose -f my-compose.yaml up -d
 | Command | Description |
 | :--- | :--- |
 | `dso compose up` | Fetch secrets and run `docker compose up`. |
-| `dso compose up -d` | Fetch secrets and run `docker compose up -d`. |
+| `dso compose up -d` | Fetch secrets and run in detached mode. |
 | `dso compose [args...]` | Pass any `docker compose` arguments through the DSO wrapper. |
 | `dso fetch <secret-name>` | Manually fetch and display a secret's key-value pairs. |
 
@@ -354,8 +348,8 @@ services:
   api:
     image: my-node-api:latest
     environment:
-      - DB_USER         # ← Injected by DSO from cloud provider
-      - DB_PASSWORD     # ← Injected by DSO from cloud provider
+      - DB_USER
+      - DB_PASSWORD
 ```
 
 **`/etc/dso/dso.yaml`**:
@@ -378,7 +372,7 @@ secrets:
 dso compose up -d
 ```
 
-### Verify Secret Injection
+**Verify secret injection**:
 
 ```bash
 docker compose exec api env | grep DB_
@@ -390,11 +384,9 @@ docker compose exec api env | grep DB_
 
 ## Plugin System
 
-DSO uses a [hashicorp/go-plugin](https://github.com/hashicorp/go-plugin) based RPC architecture.
+DSO uses a [go-plugin](https://github.com/hashicorp/go-plugin) based RPC architecture. The agent discovers plugins from `/usr/local/lib/dso/plugins/` (overridable via `DSO_PLUGIN_DIR`). A plugin is any executable named `dso-provider-<name>` that implements the `SecretProvider` interface.
 
-The agent discovers plugins from `/usr/local/lib/dso/plugins/` (overridable via `DSO_PLUGIN_DIR`). A plugin is any executable named `dso-provider-<name>` that implements the `SecretProvider` interface.
-
-### Built-in Providers
+### Built-in Cloud Plugins
 
 | Plugin | Binary Name |
 | :--- | :--- |
@@ -403,16 +395,16 @@ The agent discovers plugins from `/usr/local/lib/dso/plugins/` (overridable via 
 | Huawei CSMS | `dso-provider-huawei` |
 | HashiCorp Vault | `dso-provider-vault` |
 
-### Native Backends (no plugin required)
+### Native Backends (no plugin binary required)
 
-| Provider | Config `provider:` value |
+| Provider | `provider:` value |
 | :--- | :--- |
-| Local files | `file` |
+| Local JSON files | `file` |
 | Environment variables | `env` |
 
 ### Writing a Custom Provider
 
-Implement the `api.SecretProvider` interface from `pkg/api`:
+Implement the `api.SecretProvider` interface from `pkg/api/`:
 
 ```go
 type SecretProvider interface {
@@ -430,12 +422,11 @@ DSO is built with a security-first mindset:
 
 | Control | Detail |
 | :--- | :--- |
-| **In-memory only** | Secrets are never written to disk. They live only in the agent's RAM and are injected directly into container processes. |
-| **Unix socket IPC** | The agent-CLI channel is a Unix socket (`/var/run/dso.sock`) with strict OS-level permissions. No network exposure. |
-| **Log redaction** | Structured logging via `zap` is configured to omit all secret values. Only secret names and metadata are logged. |
-| **IAM roles** | On AWS/Azure/Huawei, use Instance Profiles or Managed Identities. Avoid hardcoding credentials. |
-| **File injection via tmpfs** | When using `inject: file`, secrets are written to memory-backed `tmpfs` mounts, not persistent storage. |
-| **Plugin binary trust** | *(Roadmap)* Plugin binaries will be verified against SHA256 checksums before execution. |
+| **In-memory only** | Secrets are never written to disk. They live only in the agent's RAM. |
+| **Unix socket IPC** | The agent-CLI channel is a Unix socket with strict OS-level permissions. |
+| **Log redaction** | Structured logging via `zap` omits all secret values automatically. |
+| **IAM roles** | Use Instance Profiles or Managed Identities — never hardcoded credentials. |
+| **File injection via tmpfs** | When using `inject: file`, secrets are written to memory-backed `tmpfs` mounts. |
 
 ---
 
@@ -452,34 +443,38 @@ examples/
 └── docker-swarm/         # Docker Swarm with native Secret Driver
 ```
 
+### Docker Swarm Native Integration
+
+```bash
+# Create a secret using the DSO driver
+docker secret create -d dso-secret-driver db_password "aws/prod/db"
+
+# Deploy the stack
+docker stack deploy -c docker-compose.yaml my-app
+```
+
 ---
 
 ## Troubleshooting
 
 ### Plugin Not Found
 
-```
-Error: failed to start provider plugin client dso-provider-aws
-```
+**Error**: `failed to start provider plugin client dso-provider-aws`
 
-**Fix**: Verify the plugin binary exists and is executable:
+Verify the plugin binary exists and is executable:
 
 ```bash
 ls -la /usr/local/lib/dso/plugins/
 chmod +x /usr/local/lib/dso/plugins/dso-provider-aws
 ```
 
-Check that `provider:` in `dso.yaml` matches the binary name suffix exactly (case-sensitive).
-
 ---
 
 ### Authentication Failure
 
-```
-Error: operation error Secrets Manager: GetSecretValue, StatusCode: 403
-```
+**Error**: `operation error Secrets Manager: GetSecretValue, StatusCode: 403`
 
-**Fix**: Ensure the host has valid credentials:
+Ensure the host has valid credentials:
 
 ```bash
 # AWS
@@ -487,19 +482,15 @@ aws sts get-caller-identity
 
 # Azure
 az account show
-
-# Or for EC2/VM — verify the Instance Profile/Managed Identity is attached.
 ```
 
 ---
 
 ### Secret Mapping Errors
 
-```
-Error: key "password" not found in secret "my-secret"
-```
+**Error**: `key "password" not found in secret "my-secret"`
 
-**Fix**: Confirm the secret in the cloud provider is valid JSON and the key names match your `mappings` exactly (case-sensitive):
+Confirm the secret stored in the cloud provider is valid JSON and key names match exactly (case-sensitive):
 
 ```bash
 aws secretsmanager get-secret-value --secret-id my-secret | jq '.SecretString | fromjson'
@@ -509,20 +500,13 @@ aws secretsmanager get-secret-value --secret-id my-secret | jq '.SecretString | 
 
 ### Socket Permission Issues
 
-```
-Error: failed to connect to dso-agent socket at /var/run/dso.sock
-```
+**Error**: `failed to connect to dso-agent socket at /var/run/dso.sock`
 
-**Fix**: Verify the agent is running and the socket exists:
+Verify the agent is running and the socket exists:
 
 ```bash
 sudo systemctl status dso-agent
 ls -la /var/run/dso.sock
-```
-
-If needed, restart the agent:
-
-```bash
 sudo systemctl restart dso-agent
 ```
 
@@ -536,10 +520,10 @@ docker-secret-operator/
 │   ├── dso/                        # CLI entrypoint (dso compose, dso fetch)
 │   ├── dso-agent/                  # Agent daemon entrypoint
 │   └── plugins/
-│       ├── dso-provider-aws/       # AWS Secrets Manager plugin
-│       ├── dso-provider-azure/     # Azure Key Vault plugin
-│       ├── dso-provider-huawei/    # Huawei CSMS plugin
-│       └── dso-provider-vault/     # HashiCorp Vault plugin
+│       ├── dso-provider-aws/
+│       ├── dso-provider-azure/
+│       ├── dso-provider-huawei/
+│       └── dso-provider-vault/
 ├── internal/
 │   ├── agent/                      # Agent core (cache, server, rotator)
 │   ├── auth/                       # Token-based authentication
@@ -550,11 +534,11 @@ docker-secret-operator/
 │   ├── backend/                    # Native local backends (file, env)
 │   ├── config/                     # YAML config loader
 │   ├── observability/              # Logging (zap) + Prometheus metrics
-│   └── provider/                   # Plugin loader (hashicorp/go-plugin)
+│   └── provider/                   # Plugin loader
 ├── plugin/
 │   └── config.json                 # Docker V2 Secret Driver manifest
 ├── examples/                       # Reference deployments
-├── .github/workflows/              # CI/CD (lint, security, release)
+├── _config.yml                     # GitHub Pages / Jekyll configuration
 ├── install.sh                      # One-command production installer
 ├── uninstall.sh                    # Clean removal script
 └── dso.yaml                        # Example configuration
@@ -583,11 +567,11 @@ Contributions are welcome! Please open an Issue to discuss your idea before subm
 
 1. Fork the repository.
 2. Create a feature branch: `git checkout -b feat/my-feature`
-3. Commit: `git commit -m 'feat: add my feature'`
-4. Push: `git push origin feat/my-feature`
+3. Commit your changes: `git commit -m 'feat: add my feature'`
+4. Push the branch: `git push origin feat/my-feature`
 5. Open a Pull Request.
 
-All PRs are automatically checked for lint, tests, and security vulnerabilities.
+All PRs are automatically checked for lint, tests, and security vulnerabilities via GitHub Actions.
 
 ---
 
@@ -597,13 +581,17 @@ DSO is licensed under the [MIT License](LICENSE).
 
 ---
 
-## Documentation
+## Documentation Website
 
 Full documentation is published at:
 
 **[https://umairmd385.github.io/docker-secret-operator/](https://umairmd385.github.io/docker-secret-operator/)**
 
 To enable GitHub Pages on your fork:
-1. Go to **Settings → Pages**.
-2. Set **Source** → `Deploy from a branch` → `main` / `/ (root)`.
-3. Click **Save**.
+
+1. Go to your repository **Settings → Pages**.
+2. Under **Build and deployment**, set **Source** to `Deploy from a branch`.
+3. Set **Branch** to `main` and folder to `/ (root)`.
+4. Click **Save**.
+
+Your documentation will be live within a few minutes.

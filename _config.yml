@@ -1,7 +1,29 @@
 title: Docker Secret Operator (DSO)
-description: Kubernetes-style external secret management for pure Docker and Compose environments without requiring Kubernetes overhead.
-theme: jekyll-theme-hacker
-logo: /docs/assets/logo.png
+description: >-
+  A lightweight, production-grade secret management layer for Docker environments — no Kubernetes required.
 
+# Theme: just-the-docs gives the best rendering for OSS project docs
+# Fallback to minima for GitHub Pages compatibility
+theme: minima
+
+# GitHub Pages compatible plugins
 plugins:
   - jekyll-seo-tag
+  - jekyll-feed
+
+# Markdown settings to ensure GFM compatibility
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Navigation
+header_pages:
+  - index.md
+
+# Social / SEO
+github_username: umairmd385
+repository: umairmd385/docker-secret-operator
+
+# Assets
+logo: /docs/assets/logo.png
