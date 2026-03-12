@@ -7,7 +7,7 @@ import (
 	"syscall"
 
 	"github.com/docker-secret-operator/dso/pkg/config"
-	"github.com/docker-secret-operator/dso/pkg/injector"
+	"github.com/docker-secret-operator/dso/internal/injector"
 	"github.com/spf13/cobra"
 )
 

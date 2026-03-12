@@ -13,112 +13,121 @@ It retrieves secrets from external cloud secret managers and injects them seamle
 
 ---
 
-## 1. Quick Start
+## 1. Installation
 
-Get the system running in minutes:
+DSO provides a production-grade, one-command idempotent installer for Ubuntu/Debian systems. It automatically handles dependencies (Docker, Go), builds multi-cloud provider plugins, and sets up the background agent as a systemd service.
 
-**1. Install binaries**
+**Run the installer:**
 ```bash
-sudo mv dso /usr/local/bin/
-sudo mv dso-agent /usr/local/bin/
+curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/install.sh | bash
 ```
 
-**2. Install provider plugins**
-```bash
-sudo mkdir -p /usr/local/lib/dso/plugins
-sudo mv dso-provider-* /usr/local/lib/dso/plugins
-```
-
-**3. Create configuration file**
-Create `/etc/dso/dso.yaml` with your provider configuration:
-```yaml
-provider: aws
-config:
-  region: us-east-1
-secrets:
-  - name: my-database-secret
-    inject: env
-    mappings:
-      password: DB_PASSWORD
-```
-
-**4. Start dso-agent**
-```bash
-dso-agent --config /etc/dso/dso.yaml
-```
-
-**5. Run docker compose through dso**
-```bash
-dso compose up
-```
+### What the installer does:
+1. **Dependency Analysis**: Detects and installs missing packages (`docker`, `go`, `curl`, `git`).
+2. **Binary Build**: Compiles `dso` (CLI) and `dso-agent` (Daemon) from source.
+3. **Plugin Installation**: Builds and installs providers to `/usr/local/lib/dso/plugins`.
+4. **Service Setup**: Creates and enables the `dso-agent.service` via **systemd**.
 
 ---
 
 ## 2. Architecture Overview
 
+DSO acts as a bridge between high-security cloud secret managers and localized Docker environments.
+
 ```mermaid
 graph TD
-    Cloud[Cloud Secret Managers] --> Plugins[Provider Plugins]
-    Plugins --> Agent[dso-agent]
-    Agent --> Socket[Unix Socket API: /var/run/dso.sock]
-    Socket --> CLI[dso CLI]
-    CLI --> Docker[Docker Containers]
+    subgraph Cloud
+        AWS[AWS Secrets Manager]
+        Azure[Azure Key Vault]
+        Huawei[Huawei CSMS]
+    end
+
+    subgraph Host
+        Agent[dso-agent Daemon]
+        Plugins[Provider Plugins]
+        Socket[Unix Socket: /var/run/dso.sock]
+    end
+
+    subgraph Containers
+        DSO_CLI[dso CLI]
+        App[Your Application Container]
+    end
+
+    Cloud --> Plugins
+    Plugins --> Agent
+    Agent --> Socket
+    Socket --> DSO_CLI
+    DSO_CLI --> App
 ```
 
 ---
 
-## 3. Installation Guide
+## 3. Usage Guide
 
-To install DSO on a Linux server (e.g., AWS EC2):
+### A. Configure the Agent
+Create `/etc/dso/dso.yaml` (or any local yaml):
+```yaml
+provider: aws
+config:
+  region: us-east-1
+secrets:
+  - name: prod/database/credentials
+    inject: env
+    mappings:
+      password: DB_PASSWORD
+```
 
-1. **Install dso and dso-agent**
-   ```bash
-   go build -o dso cmd/dso/*.go
-   go build -o dso-agent cmd/dso-agent/*.go
-   sudo mv dso dso-agent /usr/local/bin/
-   ```
+### B. Inject Secrets into Docker Compose
+Update your `docker-compose.yaml` to include the variables you expect:
+```yaml
+services:
+  web:
+    image: my-app:latest
+    environment:
+      - DB_PASSWORD
+```
 
-2. **Create plugin directory**
-   ```bash
-   sudo mkdir -p /usr/local/lib/dso/plugins
-   sudo chmod 755 /usr/local/lib/dso/plugins
-   ```
-
-3. **Install provider plugins**
-   ```bash
-   (cd cmd/plugins/dso-provider-aws && go build -o ../../../dso-provider-aws main.go)
-   (cd cmd/plugins/dso-provider-azure && go build -o ../../../dso-provider-azure main.go)
-   (cd cmd/plugins/dso-provider-huawei && go build -o ../../../dso-provider-huawei main.go)
-   
-   sudo mv dso-provider-aws dso-provider-azure dso-provider-huawei /usr/local/lib/dso/plugins/
-   ```
-
----
-
-## 4. Agent Deployment
-
-You can run the agent daemon manually:
+Run compose through the DSO wrapper:
 ```bash
-dso-agent --config /etc/dso/dso.yaml
+dso compose up -d
+```
+*DSO fetches the secret from the agent socket, injects it into the environment, and triggers the compose execution.*
+
+### C. Manual Fetching
+```bash
+dso fetch prod/database/credentials
 ```
 
-For production deployments, use a systemd service.
+---
 
-Create `/etc/systemd/system/dso-agent.service`:
-```ini
-[Unit]
-Description=Docker Secret Operator Agent
-After=network.target
+## 4. Service Management
 
-[Service]
-ExecStart=/usr/local/bin/dso-agent --config /etc/dso/dso.yaml
-Restart=always
-User=root
+The DSO Agent runs as a background daemon managed by `systemd`.
 
-[Install]
-WantedBy=multi-user.target
+| Action | Command |
+| :--- | :--- |
+| **Start Agent** | `sudo systemctl start dso-agent` |
+| **Stop Agent** | `sudo systemctl stop dso-agent` |
+| **Check Logs** | `journalctl -u dso-agent -f` |
+| **Restart** | `sudo systemctl restart dso-agent` |
+
+---
+
+## 5. Security Best Practices
+
+1. **Permissions**: The agent socket `/var/run/dso.sock` is created with strictly managed permissions.
+2. **Memory Only**: DSO prefers `inject: env` or `inject: file` via `tmpfs` mounts, ensuring secrets never touch the persistent disk.
+3. **IAM Roles**: When running on AWS/Azure, use Instance Profiles/Managed Identities instead of hardcoded API keys.
+4. **Scrubbing**: DSO structured logs (Zap) automatically omit secret values.
+
+---
+
+## 6. Uninstallation
+
+To remove all binaries, systemd services, and plugins from your system:
+```bash
+curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/uninstall.sh | bash
 ```
-Enable and start the service: `sudo systemctl daemon-reload && sudo systemctl enable --now dso-agent`
 
 ---
 

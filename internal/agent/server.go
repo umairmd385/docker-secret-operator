@@ -1,13 +1,16 @@
 package agent
 
 import (
+	"encoding/json"
 	"fmt"
 	"net"
+	"net/http"
 	"net/rpc"
 	"os"
+	"time"
 
-	"github.com/docker-secret-operator/dso/internal/observability"
 	"github.com/docker-secret-operator/dso/pkg/api"
+	"github.com/docker-secret-operator/dso/pkg/observability"
 	"github.com/docker-secret-operator/dso/pkg/provider"
 	"go.uber.org/zap"
 )
@@ -33,17 +36,22 @@ func (s *AgentServer) GetSecret(req *api.AgentRequest, resp *api.AgentResponse) 
 	s.Logger.Info("Fetching secret from provider", zap.String("provider", req.Provider), zap.String("secret", req.Secret))
 
 	// slow path provider lookup
+	timer := observability.SecretFetchLatency.WithLabelValues(req.Provider)
+	start := time.Now()
 	prov, client, err := provider.LoadProvider(req.Provider, req.Config)
 	if err != nil {
 		observability.SecretRequestsTotal.WithLabelValues(req.Provider, "error").Inc()
+		observability.BackendFailuresTotal.WithLabelValues(req.Provider, "load_fail").Inc()
 		resp.Error = err.Error()
 		return err
 	}
 	defer client.Kill()
 
 	data, err := prov.GetSecret(req.Secret)
+	timer.Observe(time.Since(start).Seconds())
 	if err != nil {
 		observability.SecretRequestsTotal.WithLabelValues(req.Provider, "error").Inc()
+		observability.BackendFailuresTotal.WithLabelValues(req.Provider, "fetch_fail").Inc()
 		resp.Error = err.Error()
 		return err
 	}
@@ -86,4 +94,64 @@ func StartSocketServer(socketPath string, cache *SecretCache, logger *zap.Logger
 		}
 		go rpc.ServeConn(conn)
 	}
+}
+
+// ServeHTTP handles Docker V2 Secret Driver requests (POST /SecretDriver.Get)
+func (s *AgentServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost || r.URL.Path != "/SecretDriver.Get" {
+		http.NotFound(w, r)
+		return
+	}
+
+	var req api.DockerV2SecretRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		s.Logger.Error("Failed to decode driver request", zap.Error(err))
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	s.Logger.Info("Docker Driver request", zap.String("name", req.Name))
+
+	// Attempt to get from cache or default provider
+	fetchReq := &api.AgentRequest{Secret: req.Name}
+	fetchResp := &api.AgentResponse{}
+	
+	err := s.GetSecret(fetchReq, fetchResp)
+	
+	resp := api.DockerV2SecretResponse{}
+	if err != nil || fetchResp.Error != "" {
+		errorMsg := "secret not found"
+		if err != nil {
+			errorMsg = err.Error()
+		} else if fetchResp.Error != "" {
+			errorMsg = fetchResp.Error
+		}
+		resp.Err = errorMsg
+	} else {
+		valBytes, _ := json.Marshal(fetchResp.Data)
+		resp.Value = valBytes
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resp)
+}
+
+func StartDriverServer(socketPath string, cache *SecretCache, logger *zap.Logger) error {
+	server := &AgentServer{
+		Cache:  cache,
+		Logger: logger,
+	}
+
+	if _, err := os.Stat(socketPath); err == nil {
+		os.Remove(socketPath)
+	}
+
+	logger.Info("Starting Docker Secret Driver socket", zap.String("path", socketPath))
+	listener, err := net.Listen("unix", socketPath)
+	if err != nil {
+		return fmt.Errorf("failed to listen on driver socket %s: %w", socketPath, err)
+	}
+
+	os.Chmod(socketPath, 0666)
+	return http.Serve(listener, server)
 }

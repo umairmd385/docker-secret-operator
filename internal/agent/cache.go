@@ -54,3 +54,15 @@ func (c *SecretCache) Delete(key string) {
 	defer c.mu.Unlock()
 	delete(c.items, key)
 }
+
+// ListKeys returns all keys currently in the cache
+func (c *SecretCache) ListKeys() []string {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+
+	keys := make([]string, 0, len(c.items))
+	for k := range c.items {
+		keys = append(keys, k)
+	}
+	return keys
+}
