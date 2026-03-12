@@ -14,9 +14,10 @@ var fetchCmd = &cobra.Command{
 	Short: "Manually fetch a secret and display it",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		cfg, err := config.LoadConfig(cfgFile)
+		cfg, err := config.LoadConfig(resolveConfig())
 		if err != nil {
 			fmt.Printf("Error loading config: %v\n", err)
+			fmt.Printf("Tip: Create /etc/dso/dso.yaml or pass --config /path/to/dso.yaml\n")
 			os.Exit(1)
 		}
 

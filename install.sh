@@ -110,11 +110,35 @@ build_plugin() {
 }
 
 echo ""
-echo -e "${BLUE}Which cloud providers do you need? (Press ENTER to select/skip each)${NC}"
-read -p "  Install AWS Secrets Manager plugin? [Y/n]: " DO_AWS
-read -p "  Install Azure Key Vault plugin?      [Y/n]: " DO_AZURE
-read -p "  Install Huawei CSMS plugin?          [Y/n]: " DO_HUAWEI
-read -p "  Install HashiCorp Vault plugin?      [Y/n]: " DO_VAULT
+echo -e "${BLUE}================================================================${NC}"
+echo -e "${BLUE}   Supported Secret Providers                                   ${NC}"
+echo -e "${BLUE}================================================================${NC}"
+echo -e ""
+echo -e "  ${GREEN}[1] AWS Secrets Manager${NC}   - Amazon Web Services secret store"
+echo -e "               Config: region (e.g. us-east-1)"
+echo -e "               Auth:   IAM Role / AWS credentials"
+echo -e ""
+echo -e "  ${GREEN}[2] Azure Key Vault${NC}        - Microsoft Azure secret store"
+echo -e "               Config: vault_name"
+echo -e "               Auth:   Managed Identity / Service Principal"
+echo -e ""
+echo -e "  ${GREEN}[3] Huawei Cloud CSMS${NC}      - Huawei Cloud secret management service"
+echo -e "               Config: region, project_id"
+echo -e "               Auth:   Huawei credentials"
+echo -e ""
+echo -e "  ${GREEN}[4] HashiCorp Vault${NC}        - Self-hosted / HCP Vault"
+echo -e "               Config: address, token, mount"
+echo -e "               Auth:   Vault token / AppRole"
+echo -e ""
+echo -e "  ${BLUE}Note:${NC} Local backends (file, env) are built-in and need no plugin."
+echo -e "${BLUE}================================================================${NC}"
+echo ""
+echo -e "${BLUE}Select which provider plugins to install (Press ENTER = Yes, type n = Skip):${NC}"
+echo ""
+read -p "  [1] AWS Secrets Manager   [Y/n]: " DO_AWS
+read -p "  [2] Azure Key Vault        [Y/n]: " DO_AZURE
+read -p "  [3] Huawei Cloud CSMS      [Y/n]: " DO_HUAWEI
+read -p "  [4] HashiCorp Vault        [Y/n]: " DO_VAULT
 echo ""
 
 [ "${DO_AWS:-Y}" != "n" ] && [ "${DO_AWS:-Y}" != "N" ] && build_plugin "aws"

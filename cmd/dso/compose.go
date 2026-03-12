@@ -12,13 +12,16 @@ import (
 )
 
 var composeCmd = &cobra.Command{
-	Use:                "compose [args...]",
-	Short:              "Wrapper around docker compose that injects secrets",
-	DisableFlagParsing: true,
+	Use:   "compose [args...]",
+	Short: "Wrapper around docker compose that injects secrets",
+	// NOTE: We do NOT set DisableFlagParsing here.
+	// That prevented the parent --config flag from being honoured.
+	// Unknown flags for 'docker compose' are passed through via args naturally.
 	Run: func(cmd *cobra.Command, args []string) {
-		cfg, err := config.LoadConfig(cfgFile)
+		cfg, err := config.LoadConfig(resolveConfig())
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Tip: Create /etc/dso/dso.yaml or pass --config /path/to/dso.yaml\n")
 			os.Exit(1)
 		}
 
