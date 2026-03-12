@@ -5,7 +5,6 @@ import (
 	"net"
 	"net/rpc"
 	"os"
-	"time"
 
 	"github.com/docker-secret-operator/dso/internal/observability"
 	"github.com/docker-secret-operator/dso/pkg/api"
@@ -56,9 +55,9 @@ func (s *AgentServer) GetSecret(req *api.AgentRequest, resp *api.AgentResponse) 
 	return nil
 }
 
-func StartSocketServer(socketPath string, logger *zap.Logger, cacheTTLSecs int) error {
+func StartSocketServer(socketPath string, cache *SecretCache, logger *zap.Logger) error {
 	server := &AgentServer{
-		Cache:  NewSecretCache(time.Duration(cacheTTLSecs) * time.Second),
+		Cache:  cache,
 		Logger: logger,
 	}
 

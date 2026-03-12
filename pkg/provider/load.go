@@ -44,11 +44,12 @@ func LoadProvider(providerName string, providerConfig map[string]string) (api.Se
 	prov := raw.(api.SecretProvider)
 
 	// Inject the dynamic YAML configuration map
-	if providerConfig != nil {
-		if err := prov.Init(providerConfig); err != nil {
-			client.Kill()
-			return nil, client, fmt.Errorf("provider %s failed to initialize: %w", pluginName, err)
-		}
+	if providerConfig == nil {
+		providerConfig = make(map[string]string)
+	}
+	if err := prov.Init(providerConfig); err != nil {
+		client.Kill()
+		return nil, client, fmt.Errorf("provider %s failed to initialize: %w", pluginName, err)
 	}
 
 	return prov, client, nil

@@ -1,9 +1,13 @@
 # Docker Secret Operator (DSO)
 
+<p align="center">
+  <img src="docs/assets/logo.png" alt="Docker Secret Operator Logo" width="400">
+</p>
+
 [![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?logo=go)](https://go.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Docker Secret Operator (DSO)** is an open-source DevOps tool designed to bring Kubernetes External Secrets functionality to pure Docker and Docker Compose environments without requiring Kubernetes. 
+**Docker Secret Operator (DSO)** is an open-source DevOps tool designed to bring Kubernetes External Secrets functionality to pure Docker and Docker Compose environments without requiring Kubernetes.  
 
 It retrieves secrets from external cloud secret managers and injects them seamlessly into Docker containers at runtime, providing native secret rotation, caching, and multi-cloud provider support.
 
@@ -287,3 +291,20 @@ Here are common issues and solutions:
 * **authentication failure**: Ensure the `dso-agent` background process has the correct IAM permissions. Validate `~/.aws/credentials`, Azure Managed Identity tokens, or system metrics identity roles attached to the instance executing the daemon.
 * **secret mapping errors**: Verify the secret inside your cloud provider is strictly valid JSON format, and that the keys mapped in `dso.yaml` match exactly (case-sensitive). If the stored value is not valid JSON, parsing keys via Mappings will fail.
 * **socket permission issues**: If `dso compose up` fails to connect, verify the `/var/run/dso.sock` file exists. Your current user MUST have read/write permissions to the socket. Try starting the daemon / socket with `sudo`.
+
+---
+
+## 12. Publishing the Documentation to GitHub Pages
+
+This repository is pre-configured to automatically generate a beautiful, interactive documentation website via GitHub Pages using Jekyll!
+
+**To turn it on:**
+1. Navigate to your repository on GitHub.
+2. Click on **Settings** -> **Pages** (on the left sidebar).
+3. Under **Build and deployment**:
+   - Source: `Deploy from a branch`
+   - Branch: `main` (Select `/ (root)` folder).
+4. Click **Save**.
+
+Your documentation site will automatically build and publish securely at:
+**`https://<your-username>.github.io/docker-secret-operator/`**

@@ -12,8 +12,9 @@ import (
 )
 
 var composeCmd = &cobra.Command{
-	Use:   "compose [args...]",
-	Short: "Wrapper around docker compose that injects secrets",
+	Use:                "compose [args...]",
+	Short:              "Wrapper around docker compose that injects secrets",
+	DisableFlagParsing: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cfg, err := config.LoadConfig(cfgFile)
 		if err != nil {
