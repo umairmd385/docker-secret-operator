@@ -18,14 +18,14 @@ DSO uses a high-performance Agent architecture alongside an extensible `hashicor
 graph TD
     CLI[dso compose up]
     Agent[dso-agent Daemon]
-    Socket[/var/run/dso.sock]
+    Socket["/var/run/dso.sock"]
     
     ProviderAWS[dso-provider-aws]
     ProviderAzure[dso-provider-azure]
 
     CLI --> Agent
     Agent --> Socket
-    Agent -. Init() config .-> ProviderAWS
+    Agent -. "Init() config" .-> ProviderAWS
     Agent <-->|gRPC| ProviderAWS
     Agent <-->|gRPC| ProviderAzure
     
@@ -39,72 +39,39 @@ graph TD
 
 ---
 
-## 🚀 Deployment Guide (Linux / EC2)
+## 🚀 Deployment Guide
 
-This guide deploys the persistent `dso-agent` and configures the provider plugins globally on a Linux server.
+There are two primary ways to deploy the `dso-agent` and its plugins: using our fully automated install script on a Linux host, or running the agent securely within a Docker container.
 
-### 1. Install Core Binaries
+### Method A: Automated Installation (Linux / EC2)
+
+The quickest way to get started is using the provided `install.sh` script, which compiles the core and all cloud plugins, mounts them to your `$PATH`, and sets up a `systemd` background service automatically.
+
+```bash
+git clone https://github.com/docker-secret-operator/dso.git
+cd dso
+chmod +x install.sh
+
+# Run the automated installer
+sudo ./install.sh
+```
+Verify the agent service is running: `systemctl status dso-agent` and check `ls -la /var/run/dso.sock`.
+
+### Method B: Docker Container Deployment
+
+If you prefer not to install bare-metal binaries, you can run the `dso-agent` daemon itself inside a Docker container. We volume mount the host's `/var/run` so that the generated socket is accessible to the `dso compose up` CLI on your host.
+
 ```bash
 git clone https://github.com/docker-secret-operator/dso.git
 cd dso
 
-# Build the main CLI tools
+# Build the host CLI binary (required to run `dso compose up`)
 go build -o dso cmd/dso/*.go
-go build -o dso-agent cmd/dso-agent/*.go
+sudo mv dso /usr/local/bin/
 
-# Move to system path
-sudo mv dso dso-agent /usr/local/bin/
+# Start the agent container in daemon mode
+docker compose -f docker-compose.agent.yml up -d
 ```
-
-### 2. Configure Plugin Discovery
-DSO discovers its cloud integrations via standalone binaries prefixed with `dso-provider-` inside the plugin directory. 
-By default, DSO searches `/usr/local/lib/dso/plugins/`.
-
-```bash
-# Create the secure plugin directory
-sudo mkdir -p /usr/local/lib/dso/plugins
-sudo chmod 755 /usr/local/lib/dso/plugins
-
-# Build and install the required cloud providers (e.g., AWS & Azure)
-cd cmd/plugins/dso-provider-aws && go build -o ../../../dso-provider-aws main.go && cd ../../../
-cd cmd/plugins/dso-provider-azure && go build -o ../../../dso-provider-azure main.go && cd ../../../
-
-sudo mv dso-provider-aws dso-provider-azure /usr/local/lib/dso/plugins/
-```
-
-When you define `provider: aws` in your `dso.yaml`, the agent dynamically attempts to execute `/usr/local/lib/dso/plugins/dso-provider-aws`.
-
-### 3. Setup systemd Service
-To ensure the socket is always available and surviving reboots, run `dso-agent` as a system service.
-
-Create `/etc/systemd/system/dso-agent.service`:
-```ini
-[Unit]
-Description=Docker Secret Operator Agent
-After=network.target
-
-[Service]
-Type=simple
-# Optionally, restrict the daemon to a specific user instead of root
-# User=dso
-ExecStart=/usr/local/bin/dso-agent
-Restart=on-failure
-RestartSec=5
-
-# For Azure/AWS identity environments, you can define specific env vars
-# Environment="AWS_REGION=us-east-1"
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Enable and start the service:
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now dso-agent
-sudo systemctl status dso-agent
-```
-Verify the socket exists: `ls -la /var/run/dso.sock`
 
 ---
 
