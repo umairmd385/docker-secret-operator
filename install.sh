@@ -93,8 +93,8 @@ git clone $REPO_URL .
 
 # 4. Build Core Binaries
 echo -e "${GREEN}[3/7] Building core binaries...${NC}"
-go build -ldflags="-s -w" -o dso cmd/dso/main.go cmd/dso/compose.go
-go build -ldflags="-s -w" -o dso-agent cmd/dso-agent/main.go
+go build -ldflags="-s -w" -o dso       ./cmd/dso/
+go build -ldflags="-s -w" -o dso-agent ./cmd/dso-agent/
 
 mv dso dso-agent $INSTALL_DIR/
 
@@ -105,7 +105,7 @@ mkdir -p $LIB_DIR/plugins
 build_plugin() {
     local name=$1
     echo "Building dso-provider-$name..."
-    go build -ldflags="-s -w" -o $LIB_DIR/plugins/dso-provider-$name cmd/plugins/dso-provider-$name/main.go
+    go build -ldflags="-s -w" -o $LIB_DIR/plugins/dso-provider-$name ./cmd/plugins/dso-provider-$name/
     echo -e "${GREEN}  ✓ dso-provider-$name built.${NC}"
 }
 
