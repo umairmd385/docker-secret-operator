@@ -1,3 +1,10 @@
+---
+title: Home
+nav_order: 1
+description: "Kubernetes-grade secret management for Docker and Docker Compose — no Kubernetes required."
+permalink: /
+---
+
 # Docker Secret Operator (DSO)
 
 **Kubernetes-grade secret management for Docker and Docker Compose — no Kubernetes required.**
@@ -769,7 +776,3 @@ Full documentation is available at:
 
 **[https://umairmd385.github.io/docker-secret-operator/](https://umairmd385.github.io/docker-secret-operator/)**
 
-To enable GitHub Pages for your fork:
-1. Go to **Settings → Pages**
-2. Set **Source** → `Deploy from a branch` → `main` / `/ (root)`
-3. Click **Save** — the site will be live within 2 minutes
