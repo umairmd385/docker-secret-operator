@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  mysql_db:
+    container_name: mysql_database_cnt
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD  # Injected by DSO from AWS Secrets Manager
+      - MYSQL_USER           # Injected by DSO from AWS Secrets Manager
+      - MYSQL_PASSWORD       # Injected by DSO from AWS Secrets Manager
+    restart: always
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+
+  phpmyadmin:
+    container_name: phpmyadmin_cnt
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    ports:
+      - "82:80"
+    environment:
+      PMA_HOST: mysql_db
+      PMA_PORT: 3306
