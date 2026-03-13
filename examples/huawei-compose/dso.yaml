@@ -1,35 +1,23 @@
 provider: huawei
 
 config:
-  region: ap-southeast-3       # Your Huawei Cloud region (e.g. ap-southeast-3, cn-north-4)
-  project_id: ""               # Optional: required for some regions
-  access_key: ""               # Optional: HW_ACCESS_KEY (leave empty if using IAM Agency on ECS)
-  secret_key: ""               # Optional: HW_SECRET_KEY (leave empty if using IAM Agency on ECS)
-
-# ── Authentication note ────────────────────────────────────────────────────────
-# On Huawei ECS with IAM Agency: leave access_key and secret_key empty.
-# The SDK uses the ECS metadata service automatically (similar to EC2 Instance Profile).
-#
-# With explicit keys: fill access_key and secret_key above,
-# or set HUAWEI_ACCESS_KEY and HUAWEI_SECRET_KEY environment variables.
-# ──────────────────────────────────────────────────────────────────────────────
+  region: ap-southeast-2
+  project_id: 98176f42176505f83584d83fd6baedf
 
 agent:
-  cache: true
   refresh_interval: 5s
+  cache: true
+
+# ── Authentication ─────────────────────────────────────────────────────────────
+# No access_key / secret_key needed when using IAM Agency on ECS.
+# Temporary credentials are fetched from the ECS metadata service and placed
+# in /etc/dso/agent.env — see README.md Step 4 for detailed instructions.
+# ──────────────────────────────────────────────────────────────────────────────
 
 secrets:
-  - name: MYSQL-ROOT-PASSWORD        # Exact name in Huawei CSMS
+  - name: localhost-sm              # Exact name of the secret in Huawei CSMS
     inject: env
     mappings:
-      value: MYSQL_ROOT_PASSWORD      # JSON string secrets use "value" key
-
-  - name: MYSQL-USER
-    inject: env
-    mappings:
-      value: MYSQL_USER
-
-  - name: MYSQL-PASSWORD
-    inject: env
-    mappings:
-      value: MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD  # JSON key → container ENV var
+      MYSQL_USER: MYSQL_USER
+      MYSQL_USER_PASSWORD: MYSQL_PASSWORD

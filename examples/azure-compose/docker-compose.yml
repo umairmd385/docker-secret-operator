@@ -1,8 +1,0 @@
-version: '3.8'
-
-services:
-  api:
-    image: python:3.9-slim
-    command: ["python", "-c", "import os; print('Loaded token from file!'); with open('/run/secrets/api_token') as f: print(f.read())"]
-    # The /run/secrets/api_token file does not need to be mapped here. 
-    # DSO intercepts logic and automatically binds a hidden `tmpfs` volume when compiling this compose structure.
