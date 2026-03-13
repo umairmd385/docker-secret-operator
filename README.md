@@ -219,14 +219,16 @@ curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/m
 git clone https://github.com/umairmd385/docker-secret-operator.git
 cd docker-secret-operator
 
-# Build CLI and agent
-go build -o /usr/local/bin/dso       ./cmd/dso/
-go build -o /usr/local/bin/dso-agent ./cmd/dso-agent/
+# Build CLI and agent (CGO_ENABLED=0 = fully static, no dynamic library dependencies)
+CGO_ENABLED=0 go build -ldflags="-s -w" -o /usr/local/bin/dso       ./cmd/dso/
+CGO_ENABLED=0 go build -ldflags="-s -w" -o /usr/local/bin/dso-agent ./cmd/dso-agent/
 
 # Build only the plugins you need
 mkdir -p /usr/local/lib/dso/plugins
-go build -o /usr/local/lib/dso/plugins/dso-provider-aws   ./cmd/plugins/dso-provider-aws/
-go build -o /usr/local/lib/dso/plugins/dso-provider-vault ./cmd/plugins/dso-provider-vault/
+CGO_ENABLED=0 go build -ldflags="-s -w" -o /usr/local/lib/dso/plugins/dso-provider-aws    ./cmd/plugins/dso-provider-aws/
+CGO_ENABLED=0 go build -ldflags="-s -w" -o /usr/local/lib/dso/plugins/dso-provider-azure  ./cmd/plugins/dso-provider-azure/
+CGO_ENABLED=0 go build -ldflags="-s -w" -o /usr/local/lib/dso/plugins/dso-provider-huawei ./cmd/plugins/dso-provider-huawei/
+CGO_ENABLED=0 go build -ldflags="-s -w" -o /usr/local/lib/dso/plugins/dso-provider-vault  ./cmd/plugins/dso-provider-vault/
 ```
 
 ### Uninstall
@@ -289,10 +291,12 @@ config:
 ```yaml
 provider: azure
 config:
-  vault_name: my-key-vault
+  vault_url: "https://your-vault-name.vault.azure.net/"  # Full URL from Azure Portal → Key Vault → Overview
 ```
 
-> Authentication: Azure Managed Identity, Service Principal (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`), or `az login`.
+> Authentication: Azure Managed Identity (recommended for Azure VMs), Service Principal (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`), or `az login`.
+
+> **Azure mapping note**: Azure secrets are plain strings, not JSON. DSO wraps them as `{"value": "..."}`. Use `value` as the mapping key in all Azure secrets.
 
 **HashiCorp Vault**
 
@@ -309,9 +313,13 @@ config:
 ```yaml
 provider: huawei
 config:
-  region: ap-southeast-1
-  project_id: my-project-id
+  region: ap-southeast-2             # Your Huawei Cloud region
+  project_id: your-project-id       # IAM → My Credentials → Project ID
+  access_key: ""                    # Leave empty when using IAM Agency on ECS
+  secret_key: ""                    # Leave empty when using IAM Agency on ECS
 ```
+
+> **Huawei ECS authentication**: Attach an IAM Agency with `CSMS FullAccess` + `KMS Administrator` to your ECS instance, then run the metadata credential script — see [examples/huawei-compose/README.md](examples/huawei-compose/README.md).
 
 **Local File (Development)**
 
@@ -540,13 +548,11 @@ Build and place the binary in `/usr/local/lib/dso/plugins/dso-provider-myprovide
 
 Ready-to-use reference configurations are in the `examples/` directory:
 
-| Example | Description |
-| :--- | :--- |
-| `examples/aws-compose/` | AWS Secrets Manager + Docker Compose |
-| `examples/azure-compose/` | Azure Key Vault + Docker Compose |
-| `examples/huawei-compose/` | Huawei CSMS + Docker Compose |
-| `examples/production-compose/` | Multi-service production deployment |
-| `examples/docker-swarm/` | Docker Swarm with native Secret Driver |
+| Example | Cloud Provider | Guide |
+| :--- | :--- | :--- |
+| `examples/aws-compose/` | AWS Secrets Manager | [README →](examples/aws-compose/README.md) |
+| `examples/azure-compose/` | Azure Key Vault | [README →](examples/azure-compose/README.md) |
+| `examples/huawei-compose/` | Huawei Cloud CSMS | [README →](examples/huawei-compose/README.md) |
 
 ### Docker Swarm Example
 
@@ -586,18 +592,37 @@ grep provider /etc/dso/dso.yaml
 StatusCode: 403 Forbidden
 ```
 
-The host lacks valid credentials for the cloud provider.
+The host lacks valid cloud provider credentials.
 
 ```bash
-# AWS — verify credentials
+# AWS — verify IAM identity
 aws sts get-caller-identity
+# Check EC2 Instance Profile:
+curl -s http://169.254.169.254/latest/meta-data/iam/info
 
 # Azure — verify login
 az account show
+az keyvault secret list --vault-name your-vault
 
-# Check EC2 Instance Profile is attached:
-curl -s http://169.254.169.254/latest/meta-data/iam/info
+# Huawei — re-fetch credentials from ECS metadata service
+CREDS=$(curl -s http://169.254.169.254/openstack/latest/securitykey)
+sudo tee /etc/dso/agent.env > /dev/null << EOF
+HUAWEI_ACCESS_KEY=$(echo $CREDS | python3 -c "import sys,json; print(json.load(sys.stdin)['credential']['access'])")
+HUAWEI_SECRET_KEY=$(echo $CREDS | python3 -c "import sys,json; print(json.load(sys.stdin)['credential']['secret'])")
+HUAWEI_SECURITY_TOKEN=$(echo $CREDS | python3 -c "import sys,json; print(json.load(sys.stdin)['credential']['securitytoken'])")
+EOF
+sudo systemctl restart dso-agent
 ```
+
+---
+
+### Huawei CSMS.0401 — KMS Decryption Failed
+
+```
+huawei csms GetSecret: error_code: CSMS.0401
+```
+
+The IAM Agency is missing the `KMS Administrator` permission. Go to **IAM → Agencies → your agency → Permissions → Authorize** and add `KMS Administrator` alongside `CSMS FullAccess`. Both are required.
 
 ---
 

@@ -68,6 +68,8 @@ kramdown:
 
 # Exclude non-doc files from Jekyll build
 exclude:
+  - "Gemfile"
+  - "Gemfile.lock"
   - "*.sh"
   - "go.mod"
   - "go.sum"
@@ -79,3 +81,4 @@ exclude:
   - "plugin/"
   - "test_local_secret/"
   - "vendor/"
+  - "*.go"
