@@ -1,8 +1,0 @@
-version: '3.8'
-
-services:
-  web:
-    image: redis:alpine
-    # Standard redis expects REDIS_PASSWORD to be set if connecting with auth
-    environment:
-      - REDIS_PASSWORD
