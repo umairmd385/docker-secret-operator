@@ -273,7 +273,7 @@ echo -e "  - Check Status: ${BLUE}systemctl status dso-agent${NC}"
 echo -e "  - Use CLI:      ${BLUE}dso compose up -d${NC}"
 echo -e ""
 echo -e "Refer to ${REPO_URL} for advanced configuration (dso.yaml)."
-echo -e "To uninstall, run: curl -fsSL ${REPO_URL}/raw/main/uninstall.sh | bash"
+echo -e "To uninstall, run: curl -fsSL ${REPO_URL}/raw/main/uninstall.sh | sudo bash"
 echo -e "${BLUE}================================================================${NC}"
 
 # Cleanup
