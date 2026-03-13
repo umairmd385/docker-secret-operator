@@ -1,0 +1,48 @@
+<!-- Mermaid.js - renders ```mermaid code blocks as diagrams -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  // Initialize Mermaid after the page loads
+  document.addEventListener("DOMContentLoaded", function () {
+    // Configure Mermaid to match just-the-docs dark theme
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "dark",
+      themeVariables: {
+        primaryColor: "#1a73e8",
+        primaryTextColor: "#e8e8e8",
+        primaryBorderColor: "#444",
+        lineColor: "#888",
+        sectionBkgColor: "#2d2d2d",
+        altSectionBkgColor: "#1e1e1e",
+        gridColor: "#555",
+        secondaryColor: "#2d2d2d",
+        tertiaryColor: "#1e1e1e",
+        background: "#1e1e1e",
+        mainBkg: "#2d2d2d",
+        nodeBorder: "#444",
+        clusterBkg: "#1a1a2e",
+        titleColor: "#e8e8e8",
+        edgeLabelBackground: "#2d2d2d",
+        fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
+      },
+      flowchart: {
+        htmlLabels: true,
+        curve: "basis"
+      },
+      securityLevel: "loose"
+    });
+
+    // Convert ```mermaid code blocks to <div class="mermaid"> tags
+    // just-the-docs renders them as <code class="language-mermaid"> inside <pre>
+    document.querySelectorAll("pre code.language-mermaid").forEach(function (el) {
+      var container = el.closest("pre");
+      var div = document.createElement("div");
+      div.className = "mermaid";
+      div.innerHTML = el.textContent;
+      container.parentNode.replaceChild(div, container);
+    });
+
+    // Re-run Mermaid after DOM replacement
+    mermaid.run();
+  });
+</script>

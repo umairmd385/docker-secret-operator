@@ -151,22 +151,22 @@ DSO has two main components: the **Agent** (`dso-agent`) that runs as a systemd 
 
 ```mermaid
 graph TD
-    subgraph Cloud
-        AWS[AWS Secrets Manager]
-        Azure[Azure Key Vault]
-        Vault[HashiCorp Vault]
-        Huawei[Huawei CSMS]
+    subgraph Cloud Providers
+        AWS["AWS Secrets Manager"]
+        Azure["Azure Key Vault"]
+        Vault["HashiCorp Vault"]
+        Huawei["Huawei CSMS"]
     end
 
     subgraph DSO Host
-        Plugins[Provider Plugins\ndso-provider-aws / azure / vault / huawei]
-        Agent[dso-agent\nCache · Rotator · REST API]
-        Socket[Unix Socket\n/var/run/dso.sock]
+        Plugins["Provider Plugins<br/>dso-provider-aws / azure / vault / huawei"]
+        Agent["dso-agent Daemon<br/>Cache - Rotator - REST API"]
+        Socket["Unix Socket<br/>/var/run/dso.sock"]
     end
 
     subgraph Docker Runtime
-        CLI[dso CLI\ndso compose · dso fetch]
-        Container[Your Application Container\nDB_USER=admin\nDB_PASSWORD=s3cr3t]
+        CLI["dso CLI<br/>dso compose / dso fetch"]
+        Container["Your Application Container<br/>DB_USER=admin  DB_PASSWORD=s3cr3t"]
     end
 
     AWS --> Plugins
@@ -176,7 +176,7 @@ graph TD
     Plugins --> Agent
     Agent --> Socket
     Socket --> CLI
-    CLI -->|ENV injection at startup| Container
+    CLI -->|"ENV injection at startup"| Container
 ```
 
 ### How Secrets Flow
