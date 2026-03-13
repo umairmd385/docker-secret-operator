@@ -93,8 +93,10 @@ git clone $REPO_URL .
 
 # 4. Build Core Binaries
 echo -e "${GREEN}[3/7] Building core binaries...${NC}"
-go build -ldflags="-s -w" -o dso       ./cmd/dso/
-go build -ldflags="-s -w" -o dso-agent ./cmd/dso-agent/
+# CGO_ENABLED=0 ensures fully static binaries - no dynamic library dependencies
+# that could cause 'Unrecognized remote plugin message' crashes at runtime
+CGO_ENABLED=0 go build -ldflags="-s -w" -o dso       ./cmd/dso/
+CGO_ENABLED=0 go build -ldflags="-s -w" -o dso-agent ./cmd/dso-agent/
 
 mv dso dso-agent $INSTALL_DIR/
 
@@ -105,7 +107,7 @@ mkdir -p $LIB_DIR/plugins
 build_plugin() {
     local name=$1
     echo "Building dso-provider-$name..."
-    go build -ldflags="-s -w" -o $LIB_DIR/plugins/dso-provider-$name ./cmd/plugins/dso-provider-$name/
+    CGO_ENABLED=0 go build -ldflags="-s -w" -o $LIB_DIR/plugins/dso-provider-$name ./cmd/plugins/dso-provider-$name/
     echo -e "${GREEN}  ✓ dso-provider-$name built.${NC}"
 }
 
