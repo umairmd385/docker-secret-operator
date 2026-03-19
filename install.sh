@@ -265,6 +265,48 @@ else
     exit 1
 fi
 
+# 8. Web UI Setup (Optional)
+echo ""
+echo -e "${BLUE}================================================================${NC}"
+echo -e "${BLUE}   Web UI Deployment (Optional)                                 ${NC}"
+echo -e "${BLUE}================================================================${NC}"
+echo ""
+read -p "Do you want to install the Web UI? (y/n) [n]: " DO_UI
+
+if [[ "$DO_UI" =~ ^[Yy]$ ]]; then
+    if systemctl is-active --quiet docker; then
+        echo -e "${GREEN}[8/8] Building Web UI Docker Image (this may take a few minutes)...${NC}"
+        if [ -d "$BUILD_DIR/dso-web-ui" ]; then
+            cd "$BUILD_DIR/dso-web-ui"
+            
+            docker stop dso-webui &> /dev/null || true
+            docker rm dso-webui &> /dev/null || true
+            
+            if docker build -t dso-webui .; then
+                echo -e "${GREEN}Starting Web UI container...${NC}"
+                docker run -d \
+                  --name dso-webui \
+                  -p 8080:80 \
+                  --add-host host.docker.internal:host-gateway \
+                  --restart unless-stopped \
+                  dso-webui
+                  
+                echo -e "${GREEN}✓ Web UI successfully built and is running on http://localhost:8080${NC}"
+                echo -e "You can stop it later with:   docker stop dso-webui"
+                echo -e "You can start it later with:  docker start dso-webui"
+            else
+                echo -e "${RED}Failed to build Web UI Docker image.${NC}"
+            fi
+        else
+            echo -e "${RED}Source directory dso-web-ui not found in build dir. Skipping Web UI installation.${NC}"
+        fi
+    else
+        echo -e "${RED}Docker service is not running. Cannot start Web UI container.${NC}"
+    fi
+else
+    echo -e "Skipping Web UI installation."
+fi
+
 # Success message
 echo -e "${BLUE}================================================================${NC}"
 echo -e "${GREEN}   Docker Secret Operator (DSO) successfully installed!         ${NC}"

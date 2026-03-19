@@ -67,7 +67,7 @@ func main() {
 	}()
 
 	// Start the administrative REST API (background)
-	apiAddr := ":8080"
+	apiAddr := ":8081"
 	if custom := os.Getenv("DSO_API_ADDR"); custom != "" {
 		apiAddr = custom
 	}
