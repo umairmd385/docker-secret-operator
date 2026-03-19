@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark: #0B0F14;
+  --color-dark-card: #111820;
+  --color-dark-border: #1F2937;
+  --color-brand-cyan: #39C5BB;
+  --color-brand-blue: #0070F3;
+  --color-brand-purple: #7928CA;
+  
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-dark text-gray-300 font-sans m-0 p-0;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(17, 24, 32, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-linear-to-r from-white to-gray-500;
+  }
+
+  .brand-gradient {
+    @apply bg-linear-to-r from-brand-cyan to-brand-blue;
+  }
+}
+
+@keyframes pulse-cyan {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse-cyan {
+  animation: pulse-cyan 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
