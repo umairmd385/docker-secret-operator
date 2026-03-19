@@ -4,7 +4,7 @@ import { usePlatform } from '../context/PlatformContext';
 import { dsoApi } from '../services/api';
 
 export default function Secrets() {
-  const { activeProvider, addNotification } = usePlatform();
+  const { activeProvider, addNotification, environment } = usePlatform();
   const [secrets, setSecrets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,13 +16,13 @@ export default function Secrets() {
     const fetchSecrets = async () => {
       setLoading(true);
       if (activeProvider) {
-        const data = await dsoApi.getSecrets(activeProvider.id);
+        const data = await dsoApi.getSecrets(activeProvider.id, environment);
         setSecrets(data);
       }
       setLoading(false);
     };
     fetchSecrets();
-  }, [activeProvider]);
+  }, [activeProvider, environment]);
 
   const handleReveal = async (name) => {
     if (revealedSecrets[name]) {
@@ -39,10 +39,19 @@ export default function Secrets() {
 
   const confirmSecretReveal = async () => {
     const name = confirmReveal;
-    const data = await dsoApi.getSecretValue(name);
+    const data = await dsoApi.getSecretValue(name, environment);
     setRevealedSecrets(prev => ({ ...prev, [name]: data.value }));
     setConfirmReveal(null);
-    addNotification(`Security: Secret "${name}" was revealed.`);
+    addNotification(`Security: Secret "${name}" was revealed. Will auto-hide in 10s.`);
+    
+    setTimeout(() => {
+      setRevealedSecrets(prev => {
+        if (!prev[name]) return prev;
+        const next = { ...prev };
+        delete next[name];
+        return next;
+      });
+    }, 10000);
   };
 
   const copyToClipboard = (val, id) => {
@@ -105,6 +114,7 @@ export default function Secrets() {
                 <th className="py-6 px-10 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Secret Mapping</th>
                 <th className="py-6 px-10 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Stored At</th>
                 <th className="py-6 px-10 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Target Workload</th>
+                <th className="py-6 px-10 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Injection</th>
                 <th className="py-6 px-10 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Secret Value</th>
                 <th className="py-6 px-10 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Status</th>
                 <th className="py-6 px-10"></th>
@@ -117,6 +127,16 @@ export default function Secrets() {
                     <td colSpan="6" className="py-8 px-10"><div className="h-4 bg-dark rounded w-full"></div></td>
                   </tr>
                 ))
+              ) : filteredSecrets.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="py-20 text-center opacity-70">
+                    <div className="w-16 h-16 bg-dark border border-dark-border rounded-2xl flex items-center justify-center mx-auto mb-4 text-gray-600">
+                      <Key size={24} />
+                    </div>
+                    <p className="text-white font-bold mb-1">No Secrets Found</p>
+                    <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">Adjust your search or register new credentials</p>
+                  </td>
+                </tr>
               ) : filteredSecrets.map((s) => (
                 <tr key={s.name} className="hover:bg-white/[0.02] transition-colors group">
                   <td className="py-8 px-10">
@@ -137,6 +157,14 @@ export default function Secrets() {
                     <div className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
                       <span className="text-xs text-gray-300 font-mono">{s.container}</span>
+                    </div>
+                  </td>
+                  <td className="py-8 px-10">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] font-bold text-brand-purple bg-brand-purple/5 border border-brand-purple/10 px-2 py-1 rounded w-fit">{s.injection_method}</span>
+                      {s.injection_method === 'FILE' && s.mount_path && (
+                        <span className="text-[9px] text-gray-500 font-mono italic max-w-[120px] truncate" title={s.mount_path}>{s.mount_path}</span>
+                      )}
                     </div>
                   </td>
                   <td className="py-8 px-10">
@@ -163,11 +191,14 @@ export default function Secrets() {
                     </div>
                   </td>
                   <td className="py-8 px-10">
-                    <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase w-fit
-                      ${s.status === 'Injected' ? 'bg-green-500/10 text-green-500' : 'bg-brand-cyan/10 text-brand-cyan animate-pulse'}
-                    `}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${s.status === 'Injected' ? 'bg-green-500' : 'bg-brand-cyan'}`}></span>
-                      {s.status}
+                    <div className="flex flex-col gap-1">
+                      <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase w-fit
+                        ${s.status === 'Synced' ? 'bg-green-500/10 text-green-500' : s.status === 'Pending' ? 'bg-yellow-500/10 text-yellow-500 animate-pulse' : 'bg-red-500/10 text-red-500'}
+                      `} title={s.error || ''}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${s.status === 'Synced' ? 'bg-green-500' : s.status === 'Pending' ? 'bg-yellow-500' : 'bg-red-500'}`}></span>
+                        {s.status}
+                      </div>
+                      {s.error && <span className="text-[9px] text-red-400 font-mono w-32 truncate" title={s.error}>{s.error}</span>}
                     </div>
                   </td>
                   <td className="py-8 px-10 text-right">

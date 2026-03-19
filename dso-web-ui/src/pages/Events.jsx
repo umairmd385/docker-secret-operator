@@ -2,26 +2,25 @@ import React, { useState } from 'react';
 import { Search, Filter, Terminal, Calendar, User, Server, AlertCircle, CheckCircle2, Info, RefreshCw } from 'lucide-react';
 
 const events = [
-  { id: 1, type: 'SUCCESS', msg: 'Provider connected successfully', entity: 'AWS SM', container: '-', time: '14:45:12', date: '2026-03-16' },
-  { id: 2, type: 'SYNC', msg: 'Secret rotation scheduled', entity: 'db_password', container: 'mysql-db', time: '14:40:05', date: '2026-03-16' },
-  { id: 3, type: 'INJECT', msg: 'Injected secrets into container', entity: 'app-v1', container: 'api-gateway', time: '14:38:22', date: '2026-03-16' },
-  { id: 4, type: 'INFO', msg: 'DSO Agent heartbeat', entity: 'system', container: '-', time: '14:35:00', date: '2026-03-16' },
-  { id: 5, type: 'ERROR', msg: 'Failed to sync: Timeout', entity: 'redis_key', container: 'cache-node', time: '14:30:15', date: '2026-03-16' },
-  { id: 6, type: 'SUCCESS', msg: 'Sync completed (12 keys)', entity: 'vault-prod', container: '-', time: '14:25:44', date: '2026-03-16' },
-  { id: 7, type: 'INJECT', msg: 'Secrets verified in workload', entity: 'worker-node', container: 'job-processor', time: '14:20:10', date: '2026-03-16' },
+  { id: 1, severity: 'error', category: 'Provider Error', service: 'AWS Secrets Manager', msg: 'Authentication token expired or invalid', time: '14:45:12', date: '2026-03-16' },
+  { id: 2, severity: 'warning', category: 'Sync Warning', service: 'db_password (mysql-db)', msg: 'Sync delayed by 12s due to high latency', time: '14:40:05', date: '2026-03-16' },
+  { id: 3, severity: 'error', category: 'Injection Error', service: 'cache-node', msg: 'Failed to mount volume /etc/secrets/storage_key', time: '14:38:22', date: '2026-03-16' },
+  { id: 4, severity: 'info', category: 'Agent System', service: 'DSO Agent', msg: 'DSO Agent heartbeat successful', time: '14:35:00', date: '2026-03-16' },
+  { id: 5, severity: 'error', category: 'Sync Error', service: 'redis_key (cache-node)', msg: 'Provider rate-limit reached', time: '14:30:15', date: '2026-03-16' },
+  { id: 6, severity: 'info', category: 'Sync Success', service: 'vault-prod', msg: 'Sync completed (12 keys verified)', time: '14:25:44', date: '2026-03-16' },
+  { id: 7, severity: 'info', category: 'Injection Success', service: 'job-processor', msg: 'Secrets actively verified in workload', time: '14:20:10', date: '2026-03-16' },
 ];
 
-const TypeBadge = ({ type }) => {
+const SeverityBadge = ({ severity, category }) => {
   const styles = {
-    SUCCESS: 'bg-green-500/10 text-green-500 border-green-500/20',
-    ERROR: 'bg-red-500/10 text-red-500 border-red-500/20',
-    INFO: 'bg-brand-blue/10 text-brand-blue border-brand-blue/20',
-    SYNC: 'bg-brand-cyan/10 text-brand-cyan border-brand-cyan/20',
-    INJECT: 'bg-brand-purple/10 text-brand-purple border-brand-purple/20',
+    info: 'bg-brand-blue/10 text-brand-blue border-brand-blue/20',
+    warning: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+    error: 'bg-red-500/10 text-red-500 border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.2)]',
   };
   return (
-    <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${styles[type] || styles.INFO}`}>
-      {type}
+    <span className={`px-2 py-0.5 rounded text-[10px] font-bold border flex items-center gap-1.5 w-fit ${styles[severity] || styles.info}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${severity === 'error' ? 'bg-red-500 animate-pulse' : severity === 'warning' ? 'bg-yellow-500' : 'bg-brand-blue'}`}></span>
+      {category}
     </span>
   );
 };
@@ -59,10 +58,9 @@ export default function Events() {
           <thead>
             <tr className="border-b border-dark-border bg-white/2">
               <th className="py-5 px-8 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Timestamp</th>
-              <th className="py-5 px-8 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Level</th>
+              <th className="py-5 px-8 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Severity</th>
+              <th className="py-5 px-8 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Service</th>
               <th className="py-5 px-8 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Message</th>
-              <th className="py-5 px-8 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Entity</th>
-              <th className="py-5 px-8 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Container</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-dark-border">
@@ -75,13 +73,14 @@ export default function Events() {
                   </div>
                 </td>
                 <td className="py-5 px-8">
-                  <TypeBadge type={event.type} />
+                  <SeverityBadge severity={event.severity} category={event.category} />
                 </td>
-                <td className="py-5 px-8 text-sm text-gray-300 group-hover:text-white transition-colors">{event.msg}</td>
                 <td className="py-5 px-8">
-                  <span className="text-xs font-mono text-brand-cyan bg-brand-cyan/5 px-2 py-1 rounded">{event.entity}</span>
+                  <span className="text-xs font-mono text-brand-cyan bg-brand-cyan/5 px-2 py-1 rounded border border-brand-cyan/10">{event.service}</span>
                 </td>
-                <td className="py-5 px-8 text-xs text-gray-500 font-mono italic">{event.container}</td>
+                <td className={`py-5 px-8 text-sm transition-colors ${event.severity === 'error' ? 'text-red-400 font-bold' : 'text-gray-300 group-hover:text-white'}`}>
+                  {event.msg}
+                </td>
               </tr>
             ))}
           </tbody>

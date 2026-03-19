@@ -16,11 +16,11 @@ import { usePlatform } from '../context/PlatformContext';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const data = [
-  { time: '10:00', syncs: 45, latency: 120 },
-  { time: '11:00', syncs: 52, latency: 115 },
-  { time: '12:00', syncs: 48, latency: 125 },
-  { time: '13:00', syncs: 61, latency: 110 },
-  { time: '14:00', syncs: 55, latency: 118 },
+  { time: '10:00', syncs: 450, failures: 12, cacheHits: 380, latency: 120 },
+  { time: '11:00', syncs: 520, failures: 5, cacheHits: 490, latency: 115 },
+  { time: '12:00', syncs: 480, failures: 8, cacheHits: 450, latency: 125 },
+  { time: '13:00', syncs: 610, failures: 3, cacheHits: 590, latency: 110 },
+  { time: '14:00', syncs: 550, failures: 10, cacheHits: 510, latency: 118 },
 ];
 
 const MetricCard = ({ title, value, change, icon: Icon, color, trend }) => (
@@ -60,11 +60,12 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard title="Secrets Injected" value="1,284" change="+12.5%" icon={Key} color="text-brand-cyan" trend="up" />
-        <MetricCard title="Injection Rate" value="99.9%" change="+0.2%" icon={Activity} color="text-green-500" trend="up" />
-        <MetricCard title="Avg Latency" value="124ms" change="-15ms" icon={Zap} color="text-brand-blue" trend="up" />
-        <MetricCard title="Sync Health" value="Stable" change="98%" icon={Shield} color="text-brand-purple" trend="up" />
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <MetricCard title="Total Secrets" value="1,284" change="+12.5%" icon={Key} color="text-brand-cyan" trend="up" />
+        <MetricCard title="Sync Success" value="14.2k" change="+8.2%" icon={CheckCircle2} color="text-green-500" trend="up" />
+        <MetricCard title="Sync Failed" value="38" change="-4.1%" icon={Shield} color="text-red-500" trend="down" />
+        <MetricCard title="Cache Hit Ratio" value="94.2%" change="+1.2%" icon={Box} color="text-brand-purple" trend="up" />
+        <MetricCard title="Avg Latency" value="45ms" change="-15ms" icon={Zap} color="text-brand-blue" trend="up" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -91,7 +92,9 @@ export default function Dashboard() {
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#0D1117', border: '1px solid #30363D', borderRadius: '16px', fontSize: '10px' }}
                 />
-                <Area type="monotone" dataKey="syncs" name="Sync ops" stroke="#39C7BB" strokeWidth={3} fillOpacity={1} fill="url(#colorSyncs)" />
+                <Area type="monotone" dataKey="syncs" name="Total Syncs" stroke="#39C7BB" strokeWidth={3} fillOpacity={1} fill="url(#colorSyncs)" />
+                <Area type="monotone" dataKey="cacheHits" name="Cache Hits" stroke="#8B5CF6" strokeWidth={2} fillOpacity={0} strokeDasharray="5 5" />
+                <Area type="monotone" dataKey="failures" name="Failures" stroke="#EF4444" strokeWidth={2} fillOpacity={0} />
               </AreaChart>
             </ResponsiveContainer>
           </div>

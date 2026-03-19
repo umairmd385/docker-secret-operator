@@ -4,7 +4,7 @@ import { dsoApi } from '../services/api';
 import { usePlatform } from '../context/PlatformContext';
 
 export default function Containers() {
-  const { activeProvider } = usePlatform();
+  const { activeProvider, environment } = usePlatform();
   const [containers, setContainers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeContainer, setActiveContainer] = useState(null);
@@ -12,12 +12,17 @@ export default function Containers() {
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
-      const data = await dsoApi.getContainers();
+      const data = await dsoApi.getContainers(environment);
       setContainers(data);
+      if (activeContainer) {
+         // Optionally refresh the active container
+         const refreshActive = data.find(c => c.name === activeContainer.name);
+         setActiveContainer(refreshActive || null);
+      }
       setLoading(false);
     };
     fetch();
-  }, []);
+  }, [environment]);
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
@@ -41,6 +46,14 @@ export default function Containers() {
             Array(4).fill(0).map((_, i) => (
               <div key={i} className="bg-dark-card border border-dark-border h-64 rounded-3xl animate-pulse"></div>
             ))
+          ) : containers.length === 0 ? (
+            <div className="col-span-full py-20 text-center opacity-70 bg-dark-card border border-dark-border rounded-[40px]">
+              <div className="w-16 h-16 bg-dark border border-dark-border rounded-2xl flex items-center justify-center mx-auto mb-4 text-gray-600">
+                <Box size={24} />
+              </div>
+              <p className="text-white font-bold mb-1">No Workloads Detected</p>
+              <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">Ensure containers are actively running</p>
+            </div>
           ) : containers.map((c) => (
             <div 
               key={c.name} 
@@ -103,16 +116,28 @@ export default function Containers() {
                     <Key size={12} />
                     Injected Secrets
                   </p>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {activeContainer.secrets.map(s => (
-                      <div key={s} className="flex justify-between items-center group/item">
-                        <span className="text-xs font-mono text-white">{s}</span>
-                        <div className="flex items-center gap-3">
-                          <span className="text-[10px] text-gray-600 font-mono uppercase">{activeProvider?.id.toUpperCase()}</span>
-                          <button className="p-1.5 bg-dark border border-dark-border rounded-lg text-gray-700 opacity-0 group-hover/item:opacity-100 hover:text-white transition-all">
-                            <ExternalLink size={12} />
-                          </button>
+                      <div key={s.name || s} className="flex flex-col gap-2 p-4 bg-dark/40 rounded-2xl border border-white/5 hover:border-white/10 transition-colors group/item">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-white">{s.name || s}</span>
+                            {s.injection_type && (
+                              <span className="text-[8px] font-mono text-brand-purple bg-brand-purple/10 px-1.5 py-0.5 rounded border border-brand-purple/20 uppercase">
+                                {s.injection_type}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-3">
+                            {s.last_injection && <span className="text-[9px] text-gray-500 font-mono italic">{s.last_injection}</span>}
+                            <span className="text-[9px] text-brand-cyan font-mono uppercase">{activeProvider?.id.toUpperCase() || 'LOCAL'}</span>
+                          </div>
                         </div>
+                        {s.injection_type === 'file' && s.mount_path && (
+                          <div className="text-[9px] text-gray-500 font-mono bg-dark px-3 py-1.5 rounded-xl border border-dark-border truncate mt-1">
+                            {s.mount_path}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

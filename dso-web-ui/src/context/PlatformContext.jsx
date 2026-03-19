@@ -6,19 +6,32 @@ const ProviderContext = createContext();
 export const PlatformProvider = ({ children }) => {
   const [activeProvider, setActiveProvider] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [globalError, setGlobalError] = useState(null);
+  const [environment, setEnvironment] = useState('dev');
   const [notifications, setNotifications] = useState([]);
 
   const refreshProvider = async () => {
     setLoading(true);
-    const data = await dsoApi.getProvider();
-    setActiveProvider(data);
-    setLoading(false);
+    try {
+      const data = await dsoApi.getProvider(environment);
+      setActiveProvider(data);
+      setGlobalError(null);
+    } catch (err) {
+      setGlobalError(err.message || 'Failed to fetch provider state');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const switchProvider = async (id) => {
     dsoApi.switchProvider(id);
     await refreshProvider();
-    addNotification(`Switched to ${id.toUpperCase()} provider.`);
+    addNotification(`Switched to ${id.toUpperCase()} provider in ${environment.toUpperCase()}.`);
+  };
+
+  const changeEnvironment = async (env) => {
+    setEnvironment(env);
+    addNotification(`Environment changed to ${env.toUpperCase()}`);
   };
 
   const addNotification = (msg) => {
@@ -32,12 +45,15 @@ export const PlatformProvider = ({ children }) => {
 
   useEffect(() => {
     refreshProvider();
-  }, []);
+  }, [environment]);
 
   return (
     <ProviderContext.Provider value={{ 
       activeProvider, 
       loading, 
+      globalError,
+      environment,
+      changeEnvironment,
       refreshProvider, 
       switchProvider,
       notifications,

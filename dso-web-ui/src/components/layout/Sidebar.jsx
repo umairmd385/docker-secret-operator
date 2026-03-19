@@ -26,7 +26,7 @@ const navItems = [
   { icon: Activity, label: 'Observability', path: '/observability' },
   { icon: History, label: 'Events', path: '/events' },
   { icon: Share2, label: 'Architecture', path: '/architecture' },
-  { icon: Zap, label: 'Playground', path: '/playground' },
+  { icon: Zap, label: 'Demo Mode', path: '/playground' },
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 

@@ -10,18 +10,19 @@ const ProviderIcon = ({ id, size = 18 }) => {
 };
 
 export default function Providers() {
-  const { activeProvider, switchProvider, addNotification } = usePlatform();
+  const { activeProvider, switchProvider, addNotification, environment } = usePlatform();
   const [allProviders, setAllProviders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async () => {
-      const data = await dsoApi.getAllProviders();
+      setLoading(true);
+      const data = await dsoApi.getAllProviders(environment);
       setAllProviders(data);
       setLoading(false);
     };
     fetch();
-  }, []);
+  }, [environment]);
 
   const handleSwitch = async (id) => {
     addNotification(`Connecting to ${id.toUpperCase()}...`);
@@ -73,16 +74,25 @@ export default function Providers() {
             </div>
 
             <h3 className="text-2xl font-black text-white mb-2 uppercase tracking-tight">{p.name}</h3>
-            <p className="text-[10px] text-gray-600 font-mono mb-10 tracking-widest">{p.region || p.vault_name || 'LOCAL CLUSTER'}</p>
+            <div className="flex flex-wrap items-center gap-2 mb-8">
+              <p className="text-[10px] text-gray-600 font-mono tracking-widest">{p.region || p.vault_name || 'LOCAL CLUSTER'}</p>
+              <div className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest flex items-center gap-1 ${p.status === 'Connected' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                {p.status === 'Connected' ? '✅ Connected' : '❌ Failed'}
+              </div>
+            </div>
 
-            <div className="space-y-4 mb-10">
+            <div className="space-y-4 mb-8">
               <div className="flex justify-between items-center text-xs">
                 <span className="text-gray-600 font-mono uppercase tracking-widest">Available</span>
                 <span className="text-white font-bold">{p.secrets_count} Secrets</span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-gray-600 font-mono uppercase tracking-widest">Latency</span>
-                <span className="text-brand-cyan font-mono font-bold tracking-tighter">14ms</span>
+                <span className="text-gray-600 font-mono uppercase tracking-widest">Auth Status</span>
+                <span className={`font-mono font-bold tracking-tighter ${p.status === 'Connected' ? 'text-white' : 'text-red-400 max-w-[120px] truncate text-right'}`} title={p.auth_status}>{p.auth_status}</span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-gray-600 font-mono uppercase tracking-widest">Last Fetch</span>
+                <span className="text-gray-400 font-mono">{p.last_successful_fetch}</span>
               </div>
             </div>
 

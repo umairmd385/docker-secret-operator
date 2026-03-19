@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Search, Bell, Github, CheckCircle, Info, X } from 'lucide-react';
+import { Search, Bell, Github, CheckCircle, Info, X, ChevronDown, AlertTriangle } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
 
 export default function Navbar() {
-  const { notifications } = usePlatform();
+  const { notifications, environment, changeEnvironment, globalError } = usePlatform();
   const [showNotifications, setShowNotifications] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
@@ -31,6 +31,32 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-6">
+        {globalError && (
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-red-500/10 border border-red-500/20 rounded-xl" title={globalError}>
+             <AlertTriangle size={14} className="text-red-500" />
+             <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">Error</span>
+          </div>
+        )}
+        
+        {/* Environment Selector */}
+        <div className="relative group">
+          <button className="flex items-center gap-2 px-4 py-2 bg-dark-card border border-dark-border rounded-xl text-gray-400 hover:text-white transition-all hover:border-white/10">
+            <span className="text-[10px] font-black uppercase tracking-widest">{environment}</span>
+            <ChevronDown size={14} />
+          </button>
+          <div className="absolute top-full right-0 mt-2 w-32 bg-dark-card border border-dark-border rounded-xl shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+            {['dev', 'stage', 'prod'].map(env => (
+              <button 
+                key={env}
+                onClick={() => changeEnvironment(env)}
+                className={`w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-colors ${environment === env ? 'text-brand-cyan' : 'text-gray-500 hover:text-white'}`}
+              >
+                {env}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* DSO Status */}
         <div className="hidden lg:flex items-center gap-3 px-4 py-2 bg-brand-cyan/5 border border-brand-cyan/10 rounded-xl">
           <CheckCircle size={14} className="text-brand-cyan animate-pulse" />
