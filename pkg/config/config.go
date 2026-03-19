@@ -12,11 +12,23 @@ type RestartStrategy struct {
 	GracePeriod string `yaml:"grace_period"`
 }
 
+type WatchConfig struct {
+	Mode            string `yaml:"mode"` // polling, event, hybrid
+	PollingInterval string `yaml:"polling_interval"`
+}
+
+type WebhookConfig struct {
+	Enabled   bool   `yaml:"enabled"`
+	AuthToken string `yaml:"auth_token"`
+}
+
 type AgentConfig struct {
 	Cache           bool            `yaml:"cache"`
-	RefreshInterval string          `yaml:"refresh_interval"`
+	RefreshInterval string          `yaml:"refresh_interval"` // Deprecated in favor of Watch.PollingInterval natively bounds smoothly.
 	AutoSync        bool            `yaml:"auto_sync"`
 	RestartStrategy RestartStrategy `yaml:"restart_strategy"`
+	Watch           WatchConfig     `yaml:"watch"`
+	Webhook         WebhookConfig   `yaml:"webhook"`
 }
 
 type ReloadStrategy struct {
