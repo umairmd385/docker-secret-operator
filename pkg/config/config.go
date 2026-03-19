@@ -7,16 +7,29 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type RestartStrategy struct {
+	Type        string `yaml:"type"`
+	GracePeriod string `yaml:"grace_period"`
+}
+
 type AgentConfig struct {
-	Cache           bool   `yaml:"cache"`
-	RefreshInterval string `yaml:"refresh_interval"`
+	Cache           bool            `yaml:"cache"`
+	RefreshInterval string          `yaml:"refresh_interval"`
+	AutoSync        bool            `yaml:"auto_sync"`
+	RestartStrategy RestartStrategy `yaml:"restart_strategy"`
+}
+
+type ReloadStrategy struct {
+	Type string `yaml:"type"` // "signal" | "restart" | "none"
 }
 
 type SecretMapping struct {
-	Name     string            `yaml:"name"`
-	Inject   string            `yaml:"inject"` // "file", "env", "socket"
-	Path     string            `yaml:"path,omitempty"`
-	Mappings map[string]string `yaml:"mappings"`
+	Name           string            `yaml:"name"`
+	Inject         string            `yaml:"inject"` // "file", "env", "socket"
+	Path           string            `yaml:"path,omitempty"`
+	Rotation       bool              `yaml:"rotation"`
+	ReloadStrategy ReloadStrategy    `yaml:"reload_strategy"`
+	Mappings       map[string]string `yaml:"mappings"`
 }
 
 type Config struct {

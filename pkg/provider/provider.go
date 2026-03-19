@@ -27,22 +27,33 @@ func (g *ProviderRPC) GetSecret(name string) (map[string]string, error) {
 }
 
 func (g *ProviderRPC) WatchSecret(name string, interval time.Duration) (<-chan api.SecretUpdate, error) {
-	// For net/rpc stream-like behavior without full gRPC,
-	// we use a long-polling approach in a goroutine for MVP
 	ch := make(chan api.SecretUpdate)
 
-	// A real production system would upgrade to gRPC streams for this.
-	// We simulate a stream by just polling GetSecret repeatedly,
-	// as net/rpc doesn't inherently support server-to-client streaming well.
 	go func() {
 		ticker := time.NewTicker(interval)
+		backoff := 2 * time.Second
+
 		for range ticker.C {
 			val, err := g.GetSecret(name)
 			var errMsg string
 			if err != nil {
-				errMsg = err.Error()
+				// Normalize network and credential timeouts reliably
+				errMsg = "Provider timeout or failure: " + err.Error()
+				ch <- api.SecretUpdate{Name: name, Data: nil, Error: errMsg}
+				
+				// Apply exponential jitter gracefully locally tracking failures 
+				ticker.Reset(interval + backoff)
+				if backoff < 60*time.Second {
+					backoff *= 2
+				}
+				continue
 			}
-			ch <- api.SecretUpdate{Name: name, Data: val, Error: errMsg}
+			
+			// Reset ticker natively bounds correctly mapping the interval precisely back to standard limits
+			ticker.Reset(interval)
+			backoff = 2 * time.Second
+			
+			ch <- api.SecretUpdate{Name: name, Data: val, Error: ""}
 		}
 	}()
 

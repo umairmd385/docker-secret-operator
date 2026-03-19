@@ -18,7 +18,7 @@ permalink: /
 
 ---
 
-**Docker Secret Operator (DSO)** is a lightweight, production-grade secret management layer for Docker and Docker Compose environments. It securely retrieves secrets from cloud secret managers — **AWS Secrets Manager**, **Azure Key Vault**, **Huawei CSMS**, **HashiCorp Vault** — and injects them into containers at runtime as environment variables, without touching a single line of your `docker-compose.yaml`.
+**Docker Secret Operator (DSO)** is a lightweight, production-ready secret management layer with limitations for Docker and Docker Compose environments. It securely retrieves secrets from cloud secret managers — **AWS Secrets Manager**, **Azure Key Vault**, **Huawei CSMS**, **HashiCorp Vault** — and injects them into containers at runtime as environment variables, without touching a single line of your `docker-compose.yaml`.
 
 > No Kubernetes. No sidecar containers. No secrets in source control. Just a fast, secure, plugin-based secret agent.
 
@@ -141,7 +141,7 @@ That's it. DSO reads `/etc/dso/dso.yaml`, fetches your secrets from the cloud, a
 | **REST Admin API** | Health checks and cache inspection at `:8080/health` and `/secrets`. |
 | **Structured Logging** | High-performance `zap` logging with automatic secret redaction. |
 | **Plugin Architecture** | Write a custom provider plugin for any secret backend in Go. |
-| **One-Command Install** | Production-grade installer handles everything end-to-end. |
+| **One-Command Install** | Automated installer handles everything end-to-end. |
 
 ---
 
@@ -527,6 +527,97 @@ func main() {
 ```
 
 Build and place the binary in `/usr/local/lib/dso/plugins/dso-provider-myprovider`, then set `provider: myprovider` in your `dso.yaml`.
+
+---
+
+## Real-Time Event Streaming (WebSockets)
+
+DSO exposes a live WebSocket feed to trace dynamic internal agent triggers, rendering heavy HTTP polling on `/api/events` obsolete for rich-client integrations.
+
+**Endpoint**: `ws://localhost:8080/api/events/ws`
+
+### Key Features
+- **Real-Time Push**: Emits strict JSON structures natively defining `restart_started`, `injection_failed`, and `health_check_passed` boundaries.
+- **Backwards Compatibility**: Traditional clients can retain standard polling natively calling `GET /api/events`.
+- **Catch-up Sync**: The WebSocket handshake immediately flushes recently cached events instantly syncing offline boundaries seamlessly via query limits (`?limit=50`).
+- **Filtering**: Drop unnecessary telemetry natively utilizing query params directly (`?severity=error`).
+
+### Example Integration
+
+```javascript
+const socket = new WebSocket('ws://localhost:8080/api/events/ws?limit=50');
+
+socket.onmessage = function(event) {
+  const data = JSON.parse(event.data);
+  console.log(`[${data.timestamp}] ${data.secret} mapped to ${data.container}: ${data.status}`);
+};
+```
+
+---
+
+## Automatic Secret Rotation
+
+### Overview
+DSO now natively supports continuous, background Automatic Secret Rotation leveraging the `WatchSecret` mechanisms of mapped cloud API endpoints.
+
+### How It Works
+- **DSO monitors secrets continuously**: Dedicated sub-routines listen for state changes actively polling the provider endpoints.
+- **Detects changes**: The agent calculates MD5 checksums validating if remote secret payloads differ from active memory cache. 
+- **Updates cache**: Once rotated, the unified memory cache explicitly drops the old metadata.
+- **Re-injects into containers**: Live containers mapping the modified secrets are mapped dynamically based on their injection type.
+
+### Best-Effort Rolling Restart Strategy
+Ensuring services face minimal network degradation during a credentials rollover is paramount.
+- **Best-Effort Rolling Restart for ENV-based Injection**: Environment-bound secrets require container reconstruction. DSO automates this by cloning the existing container topology, waiting for native Docker health check probes to pass gracefully on the temp container, and subsequently dropping traffic from the old footprint silently. Fallbacks are correctly utilized returning to the old container gracefully natively.
+- **Graceful Shutdown**: Target container configurations support mapping graceful kill-windows.
+
+### Configuration Example
+You can manage the rotation logic tightly bound in `dso.yaml`:
+```yaml
+agent:
+  refresh_interval: 1m
+  auto_sync: true
+
+restart_strategy:
+  type: rolling
+  grace_period: 20s
+
+secrets:
+  - name: my_database_password
+    inject: env
+    rotation: true
+```
+
+### Injection Behavior
+- **ENV**: Imposes a complete rolling restart natively managed with fallback bounding capabilities.
+- **FILE**: Triggers a live payload file replacement mapped instantly via temporary overlays (no restart required).
+
+### Example Workflow
+1. A database secret is manually rotated inside AWS Secrets Manager.
+2. DSO detects the MD5 diff variation natively within the defined polling parameters.
+3. The Agent unified cache is wiped and appended with the new token dynamically.
+4. Temporary container `workload-temp` spins up successfully mapping the new payload.
+5. The container reports valid Docker Health checks. Workload swaps occur natively with no disruptions.
+
+---
+
+## Limitations
+
+- **Polling Computing Costs**: Aggressive polling intervals (e.g., `< 1m`) will consume significant API request quotas against your cloud provider and could incur severe execution cost penalties depending on provider billing rules. Active adaptive polling helps mediate this, but fundamental quotas apply natively.
+- **Docker Restart Constraints**: The best-effort rolling restart system attempts health checks safely, but does not guarantee pure zero-downtime execution in high-traffic or poorly orchestrated external routing meshes. Expect minor dropped network packets dynamically on intensive layers.
+- **File Injection Dependencies**: Injecting securely utilizing `.file` modes strictly depends on your internal application's behavior. If your application logic does not natively watch for file modifications to trigger scoped internal reloads, configurations will remain stagnant despite the file overwriting successfully under the hood natively.
+
+## Recommended Usage
+
+- **Injection Preferences**: For true safety limits, **use file-based injection** (`inject: file`) instead of environment variables (`inject: env`). Binding variables inherently exposes secret payloads permanently explicitly bridging to `docker inspect`, permanently undermining fundamental isolation boundaries natively.
+- **Polling Intervals**: Opt for longer polling limits (e.g., `refresh_interval: 5m` to `15m`) gracefully balancing active cluster freshness securely prioritizing cloud quota limits robustly natively.
+- **Health Checks**: If utilizing best-effort rolling restarts natively under `inject: env`, strictly implement robust formal Docker `HEALTHCHECK` definitions statically inside your container definitions ensuring DSO safely aborts topology updates protecting workloads implicitly from panic crashes during reconstruction spans exclusively.
+
+---
+
+### Limitations
+- Inherently relies on polling-based detection mechanisms mapping to cloud provider API rate limits.
+- Depends strictly on explicit container health definitions (Docker Compose `healthcheck`) to orchestrate swaps safely.
 
 ---
 

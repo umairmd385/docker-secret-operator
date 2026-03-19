@@ -7,6 +7,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azsecrets v1.4.0
 	github.com/aws/aws-sdk-go-v2/config v1.32.11
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.41.3
+	github.com/gorilla/websocket v1.5.3
 	github.com/hashicorp/go-plugin v1.7.0
 	github.com/hashicorp/vault/api v1.16.0
 	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.187
