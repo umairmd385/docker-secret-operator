@@ -879,21 +879,30 @@ docker-secret-operator/
 
 ## Roadmap
 
-### v1.1 — In Progress
-- Secret rotation delivery via `inject: file` (tmpfs hot-reload)
-- CLI improvements (`dso status`, `dso validate`)
-- `--dry-run` mode to preview injected values
+- [x] **v1.0 — Core Foundation**
+  - Cross-cloud plugins (AWS, Azure, Huawei, HashiCorp Vault)
+  - Runtime environment variable injection
+  - Unix Socket IPC and CLI wrapper
+  - Basic Prometheus metrics
 
-### v1.2 — Planned
-- Secret TTL per mapping
-- Webhook notifications on rotation
-- Support for multiple providers simultaneously
+- [x] **v2.0 — The Trigger Engine (Latest Release)**
+  - Continuous Provider Watch (MD5 validation)
+  - Best-Effort Rolling Restarts with native Health Checks
+  - Dynamic `tmpfs` File Overwriting (Live Hot-Reload)
+  - Hybrid Trigger Engine (Polling + Webhook `POST /api/events/secret-update`)
+  - Real-Time WebSocket Telemetry Traces (`/api/events/ws`)
 
-### v2.0 — Future
-- Web UI for secret inspection
-- Secret access policy engine
-- Kubernetes compatibility layer (CRD-based config)
-- Secret diff history and audit log viewer
+### v2.1 — Planned
+- **Multi-Provider Support**: Mapping secrets from different cloud backends simultaneously.
+- **CLI Improvements**: `dso status`, `dso validate`, and `dso doctor` diagnostics.
+- **Dry-run Mode**: Preview injected values and mappings without starting containers.
+- **Secret Access Policy Engine**: Token-based RBAC for CLI-to-Agent communication.
+
+### v3.0 — Future
+- **Native Web UI**: Visualization of cluster secret footprints and rotation history.
+- **Kubernetes CRD Layer**: Manage DSO via standard K8s-style manifests.
+- **Audit Log Viewer**: Graphical tool for inspecting secret access and rotation events.
+- **Cloud-Native Log Masking**: Automatically redact secrets from `docker logs` output.
 
 ---
 
