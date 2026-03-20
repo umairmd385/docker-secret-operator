@@ -136,10 +136,13 @@ That's it. DSO reads `/etc/dso/dso.yaml`, fetches your secrets from the cloud, a
 | **Local Backends** | `file` and `env` backends for local development or air-gapped use. |
 | **Runtime Secret Injection** | Secrets are fetched and injected at container startup — never written to disk. |
 | **Background Secret Rotation** | Agent polls cloud providers and refreshes in-memory cache automatically. |
+| **Best-Effort Rolling Restart** | v2.0.0: Automatic container reconstruction with Docker health checks. |
+| **Event-Driven Trigger Engine** | v2.0.0: Hybrid polling + Webhook (POST /api/events/secret-update) ingestion. |
 | **Native Docker V2 Plugin** | Integrates with Docker Swarm via the native Secret Driver API. |
 | **Unix Socket IPC** | CLI communicates with the agent over a secure Unix domain socket. |
 | **Prometheus Metrics** | Track fetch counts, latencies, and backend failures at `:9090/metrics`. |
 | **REST Admin API** | Health checks and cache inspection at `:8080/health` and `/secrets`. |
+| **Real-Time WebSockets** | v2.0.0: Live event streaming on `/api/events/ws` for tracing triggers. |
 | **Structured Logging** | High-performance `zap` logging with automatic secret redaction. |
 | **Plugin Architecture** | Write a custom provider plugin for any secret backend in Go. |
 | **One-Command Install** | Automated installer handles everything end-to-end. |
@@ -178,6 +181,8 @@ graph TD
     Agent --> Socket
     Socket --> CLI
     CLI -->|"ENV injection at startup"| Container
+    Agent -.->|"v2.0.0: Rolling Restart trigger"| Container
+    Agent -.->|"v2.0.0: Live File Overwrite"| Container
 ```
 
 ### How Secrets Flow
@@ -680,6 +685,7 @@ Ready-to-use reference configurations are in the `examples/` directory:
 | `examples/aws-compose/` | AWS Secrets Manager | [README →](examples/aws-compose/README.md) |
 | `examples/azure-compose/` | Azure Key Vault | [README →](examples/azure-compose/README.md) |
 | `examples/huawei-compose/` | Huawei Cloud CSMS | [README →](examples/huawei-compose/README.md) |
+| `examples/v2-rotation-rolling-restart/` | Multiple (Cloud Focused) | [README →](examples/v2-rotation-rolling-restart/README.md) |
 
 ### Docker Swarm Example
 

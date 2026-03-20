@@ -1,0 +1,46 @@
+# DSO v2.0.0 — Continuous Provider Watch & Rolling Restart Configuration
+# Showcase: https://github.com/umairmd385/docker-secret-operator/releases/tag/v2.0.0
+
+provider: aws
+
+config:
+  region: us-east-1
+
+agent:
+  # v2.0.0 Feature: Passive continuous watching with MD5 diff validation
+  # This property sets the polling cycle for your cloud secret provider.
+  refresh_interval: 1m
+  
+  # v2.0.0 Trigger Engine: Hybrid polling + event-driven ingestion
+  watch:
+    mode: hybrid  # Options: polling | event | hybrid
+    polling_interval: 10m  # Backup interval if webhook events are missed
+  
+  # Webhook support for real-time reduction of polling costs
+  webhook:
+    enabled: true
+    auth_token: "example-secret-token"
+
+# v2.0.0 Feature: Best-Effort Rolling Restart Strategy
+# When a secret mapped via 'inject: env' rotations, DSO clones the footprint
+# and performs a health-checked swap to minimize network degradation.
+restart_strategy:
+  type: rolling
+  grace_period: 20s
+  fallback_on_failure: true
+
+secrets:
+  # Example 1: ENV-based injection with Rolling Restart (RECONSTRUCTION)
+  - name: my_database_password
+    inject: env
+    rotation: true
+    mappings:
+      password: DATABASE_PASSWORD
+
+  # Example 2: FILE-based injection with Live Overwrite (NO RESTART)
+  - name: my_stripe_api
+    inject: file
+    path: /run/secrets/stripe
+    rotation: true
+    mappings:
+      api_key: api_key

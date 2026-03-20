@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  # The web server simulates a production container requiring secret injection.
+  # DSO v2.0.0 will monitor secrets and orchestrate a rolling restart for this container
+  # if its corresponding secret rotates in the cloud provider.
+  web-server:
+    image: nginx:latest
+    container_name: web-server-dso-v2
+    ports:
+      - "8080:80"
+    environment:
+      - DATABASE_PASSWORD  # ← DSO v2.0.0 maps this from the cloud provider
+    # v2.0.0 REQUIREMENT: To support "Best-Effort Rolling Restart", your container 
+    # MUST have a native Docker healthcheck. DSO uses this probe to verify 
+    # the new (cloned) container is healthy before swapping it with the old one.
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: always
+
+  # Optional: Sidecar container demonstrating "Dynamic File Overwriting"
+  # This container receives secrets via 'inject: file' (tmpfs).
+  # v2.0.0 will live-overwrite files inside this container WITHOUT a restart.
+  worker-process:
+    image: alpine:latest
+    container_name: worker-process-dso-v2
+    command: ["sh", "-c", "while true; do ls -la /run/secrets/stripe; cat /run/secrets/stripe/api_key; sleep 5; done"]
+    # v2.0.0 handles the tmpfs mounting automatically if 'inject: file' is used in dso.yaml
