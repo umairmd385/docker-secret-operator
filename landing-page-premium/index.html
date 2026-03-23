@@ -1,515 +1,438 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docker Secret Operator | Kubernetes-Style Secrets for Docker</title>
-    <meta name="description" content="Securely manage and inject secrets into your Docker workloads without exposing credentials. Kubernetes-inspired secret management for Docker Compose.">
+    <title>Docker Secret Operator | Sync Secrets into Docker Containers</title>
+    <meta name="description" content="DSO syncs secrets from AWS, Azure, and other providers directly into Docker containers — without manual updates or restarts.">
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        dark: {
-                            DEFAULT: '#0B0F14',
-                            card: '#111820',
-                            border: '#1F2937',
-                        },
-                        brand: {
-                            cyan: '#39C5BB',
-                            blue: '#0070F3',
-                            purple: '#7928CA',
-                        }
-                    },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     },
-                    backgroundImage: {
-                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-                        'hero-glow': 'radial-gradient(circle at 50% 50%, rgba(0, 112, 243, 0.15) 0%, transparent 70%)',
+                    colors: {
+                        accent: '#2563eb',
+                        'accent-hover': '#1d4ed8',
                     }
                 }
             }
         }
     </script>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <style>
-        @layer utilities {
-            .glass {
-                background: rgba(17, 24, 32, 0.7);
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.05);
-            }
-            .text-gradient {
-                background: linear-gradient(135deg, #fff 0%, #888 100%);
-                background-clip: text;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-            }
-            .brand-gradient {
-                background: linear-gradient(135deg, #0070F3 0%, #39C5BB 100%);
-            }
-            .glow-on-hover:hover {
-                box-shadow: 0 0 30px rgba(57, 197, 187, 0.3);
-            }
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        .nav-link { color: #374151; font-size: 0.875rem; font-weight: 500; }
+        .nav-link:hover { color: #111827; }
+        .step-number {
+            width: 28px; height: 28px;
+            background: #2563eb; color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700;
+            flex-shrink: 0;
         }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Animated connection lines */
-        .ping-connection {
-            stroke-dasharray: 8;
-            animation: dash 5s linear infinite;
-        }
-        @keyframes dash {
-            to { stroke-dashoffset: -100; }
-        }
-
-        /* Terminal blinking cursor */
-        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #39C5BB; animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 2px; }
-        @keyframes blink { 50% { opacity: 0; } }
+        /* Architecture arrow */
+        .arch-arrow { color: #9ca3af; font-size: 1.25rem; text-align: center; margin: 4px 0; }
     </style>
 </head>
-<body class="bg-dark text-gray-300 font-sans selection:bg-brand-cyan/30">
+<body class="bg-white text-gray-800 antialiased">
 
     <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 glass border-b border-white/5 py-4 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+    <nav class="border-b border-gray-200 sticky top-0 bg-white z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <img src="assets/images/logo.png" alt="DSO" class="w-8 h-8">
-                <span class="text-white font-bold tracking-tight text-lg">Docker Secret Operator</span>
+                <img src="assets/images/logo.png" alt="DSO Logo" class="w-7 h-7">
+                <span class="font-semibold text-gray-900 text-sm">Docker Secret Operator</span>
             </div>
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-                <a href="#problem" class="hover:text-white transition-colors">Why DSO?</a>
-                <a href="#solution" class="hover:text-white transition-colors">Solution</a>
-                <a href="#features" class="hover:text-white transition-colors">Features</a>
-                <a href="#architecture" class="hover:text-white transition-colors">Architecture</a>
-                <a href="#use-cases" class="hover:text-white transition-colors">Use Cases</a>
-                <a href="#getting-started" class="hover:text-white transition-colors">Install</a>
-                <div class="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
-                    <img src="https://img.shields.io/github/stars/umairmd385/docker-secret-operator?style=flat&color=39C5BB&label=stars" alt="GitHub Stars" class="h-5">
-                </div>
-                <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank" class="text-white bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition-all border border-white/10">GitHub</a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#how-it-works" class="nav-link">How it works</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#architecture" class="nav-link">Architecture</a>
+                <a href="#getting-started" class="nav-link">Get Started</a>
+                <a href="https://umairmd385.github.io/docker-secret-operator/" target="_blank" class="nav-link">Docs</a>
+                <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
+                   class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 border border-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-50 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                    GitHub
+                </a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-32">
-        
-        <!-- 1. Hero Section -->
-        <section class="relative overflow-hidden px-6 lg:px-8 pb-20">
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-hero-glow pointer-events-none"></div>
-            
-            <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
-                <div class="reveal active mb-12">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-xs font-bold mb-6">
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-cyan opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-cyan"></span>
-                        </span>
-                        V1.2.4 STABLE RELEASE
-                    </div>
-                    <h1 class="text-5xl lg:text-8xl font-extrabold text-white leading-tight mb-6 tracking-tight">
-                        Kubernetes-Native Secret Management, <br>
-                        <span class="brand-gradient bg-clip-text text-transparent">Built for Docker.</span>
-                    </h1>
-                    <p class="text-xl text-gray-400 mb-10 max-w-3xl leading-relaxed mx-auto">
-                        Secure your sensitive data across AWS, Azure, GCP, and Vault without rebuilding container images or enduring downtime. Keep passwords out of <code class="bg-[#111820] text-brand-cyan px-2 py-0.5 rounded">.env</code> files forever.
-                    </p>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4 w-full max-w-md mx-auto">
-                        <a href="#getting-started" class="px-8 py-4 brand-gradient text-white rounded-xl font-bold shadow-2xl shadow-brand-blue/20 hover:scale-[1.02] transition-all glow-on-hover w-full text-center">
-                            Get Started
-                        </a>
-                        <a href="https://umairmd385.github.io/docker-secret-operator/" class="px-8 py-4 bg-white/10 border border-white/20 text-white rounded-xl font-bold hover:bg-white/20 transition-all flex items-center justify-center w-full text-center">
-                            View Docs
-                        </a>
-                        <a href="https://github.com/umairmd385/docker-secret-operator" class="px-8 py-4 bg-dark-card border border-dark-border text-white rounded-xl font-bold hover:bg-dark-border/50 transition-all flex items-center justify-center gap-2 w-full text-center">
-                            <svg class="w-5 h-5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                            GitHub
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <main>
 
-        <!-- 2. Problem Statement -->
-        <section id="problem" class="py-24 bg-dark-card/30 border-y border-white/5">
-            <div class="max-w-6xl mx-auto px-6 text-center reveal">
-                <span class="text-brand-cyan font-bold tracking-widest uppercase text-sm mb-4 block">The Problem</span>
-                <h2 class="text-4xl lg:text-5xl font-bold text-white mb-8">Docker secrets are static. Production is not.</h2>
-                <p class="text-xl text-gray-400 leading-relaxed mb-16 max-w-4xl mx-auto">
-                    In pure Docker or Compose environments, secrets are effectively baked in at boot time. Updating a TLS certificate or rotating a database password usually requires manual scripts, risky <code class="text-gray-300">.env</code> file modifications, and heavy container restarts—leading to operational overhead and zero agility.
+        <!-- 1. Hero -->
+        <section class="py-20 px-6 border-b border-gray-100">
+            <div class="max-w-3xl mx-auto text-center">
+                <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full mb-6">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                    Open Source · MIT License
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-5">
+                    Docker Secret Operator
+                </h1>
+                <p class="text-xl text-gray-500 leading-relaxed mb-8 max-w-2xl mx-auto">
+                    Sync and manage secrets from external providers directly into Docker containers — without manual updates or restarts.
                 </p>
-                <div class="grid md:grid-cols-2 gap-8 text-left">
-                    <div class="glass p-8 rounded-2xl border border-red-500/20 shadow-2xl">
-                        <h4 class="text-red-400 font-bold mb-4 flex items-center gap-2 text-lg">
-                            <span class="bg-red-500/10 p-2 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></span>
-                            The Old Way
-                        </h4>
-                        <ul class="space-y-4 text-gray-400 text-sm mt-6">
-                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold">✗</span> Hardcoded `.env` files pushed to servers (or worse, Git).</li>
-                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold">✗</span> Custom curl scripts bridging Cloud KMS into Docker.</li>
-                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold">✗</span> Nightmare rotation cycles requiring full application layer restarts.</li>
-                        </ul>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
+                    <a href="#getting-started"
+                       class="w-full sm:w-auto inline-block bg-accent hover:bg-accent-hover text-white font-semibold px-8 py-3 rounded-md transition-colors text-sm text-center">
+                        Get Started
+                    </a>
+                    <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
+                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium px-8 py-3 rounded-md transition-colors text-sm">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                        View on GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Problem -->
+        <section id="problem" class="py-16 px-6 bg-gray-50 border-b border-gray-100">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-3">Managing secrets in Docker is difficult</h2>
+                <p class="text-gray-500 mb-8">Most Docker environments handle secrets manually, which creates real operational and security problems.</p>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3">
+                        <span class="mt-0.5 text-red-400 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </span>
+                        <span class="text-gray-700">Secrets are hardcoded or manually injected via <code class="bg-gray-100 text-gray-800 text-sm px-1.5 py-0.5 rounded">.env</code> files</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="mt-0.5 text-red-400 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </span>
+                        <span class="text-gray-700">Updating secrets requires pulling containers down and restarting</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="mt-0.5 text-red-400 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </span>
+                        <span class="text-gray-700">No native integration with cloud secret managers (AWS, Azure, Vault)</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="mt-0.5 text-red-400 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </span>
+                        <span class="text-gray-700">Rotation is manual and error-prone — easy to miss a running container</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 3. Solution -->
+        <section id="solution" class="py-16 px-6 border-b border-gray-100">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-3">DSO connects Docker to your secret provider</h2>
+                <p class="text-gray-500 mb-8">DSO runs as a local agent alongside Docker. It connects to your external secret store and keeps containers in sync.</p>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <span class="mt-0.5 text-green-500 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <span class="text-gray-700">Fetches secrets from providers like AWS Secrets Manager and Azure Key Vault</span>
+                    </li>
+                    <div class="flex items-start gap-3">
+                        <span class="mt-0.5 text-green-500 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <span class="text-gray-700">Injects them into containers as environment variables or mounted files</span>
                     </div>
-                    <div class="glass p-8 rounded-2xl border border-brand-cyan/20 shadow-2xl">
-                        <h4 class="text-brand-cyan font-bold mb-4 flex items-center gap-2 text-lg">
-                            <span class="bg-brand-cyan/10 p-2 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
-                            The DSO Way
-                        </h4>
-                        <ul class="space-y-4 text-gray-400 text-sm mt-6">
-                            <li class="flex items-start gap-3"><span class="text-brand-cyan font-bold">✓</span> Sync directly from AWS, Azure, and Vault out-of-the-box.</li>
-                            <li class="flex items-start gap-3"><span class="text-brand-cyan font-bold">✓</span> Pure in-memory (tmpfs) injection without touching physical drives.</li>
-                            <li class="flex items-start gap-3"><span class="text-brand-cyan font-bold">✓</span> Zero-downtime rotation bridging directly to native Linux SIGHUPs.</li>
-                        </ul>
+                    <div class="flex items-start gap-3">
+                        <span class="mt-0.5 text-green-500 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <span class="text-gray-700">Keeps containers updated when values change — no manual updates, no restarts</span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 3. Solution Overview -->
-        <section id="solution" class="py-32">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center mb-24 reveal">
-                    <span class="text-brand-blue font-bold tracking-widest uppercase text-sm mb-4 block">The Solution</span>
-                    <h2 class="text-4xl lg:text-5xl font-extrabold text-white mb-6">Bridging Cloud Secrets & Docker</h2>
-                    <p class="text-gray-400 text-xl max-w-2xl mx-auto">DSO acts as an intelligent abstraction layer, securely fetching cryptographic payloads and seamlessly injecting them directly into container environments.</p>
-                </div>
-                
-                <div class="grid lg:grid-cols-3 gap-8">
-                    <div class="glass p-10 rounded-[32px] reveal hover:border-brand-cyan/40 transition-all glow-on-hover">
-                        <div class="w-14 h-14 bg-brand-cyan/10 rounded-2xl flex items-center justify-center mb-6">
-                            <svg class="w-7 h-7 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">Zero-Downtime Reloads</h3>
-                        <p class="text-gray-400">DSO natively integrates with Docker Events to dispatch <code class="text-gray-300">SIGHUP</code> kernel signals directly to your containers when secrets update—eliminating HTTP disconnects.</p>
+        <!-- 4. How it works -->
+        <section id="how-it-works" class="py-16 px-6 bg-gray-50 border-b border-gray-100">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">How it works</h2>
+                <p class="text-gray-500 mb-12">Four steps from secret store to running container.</p>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <div class="w-8 h-8 bg-blue-100 text-blue-700 rounded-md flex items-center justify-center font-bold text-sm mb-4">1</div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Store secrets</h4>
+                        <p class="text-sm text-gray-500">Add your secrets to AWS Secrets Manager, Azure Key Vault, or another supported provider.</p>
                     </div>
-                    <div class="glass p-10 rounded-[32px] reveal hover:border-brand-blue/40 transition-all glow-on-hover" style="transition-delay: 100ms;">
-                        <div class="w-14 h-14 bg-brand-blue/10 rounded-2xl flex items-center justify-center mb-6">
-                            <svg class="w-7 h-7 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                        </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">100% In-Memory</h3>
-                        <p class="text-gray-400">Strict POSIX (<code class="text-gray-300">0400</code>) constraints ensure that your multi-cloud tokens are never written to physical hard drives—everything flows securely through <code class="text-gray-300">tmpfs</code>.</p>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <div class="w-8 h-8 bg-blue-100 text-blue-700 rounded-md flex items-center justify-center font-bold text-sm mb-4">2</div>
+                        <h4 class="font-semibold text-gray-900 mb-2">DSO fetches</h4>
+                        <p class="text-sm text-gray-500">The DSO agent polls the provider and retrieves the secret values over a secure connection.</p>
                     </div>
-                    <div class="glass p-10 rounded-[32px] reveal hover:border-purple-500/40 transition-all glow-on-hover" style="transition-delay: 200ms;">
-                        <div class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-6">
-                            <svg class="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">Cloud Native</h3>
-                        <p class="text-gray-400">Operate seamlessly across AWS Secrets Manager, Azure Key Vault, Google Cloud, and HashiCorp Vault using a single, declarative API configuration schema.</p>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <div class="w-8 h-8 bg-blue-100 text-blue-700 rounded-md flex items-center justify-center font-bold text-sm mb-4">3</div>
+                        <h4 class="font-semibold text-gray-900 mb-2">DSO injects</h4>
+                        <p class="text-sm text-gray-500">Secrets are pushed into running containers as environment variables or file mounts.</p>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <div class="w-8 h-8 bg-blue-100 text-blue-700 rounded-md flex items-center justify-center font-bold text-sm mb-4">4</div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Auto-updated</h4>
+                        <p class="text-sm text-gray-500">When the upstream value changes, containers receive the new value automatically.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 4. Features Section -->
-        <section id="features" class="py-32 bg-dark-card/50">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="grid lg:grid-cols-2 gap-20 items-center">
-                    <div class="reveal">
-                        <span class="text-brand-cyan font-bold tracking-widest uppercase text-sm mb-4 block">Key Features</span>
-                        <h2 class="text-4xl lg:text-5xl font-bold text-white mb-8">Deploy with absolute confidence.</h2>
-                        
-                        <div class="space-y-8 mt-12">
-                            <div class="flex gap-4">
-                                <div class="text-brand-blue"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg></div>
-                                <div>
-                                    <h4 class="text-white font-bold text-lg mb-2">Automated Synchronization</h4>
-                                    <p class="text-gray-400 text-sm leading-relaxed">Whether relying on Kafka Triggers, Webhooks, or intelligent polling networks, your Docker engines reflect backend Key Management rotations instantly.</p>
-                                </div>
+        <!-- 5. Example Usage -->
+        <section id="example" class="py-16 px-6 border-b border-gray-100">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Example usage</h2>
+                <p class="text-gray-500 mb-10">Define your provider and secret mapping in <code class="bg-gray-100 text-gray-800 text-sm px-1.5 py-0.5 rounded">dso.yaml</code>, then use DSO to bring your stack up.</p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700 mb-2">dso.yaml</p>
+                        <div class="bg-gray-900 rounded-lg overflow-hidden">
+                            <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-gray-700">
+                                <span class="text-xs font-mono text-gray-400">dso.yaml</span>
                             </div>
-                            <div class="flex gap-4">
-                                <div class="text-brand-cyan"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg></div>
-                                <div>
-                                    <h4 class="text-white font-bold text-lg mb-2">Prometheus Observability</h4>
-                                    <p class="text-gray-400 text-sm leading-relaxed">Exposes metrics out-of-the-box (<code class="text-brand-cyan">:9090/metrics</code>) to alert SOC teams on specific API Provider connectivity issues or signal delivery failures.</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-4">
-                                <div class="text-purple-400"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg></div>
-                                <div>
-                                    <h4 class="text-white font-bold text-lg mb-2">Native Integration</h4>
-                                    <p class="text-gray-400 text-sm leading-relaxed">Functions exactly like traditional <code class="text-purple-400">docker compose</code>, making migration for local development or CI/CD deployments functionally invisible to engineers.</p>
-                                </div>
-                            </div>
+                            <pre class="p-5 text-sm font-mono leading-relaxed overflow-x-auto text-gray-100">provider: aws
+
+config:
+  region: us-east-1
+
+secrets:
+  - name: my-app-secret
+    inject: env
+    mappings:
+      DB_PASSWORD: DATABASE_PASS
+      DB_USER: DATABASE_USER</pre>
                         </div>
                     </div>
-                    
-                    <div class="reveal bg-[#0B0F14] border border-white/10 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,112,243,0.1)] relative" style="transition-delay: 200ms;">
-                        <div class="flex items-center gap-1.5 px-4 py-3 bg-white/5 border-b border-white/5">
-                            <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
-                            <span class="ml-4 text-[10px] font-mono text-gray-400 tracking-widest uppercase">dso.yaml — Declarative Model</span>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700 mb-2">docker-compose.yaml</p>
+                        <div class="bg-gray-900 rounded-lg overflow-hidden">
+                            <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-gray-700">
+                                <span class="text-xs font-mono text-gray-400">docker-compose.yaml</span>
+                            </div>
+                            <pre class="p-5 text-sm font-mono leading-relaxed overflow-x-auto text-gray-100">services:
+  app:
+    image: my-app:latest
+    environment:
+      - DB_PASSWORD_FILE=/run/secrets/DB_PASSWORD
+      - DB_USER_FILE=/run/secrets/DB_USER</pre>
                         </div>
-                        <pre class="p-8 font-mono text-sm leading-relaxed overflow-x-auto text-gray-300">
-<span class="text-gray-500"># Bind to AWS Secrets Manager</span>
-<span class="text-brand-blue">provider:</span> <span class="text-brand-cyan">aws</span>
+                    </div>
+                </div>
+                <p class="mt-6 text-sm text-gray-500">
+                    DSO reads <code class="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-xs">dso.yaml</code>, pulls the values from AWS Secrets Manager, and injects them into the running container. When the secret is rotated in AWS, DSO detects the change and updates the container automatically.
+                </p>
+            </div>
+        </section>
 
-<span class="text-brand-blue">config:</span>
-  <span class="text-brand-blue">region:</span> <span class="text-brand-cyan">us-east-2</span>
-
-<span class="text-brand-blue">agent:</span>
-  <span class="text-brand-blue">watch:</span>
-    <span class="text-brand-blue">mode:</span> <span class="text-brand-cyan">hybrid</span>
-
-<span class="text-gray-500"># Wire cloud secrets directly to containers</span>
-<span class="text-brand-blue">secrets:</span>
-  <span class="text-brand-blue">- name:</span> <span class="text-brand-cyan">prod/database/redis_tls</span>
-    <span class="text-brand-blue">inject:</span> <span class="text-brand-cyan">file</span>
-    <span class="text-brand-blue">reload_strategy:</span>
-      <span class="text-brand-blue">type:</span> <span class="text-brand-cyan">signal</span>
-    <span class="text-brand-blue">mappings:</span>
-      <span class="text-brand-blue">REDIS_CERT:</span> <span class="text-brand-cyan">cert.pem</span></pre>
+        <!-- 6. Features -->
+        <section id="features" class="py-16 px-6 bg-gray-50 border-b border-gray-100">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Features</h2>
+                <p class="text-gray-500 mb-10">Everything you need to manage secrets in a Docker environment.</p>
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">Secret Sync</h4>
+                        <p class="text-sm text-gray-500">Automatically fetch secrets from AWS Secrets Manager, Azure Key Vault, HashiCorp Vault, Huawei CSMS, and more.</p>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">Secret Rotation</h4>
+                        <p class="text-sm text-gray-500">DSO polls the provider on a configurable interval. When values change, containers receive the updated secret automatically.</p>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">Multi-Provider Support</h4>
+                        <p class="text-sm text-gray-500">Works with AWS, Azure, Vault, Huawei, and local file or environment sources. Switch providers by changing one line in <code class="bg-gray-100 text-xs px-1 py-0.5 rounded">dso.yaml</code>.</p>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">No Restarts Required</h4>
+                        <p class="text-sm text-gray-500">Updated secrets are pushed into running containers without stopping or restarting them.</p>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">Works with Docker Compose</h4>
+                        <p class="text-sm text-gray-500">Use <code class="bg-gray-100 text-xs px-1 py-0.5 rounded">dso compose up</code> — a transparent wrapper around <code class="bg-gray-100 text-xs px-1 py-0.5 rounded">docker compose</code> that handles secret injection automatically.</p>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">No Kubernetes Required</h4>
+                        <p class="text-sm text-gray-500">DSO runs as a lightweight systemd service. No cluster, no sidecars, no Helm charts needed.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 5. Architecture Section -->
-        <section id="architecture" class="py-32">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center mb-24 reveal">
-                    <span class="text-purple-400 font-bold tracking-widest uppercase text-sm mb-4 block">Architecture</span>
-                    <h2 class="text-4xl lg:text-6xl font-extrabold text-white mb-6">How It Works</h2>
-                    <p class="text-gray-400 text-xl max-w-2xl mx-auto">A robust, decoupled design bridging Cloud Providers securely to the local Docker Engine.</p>
-                </div>
-                
-                <div class="reveal relative bg-dark-card/50 p-12 rounded-[40px] border border-white/5 overflow-hidden shadow-2xl">
-                    <div class="absolute -top-40 -left-40 w-96 h-96 bg-brand-cyan/10 rounded-full blur-[100px]"></div>
-                    
-                    <div class="grid lg:grid-cols-4 gap-12 items-center relative z-10">
-                        <!-- Provider -->
-                        <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 glass rounded-2xl flex items-center justify-center mb-6 border-brand-cyan/20">
-                                <svg class="w-12 h-12 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+        <!-- 7. Architecture -->
+        <section id="architecture" class="py-16 px-6 border-b border-gray-100">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Architecture</h2>
+                <p class="text-gray-500 mb-10">DSO runs as a background agent between your secret provider and your Docker containers.</p>
+                <div class="grid md:grid-cols-2 gap-12 items-start">
+                    <!-- Diagram -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 font-mono text-sm text-center">
+                        <div class="inline-flex flex-col items-center gap-1 w-full">
+                            <div class="w-full max-w-xs bg-white border border-blue-200 text-blue-800 rounded-md px-4 py-3 text-center font-medium">
+                                Cloud Secret Manager
+                                <p class="text-xs text-gray-400 font-normal mt-0.5">AWS / Azure / Vault / Huawei</p>
                             </div>
-                            <h4 class="text-white font-bold mb-2 text-center text-lg">Cloud Provider</h4>
-                            <p class="text-xs text-gray-500 text-center px-4">AWS / Azure / Vault / GCP</p>
-                        </div>
-
-                        <div class="hidden lg:flex items-center justify-center">
-                            <svg class="w-full h-8" viewBox="0 0 200 40">
-                                <path d="M 10 20 L 190 20" stroke="rgba(57, 197, 187, 0.3)" stroke-width="2" fill="none" class="ping-connection"></path>
-                                <circle cx="190" cy="20" r="3" fill="#39C5BB"></circle>
-                            </svg>
-                        </div>
-
-                        <!-- DSO Agent -->
-                        <div class="flex flex-col items-center">
-                            <div class="w-32 h-32 brand-gradient rounded-3xl p-0.5 shadow-2xl shadow-brand-blue/30 relative">
-                                <div class="w-full h-full bg-dark rounded-[22px] flex flex-col items-center justify-center gap-2">
-                                    <img src="assets/images/logo.png" class="w-12 h-12 animate-pulse mt-2">
-                                </div>
-                                <div class="absolute -top-3 -right-3 px-3 py-1 bg-brand-cyan text-black text-[10px] font-bold rounded-full">DSO AGENT</div>
+                            <div class="arch-arrow">↓</div>
+                            <div class="w-full max-w-xs bg-blue-600 text-white rounded-md px-4 py-3 text-center font-medium">
+                                DSO Agent
+                                <p class="text-xs text-blue-200 font-normal mt-0.5">Polls · Caches · Injects</p>
                             </div>
-                            <h4 class="text-white font-bold mt-6 mb-2 text-center text-lg">Event Reloader</h4>
-                            <p class="text-xs text-gray-500 text-center px-4">Atomic writer & SIGHUP Control Engine</p>
-                        </div>
-
-                        <div class="hidden lg:flex items-center justify-center">
-                            <svg class="w-full h-8" viewBox="0 0 200 40">
-                                <path d="M 10 20 L 190 20" stroke="rgba(0, 112, 243, 0.3)" stroke-width="2" fill="none" class="ping-connection"></path>
-                                <circle cx="190" cy="20" r="3" fill="#0070F3"></circle>
-                            </svg>
-                        </div>
-
-                        <!-- Docker -->
-                        <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 bg-gray-800 rounded-2xl flex items-center justify-center border border-white/5 opacity-80">
-                                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M13.983 11.078h2.119c.695 0 1.259.564 1.259 1.259 0 .696-.564 1.259-1.259 1.259h-2.119a1.26 1.26 0 0 1-1.259-1.259c0-.695.564-1.259 1.259-1.259Z"></path></svg>
+                            <div class="arch-arrow">↓</div>
+                            <div class="w-full max-w-xs bg-white border border-gray-200 text-gray-700 rounded-md px-4 py-3 text-center font-medium">
+                                Docker Volume / Secret Mount
+                                <p class="text-xs text-gray-400 font-normal mt-0.5">/run/secrets/ or environment</p>
                             </div>
-                            <h4 class="text-white font-bold mt-6 mb-2 text-center text-lg">Docker Engine</h4>
-                            <p class="text-xs text-gray-500 text-center px-4">Containers reload configs seamlessly</p>
+                            <div class="arch-arrow">↓</div>
+                            <div class="w-full max-w-xs bg-white border border-gray-200 text-gray-700 rounded-md px-4 py-3 text-center font-medium">
+                                Application Container
+                                <p class="text-xs text-gray-400 font-normal mt-0.5">Reads secrets at runtime</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Explanation -->
+                    <div class="space-y-5">
+                        <div class="flex items-start gap-3">
+                            <div class="step-number">1</div>
+                            <div>
+                                <p class="font-semibold text-gray-800 text-sm">DSO runs as a service alongside Docker</p>
+                                <p class="text-sm text-gray-500 mt-1">Installed via a single script. Runs as a systemd unit — no cluster or orchestrator required.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="step-number">2</div>
+                            <div>
+                                <p class="font-semibold text-gray-800 text-sm">Pulls secrets from external providers</p>
+                                <p class="text-sm text-gray-500 mt-1">Uses provider-specific plugins (Go binaries) to connect to AWS, Azure, Vault, and others. Credentials are read from the host environment.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="step-number">3</div>
+                            <div>
+                                <p class="font-semibold text-gray-800 text-sm">Stores locally (file or volume)</p>
+                                <p class="text-sm text-gray-500 mt-1">Secrets are written to a local path or mounted volume. They never appear in compose files or environment dumps.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="step-number">4</div>
+                            <div>
+                                <p class="font-semibold text-gray-800 text-sm">Updates propagate automatically</p>
+                                <p class="text-sm text-gray-500 mt-1">When a secret is rotated upstream, DSO detects it within the polling interval and pushes the new value into the running container.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 6. Use Cases -->
-        <section id="use-cases" class="py-24 bg-white/2 border-y border-white/5">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center mb-16 reveal">
-                    <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">Real-World Use Cases</h2>
-                    <p class="text-gray-400 text-lg max-w-2xl mx-auto">DSO is designed specifically for teams needing extreme reliability without the architectural burden of deploying full Kubernetes clusters.</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="glass p-8 rounded-3xl border border-white/5 reveal hover:-translate-y-2 transition-transform duration-300">
-                        <h4 class="text-white font-bold text-xl mb-4 flex items-center gap-3">
-                            <span class="p-2 bg-brand-cyan/20 rounded-lg text-brand-cyan"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></span>
-                            Startups & SMEs
-                        </h4>
-                        <p class="text-gray-400 text-sm leading-relaxed">Teams building modern applications via simple `docker-compose.yml` deployments on EC2/DigitalOcean but requiring the strict SOC2 compliance of AWS Secrets Manager.</p>
-                    </div>
-                    <div class="glass p-8 rounded-3xl border border-white/5 reveal hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 100ms;">
-                        <h4 class="text-white font-bold text-xl mb-4 flex items-center gap-3">
-                            <span class="p-2 bg-brand-blue/20 rounded-lg text-brand-blue"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></span>
-                            Zero-Downtime APIs
-                        </h4>
-                        <p class="text-gray-400 text-sm leading-relaxed">High-traffic Node.js or Go services that can parse kernel `SIGHUP` events dynamically swap active Postgres/Redis connection strings without terminating live WebSocket traffic.</p>
-                    </div>
-                    <div class="glass p-8 rounded-3xl border border-white/5 reveal hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 200ms;">
-                        <h4 class="text-white font-bold text-xl mb-4 flex items-center gap-3">
-                            <span class="p-2 bg-purple-500/20 rounded-lg text-purple-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
-                            Multi-Cloud Aggregators
-                        </h4>
-                        <p class="text-gray-400 text-sm leading-relaxed">Enterprise edge nodes operating across hybrid bare-metal datacenters, standardizing secret ingestion completely through the DSO CLI abstraction wrapper.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. Getting Started -->
-        <section id="getting-started" class="py-32">
-            <div class="max-w-5xl mx-auto px-6">
-                <div class="reveal text-center mb-16">
-                    <span class="text-green-500 font-bold tracking-widest uppercase text-sm mb-4 block">Quick Start</span>
-                    <h2 class="text-4xl lg:text-5xl font-extrabold text-white mb-6">Install in Under 60 Seconds</h2>
-                    <p class="text-gray-400 text-lg">DSO natively integrates with standard package managers for a fluid DevOps setup.</p>
-                </div>
-                
-                <div class="reveal bg-black/80 rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
-                    <div class="flex items-center justify-between px-6 py-3 border-b border-white/5 bg-white/5">
-                        <div class="flex gap-2">
-                            <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
-                            <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
-                            <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
-                        </div>
-                        <div class="text-[10px] font-mono text-gray-500 tracking-widest">BASH</div>
-                    </div>
-                    <div class="p-8 font-mono text-sm leading-relaxed">
-                        <div class="mb-6">
-                            <p class="text-gray-500 mb-2"># 1. Download and configure the systemd daemon</p>
-                            <div class="flex items-center justify-between group">
-                                <code class="text-brand-cyan">curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/install.sh | sudo bash</code>
+        <!-- 8. Getting Started -->
+        <section id="getting-started" class="py-16 px-6 bg-gray-50 border-b border-gray-100">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Getting started</h2>
+                <p class="text-gray-500 mb-10">DSO is installed as a systemd service. The installer handles binaries, plugins, and systemd setup.</p>
+                <div class="space-y-8">
+                    <div class="flex items-start gap-4">
+                        <div class="step-number mt-0.5">1</div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 mb-2">Install DSO</p>
+                            <div class="bg-gray-900 rounded-md overflow-hidden">
+                                <pre class="p-4 text-sm font-mono text-gray-100 overflow-x-auto">curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/install.sh | sudo bash</pre>
                             </div>
                         </div>
-                        <div class="mb-6">
-                            <p class="text-gray-500 mb-2"># 2. Add your dso.yaml to /etc/dso/dso.yaml & Start process</p>
-                            <code class="text-white">sudo systemctl start dso-agent</code>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="step-number mt-0.5">2</div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 mb-2">Configure your provider credentials</p>
+                            <p class="text-sm text-gray-500">Add your cloud provider credentials to the host environment (e.g., <code class="bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-xs">AWS_ACCESS_KEY_ID</code> and <code class="bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-xs">AWS_SECRET_ACCESS_KEY</code> for AWS).</p>
                         </div>
-                        <div class="mb-6">
-                            <p class="text-gray-500 mb-2"># 3. Transparently deploy your standard compose file!</p>
-                            <code class="text-brand-cyan">dso compose up -d</code>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="step-number mt-0.5">3</div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 mb-2">Create <code class="font-mono">/etc/dso/dso.yaml</code></p>
+                            <div class="bg-gray-900 rounded-md overflow-hidden">
+                                <pre class="p-4 text-sm font-mono text-gray-100 overflow-x-auto">provider: aws
+
+config:
+  region: us-east-1
+
+secrets:
+  - name: my-app-secret
+    inject: env
+    mappings:
+      DB_PASSWORD: DATABASE_PASS</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="step-number mt-0.5">4</div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 mb-2">Start the agent and deploy</p>
+                            <div class="bg-gray-900 rounded-md overflow-hidden">
+                                <pre class="p-4 text-sm font-mono text-gray-100 overflow-x-auto">sudo systemctl start dso-agent
+dso compose up -d</pre>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-12 text-center reveal">
-                    <a href="https://umairmd385.github.io/docker-secret-operator/" class="inline-flex items-center gap-2 text-brand-blue hover:text-white transition-colors underline underline-offset-8 decoration-white/20 hover:decoration-brand-cyan font-semibold">
-                        View full API documentation and setup guides 
+                <div class="mt-10 pt-8 border-t border-gray-200">
+                    <a href="https://umairmd385.github.io/docker-secret-operator/"
+                       class="inline-flex items-center gap-2 text-sm font-medium text-accent hover:underline">
+                        Read the full documentation
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- 8. Call to Action -->
-        <section id="cta" class="py-32 pb-48 relative overflow-hidden bg-dark-card/50 border-t border-white/5">
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-hero-glow opacity-30 pointer-events-none"></div>
-            
-            <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
-                <div class="reveal">
-                    <h2 class="text-5xl lg:text-7xl font-black text-white mb-8 tracking-tighter">Ready to secure your stack?</h2>
-                    <p class="text-xl text-gray-400 mb-12">Join hundreds of engineers deploying resilient Docker infrastructure natively.</p>
-                    
-                    <div class="flex flex-col sm:flex-row justify-center gap-6">
-                        <a href="https://github.com/umairmd385/docker-secret-operator" class="px-10 py-5 bg-white text-black rounded-2xl font-black text-lg hover:scale-105 transition-all flex items-center justify-center gap-3">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                            View on GitHub
-                        </a>
-                        <a href="https://umairmd385.github.io/docker-secret-operator/" class="px-10 py-5 glass border border-white/20 text-white rounded-2xl font-black text-lg hover:bg-white/10 hover:scale-105 transition-all text-center">
-                            Explore Documentation
-                        </a>
-                    </div>
+        <!-- 9. CTA -->
+        <section class="py-20 px-6 text-center">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Start using DSO</h2>
+                <p class="text-lg text-gray-500 mb-8">Simplify secret management in Docker. Open source, lightweight, no Kubernetes required.</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-3">
+                    <a href="#getting-started"
+                       class="inline-block bg-accent hover:bg-accent-hover text-white font-semibold px-8 py-3 rounded-md transition-colors text-sm">
+                        Get Started
+                    </a>
+                    <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
+                       class="inline-flex items-center justify-center gap-2 border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium px-8 py-3 rounded-md transition-colors text-sm">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                        View on GitHub
+                    </a>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="py-20 border-t border-white/5 bg-[#080B0F]">
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12 mb-20">
-            <div class="md:col-span-2">
-                <div class="flex items-center gap-3 mb-6">
-                    <img src="assets/images/logo.png" alt="DSO" class="w-8 h-8">
-                    <span class="text-white font-bold tracking-tight text-xl">Docker Secret Operator</span>
-                </div>
-                <p class="text-gray-500 max-w-sm mb-8">Kubernetes-grade secret management for Docker environments. Infrastructure security made simple, reliable, and entirely open-source.</p>
-                <div class="flex gap-4">
-                    <a href="https://github.com/umairmd385/docker-secret-operator" class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
-                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                    </a>
-                </div>
+    <footer class="border-t border-gray-100 py-8 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+            <div class="flex items-center gap-2">
+                <img src="assets/images/logo.png" alt="DSO Logo" class="w-5 h-5 opacity-60">
+                <span>Docker Secret Operator — MIT License</span>
             </div>
-            <div>
-                <h5 class="text-white font-bold mb-6">Product</h5>
-                <ul class="space-y-4 text-sm text-gray-500">
-                    <li><a href="#features" class="hover:text-white transition-colors">Features</a></li>
-                    <li><a href="#architecture" class="hover:text-white transition-colors">Architecture</a></li>
-                    <li><a href="#getting-started" class="hover:text-white transition-colors">Installation</a></li>
-                </ul>
-            </div>
-            <div>
-                <h5 class="text-white font-bold mb-6">Community</h5>
-                <ul class="space-y-4 text-sm text-gray-500">
-                    <li><a href="https://github.com/umairmd385/docker-secret-operator" class="hover:text-white transition-colors">GitHub Repository</a></li>
-                    <li><a href="https://umairmd385.github.io/docker-secret-operator/" class="hover:text-white transition-colors">Official Docs</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 text-xs text-gray-600">
-            <div>&copy; 2026 Docker Secret Operator. Released under MIT License. Built for the DevOps community.</div>
-            <div class="flex gap-8">
-                <a href="https://github.com/umairmd385/docker-secret-operator" class="hover:text-white transition-colors">View Source</a>
+            <div class="flex items-center gap-6">
+                <a href="https://umairmd385.github.io/docker-secret-operator/" class="hover:text-gray-600 transition-colors">Documentation</a>
+                <a href="https://github.com/umairmd385/docker-secret-operator" class="hover:text-gray-600 transition-colors">GitHub</a>
+                <a href="https://github.com/umairmd385/docker-secret-operator/tree/main/examples" class="hover:text-gray-600 transition-colors">Examples</a>
             </div>
         </div>
     </footer>
 
-    <script>
-        // Scroll Reveal Implementation
-        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { 
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active'); 
-                }
-            });
-        }, observerOptions);
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // Navbar blur and dynamic styling on scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('bg-dark/80');
-                nav.classList.add('py-2');
-                nav.classList.remove('py-4');
-            } else {
-                nav.classList.remove('bg-dark/80');
-                nav.classList.remove('py-2');
-                nav.classList.add('py-4');
-            }
-        });
-    </script>
 </body>
 </html>
