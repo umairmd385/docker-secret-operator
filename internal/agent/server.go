@@ -9,14 +9,15 @@ import (
 	"os"
 	"time"
 
+	"github.com/docker-secret-operator/dso/internal/provider"
 	"github.com/docker-secret-operator/dso/pkg/api"
 	"github.com/docker-secret-operator/dso/pkg/observability"
-	"github.com/docker-secret-operator/dso/pkg/provider"
 	"go.uber.org/zap"
 )
 
 type AgentServer struct {
 	Cache  *SecretCache
+	Store  *provider.SecretStoreManager
 	Logger *zap.Logger
 }
 
@@ -38,14 +39,13 @@ func (s *AgentServer) GetSecret(req *api.AgentRequest, resp *api.AgentResponse) 
 	// slow path provider lookup
 	timer := observability.SecretFetchLatency.WithLabelValues(req.Provider)
 	start := time.Now()
-	prov, client, err := provider.LoadProvider(req.Provider, req.Config)
+	prov, err := s.Store.GetProvider(req.Provider, req.Config)
 	if err != nil {
 		observability.SecretRequestsTotal.WithLabelValues(req.Provider, "error").Inc()
 		observability.BackendFailuresTotal.WithLabelValues(req.Provider, "load_fail").Inc()
 		resp.Error = err.Error()
 		return err
 	}
-	defer client.Kill()
 
 	data, err := prov.GetSecret(req.Secret)
 	timer.Observe(time.Since(start).Seconds())
@@ -63,9 +63,10 @@ func (s *AgentServer) GetSecret(req *api.AgentRequest, resp *api.AgentResponse) 
 	return nil
 }
 
-func StartSocketServer(socketPath string, cache *SecretCache, logger *zap.Logger) error {
+func StartSocketServer(socketPath string, cache *SecretCache, store *provider.SecretStoreManager, logger *zap.Logger) error {
 	server := &AgentServer{
 		Cache:  cache,
+		Store:  store,
 		Logger: logger,
 	}
 
@@ -136,9 +137,10 @@ func (s *AgentServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-func StartDriverServer(socketPath string, cache *SecretCache, logger *zap.Logger) error {
+func StartDriverServer(socketPath string, cache *SecretCache, store *provider.SecretStoreManager, logger *zap.Logger) error {
 	server := &AgentServer{
 		Cache:  cache,
+		Store:  store,
 		Logger: logger,
 	}
 

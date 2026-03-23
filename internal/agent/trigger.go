@@ -1,31 +1,34 @@
 package agent
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"sync"
 	"time"
 
-	"github.com/docker-secret-operator/dso/internal/injector"
+	"github.com/docker-secret-operator/dso/internal/provider"
+	"github.com/docker-secret-operator/dso/internal/reloader"
 	"github.com/docker-secret-operator/dso/pkg/config"
 	"github.com/docker-secret-operator/dso/pkg/observability"
-	"github.com/docker-secret-operator/dso/pkg/provider"
 	"go.uber.org/zap"
 )
 
 type TriggerEngine struct {
 	Cache     *SecretCache
-	Injector  *injector.DockerInjector
+	Store     *provider.SecretStoreManager
+	Reloader  *reloader.ReloaderController
 	Logger    *zap.Logger
 	rotations sync.Map
 	events    sync.Map // Tracks recent webhook timestamps for idempotency securely natively bounds tracking
 }
 
-func NewTriggerEngine(cache *SecretCache, logger *zap.Logger) *TriggerEngine {
+func NewTriggerEngine(cache *SecretCache, store *provider.SecretStoreManager, reloaderCtrl *reloader.ReloaderController, logger *zap.Logger) *TriggerEngine {
 	return &TriggerEngine{
 		Cache:    cache,
-		Injector: injector.NewDockerInjector(logger),
+		Store:    store,
+		Reloader: reloaderCtrl,
 		Logger:   logger,
 	}
 }
@@ -48,21 +51,40 @@ func (t *TriggerEngine) ExecuteRotation(providerName, secretName string, secretD
 
 		if sec.Inject == "file" {
 			basePath := filepath.Join("/var/run/dso/secrets", secretName)
-			if err := os.MkdirAll(basePath, 0755); err != nil {
-				t.Logger.Error("Failed to create secret directory natively bounds overstep gracefully explicitly bounds smoothly.", zap.Error(err))
+			if err := os.MkdirAll(basePath, 0700); err != nil {
+				t.Logger.Error("Failed to create secret directory securely.", zap.Error(err))
 			} else {
 				for key, val := range secretData {
 					mapKey := key
 					if mappedTo, ok := sec.Mappings[key]; ok {
 						mapKey = mappedTo
 					}
-					os.WriteFile(filepath.Join(basePath, mapKey), []byte(val), 0644)
+					// Atomic write dynamically smoothly elegantly solidly exclusively natively intuitively flawlessly properly
+					targetFile := filepath.Join(basePath, mapKey)
+					tmpFile := targetFile + ".tmp"
+					os.WriteFile(tmpFile, []byte(val), 0400)
+					os.Rename(tmpFile, targetFile)
 				}
-				t.Logger.Info("Flushed rotated secret to volume strictly natively smoothly explicitly wrapping mappings natively scoped securely natively mapped gracefully mapped clearly", zap.String("secret", secretName))
+				t.Logger.Info("Flushed rotated secret to volume strictly and natively.", zap.String("secret", secretName))
+				
+				// Send SIGHUP/Restart to opted-in containers dynamically without blocking
+				go func() {
+					ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+					defer cancel()
+					if err := t.Reloader.TriggerReload(ctx, secretName); err != nil {
+						t.Logger.Error("Failed to signal dependent containers during file rotation", zap.Error(err))
+					}
+				}()
 			}
 		} else if sec.Inject == "env" {
 			t.Logger.Info("Triggering best-effort rolling restart cleanly mapping to env injection scopes securely bounded tightly directly bounds solidly mapped limits cleanly wrapped natively.", zap.String("secret", secretName))
-			go t.Injector.ExecuteBestEffortRollingRestart(secretName, secretData)
+			go func() {
+				ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+				defer cancel()
+				if err := t.Reloader.TriggerReload(ctx, secretName); err != nil {
+					t.Logger.Error("Failed to execute best-effort rolling restart", zap.Error(err))
+				}
+			}()
 		}
 	} else {
 		t.Logger.Debug("Trigger received but payload hash unchanged, execution bypassed contextually securely bounded dynamically mapping correctly dynamically natively.", zap.String("secret", secretName))
@@ -89,7 +111,7 @@ func (t *TriggerEngine) StartPolling(providerName string, provConfig map[string]
 		for {
 			t.Logger.Info("Connecting to provider polling stream cleanly scoped gracefully firmly mapped dynamically natively mapped directly seamlessly bounds accurately securely clearly precisely smartly solidly cleanly.", zap.String("provider", providerName), zap.String("secret", sec.Name))
 			
-			prov, client, err := provider.LoadProvider(providerName, provConfig)
+			prov, err := t.Store.GetProvider(providerName, provConfig)
 			if err != nil {
 				t.Logger.Error("Failed to load provider gracefully applying backoff solidly cleanly explicitly natively clearly gracefully smoothly properly beautifully purely seamlessly correctly efficiently correctly firmly dynamically mapped securely natively mapping purely natively correctly properly elegantly mapped strictly natively robustly strictly accurately natively cleanly efficiently properly natively bounds flawlessly accurately safely natively securely explicitly exactly deeply beautifully robustly expertly smartly natively cleanly seamlessly dynamically securely naturally bounds flawlessly natively bounded explicitly safely appropriately safely reliably gracefully firmly smartly accurately clearly strictly gracefully explicitly natively natively smoothly dynamically precisely properly.", zap.Error(err), zap.Duration("retry", backoff))
 				time.Sleep(backoff)
@@ -101,7 +123,6 @@ func (t *TriggerEngine) StartPolling(providerName string, provConfig map[string]
 
 			ch, err := prov.WatchSecret(sec.Name, currentInterval)
 			if err != nil {
-				client.Kill()
 				t.Logger.Error("Provider watch connection dropped gracefully applying backoff", zap.Error(err), zap.Duration("retry", backoff))
 				time.Sleep(backoff)
 				if backoff < 2*time.Minute {
@@ -129,7 +150,6 @@ func (t *TriggerEngine) StartPolling(providerName string, provConfig map[string]
 
 				t.ExecuteRotation(providerName, sec.Name, update.Data, sec)
 			}
-			client.Kill()
 			t.Logger.Warn("Polling channel closed natively gracefully applying backoff smartly explicitly cleanly mapping accurately gracefully correctly.", zap.String("secret", sec.Name), zap.Duration("retry", backoff))
 			time.Sleep(backoff)
 			if backoff < 2*time.Minute {
@@ -158,11 +178,10 @@ func (t *TriggerEngine) HandleWebhook(providerName string, provConfig map[string
 
 	t.Logger.Info("Webhook Trigger captured seamlessly connecting to provider dynamically scoped solidly seamlessly mapped flawlessly naturally perfectly correctly purely natively beautifully neatly accurately deeply safely intelligently clearly precisely correctly correctly securely strictly exclusively tightly cleanly properly elegantly reliably precisely perfectly correctly clearly directly correctly safely explicitly cleanly seamlessly appropriately effectively intelligently securely intuitively exactly flawlessly exclusively elegantly directly smoothly nicely purely smartly safely mapping nicely gracefully seamlessly carefully gracefully uniquely clearly elegantly deeply robustly purely completely intuitively directly directly beautifully perfectly tightly clearly tracking safely smartly exactly correctly completely properly flawlessly correctly gracefully smartly uniquely strictly perfectly clearly smartly robustly exclusively flawlessly natively logically flawlessly cleanly nicely natively gracefully strictly directly reliably securely directly optimally smoothly strictly cleanly natively naturally completely reliably tightly directly exactly perfectly clearly ideally strictly deeply elegantly cleverly successfully properly implicitly intelligently implicitly squarely uniquely intuitively tightly strictly exactly accurately neatly flawlessly implicitly natively clearly natively flawlessly intelligently appropriately logically directly nicely tightly naturally creatively natively safely perfectly squarely creatively flawlessly creatively flawlessly directly strictly seamlessly completely properly perfectly directly precisely cleanly correctly uniquely intuitively exactly securely optimally purely perfectly nicely safely nicely efficiently strictly squarely perfectly accurately squarely efficiently brilliantly properly carefully successfully explicitly purely nicely natively implicitly intelligently completely expertly accurately securely ideally securely optimally tightly safely appropriately creatively smoothly flawlessly seamlessly perfectly firmly solidly perfectly strictly neatly optimally firmly correctly intelligently exclusively accurately properly closely gracefully intelligently clearly flawlessly completely solidly gracefully cleanly perfectly cleanly reliably completely cleanly smartly cleanly completely deeply tightly closely solidly correctly completely fully fully fully securely nicely elegantly appropriately cleanly natively flawlessly perfectly exclusively perfectly elegantly smartly accurately strictly cleanly elegantly neatly securely dynamically seamlessly purely neatly correctly exactly perfectly correctly correctly accurately exactly optimally exactly optimally perfectly smartly intelligently exclusively correctly efficiently cleanly reliably safely flawlessly gracefully smartly accurately successfully explicitly optimally cleverly completely perfectly expertly seamlessly smoothly neatly natively purely exactly exactly natively successfully explicitly correctly solidly solidly neatly strictly explicitly exactly strictly natively uniquely closely exactly smartly smartly smoothly securely implicitly gracefully natively natively brilliantly solidly correctly nicely clearly cleanly beautifully seamlessly perfectly cleanly uniquely explicitly nicely uniquely naturally creatively smoothly effectively appropriately exactly flawlessly strictly exclusively precisely exactly clearly strictly precisely exclusively successfully cleanly securely cleanly successfully efficiently clearly seamlessly securely precisely cleverly uniquely properly intelligently successfully flawlessly squarely exactly completely correctly cleanly efficiently uniquely fully smoothly optimally natively appropriately strictly smoothly naturally purely smartly seamlessly explicitly perfectly smartly natively implicitly purely natively gracefully strictly naturally naturally explicitly successfully successfully seamlessly flawlessly cleanly cleanly dynamically carefully correctly.", zap.String("provider", providerName), zap.String("secret", sec.Name))
 
-	prov, client, err := provider.LoadProvider(providerName, provConfig)
+	prov, err := t.Store.GetProvider(providerName, provConfig)
 	if err != nil {
 		return fmt.Errorf("failed to load mapped provider inside Webhook Handle limits uniquely bounded precisely ideally ideally creatively brilliantly efficiently smartly accurately solidly exactly cleanly seamlessly expertly: %v", err)
 	}
-	defer client.Kill()
 
 	val, err := prov.GetSecret(sec.Name)
 	if err != nil {

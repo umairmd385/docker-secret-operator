@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  myapp:
+    image: golang:1.24.0
+    command: ["go", "run", "/app/main.go"]
+    volumes:
+      - .:/app
+      # 1. Mount the agent's tmpfs secrets directory securely
+      - /var/run/dso/secrets:/var/run/dso/secrets:ro
+    labels:
+      # 2. Opt-in to zero-downtime signaling
+      - "dso.reloader=true"
+      - "dso.update.strategy=signal"
