@@ -5,35 +5,123 @@ description: "Kubernetes-grade secret management for Docker and Docker Compose �
 permalink: /
 ---
 
-# Docker Secret Operator (DSO)
+# 🔐 Docker Secret Operator (DSO)
 
-**Kubernetes-grade secret management for Docker and Docker Compose — no Kubernetes required.**
+> Kubernetes-style secret management for Docker & Docker Compose 🚀
 
 [![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?logo=go&logoColor=white)](https://go.dev/)
 [![Release: v2.0.0](https://img.shields.io/badge/Release-v2.0.0-blueviolet.svg)](https://github.com/umairmd385/docker-secret-operator/releases)
-[![Architecture: Trigger Engine](https://img.shields.io/badge/Architecture-Trigger%20Engine-black.svg?logo=apache&logoColor=white)](https://github.com/umairmd385/docker-secret-operator)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
 [![GitHub Stars](https://img.shields.io/github/stars/umairmd385/docker-secret-operator?style=social)](https://github.com/umairmd385/docker-secret-operator/stargazers)
 [![CI Status](https://github.com/umairmd385/docker-secret-operator/actions/workflows/lint-test.yml/badge.svg)](https://github.com/umairmd385/docker-secret-operator/actions)
 [![Docker Support](https://img.shields.io/badge/Docker-V2%20Secret%20Driver-2496ED?logo=docker&logoColor=white)](https://docs.docker.com/engine/extend/)
-
----
-
-**Docker Secret Operator (DSO)** is a lightweight, production-ready secret management layer with limitations for Docker and Docker Compose environments. It securely retrieves secrets from cloud secret managers — **AWS Secrets Manager**, **Azure Key Vault**, **Huawei CSMS**, **HashiCorp Vault** — and injects them into containers at runtime as environment variables, without touching a single line of your `docker-compose.yaml`.
-
-> No Kubernetes. No sidecar containers. No secrets in source control. Just a fast, secure, plugin-based secret agent.
 
 **[Documentation Site →](https://umairmd385.github.io/docker-secret-operator/)**
 
 ---
 
+## 🚀 Problem
+
+Managing secrets in Docker Compose is insecure and painful:
+
+- ❌ Hardcoded credentials in YAML
+- ❌ `.env` file leaks
+- ❌ No dynamic secret injection
+- ❌ No cloud secret integration
+
+---
+
+## 💡 Solution
+
+**Docker Secret Operator (DSO)** brings **cloud-native secret management** to Docker environments without Kubernetes.
+
+---
+
+## ✨ Features Overview
+
+- 🔐 Secure secret injection into containers
+- ☁️ Multi-cloud support:
+  - AWS Secrets Manager
+  - Azure Key Vault
+  - Huawei Cloud CSMS
+  - HashiCorp Vault
+- 🔄 Dynamic runtime secret injection
+- ⚙️ Provider-aware architecture
+- 🚀 Lightweight & Docker-native
+
+---
+
+## ⚡ Quick Start Overview
+
+```bash
+# Run your docker compose with DSO
+dso compose up -d
+```
+
+---
+
+## 🏗 High-Level Architecture
+
+```text
+User → DSO CLI → Secret Provider → Secret Fetch → Inject → Container
+```
+
+---
+
+## 🔌 Supported Providers
+
+| Provider            | Status |
+| ------------------- | ------ |
+| AWS Secrets Manager | ✅      |
+| Azure Key Vault     | ✅      |
+| Huawei CSMS         | ✅      |
+| HashiCorp Vault     | ✅      |
+
+---
+
+## 🧪 Injection Example
+
+### docker-compose.yml
+
+```yaml
+version: "3.9"
+
+services:
+  app:
+    image: my-app
+    environment:
+      DB_PASSWORD: ${SECRET_DB_PASSWORD}
+```
+
+### DSO Flow
+
+```text
+1. DSO fetches secret from provider
+2. Injects into runtime environment
+3. Container starts with secure values
+```
+
+---
+
+## 🤔 Why Not Kubernetes?
+
+| Feature           | Kubernetes | Docker + DSO |
+| ----------------- | ---------- | ------------ |
+| Secret Management | ✅          | ✅ (DSO)      |
+| Complexity        | High       | Low          |
+| Setup Time        | Long       | Fast         |
+| Learning Curve    | Steep      | Minimal      |
+
+---
+
 ## Table of Contents
 
-- [Why This Project Exists](#why-this-project-exists)
+*(Deep Dive Documentation)*
+
 - [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Features](#features)
-- [Architecture](#architecture)
+- [Detailed Features](#features)
+- [Detailed Architecture](#architecture)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
@@ -41,6 +129,9 @@ permalink: /
 - [Docker Compose Integration](#docker-compose-integration)
 - [Real-World Use Case](#real-world-use-case)
 - [Plugin System](#plugin-system)
+- [Real-Time Event Streaming](#real-time-event-streaming-websockets)
+- [Event-Driven Trigger Engine](#event-driven-trigger-engine-automatic-secret-rotation)
+- [Limitations](#limitations)
 - [Security Model](#security-model)
 - [Examples](#examples)
 - [Troubleshooting](#troubleshooting)
@@ -49,22 +140,6 @@ permalink: /
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
-
----
-
-## Why This Project Exists
-
-Most modern secret management tooling — External Secrets Operator, Sealed Secrets, Vault Agent Injector — is built exclusively for **Kubernetes**. But a huge portion of the industry still runs workloads on plain **Docker Compose**: startups, internal tools, staging environments, IoT, edge deployments.
-
-DSO fills that gap:
-
-| The Problem | The Solution |
-| :--- | :--- |
-| Secrets hardcoded in `docker-compose.yaml` | Inject secrets at runtime from a cloud provider |
-| `.env` files committed to git | Central secret store, no local secret files |
-| Kubernetes required for External Secrets | Works with any Docker or Docker Compose environment |
-| Secrets visible in container environment dumps | Secrets sourced via secure Unix socket, never printed |
-| Manual rotation after secret changes | Background polling with automatic cache refresh |
 
 ---
 
