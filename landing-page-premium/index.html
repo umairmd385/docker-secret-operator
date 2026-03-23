@@ -17,16 +17,20 @@ body{background:#0d1117;color:#e6edf3;font-family:'Inter',system-ui,sans-serif}
 .reveal{opacity:0;transform:translateY(20px);transition:.6s ease}
 .reveal.visible{opacity:1;transform:none}
 .grid-bg{background-image:linear-gradient(rgba(0,201,167,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,201,167,.04) 1px,transparent 1px);background-size:40px 40px}
-.terminal-line{display:none}
-.terminal-line.show{display:block}
 nav.scrolled{background:rgba(13,17,23,.85);backdrop-filter:blur(12px)}
-.dso-col{background:rgba(0,201,167,.06);border-color:#00c9a7}
-pre code .kw{color:#79c0ff}
-pre code .str{color:#a5d6ff}
-pre code .val{color:#00c9a7}
-pre code .cm{color:#6e7681}
 .btn-copy{opacity:0;transition:.2s}
 .code-wrap:hover .btn-copy{opacity:1}
+/* Mobile menu */
+#mobile-menu{max-height:0;overflow:hidden;transition:max-height .3s ease}
+#mobile-menu.open{max-height:400px}
+/* Step connector arrows */
+@keyframes flow{0%,100%{opacity:.3}50%{opacity:.9}}
+.flow-arrow{animation:flow 2.5s ease-in-out infinite}
+/* Terminal scan line */
+@keyframes scan{0%{top:-2px}100%{top:100%}}
+.scan-line{position:absolute;left:0;right:0;height:1px;background:rgba(0,201,167,.15);animation:scan 4s linear infinite;pointer-events:none}
+/* Even section bg */
+.sec-even{background:#0f1419}
 </style>
 </head>
 <body>
@@ -35,19 +39,36 @@ pre code .cm{color:#6e7681}
 <nav id="nav" class="fixed top-0 w-full z-50 transition-all duration-300 py-4 border-b border-transparent">
   <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
     <a href="#" class="flex items-center gap-2.5 text-white font-mono font-bold text-sm">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#00c9a7" fill-opacity=".15" stroke="#00c9a7" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="#00c9a7" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="14" r="1" fill="#00c9a7"/></svg>
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#00c9a7" fill-opacity=".12" stroke="#00c9a7" stroke-width="1.2"/><rect x="1" y="12" width="6" height="4" rx="1.5" fill="none" stroke="#00c9a7" stroke-width="1"/><rect x="21" y="12" width="6" height="4" rx="1.5" fill="none" stroke="#00c9a7" stroke-width="1"/><rect x="9" y="11" width="10" height="8" rx="2.5" fill="#0d1117" stroke="#00c9a7" stroke-width="1.4"/><path d="M11 11 Q11 6 14 6 Q17 6 17 11" fill="none" stroke="#00c9a7" stroke-width="1.6" stroke-linecap="round"/><circle cx="14" cy="15" r="1.8" fill="#00c9a7"/><rect x="13.3" y="15.5" width="1.4" height="2.5" fill="#00c9a7" rx="0.5"/><circle cx="4" cy="14" r="0.8" fill="#00c9a7" opacity="0.7"/><circle cx="24" cy="14" r="0.8" fill="#00c9a7" opacity="0.7"/></svg>
       Docker Secret Operator
     </a>
     <div class="hidden md:flex items-center gap-7 text-sm text-[#8b949e]">
       <a href="#how-it-works" class="hover:text-white transition-colors">How it works</a>
       <a href="#features" class="hover:text-white transition-colors">Features</a>
       <a href="#providers" class="hover:text-white transition-colors">Providers</a>
+      <a href="#architecture" class="hover:text-white transition-colors">Architecture</a>
       <a href="#getting-started" class="hover:text-white transition-colors">Get Started</a>
       <a href="https://umairmd385.github.io/docker-secret-operator/" target="_blank" class="hover:text-white transition-colors">Docs</a>
       <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank" class="flex items-center gap-2 bg-[#21262d] border border-[#30363d] text-white px-4 py-1.5 rounded-md text-xs font-medium hover:bg-[#30363d] transition-colors">
         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
         GitHub
       </a>
+    </div>
+    <!-- Hamburger -->
+    <button id="hamburger" class="md:hidden text-[#8b949e] hover:text-white p-1" onclick="document.getElementById('mobile-menu').classList.toggle('open')" aria-label="Menu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="md:hidden bg-[#0d1117] border-t border-[#21262d]">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4 text-sm text-[#8b949e]">
+      <a href="#how-it-works" class="hover:text-white" onclick="document.getElementById('mobile-menu').classList.remove('open')">How it works</a>
+      <a href="#features" class="hover:text-white" onclick="document.getElementById('mobile-menu').classList.remove('open')">Features</a>
+      <a href="#providers" class="hover:text-white" onclick="document.getElementById('mobile-menu').classList.remove('open')">Providers</a>
+      <a href="#architecture" class="hover:text-white" onclick="document.getElementById('mobile-menu').classList.remove('open')">Architecture</a>
+      <a href="#getting-started" class="hover:text-white" onclick="document.getElementById('mobile-menu').classList.remove('open')">Get Started</a>
+      <a href="https://umairmd385.github.io/docker-secret-operator/" target="_blank" class="hover:text-white">Docs</a>
+      <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank" class="text-white flex items-center gap-2 font-medium">GitHub ↗</a>
     </div>
   </div>
 </nav>
@@ -78,14 +99,15 @@ pre code .cm{color:#6e7681}
       </div>
     </div>
     <!-- Terminal -->
-    <div class="bg-[#161b22] border border-[#30363d] rounded-xl overflow-hidden shadow-2xl shadow-black/50">
+    <div class="bg-[#161b22] border border-[#30363d] rounded-xl overflow-hidden shadow-2xl shadow-black/50 relative">
       <div class="flex items-center gap-1.5 px-4 py-3 border-b border-[#30363d] bg-[#0d1117]">
         <span class="w-3 h-3 rounded-full bg-[#ff5f56]"></span>
         <span class="w-3 h-3 rounded-full bg-[#ffbd2e]"></span>
         <span class="w-3 h-3 rounded-full bg-[#27c93f]"></span>
         <span class="ml-4 font-mono text-xs text-[#6e7681]">bash — dso</span>
       </div>
-      <div class="p-6 font-mono text-sm leading-loose min-h-[220px]" id="terminal-output">
+      <div class="scan-line"></div>
+      <div class="p-6 font-mono text-sm leading-loose min-h-[240px]" id="terminal-output">
         <div class="flex gap-2"><span class="text-accent">$</span><span id="terminal-cmd" class="text-white"></span><span id="cursor" class="inline-block w-2 h-4 bg-accent align-middle animate-pulse"></span></div>
         <div id="terminal-lines" class="mt-2 space-y-0.5"></div>
       </div>
@@ -151,27 +173,88 @@ pre code .cm{color:#6e7681}
       <h2 class="text-3xl font-mono font-bold text-white mb-3">How it works</h2>
       <p class="text-[#8b949e]">Four steps from secret store to running container.</p>
     </div>
-    <div class="grid md:grid-cols-4 gap-4 relative">
-      <div class="hidden md:block absolute top-9 left-[25%] right-[25%] h-px bg-gradient-to-r from-accent/20 via-accent/40 to-accent/20"></div>
-      <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6 relative">
-        <div class="w-9 h-9 bg-accent/10 border border-accent/20 rounded-lg flex items-center justify-center font-mono font-bold text-accent text-sm mb-5">1</div>
+    <div class="grid md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] gap-2 items-center">
+      <!-- Step 1 -->
+      <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6">
+        <svg class="w-5 h-5 text-accent mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+        <div class="w-8 h-8 bg-accent/10 border border-accent/20 rounded-lg flex items-center justify-center font-mono font-bold text-accent text-sm mb-4">1</div>
         <h4 class="font-semibold text-white mb-2">Store secrets</h4>
         <p class="text-xs text-[#8b949e] leading-relaxed">Add your secrets to AWS Secrets Manager, Azure Key Vault, or another supported provider.</p>
       </div>
+      <!-- Arrow 1 -->
+      <div class="hidden md:flex items-center justify-center px-1">
+        <svg class="w-6 h-6 flow-arrow" style="color:rgba(0,201,167,.6)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+      <!-- Step 2 -->
       <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6" style="transition-delay:.1s">
-        <div class="w-9 h-9 bg-accent/10 border border-accent/20 rounded-lg flex items-center justify-center font-mono font-bold text-accent text-sm mb-5">2</div>
+        <svg class="w-5 h-5 text-accent mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/></svg>
+        <div class="w-8 h-8 bg-accent/10 border border-accent/20 rounded-lg flex items-center justify-center font-mono font-bold text-accent text-sm mb-4">2</div>
         <h4 class="font-semibold text-white mb-2">DSO fetches</h4>
         <p class="text-xs text-[#8b949e] leading-relaxed">The DSO agent polls the provider and retrieves secret values over a secure connection.</p>
       </div>
+      <!-- Arrow 2 -->
+      <div class="hidden md:flex items-center justify-center px-1">
+        <svg class="w-6 h-6 flow-arrow" style="color:rgba(0,201,167,.6);animation-delay:.5s" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+      <!-- Step 3 -->
       <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6" style="transition-delay:.2s">
-        <div class="w-9 h-9 bg-accent/10 border border-accent/20 rounded-lg flex items-center justify-center font-mono font-bold text-accent text-sm mb-5">3</div>
+        <svg class="w-5 h-5 text-accent mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <div class="w-8 h-8 bg-accent/10 border border-accent/20 rounded-lg flex items-center justify-center font-mono font-bold text-accent text-sm mb-4">3</div>
         <h4 class="font-semibold text-white mb-2">DSO injects</h4>
         <p class="text-xs text-[#8b949e] leading-relaxed">Secrets are pushed into running containers as env vars or via <code class="text-accent">/run/secrets/</code> file mounts.</p>
       </div>
+      <!-- Arrow 3 -->
+      <div class="hidden md:flex items-center justify-center px-1">
+        <svg class="w-6 h-6 flow-arrow" style="color:rgba(0,201,167,.6);animation-delay:1s" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+      <!-- Step 4 -->
       <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6" style="transition-delay:.3s">
-        <div class="w-9 h-9 bg-accent/10 border border-accent/20 rounded-lg flex items-center justify-center font-mono font-bold text-accent text-sm mb-5">4</div>
+        <svg class="w-5 h-5 text-accent mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        <div class="w-8 h-8 bg-accent/10 border border-accent/20 rounded-lg flex items-center justify-center font-mono font-bold text-accent text-sm mb-4">4</div>
         <h4 class="font-semibold text-white mb-2">Auto-updated</h4>
         <p class="text-xs text-[#8b949e] leading-relaxed">When the upstream value changes, containers receive the new value automatically. No restart needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features" class="py-20 px-6 sec-even border-b border-[#21262d]">
+  <div class="max-w-6xl mx-auto">
+    <div class="reveal text-center mb-14">
+      <h2 class="text-3xl font-mono font-bold text-white mb-3">Features</h2>
+      <p class="text-[#8b949e]">Everything DSO does, clearly.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6 hover:border-accent/30 transition-colors">
+        <svg class="w-6 h-6 text-accent mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+        <h4 class="font-semibold text-white mb-2">Secret Sync</h4>
+        <p class="text-sm text-[#8b949e] leading-relaxed">Fetches secrets from external providers automatically. Zero manual steps once configured.</p>
+      </div>
+      <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6 hover:border-accent/30 transition-colors" style="transition-delay:.05s">
+        <svg class="w-6 h-6 text-accent mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        <h4 class="font-semibold text-white mb-2">Auto Rotation</h4>
+        <p class="text-sm text-[#8b949e] leading-relaxed">Polls on a configurable interval and pushes updated values into running containers. No restarts, no downtime.</p>
+      </div>
+      <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6 hover:border-accent/30 transition-colors" style="transition-delay:.1s">
+        <svg class="w-6 h-6 text-accent mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        <h4 class="font-semibold text-white mb-2">Multi-Provider</h4>
+        <p class="text-sm text-[#8b949e] leading-relaxed">Switch providers by changing one line in <code class="text-accent text-xs">dso.yaml</code>. Plugin architecture makes adding new providers straightforward.</p>
+      </div>
+      <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6 hover:border-accent/30 transition-colors" style="transition-delay:.15s">
+        <svg class="w-6 h-6 text-accent mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+        <h4 class="font-semibold text-white mb-2">No Kubernetes</h4>
+        <p class="text-sm text-[#8b949e] leading-relaxed">Runs as a systemd service on any Linux host. No cluster, no sidecars, no Helm charts.</p>
+      </div>
+      <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6 hover:border-accent/30 transition-colors" style="transition-delay:.2s">
+        <svg class="w-6 h-6 text-accent mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+        <h4 class="font-semibold text-white mb-2">Docker Compose Native</h4>
+        <p class="text-sm text-[#8b949e] leading-relaxed">Use <code class="text-accent text-xs">dso compose up</code> — a transparent wrapper. Your existing compose file stays unchanged.</p>
+      </div>
+      <div class="reveal bg-[#161b22] border border-[#30363d] rounded-xl p-6 hover:border-accent/30 transition-colors" style="transition-delay:.25s">
+        <svg class="w-6 h-6 text-accent mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <h4 class="font-semibold text-white mb-2">Env Vars + File Mounts</h4>
+        <p class="text-sm text-[#8b949e] leading-relaxed">Inject as environment variables or <code class="text-accent text-xs">/run/secrets/</code> file mounts. Works with how your app already reads config.</p>
       </div>
     </div>
   </div>
@@ -252,7 +335,7 @@ pre code .cm{color:#6e7681}
 </section>
 
 <!-- Architecture -->
-<section class="py-20 px-6 bg-[#161b22] border-b border-[#21262d]">
+<section id="architecture" class="py-20 px-6 bg-[#161b22] border-b border-[#21262d]">
   <div class="max-w-6xl mx-auto">
     <div class="reveal text-center mb-14">
       <h2 class="text-3xl font-mono font-bold text-white mb-3">Architecture</h2>
@@ -457,7 +540,7 @@ pre code .cm{color:#6e7681}
 <footer class="border-t border-[#21262d] py-8 px-6">
   <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[#6e7681]">
     <div class="flex items-center gap-2 font-mono">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#00c9a7" fill-opacity=".15" stroke="#00c9a7" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="#00c9a7" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="14" r="1" fill="#00c9a7"/></svg>
+      <svg width="20" height="20" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#00c9a7" fill-opacity=".12" stroke="#00c9a7" stroke-width="1.2"/><rect x="1" y="12" width="6" height="4" rx="1.5" fill="none" stroke="#00c9a7" stroke-width="1"/><rect x="21" y="12" width="6" height="4" rx="1.5" fill="none" stroke="#00c9a7" stroke-width="1"/><rect x="9" y="11" width="10" height="8" rx="2.5" fill="#0d1117" stroke="#00c9a7" stroke-width="1.4"/><path d="M11 11 Q11 6 14 6 Q17 6 17 11" fill="none" stroke="#00c9a7" stroke-width="1.6" stroke-linecap="round"/><circle cx="14" cy="15" r="1.8" fill="#00c9a7"/><rect x="13.3" y="15.5" width="1.4" height="2.5" fill="#00c9a7" rx="0.5"/></svg>
       Docker Secret Operator — MIT License
     </div>
     <div class="flex items-center gap-6">
@@ -502,19 +585,24 @@ const output = [
 async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function runTerminal() {
-  await sleep(800);
-  for (let ch of command) { cmd.textContent += ch; await sleep(70); }
-  cursor.style.display = 'none';
-  await sleep(400);
-  for (let [text, color] of output) {
-    const p = document.createElement('p');
-    p.style.color = color;
-    p.textContent = text;
-    p.style.opacity = '0';
-    lines.appendChild(p);
-    await sleep(300);
-    p.style.transition = '.3s';
-    p.style.opacity = '1';
+  while (true) {
+    cmd.textContent = ''; lines.innerHTML = ''; cursor.style.display = 'inline-block';
+    await sleep(600);
+    for (let ch of command) { cmd.textContent += ch; await sleep(70); }
+    cursor.style.display = 'none';
+    await sleep(400);
+    for (let [text, color] of output) {
+      const p = document.createElement('p');
+      p.style.color = color; p.textContent = text; p.style.opacity = '0';
+      lines.appendChild(p);
+      await sleep(280);
+      p.style.transition = '.3s'; p.style.opacity = '1';
+    }
+    await sleep(3500);
+    // fade out
+    lines.style.transition = '.6s'; lines.style.opacity = '0';
+    await sleep(700);
+    lines.style.opacity = '1'; lines.style.transition = '';
   }
 }
 runTerminal();
