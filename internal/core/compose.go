@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/docker-secret-operator/dso/internal/injector"
+	"github.com/docker-secret-operator/dso/pkg/config"
 	"gopkg.in/yaml.v3"
 )
 
@@ -19,9 +20,37 @@ type ComposeFile struct {
 	Other    map[string]interface{} `yaml:",inline"`
 }
 
-// RunComposeUp parses the compose file, fetches DSO custom secrets, writes them to a secure temp dir,
-// rewrites the compose file to use local files, and executes docker compose.
-func RunComposeUp(filename string, extraArgs []string) error {
+// RunComposeUpWithEnv parses the compose file, fetches DSO custom secrets for file overrides, merges them with dso.yaml ENV configurations, and dynamically runs docker compose.
+func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string) error {
+	envMap := make(map[string]string)
+
+	cfg, err := config.LoadConfig(configPath)
+	if err == nil {
+		socketPath := "/var/run/dso.sock"
+		if custom := os.Getenv("DSO_SOCKET_PATH"); custom != "" {
+			socketPath = custom
+		}
+		if client, err := injector.NewAgentClient(socketPath); err == nil {
+			if injectedEnvs, err := client.FetchAllEnvs(cfg); err == nil {
+				for k, v := range injectedEnvs {
+					envMap[k] = v
+				}
+			}
+		}
+	}
+
+	for _, e := range os.Environ() {
+		parts := strings.SplitN(e, "=", 2)
+		if len(parts) == 2 {
+			envMap[parts[0]] = parts[1]
+		}
+	}
+
+	var finalEnvs []string
+	for k, v := range envMap {
+		finalEnvs = append(finalEnvs, fmt.Sprintf("%s=%s", k, v))
+	}
+
 	data, err := os.ReadFile(filename)
 	if err != nil {
 		return fmt.Errorf("failed to read %s: %w", filename, err)
@@ -85,7 +114,7 @@ func RunComposeUp(filename string, extraArgs []string) error {
 
 	if !hasDsoSecrets {
 		// Just run docker compose normally
-		return execDockerCompose(filename, extraArgs)
+		return execDockerCompose(filename, extraArgs, finalEnvs)
 	}
 
 	// Write the transformed compose file
@@ -106,6 +135,7 @@ func RunComposeUp(filename string, extraArgs []string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
+	cmd.Env = finalEnvs
 
 	err = cmd.Run()
 
@@ -150,11 +180,12 @@ func fetchSecretDirectly(provider, secretPath string) (string, error) {
 	return string(bytes), nil
 }
 
-func execDockerCompose(filename string, extraArgs []string) error {
+func execDockerCompose(filename string, extraArgs []string, finalEnvs []string) error {
 	args := append([]string{"compose", "-f", filename, "up"}, extraArgs...)
 	cmd := exec.Command("docker", args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
+	cmd.Env = finalEnvs
 	return cmd.Run()
 }

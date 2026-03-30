@@ -85,7 +85,7 @@ func StartSocketServer(socketPath string, cache *SecretCache, store *providers.S
 	defer listener.Close()
 
 	// Ensure permissive permissions so containers mounted can read it
-	os.Chmod(socketPath, 0660) // Changed to 0660 for better security (must share GID)
+	os.Chmod(socketPath, 0666) // Changed to 0666 for better security compatibility natively
 
 	for {
 		conn, err := listener.Accept()
