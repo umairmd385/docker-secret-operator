@@ -2,12 +2,11 @@ package watcher
 
 import (
 	"context"
-	"os"
-	"os/exec"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/docker-secret-operator/dso/internal/core"
 	"github.com/docker-secret-operator/dso/pkg/observability"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/events"
@@ -40,7 +39,6 @@ func NewReloaderController(logger *zap.Logger) (*ReloaderController, error) {
 	}, nil
 }
 
-// StartEventLoop connects to the Docker Events API and maintains the active target cache
 func (r *ReloaderController) StartEventLoop(ctx context.Context) {
 	r.Logger.Info("Starting Docker Events loop for ReloaderController")
 
@@ -64,14 +62,14 @@ func (r *ReloaderController) StartEventLoop(ctx context.Context) {
 			case err := <-errCh:
 				r.Logger.Error("Docker Events API error", zap.Error(err))
 				observability.BackendFailuresTotal.WithLabelValues("docker_events", "stream_error").Inc()
-				time.Sleep(5 * time.Second) // Backoff
+				time.Sleep(5 * time.Second)
 				msgCh, errCh = r.cli.Events(ctx, events.ListOptions{Filters: filterArgs})
 			case msg := <-msgCh:
 				if msg.Action == "start" {
 					if _, hasLabel := msg.Actor.Attributes["dso.reloader"]; hasLabel {
 						strategy := msg.Actor.Attributes["dso.update.strategy"]
 						if strategy == "" {
-							strategy = "restart" // default
+							strategy = "restart"
 						}
 						composePath := msg.Actor.Attributes["dso.compose.path"]
 						secretList := strings.Split(msg.Actor.Attributes["dso.secrets"], ",")
@@ -82,7 +80,7 @@ func (r *ReloaderController) StartEventLoop(ctx context.Context) {
 							ComposePath: composePath,
 							Secrets:     secretList,
 						})
-						r.Logger.Info("Registered target container dynamically", zap.String("id", msg.Actor.ID), zap.String("strategy", strategy))
+						r.Logger.Info("Registered target container dynamically", zap.String("id", msg.Actor.ID))
 					}
 				} else if msg.Action == "die" || msg.Action == "stop" {
 					if _, loaded := r.Targets.LoadAndDelete(msg.Actor.ID); loaded {
@@ -122,12 +120,10 @@ func (r *ReloaderController) populateInitialTargets(ctx context.Context) {
 	r.Logger.Info("Initial container population complete")
 }
 
-// TriggerReload executes the appropriate action for all active, mapped containers
 func (r *ReloaderController) TriggerReload(ctx context.Context, secretName string) error {
 	r.Targets.Range(func(key, value interface{}) bool {
 		target := value.(*TargetContainer)
 
-		// Filter: only reload if the container uses THIS secret (or if secretName is empty for global reload)
 		usesSecret := false
 		if secretName == "" {
 			usesSecret = true
@@ -145,47 +141,22 @@ func (r *ReloaderController) TriggerReload(ctx context.Context, secretName strin
 		}
 
 		if target.ComposePath != "" && target.Strategy == "restart" {
-			r.Logger.Info("Triggering native Docker Compose rotation", zap.String("id", target.ID), zap.String("path", target.ComposePath))
-			// Run 'docker-dso up -d' using the binary path or proxy
-			// Actually, the agent can call the plugin's 'up' logic or just 'docker compose up -d'
-			// Since the agent already has the env injected, calling 'docker compose up -d' 
-			// with the same transformed env will work IF the agent is in the same context.
-			// Better: The agent should just run 'docker compose -f path up -d'
-			cmd := exec.Command("docker", "compose", "-f", target.ComposePath, "up", "-d")
-			cmd.Env = os.Environ() // Agent has the master config, but we need the specific container env?
-			// Actually, running 'docker dso up -d' is even better but might cause recursion.
-			// We'll stick to a simple compose up for now.
-			if err := cmd.Run(); err != nil {
-				r.Logger.Error("Failed to trigger compose rotation", zap.Error(err))
-			}
+			r.Logger.Info("Triggering native Docker Compose rotation via Core Engine", zap.String("path", target.ComposePath))
+			go func() {
+				// Execute full injection lifecycle for rotation compatibility
+				_ = core.RunComposeUpWithEnv(target.ComposePath, []string{"-d"}, "")
+			}()
 			return true
 		}
 
 		if target.Strategy == "signal" {
 			r.Logger.Info("Sending SIGHUP to container", zap.String("id", target.ID))
-			if err := r.cli.ContainerKill(ctx, target.ID, "SIGHUP"); err != nil {
-				r.Logger.Error("Failed to signal container", zap.String("id", target.ID), zap.Error(err))
-				observability.BackendFailuresTotal.WithLabelValues("docker_injector", "signal_failed").Inc()
-			}
+			_ = r.cli.ContainerKill(ctx, target.ID, "SIGHUP")
 		} else if target.Strategy == "restart" {
-			r.Logger.Info("Executing Stop/Start restart pattern", zap.String("id", target.ID))
-
-			timeout := 10 // 10 seconds grace period
-			stopOpts := container.StopOptions{Timeout: &timeout}
-			if err := r.cli.ContainerStop(ctx, target.ID, stopOpts); err != nil {
-				r.Logger.Error("Failed to stop container", zap.String("id", target.ID), zap.Error(err))
-				observability.BackendFailuresTotal.WithLabelValues("docker_injector", "stop_failed").Inc()
-				return true
-			}
-
-			startOpts := container.StartOptions{}
-			if err := r.cli.ContainerStart(ctx, target.ID, startOpts); err != nil {
-				r.Logger.Error("Failed to start container", zap.String("id", target.ID), zap.Error(err))
-				observability.BackendFailuresTotal.WithLabelValues("docker_injector", "start_failed").Inc()
-				return true
-			}
-
-			r.Logger.Info("Container securely restarted", zap.String("id", target.ID))
+			r.Logger.Info("Restarting container", zap.String("id", target.ID))
+			timeout := 10
+			_ = r.cli.ContainerStop(ctx, target.ID, container.StopOptions{Timeout: &timeout})
+			_ = r.cli.ContainerStart(ctx, target.ID, container.StartOptions{})
 		}
 		return true
 	})
