@@ -20,9 +20,11 @@ type TriggerEngine struct {
 	Store     *providers.SecretStoreManager
 	Reloader  *watcher.ReloaderController
 	Logger    *zap.Logger
-	rotations sync.Map
-	events    sync.Map
-	Server    *AgentServer
+	rotations     sync.Map
+	events        sync.Map
+	secretHashes  sync.Map
+	lastRotations sync.Map
+	Server        *AgentServer
 }
 
 func NewTriggerEngine(cache *SecretCache, storeManager *providers.SecretStoreManager, rw *watcher.ReloaderController, logger *zap.Logger) *TriggerEngine {
@@ -36,22 +38,40 @@ func NewTriggerEngine(cache *SecretCache, storeManager *providers.SecretStoreMan
 
 func (t *TriggerEngine) ExecuteRotation(providerName, secretName string, secretData map[string]string, sec config.SecretMapping) {
 	cacheKey := fmt.Sprintf("%s:%s", providerName, secretName)
-
 	newHash := ComputeHash(secretData)
-	oldData, exists := t.Cache.Get(cacheKey)
-	oldHash := ""
-	if exists {
-		oldHash = ComputeHash(oldData)
+
+	// 2. Add cooldown window
+	if lastRot, ok := t.lastRotations.Load(cacheKey); ok {
+		if time.Since(lastRot.(time.Time)) < 30*time.Second {
+			t.Logger.Debug("Cooldown active, skipping rotation", zap.String("secret", secretName))
+			return
+		}
 	}
 
-	if !exists || oldHash != newHash {
-		msg := fmt.Sprintf("Secret rotated: %s", secretName)
-		t.Logger.Info(msg)
+	var oldHash string
+	if val, ok := t.secretHashes.Load(cacheKey); ok {
+		oldHash = val.(string)
+	}
+
+	if oldHash == newHash {
+		msg := fmt.Sprintf("\033[1;33m[DSO ROTATION]\033[0m No change detected for %s → skipping", secretName)
 		if t.Server != nil {
 			t.Server.Emit(msg)
+		} else {
+			fmt.Println(msg)
 		}
-		
-		t.Cache.Set(cacheKey, secretData)
+		return
+	}
+
+	t.secretHashes.Store(cacheKey, newHash)
+	t.lastRotations.Store(cacheKey, time.Now())
+	t.Cache.Set(cacheKey, secretData)
+
+	msg := fmt.Sprintf("Secret rotated: %s", secretName)
+	t.Logger.Info(msg)
+	if t.Server != nil {
+		t.Server.Emit(msg)
+	}
 
 		if sec.Inject == "file" {
 			basePath := filepath.Join("/var/run/dso/secrets", secretName)

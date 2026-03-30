@@ -3,12 +3,15 @@ package watcher
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/docker-secret-operator/dso/internal/analyzer"
 	"github.com/docker-secret-operator/dso/internal/core"
 	"github.com/docker-secret-operator/dso/internal/rotation"
+	"github.com/docker-secret-operator/dso/internal/strategy"
 	"github.com/docker-secret-operator/dso/pkg/observability"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/events"
@@ -143,17 +146,35 @@ func (r *ReloaderController) TriggerReload(ctx context.Context, secretName strin
 			return true
 		}
 
-		if target.ComposePath != "" && target.Strategy == "restart" {
+		activeStrategy := target.Strategy
+		if activeStrategy == "auto" || activeStrategy == "" {
+			inspect, err := r.cli.ContainerInspect(ctx, target.ID)
+			if err == nil {
+				analysisResult := analyzer.AnalyzeContainer(inspect)
+				decision := strategy.DecideStrategy(analysisResult)
+
+				if r.Server != nil {
+					if as, ok := r.Server.(interface{ Emit(string) }); ok {
+						as.Emit("\n" + decision.Report)
+					}
+				}
+				activeStrategy = decision.Strategy
+			} else {
+				activeStrategy = "restart"
+			}
+		}
+
+		if target.ComposePath != "" && activeStrategy == "restart" {
 			r.Logger.Info("Triggering native Docker Compose rotation via Core Engine", zap.String("path", target.ComposePath))
 			
 			go func() {
-				// EMIT EVENT!
+				RecordDSOAction(filepath.Base(filepath.Dir(target.ComposePath)))
+				
 				if r.Server != nil {
 					if as, ok := r.Server.(interface{ Emit(string) }); ok {
-						as.Emit(fmt.Sprintf("🔄 Native rotation: Scaling %s from compose context.", target.ComposePath))
+						as.Emit(fmt.Sprintf("\033[1;36m[DSO EXECUTION]\033[0m\nStrategy: restart (compose)\n🔄 Native rotation: Scaling %s from compose context.", target.ComposePath))
 					}
 				}
-				// Use the resolved config path if available, or fallback to default resolve logic
 				err := core.RunComposeUpWithEnv(target.ComposePath, []string{"-d"}, "")
 				if err != nil {
 					r.Logger.Error("Background rotation failed", zap.Error(err))
@@ -164,33 +185,47 @@ func (r *ReloaderController) TriggerReload(ctx context.Context, secretName strin
 			return true
 		}
 
-		if target.Strategy == "signal" {
+		if activeStrategy == "signal" {
 			r.Logger.Info("Sending SIGHUP to container", zap.String("id", target.ID))
 			_ = r.cli.ContainerKill(ctx, target.ID, "SIGHUP")
-		} else if target.Strategy == "rolling" {
+		} else if activeStrategy == "rolling" {
 			r.Logger.Info("🚀 Executing Zero-Downtime Rolling Rotation", zap.String("id", target.ID))
+			RecordDSOAction(target.ID)
 			
-			// Use the rolling strategy engine
 			rs := rotation.NewRollingStrategy(r.cli)
 			
 			go func() {
-				// EMIT EVENT!
 				if r.Server != nil {
 					if as, ok := r.Server.(interface{ Emit(string) }); ok {
-						as.Emit(fmt.Sprintf("🔄 Rolling Swap Start: %s", target.ID[:12]))
+						as.Emit(fmt.Sprintf("\033[1;36m[DSO EXECUTION]\033[0m\nStrategy: rolling\n🔄 Rolling Swap Start: %s", target.ID[:12]))
 					}
 				}
 
-				// TODO: Fetch latest secrets from cache to pass into Execute
-				// For now, we use empty map to represent 'refresh from latest fetch'
 				err := rs.Execute(ctx, target.ID, map[string]string{}, 30*time.Second)
 				if err != nil {
-					r.Logger.Error("Rolling rotation failed", zap.Error(err))
+					r.Logger.Error("Rolling rotation failed, triggering fallback", zap.Error(err))
+					if r.Server != nil {
+						if as, ok := r.Server.(interface{ Emit(string) }); ok {
+							as.Emit(fmt.Sprintf("\033[1;31m[DSO FALLBACK]\033[0m\nRolling failed due to: %v → switching to restart", err))
+							as.Emit("\033[1;36m[DSO EXECUTION]\033[0m\nStrategy: restart\nStopping container → injecting new secrets → starting container")
+						}
+					}
+					// FALLBACK
+					timeout := 10
+					_ = r.cli.ContainerStop(ctx, target.ID, container.StopOptions{Timeout: &timeout})
+					_ = r.cli.ContainerStart(ctx, target.ID, container.StartOptions{})
 				}
 			}()
 
-		} else if target.Strategy == "restart" {
+		} else if activeStrategy == "restart" {
 			r.Logger.Info("Restarting container", zap.String("id", target.ID))
+			RecordDSOAction(target.ID)
+			
+			if r.Server != nil {
+				if as, ok := r.Server.(interface{ Emit(string) }); ok {
+					as.Emit("\033[1;36m[DSO EXECUTION]\033[0m\nStrategy: restart\nStopping container → injecting new secrets → starting container")
+				}
+			}
 			timeout := 10
 			_ = r.cli.ContainerStop(ctx, target.ID, container.StopOptions{Timeout: &timeout})
 			_ = r.cli.ContainerStart(ctx, target.ID, container.StartOptions{})

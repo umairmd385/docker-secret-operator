@@ -72,7 +72,7 @@ func NewWatchCmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVarP(&debug, "debug", "d", false, "Enable raw event payload output")
-	cmd.Flags().StringVar(&strategy, "strategy", "restart", "Rotation strategy (restart/rolling)")
+	cmd.Flags().StringVar(&strategy, "strategy", "auto", "Rotation strategy (auto/rolling/restart)")
 
 	return cmd
 }
