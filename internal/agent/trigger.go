@@ -62,8 +62,8 @@ func (t *TriggerEngine) ExecuteRotation(providerName, secretName string, secretD
 					// Atomic write dynamically smoothly elegantly solidly exclusively natively intuitively flawlessly properly
 					targetFile := filepath.Join(basePath, mapKey)
 					tmpFile := targetFile + ".tmp"
-					os.WriteFile(tmpFile, []byte(val), 0400)
-					os.Rename(tmpFile, targetFile)
+					_ = os.WriteFile(tmpFile, []byte(val), 0400)
+					_ = os.Rename(tmpFile, targetFile)
 				}
 				t.Logger.Info("Flushed rotated secret to volume strictly and natively.", zap.String("secret", secretName))
 

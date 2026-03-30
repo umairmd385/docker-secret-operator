@@ -70,7 +70,7 @@ func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string)
 	// Best effort to clean up, though syscall.Exec will replace our process so defer won't run.
 	// We'll let the OS clean it up eventually, or we run docker compose synchronously and then cleanup.
 
-	os.Chmod(secDir, 0700)
+	_ = os.Chmod(secDir, 0700)
 
 	hasDsoSecrets := false
 
@@ -140,7 +140,7 @@ func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string)
 	err = cmd.Run()
 
 	// Cleanup secrets from memory explicitly
-	os.RemoveAll(secDir)
+	_ = os.RemoveAll(secDir)
 
 	return err
 }

@@ -70,11 +70,11 @@ func StartSocketServer(socketPath string, cache *SecretCache, store *providers.S
 		Logger: logger,
 	}
 
-	rpc.RegisterName("Agent", server)
+	_ = rpc.RegisterName("Agent", server)
 
 	// Remove old socket if exists
 	if _, err := os.Stat(socketPath); err == nil {
-		os.Remove(socketPath)
+		_ = os.Remove(socketPath)
 	}
 
 	logger.Info("Starting local Unix socket", zap.String("path", socketPath))
@@ -85,7 +85,7 @@ func StartSocketServer(socketPath string, cache *SecretCache, store *providers.S
 	defer listener.Close()
 
 	// Ensure permissive permissions so containers mounted can read it
-	os.Chmod(socketPath, 0666) // Changed to 0666 for better security compatibility natively
+	_ = os.Chmod(socketPath, 0666) // Changed to 0666 for better security compatibility natively
 
 	for {
 		conn, err := listener.Accept()
@@ -134,7 +134,7 @@ func (s *AgentServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(resp)
+	_ = json.NewEncoder(w).Encode(resp)
 }
 
 func StartDriverServer(socketPath string, cache *SecretCache, store *providers.SecretStoreManager, logger *zap.Logger) error {
@@ -145,7 +145,7 @@ func StartDriverServer(socketPath string, cache *SecretCache, store *providers.S
 	}
 
 	if _, err := os.Stat(socketPath); err == nil {
-		os.Remove(socketPath)
+		_ = os.Remove(socketPath)
 	}
 
 	logger.Info("Starting Docker Secret Driver socket", zap.String("path", socketPath))
@@ -154,6 +154,6 @@ func StartDriverServer(socketPath string, cache *SecretCache, store *providers.S
 		return fmt.Errorf("failed to listen on driver socket %s: %w", socketPath, err)
 	}
 
-	os.Chmod(socketPath, 0666)
+	_ = os.Chmod(socketPath, 0666)
 	return http.Serve(listener, server)
 }

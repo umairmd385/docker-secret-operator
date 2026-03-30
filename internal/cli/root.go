@@ -82,7 +82,7 @@ func NewRootCmd() *cobra.Command {
 		Short: "Docker Secret Operator (DSO) CLI",
 		Long:  `dso fetches and injects secrets into containers dynamically.`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			observability.NewLogger("info", false)
+			_, _ = observability.NewLogger("info", false)
 		},
 	}
 
