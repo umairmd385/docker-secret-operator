@@ -60,17 +60,29 @@ sudo chmod 600 /etc/dso/dso.yaml
 provider: aws
 
 config:
-  region: us-east-2       # Change to the region where your secret lives
+  region: us-east-2    # Change to your AWS region
 
 agent:
   cache: true
-  refresh_interval: 5s    # Re-fetch from AWS every 5 seconds
+  # New v3 Watcher Configuration
+  watch:
+    mode: polling           # Options: polling, event (via webhook), hybrid
+    polling_interval: 5m    # Frequency of cloud provider checks
+  
+  # New v3 Restart Strategy for all connected containers
+  restart_strategy:
+    type: rolling           # Seamlessly swap containers without downtime
+    health_check_timeout: 45s
+    grace_period: 20s
 
 secrets:
-  - name: local_secret    # Exact name from AWS Secrets Manager console
+  - name: arn:aws:secretsmanager:us-east-2:123456789012:secret:local_secret-QdHsn2
     inject: env
+    rotation: true          # 🔥 Must be 'true' for the Watcher to track this secret
+    reload_strategy:
+      type: restart         # Automatically restart container when secret rotates
     mappings:
-      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD   # AWS key → container ENV
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
       MYSQL_USER: MYSQL_USER
       MYSQL_PASSWORD: MYSQL_PASSWORD
 ```
@@ -139,6 +151,16 @@ services:
 ```bash
 # From the examples/aws-compose directory
 docker dso up -d
+```
+
+**Expected output:**
+```text
+DSO matched config: /etc/dso/dso.yaml
+DSO securely injecting secrets for docker-compose.yaml...
+[+] up 3/3
+ ✔ Network mysql_default        Created                                                                                                                                                                                                  0.1s
+ ✔ Container phpmyadmin_cnt     Started                                                                                                                                                                                                  0.8s
+ ✔ Container mysql_database_cnt Started 
 ```
 
 DSO will:
