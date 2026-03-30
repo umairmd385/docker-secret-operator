@@ -150,8 +150,11 @@ func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string)
 		_ = os.WriteFile(transformedFilename, transformedData, 0600)
 	}
 
-	// Run docker compose
-	args := append([]string{"compose", "-f", transformedFilename, "up"}, extraArgs...)
+	// Step 3: Run docker compose
+	// CRITICAL: We must pass the original project name, otherwise Docker uses the tmp dir name
+	// and causes container naming conflicts.
+	projectName := filepath.Base(filepath.Dir(absPath))
+	args := append([]string{"compose", "-p", projectName, "-f", transformedFilename, "up"}, extraArgs...)
 	cmd := exec.Command("docker", args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
