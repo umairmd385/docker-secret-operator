@@ -40,6 +40,7 @@ func NewRootCmd() *cobra.Command {
 	cmd.AddCommand(NewInjectCmd())
 	cmd.AddCommand(NewSyncCmd())
 	cmd.AddCommand(NewUpCmd())
+	cmd.AddCommand(NewDownCmd())
 	cmd.AddCommand(NewVersionCmd())
 
 	return cmd
