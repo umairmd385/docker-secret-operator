@@ -28,15 +28,15 @@ func NewUpCmd() *cobra.Command {
 					skip = false
 					continue
 				}
-				if arg == "-f" || arg == "--file" {
+				if arg == "-f" || arg == "--file" || arg == "-cf" {
 					if i+1 < len(args) {
 						composeFile = args[i+1]
 					}
 					skip = true
 					continue
 				}
-				if strings.HasPrefix(arg, "--file=") {
-					composeFile = strings.TrimPrefix(arg, "--file=")
+				if strings.HasPrefix(arg, "--file=") || strings.HasPrefix(arg, "-cf=") {
+					composeFile = strings.TrimPrefix(strings.TrimPrefix(arg, "--file="), "-cf=")
 					continue
 				}
 				if arg == "--config" || arg == "-c" {

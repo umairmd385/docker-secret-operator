@@ -142,9 +142,16 @@ func (r *ReloaderController) TriggerReload(ctx context.Context, secretName strin
 
 		if target.ComposePath != "" && target.Strategy == "restart" {
 			r.Logger.Info("Triggering native Docker Compose rotation via Core Engine", zap.String("path", target.ComposePath))
+			
+			// We pass the absolute path and empty args to trigger a native recreate.
+			// The Core Engine will now detect /etc/dso/dso.yaml automatically.
 			go func() {
-				// Execute full injection lifecycle for rotation compatibility
-				_ = core.RunComposeUpWithEnv(target.ComposePath, []string{"-d"}, "")
+				err := core.RunComposeUpWithEnv(target.ComposePath, []string{"-d"}, "/etc/dso/dso.yaml")
+				if err != nil {
+					r.Logger.Error("Background rotation failed", zap.Error(err))
+				} else {
+					r.Logger.Info("Background rotation successful", zap.String("path", target.ComposePath))
+				}
 			}()
 			return true
 		}

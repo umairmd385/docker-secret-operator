@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/rpc"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/docker-secret-operator/dso/internal/providers"
@@ -19,6 +20,28 @@ type AgentServer struct {
 	Cache  *SecretCache
 	Store  *providers.SecretStoreManager
 	Logger *zap.Logger
+	Events []string // Simple in-memory event log for 'watch'
+	mu     sync.Mutex
+}
+
+func (s *AgentServer) Emit(msg string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.Events = append(s.Events, fmt.Sprintf("[%s] %s", time.Now().Format("15:04:05"), msg))
+	if len(s.Events) > 100 {
+		s.Events = s.Events[1:]
+	}
+}
+
+func (s *AgentServer) GetEvents(req *api.AgentRequest, resp *api.AgentResponse) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.Logger.Debug("Streaming events to watcher")
+	resp.Data = map[string]string{}
+	for i, e := range s.Events {
+		resp.Data[fmt.Sprintf("%d", i)] = e
+	}
+	return nil
 }
 
 func (s *AgentServer) GetSecret(req *api.AgentRequest, resp *api.AgentResponse) error {

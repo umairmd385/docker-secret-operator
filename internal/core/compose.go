@@ -30,8 +30,19 @@ func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string)
 		}
 	}
 
-	cfg, err := config.LoadConfig(configPath)
+	// Resolve config path if empty
+	targetConfig := configPath
+	if targetConfig == "" {
+		if _, err := os.Stat("dso.yaml"); err == nil {
+			targetConfig = "dso.yaml"
+		} else if _, err := os.Stat("/etc/dso/dso.yaml"); err == nil {
+			targetConfig = "/etc/dso/dso.yaml"
+		}
+	}
+
+	cfg, err := config.LoadConfig(targetConfig)
 	if err == nil {
+		fmt.Printf("DSO matched config: %s\n", targetConfig)
 		socketPath := "/var/run/dso.sock"
 		if custom := os.Getenv("DSO_SOCKET_PATH"); custom != "" {
 			socketPath = custom

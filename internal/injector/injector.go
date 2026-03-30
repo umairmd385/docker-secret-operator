@@ -56,3 +56,12 @@ func (ac *AgentClient) FetchAllEnvs(cfg *config.Config) (map[string]string, erro
 	}
 	return envs, nil
 }
+
+func (ac *AgentClient) GetEvents() (*api.AgentResponse, error) {
+	req := &api.AgentRequest{}
+	var resp api.AgentResponse
+	if err := ac.client.Call("Agent.GetEvents", req, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
