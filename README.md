@@ -1,166 +1,115 @@
-# 🔐 docker-dso
+<div align="center">
+  <img src="./docs/assets/dso-logo.png" width="300" alt="docker-dso logo"/>
 
-![docker-dso Hero](/home/user/.gemini/antigravity/brain/a4b51bf6-799a-47eb-96b5-61a67f139efa/docker_dso_hero_dashboard_1774848045282.png)
+  # 🔐 docker-dso
 
-**Enterprise-Grade Secret Management for Docker**
+  **Enterprise-grade secret management for Docker.**
+  
+  *Stop leaking secrets in `.env` files. No Kubernetes required.*
+  
+  [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
+  [![Version](https://img.shields.io/badge/Version-v3.0.0-blueviolet.svg)](https://github.com/umairmd385/docker-secret-operator/releases)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-green)](https://opensource.org/licenses/MIT)
 
-[![Build](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
-[![Version](https://img.shields.io/badge/Version-v3.0.0-blueviolet.svg)](https://github.com/umairmd385/docker-secret-operator/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](https://opensource.org/licenses/MIT)
-[![Docker Plugin](https://img.shields.io/badge/Docker-Native%20Plugin-2496ED?logo=docker&logoColor=white)](https://docs.docker.com/engine/extend/)
-
----
-
-🚫 **Secret Sprawl is killing your security posture.**  
-`.env` files, hardcoded credentials, and scattered configs are **SOC2 audit nightmares**.
-
-✅ **docker-dso fixes this.**
-
-👉 Run Docker workloads with:
-- Centralized secrets (AWS / Vault / Azure)
-- Zero `.env` exposure
-- Built-in rotation
-- Docker-native workflows
-
-```bash
-docker dso up -d
-```
-
-![docker-dso Terminal Demo](/home/user/.gemini/antigravity/brain/a4b51bf6-799a-47eb-96b5-61a67f139efa/docker_dso_terminal_demo_1774848089612.png)
-
-> Secure Docker like Kubernetes — **without Kubernetes.**
+</div>
 
 ---
 
-## 🎥 Live Demo
+**docker-dso** is a production-ready Docker CLI plugin designed for DevOps engineers. It natively maps enterprise cloud vaults (AWS, Azure, Vault) directly into your Docker containers at runtime. 
 
-### 🔐 Secure Docker in One Command
-![demo-up](./docs/assets/demo-up.gif)
+No disk persistence. No leaked credentials. Total compliance.
 
-### 🔄 Automatic Secret Rotation
-![demo-rotation](./docs/assets/demo-rotation.gif)
-
-### 🧠 Intelligent Strategy Engine
-![demo-strategy](./docs/assets/demo-strategy.gif)
+![docker-dso Hero](./docs/assets/hero.png)
 
 ---
 
-## 🚀 WHAT IS docker-dso?
+## ⚡ Get Started in 30 Seconds
 
-We've all been there: You're trying to spin up a Docker Compose stack, but you end up hardcoding secret tokens in `docker-compose.yml`, or relying on insecure, committed `.env` files that inevitably leak onto GitHub. To solve this properly, people usually migrate their entire stack to Kubernetes, adopting immense unnecessary complexity.
-
-**docker-dso** solves this. It's a proper, native Docker CLI plugin that hooks directly into Docker Compose to fetch centralized credentials from cloud provider vaults exactly precisely when containers boot. 
-
-It is the missing secret operator for Docker. 
-
----
-
-## 😡 THE PROBLEM
-
-- **`.env` files leak secrets**: They get accidentally committed, shared insecurely over Slack, and sit plainly unencrypted on local disks.
-- **Docker secrets are limited**: Native `docker secret` requires full Docker Swarm mode. They do not natively pull from external cloud backends.
-- **Kubernetes is too heavy**: Don't rewrite your infrastructure just to get external secret mapping.
-
----
-
-## ✅ THE SOLUTION
-
-`docker-dso` makes secret management a native part of your existing Docker ecosystem. By seamlessly mapping cloud provider credentials (like AWS Secrets Manager) directly into simple Compose tags, it eliminates friction securely and intuitively.
-
----
-
-## ⚔️ COMPARISON TABLE
-
-| Feature                   | Built-in Docker Secrets | docker-dso |
-| ------------------------- | ----------------------- | ---------- |
-| Works without Swarm       | ❌                       | ✅          |
-| External secret providers | ❌                       | ✅          |
-| Secret rotation           | ❌                       | ✅          |
-| Zero-downtime updates     | ❌                       | ✅          |
-| Dev-friendly              | ⚠️                       | ✅          |
-
----
-
-## 🧠 KEY FEATURES
-
-- **Docker CLI Plugin**: First-party operational feel (`docker dso <cmd>`).
-- **Compose Integration**: Parse `docker-compose.yml` natively and inject automatically without wrappers.
-- **Secure Injection**: Injects fetched tokens securely and dynamically into tmpfs boundaries or environment variables.
-- **Secret Rotation**: Watcher engine detects cloud provider updates, gracefully restarting bounded containers.
-- **Multi-Cloud Support**: Connects to AWS Secrets Manager, Azure Key Vault, Huawei CSMS, HashiCorp Vault.
-
----
-
-## ⚡ Performance & Footprint
-
-docker-dso is built in **Go** with a minimal, efficient runtime design.
-
-### 🧠 Lightweight by Design
-
-- **Memory Footprint**: ~10–30 MB typical runtime
-- **CPU Usage**: Near idle (event-driven, not constantly polling)
-- **Startup Time**: <100ms injection latency
-
-### ⚙️ Architecture Efficiency
-
-- Uses **in-memory secret storage** (no disk I/O)
-- Event-driven watcher minimizes CPU overhead
-- Direct Docker socket integration (no proxy layers)
-
-### 📈 What This Means
-
-- No impact on container performance
-- Safe for production workloads
-- Scales with your Docker environment
-
-> You get Kubernetes-level secret management without Kubernetes-level overhead.
-
----
-
-## 🛠️ Installation & Upgrades
-
-### 1-Line Automated Install (Recommended)
-Our production installer handles dependencies, builds core binaries, and registers the **Docker CLI Plugin** automatically.
-
+**1. Install the Plugin**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/install.sh | sudo bash
 ```
 
-### 🔁 How to Upgrade
-Got new features? Upgrading is seamless. Just re-run the automated installer above. It will safely replace the binaries while preserving your custom `/etc/dso/dso.yaml` mappings.
-
-### 🧹 Uninstallation
-We hate to see you go, but we made it easy to leave.
-```bash
-curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/uninstall.sh | sudo bash
+**2. Configure your Vault (`/etc/dso/dso.yaml`)**
+```yaml
+provider: aws
+secrets:
+  - name: production-db-credentials
+    inject: env
+    mappings:
+      DB_PASS: DB_PASS
 ```
 
-### Manual Plugin Install
-If you've grabbed the binary directly from GitHub Releases:
+**3. Run your Compose Stack Natively**
 ```bash
-mkdir -p ~/.docker/cli-plugins
-mv docker-dso ~/.docker/cli-plugins/
-chmod +x ~/.docker/cli-plugins/docker-dso
-
-# Verify the installation!
-docker dso version
+docker dso up -d
 ```
+*Your containers are now running with securely injected secrets!*
 
 ---
 
-## 🔄 SECRET ROTATION
+## 🎥 The Experience (Live Demo)
 
-Hardcoded files get stale. Credentials expire.
-`docker-dso` utilizes an **Event-Driven Watcher system** that natively secures rotation endpoints gracefully. 
+We built `docker-dso` to feel like native Docker operations. Here is exactly what the lifecycle looks like.
 
-When you configure rotation:
-1. `docker-dso` securely polls or listens via webhook for updates from your cloud provider (e.g. AWS Secrets Manager).
-2. It detects structural ID payload shifts cleanly.
-3. Automatically performs a *Zero-Downtime Rolling Restart* of any affected container seamlessly.
+### 1. Secure Docker in One Command
+When you spin up a stack, `docker-dso` dynamically fetches and injects your secrets straight into the container environment boundaries.
+![demo-up](./docs/assets/demo-up.gif)
+
+### 2. Automatic Secret Rotation
+The background Watcher engine continuously monitors your Cloud provider. When a secret changes, it precisely detects the drift and triggers a Zero-Downtime roll.
+![demo-rotation](./docs/assets/demo-rotation.gif)
+
+### 3. Intelligent Strategy Engine
+Not all containers can be hot-swapped. The Analyzer profiles your container's metadata (ports, statefulness) to intelligently decide between a seamless rolling update or a safe physical restart.
+![demo-strategy](./docs/assets/demo-strategy.gif)
+
+---
+
+## 🧠 Why docker-dso Exists
+
+We've all been there: You're orchestrating a Docker Compose stack, but you end up hardcoding tokens or relying on insecure, committed `.env` files that inevitably leak onto GitHub. To solve this properly, teams often migrate their entire infrastructure to Kubernetes—adopting immense, unnecessary complexity. 
+
+**`docker-dso` was built to provide K8s-level operational bounds without the K8s overhead.**
+
+---
+
+## 📊 Before vs After
+
+### ❌ Before (The `.env` Nightmare)
+- Secrets sit unencrypted on local disks.
+- Developers slack each other production keys.
+- Impossible to rotate credentials without manually restarting orchestrations.
+- Fails SOC2 audits.
+
+### ✅ After (The `docker-dso` Way)
+- Secrets are centrally audited in **AWS / Azure / Vault**.
+- Fetched dynamically directly into RAM at runtime.
+- Automated zero-downtime rotation.
+- Enterprise-compliant by default.
+
+---
+
+## 🔥 What Makes docker-dso Different?
+
+- **Zero-Downtime Rollouts**: `docker-dso` doesn't just restart containers. It executes Blue/Green shadow swaps natively in Docker.
+- **Docker CLI Native**: First-party operational feel (`docker dso <cmd>`). No wrapper scripts.
+- **Event-Driven**: Built in highly-concurrent Go. Immediate reaction to secret drifts via Hash Tracking, equipped with Debouncers to prevent spam.
+- **Multi-Cloud**: Write once, securely map anywhere. (AWS Secrets Manager, Azure Key Vault, HashiCorp Vault).
+
+---
+
+## ⚠️ Real-World Constraints 
+
+`docker-dso` intelligently handles the physics of Docker:
+- **Port Bindings**: If a container has a fixed host port (e.g., `80:80`), blue/green rolling is physically impossible. The Strategy Engine automatically detects this and falls back to a graceful `restart`.
+- **Stateful Mounts**: Containers writing to `/var/lib/mysql` cannot run concurrently. The Analyzer intercepts this risk.
 
 ---
 
 ## 🔍 Real Runtime Logs
+
+True transparency. Here is exactly what the Intelligent Strategy Engine prints when evaluating a stateful database:
 
 ```text
 [DSO ANALYZER]
@@ -177,11 +126,11 @@ No change detected → skipping
 
 ---
 
-## 🧱 ARCHITECTURE (ENTERPRISE FLOW)
+## 🧱 Enterprise Architecture Flow
 
 ```mermaid
 flowchart TD
-    A[AWS IAM Role / Vault Auth] --> B[DSO Agent]
+    A[Cloud Vault / IAM] --> B[DSO Agent]
     B --> C[Secret Fetch Engine]
     C --> D[In-Memory Secure Store]
 
@@ -198,161 +147,18 @@ flowchart TD
     style B fill:#bbf,stroke:#333
 ```
 
-### 🔍 Flow Explained
+---
 
-1. **Authentication Layer**
-   * Uses AWS IAM Roles / Vault tokens (no hardcoded credentials)
-2. **DSO Agent**
-   * Fetches secrets securely at runtime
-   * Stores only in memory (no disk persistence)
-3. **Docker Integration**
-   * Hooks into Docker via Unix socket
-   * Injects secrets at container start
-4. **Rotation Engine**
-   * Watches provider changes
-   * Triggers zero-downtime restarts
+## 🤝 Contributing
 
-> No secrets ever touch disk. No `.env`. No leaks.
+We strongly encourage open-source contributions to expand cloud provider compatibility! 
+See `CONTRIBUTING.md` for our architecture guidelines.
 
 ---
 
-## 🔁 MIGRATION GUIDE
+## ⭐ Support & Enterprise
 
-If you used DSO versions 1.x or 2.x, migrating to 3.x is exceptionally simple:
+If `docker-dso` helped secure your infrastructure, please **Star this repo** to help increase developer adoption.
 
-From:
-```bash
-dso apply
-dso fetch my-secret
-dso compose up -d
-```
-
-To:
-```bash
-docker dso apply
-docker dso fetch my-secret
-docker dso up -d
-```
-
-The legacy `dso` binary is officially deprecated.
-
----
-
-## 🛠️ Troubleshooting
-
-### ❌ Issue: AWS Secret Not Fetching
-
-**Error Example:**
-```text
-AccessDeniedException: User is not authorized
-```
-
-### ✅ Solution
-
-Ensure your IAM role or user has:
-
-```json
-{
-  "Effect": "Allow",
-  "Action": [
-    "secretsmanager:GetSecretValue",
-    "secretsmanager:DescribeSecret"
-  ],
-  "Resource": "*"
-}
-```
-
----
-
-### ❌ Issue: Docker Socket Permission Denied
-
-**Fix:**
-
-```bash
-sudo usermod -aG docker $USER
-newgrp docker
-```
-
----
-
-### ❌ Issue: Secret Not Injected
-
-Checklist:
-
-* ✅ `docker dso up` used (not plain docker compose)
-* ✅ Correct `dso:` URI format
-* ✅ Network access to provider
-
----
-
-### ❌ Issue: Rotation Not Working
-
-* Check watcher config
-* Ensure provider supports updates
-* Validate polling interval
-
----
-
-> Still stuck? Open a GitHub issue with logs — we respond fast 🚀
-
----
-
-## 👥 WHO IS THIS FOR?
-
-- **DevOps Engineers** seeking secure operational bounds without extreme scaling costs.
-- **Startups** actively avoiding the heavy lift of migrating to Kubernetes.
-- **Security-Focused Teams** explicitly trying to eliminate `.env` file credentials.
-
----
-
-## 🤝 CONTRIBUTING
-
-We strongly encourage community contributions. Refer to `CONTRIBUTING.md` for guidelines on submitting pulls, adding features, and developing plugins.
-
----
-
-## ⭐ CALL TO ACTION
-
-👉 **Star this repo if you care about secure Docker deployments.** 
-Your support fundamentally strengthens the open-source DevOps ecosystem. Stop leaking `.env` files today!
-
----
-
-## 💼 Support & Enterprise
-
-docker-dso is open-source — but we also provide **enterprise-grade support and customization**.
-
-### 🧩 Enterprise Offerings
-
-- 🔧 Custom secret provider integrations (internal vaults, legacy systems)
-- 🏢 Organization-wide policy enforcement (RBAC, audit trails)
-- ⚡ Performance tuning for large-scale Docker clusters
-- 🔐 Compliance alignment (SOC2, ISO 27001, internal audits)
-
----
-
-### ☁️ Managed SaaS (Coming Soon)
-
-We are building a **fully managed docker-dso platform**:
-
-- Central dashboard for secret visibility
-- Rotation monitoring
-- Audit logs & compliance reports
-- Multi-environment orchestration
-
-👉 **Join the waitlist:** [dso.dev/managed-saas](https://github.com/umairmd385/docker-secret-operator/issues)
-
----
-
-### 📩 Consulting / Support
-
-Need help integrating docker-dso in your infra?
-
-👉 Reach out:
-- GitHub Discussions: [Open a Thread](https://github.com/umairmd385/docker-secret-operator/discussions)
-- LinkedIn: [Md Umair](https://www.linkedin.com/in/mdumair250801/)
-- Email: [umairmd385@gmail.com]
-
----
-
-> Secure your Docker stack before your next security audit does it for you.
+For SOC2 implementation consulting or Enterprise Support:
+👉 [Open a Discussion](https://github.com/umairmd385/docker-secret-operator/discussions)
