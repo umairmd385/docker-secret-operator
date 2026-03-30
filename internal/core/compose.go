@@ -72,8 +72,6 @@ func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string)
 
 	_ = os.Chmod(secDir, 0700)
 
-	hasDsoSecrets := false
-
 	for secretName, secretConfigRaw := range parsed.Secrets {
 		secretConfig, ok := secretConfigRaw.(map[string]interface{})
 		if !ok {
@@ -81,7 +79,6 @@ func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string)
 		}
 
 		if dsoUriRaw, exists := secretConfig["dso"]; exists {
-			hasDsoSecrets = true
 			dsoUri := fmt.Sprintf("%v", dsoUriRaw)
 
 			// Simple URI parsing, e.g., aws-sm://prod/db/password
@@ -153,10 +150,8 @@ func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string)
 		parsed.Services[name] = svc
 	}
 
-	if !hasDsoSecrets {
-		// Just run docker compose normally
-		return execDockerCompose(filename, extraArgs, finalEnvs)
-	}
+	// Always use the transformed file to ensure rotation labels are injected
+	// even if no dso: secret files are present.
 
 	// Write the transformed compose file
 	transformedFilename := filepath.Join(secDir, "docker-compose.dso-transformed.yml")
