@@ -104,7 +104,6 @@ func (t *TriggerEngine) ExecuteRotation(providerName, secretName string, secretD
 				}
 				_ = t.Reloader.TriggerReload(ctx, secretName)
 			}()
-		}
 	}
 }
 
