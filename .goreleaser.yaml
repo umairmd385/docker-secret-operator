@@ -1,0 +1,120 @@
+version: 2
+project_name: docker-secret-operator
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: docker-dso
+    main: ./cmd/docker-dso
+    binary: docker-dso
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+  - id: dso
+    main: ./cmd/dso
+    binary: dso
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+  - id: dso-agent
+    main: ./cmd/dso-agent
+    binary: dso-agent
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+  - id: dso-provider-aws
+    main: ./cmd/plugins/dso-provider-aws
+    binary: dso-provider-aws
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+  - id: dso-provider-azure
+    main: ./cmd/plugins/dso-provider-azure
+    binary: dso-provider-azure
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+  - id: dso-provider-huawei
+    main: ./cmd/plugins/dso-provider-huawei
+    binary: dso-provider-huawei
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+  - id: dso-provider-vault
+    main: ./cmd/plugins/dso-provider-vault
+    binary: dso-provider-vault
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "386" }}i386
+      {{- else if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+      - install.sh
+      - uninstall.sh
+
+checksum:
+  name_template: 'checksums.txt'
+
+release:
+  github:
+    owner: umairmd385
+    name: docker-secret-operator
+  draft: false
+  prerelease: auto

@@ -19,7 +19,7 @@ func NewDownCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			fullArgs := append([]string{"compose"}, args...)
+			fullArgs := append([]string{"compose", "down"}, args...)
 			
 			child := exec.Command(dockerPath, fullArgs...)
 			child.Stdout = os.Stdout

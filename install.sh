@@ -190,16 +190,30 @@ if [ ! -f /etc/dso/dso.yaml ]; then
 # Docker Secret Operator (DSO) Configuration
 # Full docs: https://github.com/umairmd385/docker-secret-operator
 
-provider: ${PROVIDER}
+provider: aws
 
 config:
-  region: ${REGION}  # For Azure: vault_name | For Vault: address + token
+  region: us-east-2
+
+agent:
+  cache: true
+  watch:
+    mode: polling
+    polling_interval: 5m
+  restart_strategy:
+    type: rolling
+    grace_period: 20s
 
 secrets:
-  - name: ${SECRET_NAME}   # Secret name / ARN in the cloud provider
+  - name: <secret-arn>
     inject: env
+    rotation: true
+    reload_strategy:
+      type: restart
     mappings:
-      ${SECRET_KEY}: ${ENV_NAME}
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_USER: MYSQL_USER
+      MYSQL_PASSWORD: MYSQL_PASSWORD
 EOF
 
     echo -e "${GREEN}Created /etc/dso/dso.yaml successfully!${NC}"
@@ -207,7 +221,7 @@ else
     echo -e "${GREEN}Existing /etc/dso/dso.yaml found - skipping config creation.${NC}"
 fi
 
-chmod 600 /etc/dso/dso.yaml
+chmod 644 /etc/dso/dso.yaml
 
 # 6b. Create systemd service
 echo -e "${GREEN}[5b/7] Configuring dso-agent service...${NC}"
@@ -224,7 +238,6 @@ Restart=on-failure
 RestartSec=5
 EnvironmentFile=-/etc/dso/agent.env
 RuntimeDirectory=dso
-UMask=0007
 
 [Install]
 WantedBy=multi-user.target
