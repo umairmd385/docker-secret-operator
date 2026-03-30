@@ -2,6 +2,9 @@ package watcher
 
 import (
 	"context"
+	"os"
+	"os/exec"
+	"strings"
 	"sync"
 	"time"
 
@@ -14,8 +17,10 @@ import (
 )
 
 type TargetContainer struct {
-	ID       string
-	Strategy string // "signal" or "restart"
+	ID          string
+	Strategy    string   // "signal" or "restart"
+	ComposePath string   // Optional path to docker-compose.yml
+	Secrets     []string // List of secrets this container depends on
 }
 
 type ReloaderController struct {
@@ -68,9 +73,14 @@ func (r *ReloaderController) StartEventLoop(ctx context.Context) {
 						if strategy == "" {
 							strategy = "restart" // default
 						}
+						composePath := msg.Actor.Attributes["dso.compose.path"]
+						secretList := strings.Split(msg.Actor.Attributes["dso.secrets"], ",")
+
 						r.Targets.Store(msg.Actor.ID, &TargetContainer{
-							ID:       msg.Actor.ID,
-							Strategy: strategy,
+							ID:          msg.Actor.ID,
+							Strategy:    strategy,
+							ComposePath: composePath,
+							Secrets:     secretList,
 						})
 						r.Logger.Info("Registered target container dynamically", zap.String("id", msg.Actor.ID), zap.String("strategy", strategy))
 					}
@@ -99,9 +109,14 @@ func (r *ReloaderController) populateInitialTargets(ctx context.Context) {
 		if strategy == "" {
 			strategy = "restart"
 		}
+		composePath := c.Labels["dso.compose.path"]
+		secretList := strings.Split(c.Labels["dso.secrets"], ",")
+
 		r.Targets.Store(c.ID, &TargetContainer{
-			ID:       c.ID,
-			Strategy: strategy,
+			ID:          c.ID,
+			Strategy:    strategy,
+			ComposePath: composePath,
+			Secrets:     secretList,
 		})
 	}
 	r.Logger.Info("Initial container population complete")
@@ -111,6 +126,40 @@ func (r *ReloaderController) populateInitialTargets(ctx context.Context) {
 func (r *ReloaderController) TriggerReload(ctx context.Context, secretName string) error {
 	r.Targets.Range(func(key, value interface{}) bool {
 		target := value.(*TargetContainer)
+
+		// Filter: only reload if the container uses THIS secret (or if secretName is empty for global reload)
+		usesSecret := false
+		if secretName == "" {
+			usesSecret = true
+		} else {
+			for _, s := range target.Secrets {
+				if s == secretName || strings.Contains(secretName, s) || strings.Contains(s, secretName) {
+					usesSecret = true
+					break
+				}
+			}
+		}
+
+		if !usesSecret {
+			return true
+		}
+
+		if target.ComposePath != "" && target.Strategy == "restart" {
+			r.Logger.Info("Triggering native Docker Compose rotation", zap.String("id", target.ID), zap.String("path", target.ComposePath))
+			// Run 'docker-dso up -d' using the binary path or proxy
+			// Actually, the agent can call the plugin's 'up' logic or just 'docker compose up -d'
+			// Since the agent already has the env injected, calling 'docker compose up -d' 
+			// with the same transformed env will work IF the agent is in the same context.
+			// Better: The agent should just run 'docker compose -f path up -d'
+			cmd := exec.Command("docker", "compose", "-f", target.ComposePath, "up", "-d")
+			cmd.Env = os.Environ() // Agent has the master config, but we need the specific container env?
+			// Actually, running 'docker dso up -d' is even better but might cause recursion.
+			// We'll stick to a simple compose up for now.
+			if err := cmd.Run(); err != nil {
+				r.Logger.Error("Failed to trigger compose rotation", zap.Error(err))
+			}
+			return true
+		}
 
 		if target.Strategy == "signal" {
 			r.Logger.Info("Sending SIGHUP to container", zap.String("id", target.ID))

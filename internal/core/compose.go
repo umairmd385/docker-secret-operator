@@ -112,6 +112,47 @@ func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string)
 		}
 	}
 
+	// Step 2: Inject rotation management labels into all services
+	absPath, _ := filepath.Abs(filename)
+	for name, svcRaw := range parsed.Services {
+		svc, ok := svcRaw.(map[string]interface{})
+		if !ok {
+			continue
+		}
+
+		labels := make(map[string]interface{})
+		if existingLabels, ok := svc["labels"].(map[string]interface{}); ok {
+			labels = existingLabels
+		} else if existingLabels, ok := svc["labels"].([]interface{}); ok {
+			// Convert slice labels to map if needed
+			for _, l := range existingLabels {
+				parts := strings.SplitN(fmt.Sprintf("%v", l), "=", 2)
+				if len(parts) == 2 {
+					labels[parts[0]] = parts[1]
+				} else {
+					labels[parts[0]] = ""
+				}
+			}
+		}
+
+		labels["dso.reloader"] = "true"
+		labels["dso.compose.path"] = absPath
+		
+		// Map secrets into label for affinity
+		var used []string
+		if cfg != nil {
+			for _, s := range cfg.Secrets {
+				used = append(used, s.Name)
+			}
+		}
+		if len(used) > 0 {
+			labels["dso.secrets"] = strings.Join(used, ",")
+		}
+
+		svc["labels"] = labels
+		parsed.Services[name] = svc
+	}
+
 	if !hasDsoSecrets {
 		// Just run docker compose normally
 		return execDockerCompose(filename, extraArgs, finalEnvs)
