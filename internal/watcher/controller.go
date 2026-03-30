@@ -2,11 +2,13 @@ package watcher
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/docker-secret-operator/dso/internal/core"
+	"github.com/docker-secret-operator/dso/internal/rotation"
 	"github.com/docker-secret-operator/dso/pkg/observability"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/events"
@@ -26,6 +28,7 @@ type ReloaderController struct {
 	Logger  *zap.Logger
 	Targets sync.Map // map[string]*TargetContainer (key: containerID)
 	cli     *client.Client
+	Server  interface{}
 }
 
 func NewReloaderController(logger *zap.Logger) (*ReloaderController, error) {
@@ -143,10 +146,15 @@ func (r *ReloaderController) TriggerReload(ctx context.Context, secretName strin
 		if target.ComposePath != "" && target.Strategy == "restart" {
 			r.Logger.Info("Triggering native Docker Compose rotation via Core Engine", zap.String("path", target.ComposePath))
 			
-			// We pass the absolute path and empty args to trigger a native recreate.
-			// The Core Engine will now detect /etc/dso/dso.yaml automatically.
 			go func() {
-				err := core.RunComposeUpWithEnv(target.ComposePath, []string{"-d"}, "/etc/dso/dso.yaml")
+				// EMIT EVENT!
+				if r.Server != nil {
+					if as, ok := r.Server.(interface{ Emit(string) }); ok {
+						as.Emit(fmt.Sprintf("🔄 Native rotation: Scaling %s from compose context.", target.ComposePath))
+					}
+				}
+				// Use the resolved config path if available, or fallback to default resolve logic
+				err := core.RunComposeUpWithEnv(target.ComposePath, []string{"-d"}, "")
 				if err != nil {
 					r.Logger.Error("Background rotation failed", zap.Error(err))
 				} else {
@@ -159,6 +167,28 @@ func (r *ReloaderController) TriggerReload(ctx context.Context, secretName strin
 		if target.Strategy == "signal" {
 			r.Logger.Info("Sending SIGHUP to container", zap.String("id", target.ID))
 			_ = r.cli.ContainerKill(ctx, target.ID, "SIGHUP")
+		} else if target.Strategy == "rolling" {
+			r.Logger.Info("🚀 Executing Zero-Downtime Rolling Rotation", zap.String("id", target.ID))
+			
+			// Use the rolling strategy engine
+			rs := rotation.NewRollingStrategy(r.cli)
+			
+			go func() {
+				// EMIT EVENT!
+				if r.Server != nil {
+					if as, ok := r.Server.(interface{ Emit(string) }); ok {
+						as.Emit(fmt.Sprintf("🔄 Rolling Swap Start: %s", target.ID[:12]))
+					}
+				}
+
+				// TODO: Fetch latest secrets from cache to pass into Execute
+				// For now, we use empty map to represent 'refresh from latest fetch'
+				err := rs.Execute(ctx, target.ID, map[string]string{}, 30*time.Second)
+				if err != nil {
+					r.Logger.Error("Rolling rotation failed", zap.Error(err))
+				}
+			}()
+
 		} else if target.Strategy == "restart" {
 			r.Logger.Info("Restarting container", zap.String("id", target.ID))
 			timeout := 10

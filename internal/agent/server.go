@@ -86,7 +86,7 @@ func (s *AgentServer) GetSecret(req *api.AgentRequest, resp *api.AgentResponse) 
 	return nil
 }
 
-func StartSocketServer(socketPath string, cache *SecretCache, store *providers.SecretStoreManager, logger *zap.Logger) error {
+func StartSocketServer(socketPath string, cache *SecretCache, store *providers.SecretStoreManager, logger *zap.Logger) (*AgentServer, error) {
 	server := &AgentServer{
 		Cache:  cache,
 		Store:  store,
@@ -103,21 +103,25 @@ func StartSocketServer(socketPath string, cache *SecretCache, store *providers.S
 	logger.Info("Starting local Unix socket", zap.String("path", socketPath))
 	listener, err := net.Listen("unix", socketPath)
 	if err != nil {
-		return fmt.Errorf("failed to listen on socket %s: %w", socketPath, err)
+		return nil, fmt.Errorf("failed to listen on socket %s: %w", socketPath, err)
 	}
-	defer listener.Close()
 
 	// Ensure permissive permissions so containers mounted can read it
-	_ = os.Chmod(socketPath, 0666) // Changed to 0666 for better security compatibility natively
+	_ = os.Chmod(socketPath, 0666)
 
-	for {
-		conn, err := listener.Accept()
-		if err != nil {
-			logger.Error("Socket accept error", zap.Error(err))
-			continue
+	go func() {
+		defer listener.Close()
+		for {
+			conn, err := listener.Accept()
+			if err != nil {
+				logger.Error("Socket accept error", zap.Error(err))
+				continue
+			}
+			go rpc.ServeConn(conn)
 		}
-		go rpc.ServeConn(conn)
-	}
+	}()
+
+	return server, nil
 }
 
 // ServeHTTP handles Docker V2 Secret Driver requests (POST /SecretDriver.Get)

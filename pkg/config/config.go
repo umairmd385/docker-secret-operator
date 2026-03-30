@@ -22,13 +22,20 @@ type WebhookConfig struct {
 	AuthToken string `yaml:"auth_token"`
 }
 
+type RotationConfig struct {
+	Strategy           string `yaml:"strategy"`
+	HealthCheckTimeout string `yaml:"health_check_timeout"`
+	MaxParallel        int    `yaml:"max_parallel"`
+}
+
 type AgentConfig struct {
 	Cache           bool            `yaml:"cache"`
-	RefreshInterval string          `yaml:"refresh_interval"` // Deprecated in favor of Watch.PollingInterval natively bounds smoothly.
+	RefreshInterval string          `yaml:"refresh_interval"` 
 	AutoSync        bool            `yaml:"auto_sync"`
 	RestartStrategy RestartStrategy `yaml:"restart_strategy"`
 	Watch           WatchConfig     `yaml:"watch"`
 	Webhook         WebhookConfig   `yaml:"webhook"`
+	Rotation        RotationConfig  `yaml:"rotation"`
 }
 
 type ReloadStrategy struct {

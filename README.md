@@ -321,7 +321,7 @@ Need help integrating docker-dso in your infra?
 👉 Reach out:
 - GitHub Discussions: [Open a Thread](https://github.com/umairmd385/docker-secret-operator/discussions)
 - LinkedIn: [Md Umair](https://www.linkedin.com/in/mdumair250801/)
-- Email: [mdumair250801@gmail.com]
+- Email: [umairmd385@gmail.com]
 
 ---
 

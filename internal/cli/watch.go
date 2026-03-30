@@ -1,16 +1,21 @@
 package cli
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"time"
 
 	"github.com/docker-secret-operator/dso/internal/injector"
+	"github.com/docker-secret-operator/dso/internal/watcher"
 	"github.com/spf13/cobra"
 )
 
 func NewWatchCmd() *cobra.Command {
-	return &cobra.Command{
+	var debug bool
+	var strategy string
+
+	cmd := &cobra.Command{
 		Use:   "watch",
 		Short: "Real-time monitor of secret rotations and container lifecycles",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -19,36 +24,55 @@ func NewWatchCmd() *cobra.Command {
 				socketPath = custom
 			}
 
-			client, err := injector.NewAgentClient(socketPath)
+			// New Docker Watcher logic
+			dw, err := watcher.NewDockerWatcher(debug)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error: Could not connect to DSO Agent: %v\n", err)
+				fmt.Fprintln(os.Stderr, err)
 				os.Exit(1)
 			}
 
-			fmt.Println("\033[1;36mDSO Watcher Active\033[0m - Monitoring container lifecycle events...")
-			fmt.Println("-------------------------------------------------------------------")
+			ctx := context.Background()
+			msgCh, errCh := dw.Subscribe(ctx)
 
-			seen := make(map[string]bool)
+			// Legacy Agent connection for DSO local events
+			client, _ := injector.NewAgentClient(socketPath)
+
+			fmt.Println("\033[1;36mDSO Watcher Active\033[0m (Strategy: " + strategy + ") - Monitoring live container events...")
+			fmt.Println("-----------------------------------------------------------------------------------")
+
+			seenAgentMsgs := make(map[string]bool)
 
 			for {
-				resp, err := client.GetEvents()
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "Connection lost: %v. Retrying...\n", err)
+				select {
+				case <-ctx.Done():
+					return
+				case dwErr := <-errCh:
+					fmt.Fprintf(os.Stderr, "[ERROR] Docker event stream error: %v\n", dwErr)
 					time.Sleep(2 * time.Second)
-					client, _ = injector.NewAgentClient(socketPath)
-					continue
-				}
-
-				// Sort and display new events
-				for _, msg := range resp.Data {
-					if !seen[msg] {
-						fmt.Printf("📡 %s\n", msg)
-						seen[msg] = true
+					msgCh, errCh = dw.Subscribe(ctx) // Try to reconnect
+				case msg := <-msgCh:
+					// Format and display Docker native events
+					watcher.ProcessEvent(msg, debug)
+				case <-time.After(1 * time.Second):
+					// Periodically check Agent for DSO specific rotation events
+					if client != nil {
+						resp, err := client.GetEvents()
+						if err == nil {
+							for _, m := range resp.Data {
+								if !seenAgentMsgs[m] {
+									fmt.Printf("\033[1;32m[DSO ROTATION]\033[0m [%s] %s\n", time.Now().Format("15:04:05"), m)
+									seenAgentMsgs[m] = true
+								}
+							}
+						}
 					}
 				}
-
-				time.Sleep(1 * time.Second)
 			}
 		},
 	}
+
+	cmd.Flags().BoolVarP(&debug, "debug", "d", false, "Enable raw event payload output")
+	cmd.Flags().StringVar(&strategy, "strategy", "restart", "Rotation strategy (restart/rolling)")
+
+	return cmd
 }
