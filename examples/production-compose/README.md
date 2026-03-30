@@ -13,9 +13,9 @@ This example shows how to deploy a stack using DSO for secret management.
    sudo systemctl status dso-agent
    ```
 
-2. **Deploy the stack via dso wrapper**
+2. **Deploy the stack via docker-dso plugin**
    ```bash
-   dso compose -f docker-compose.yaml up -d
+   docker dso up -d
    ```
 
 3. **Verify injection**

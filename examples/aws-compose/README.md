@@ -10,7 +10,7 @@ This example demonstrates using **Docker Secret Operator (DSO)** to inject MySQL
 | :--- | :--- |
 | **AWS Secrets Manager** | Stores `MYSQL_ROOT_PASSWORD`, `MYSQL_USER`, `MYSQL_PASSWORD` |
 | **dso-agent** | Fetches the secret from AWS and caches it in memory |
-| **dso compose** | Injects the secret values into docker compose at startup |
+| **docker dso** | Injects the secret values into docker compose at startup |
 | **mysql_db** | MySQL container receives credentials via environment variables |
 | **phpmyadmin** | phpMyAdmin connects to MySQL without needing credentials in the compose file |
 
@@ -86,7 +86,7 @@ sudo systemctl start dso-agent
 sudo systemctl status dso-agent
 
 # Confirm it can reach your secret:
-dso fetch local_secret
+docker dso fetch local_secret
 ```
 
 Expected output:
@@ -137,8 +137,8 @@ services:
 ## Step 5 — Deploy
 
 ```bash
-# From the examples/aws-compose directory (or any directory after system install)
-dso compose up -d
+# From the examples/aws-compose directory
+docker dso up -d
 ```
 
 DSO will:
@@ -236,7 +236,7 @@ examples/aws-compose/
 ## Cleanup
 
 ```bash
-dso compose down
+docker dso down
 # or
 docker compose down -v  # also removes volumes
 ```

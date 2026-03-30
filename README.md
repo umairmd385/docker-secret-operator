@@ -1,5 +1,7 @@
 # 🔐 docker-dso
 
+![docker-dso Hero](/home/user/.gemini/antigravity/brain/a4b51bf6-799a-47eb-96b5-61a67f139efa/docker_dso_hero_dashboard_1774848045282.png)
+
 **Enterprise-Grade Secret Management for Docker**
 
 [![Build](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
@@ -23,6 +25,8 @@
 ```bash
 docker dso up -d
 ```
+
+![docker-dso Terminal Demo](/home/user/.gemini/antigravity/brain/a4b51bf6-799a-47eb-96b5-61a67f139efa/docker_dso_terminal_demo_1774848089612.png)
 
 > Secure Docker like Kubernetes — **without Kubernetes.**
 
@@ -100,36 +104,33 @@ docker-dso is built in **Go** with a minimal, efficient runtime design.
 
 ---
 
-## ⚡ QUICK START
+## 🛠️ Installation & Upgrades
+
+### 1-Line Automated Install (Recommended)
+Our production installer handles dependencies, builds core binaries, and registers the **Docker CLI Plugin** automatically.
 
 ```bash
-# Initialize limits & configuration natively
-docker dso init
-
-# Inject securely and boot your app
-docker dso up -d
+curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/install.sh | sudo bash
 ```
 
----
+### 🔁 How to Upgrade
+Got new features? Upgrading is seamless. Just re-run the automated installer above. It will safely replace the binaries while preserving your custom `/etc/dso/dso.yaml` mappings.
 
-## 📦 REAL WORLD EXAMPLE
+### 🧹 Uninstallation
+We hate to see you go, but we made it easy to leave.
+```bash
+curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/uninstall.sh | sudo bash
+```
 
-You declare `dso:` attributes directly inside your generic Compose file.
+### Manual Plugin Install
+If you've grabbed the binary directly from GitHub Releases:
+```bash
+mkdir -p ~/.docker/cli-plugins
+mv docker-dso ~/.docker/cli-plugins/
+chmod +x ~/.docker/cli-plugins/docker-dso
 
-**`docker-compose.yml`**
-```yaml
-version: "3.9"
-
-services:
-  app:
-    image: my-secure-app:latest
-    secrets:
-      - db_password
-
-secrets:
-  db_password:
-    # 💥 The Magic Happens Here!
-    dso: aws-sm://prod/db/password
+# Verify the installation!
+docker dso version
 ```
 
 ---
@@ -309,7 +310,7 @@ We are building a **fully managed docker-dso platform**:
 - Audit logs & compliance reports
 - Multi-environment orchestration
 
-👉 **Join the waitlist:** (link pending)
+👉 **Join the waitlist:** [dso.dev/managed-saas](https://github.com/umairmd385/docker-secret-operator/issues)
 
 ---
 
@@ -318,9 +319,9 @@ We are building a **fully managed docker-dso platform**:
 Need help integrating docker-dso in your infra?
 
 👉 Reach out:
-- GitHub Discussions
-- LinkedIn
-- Email (founder@example.com)
+- GitHub Discussions: [Open a Thread](https://github.com/umairmd385/docker-secret-operator/discussions)
+- LinkedIn: [Md Umair](https://www.linkedin.com/in/mdumair250801/)
+- Email: [mdumair250801@gmail.com]
 
 ---
 

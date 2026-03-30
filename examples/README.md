@@ -3,13 +3,13 @@
 This directory contains standalone end-to-end examples highlighting the capabilities of the **Docker Secret Operator (DSO)** across different cloud environments.
 
 ## Running an Example
-Navigate into any example directory and run the stack using the `dso` wrapper.
+Navigate into any example directory and run the stack using the `docker dso` plugin.
 
 ```bash
-cd aws-docker-compose
+cd aws-compose
 
-# Intercept compose up, retrieve secrets, and inject!
-dso compose up -d
+# Native plugin execution: retrieve secrets & boot!
+docker dso up -d
 ```
 
 ## Available Scenarios

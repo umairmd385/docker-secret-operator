@@ -29,9 +29,10 @@ systemctl disable dso-agent || true
 rm -f /etc/systemd/system/dso-agent.service
 systemctl daemon-reload
 
-echo -e "${GREEN}Removing binaries...${NC}"
+echo -e "${GREEN}Removing binaries and plugin...${NC}"
 rm -f $INSTALL_DIR/dso
 rm -f $INSTALL_DIR/dso-agent
+rm -f /usr/local/lib/docker/cli-plugins/docker-dso
 
 echo -e "${GREEN}Removing library and plugins...${NC}"
 rm -rf $LIB_DIR

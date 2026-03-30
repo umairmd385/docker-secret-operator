@@ -15,6 +15,10 @@ services:
   # Sample Application utilizing DSO
   web:
     image: nginx:latest
-    environment:
-      - DB_PASSWORD
-    # When running dso compose up, DB_PASSWORD will be injected automatically
+    secrets:
+      - db_password
+    # When running docker dso up, db_password will be fetched and injected automatically
+
+secrets:
+  db_password:
+    dso: aws-sm://prod/database/password

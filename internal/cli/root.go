@@ -46,7 +46,15 @@ func NewRootCmd() *cobra.Command {
 }
 
 func Execute() {
-	if err := NewRootCmd().Execute(); err != nil {
+	rootCmd := NewRootCmd()
+
+	// Docker CLI plugin fix: strip the plugin name if it's passed as the first argument
+	// (Required when called via 'docker dso ...')
+	if len(os.Args) > 1 && os.Args[1] == "dso" {
+		os.Args = append(os.Args[:1], os.Args[2:]...)
+	}
+
+	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
