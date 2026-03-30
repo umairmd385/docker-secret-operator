@@ -32,6 +32,19 @@ docker dso up -d
 
 ---
 
+## 🎥 Live Demo
+
+### 🔐 Secure Docker in One Command
+![demo-up](./docs/assets/demo-up.gif)
+
+### 🔄 Automatic Secret Rotation
+![demo-rotation](./docs/assets/demo-rotation.gif)
+
+### 🧠 Intelligent Strategy Engine
+![demo-strategy](./docs/assets/demo-strategy.gif)
+
+---
+
 ## 🚀 WHAT IS docker-dso?
 
 We've all been there: You're trying to spin up a Docker Compose stack, but you end up hardcoding secret tokens in `docker-compose.yml`, or relying on insecure, committed `.env` files that inevitably leak onto GitHub. To solve this properly, people usually migrate their entire stack to Kubernetes, adopting immense unnecessary complexity.
@@ -144,6 +157,23 @@ When you configure rotation:
 1. `docker-dso` securely polls or listens via webhook for updates from your cloud provider (e.g. AWS Secrets Manager).
 2. It detects structural ID payload shifts cleanly.
 3. Automatically performs a *Zero-Downtime Rolling Restart* of any affected container seamlessly.
+
+---
+
+## 🔍 Real Runtime Logs
+
+```text
+[DSO ANALYZER]
+Container: mysql_database_cnt
+- Fixed Port: YES
+- Stateful: YES
+
+[DSO STRATEGY]
+Selected: restart
+
+[DSO ROTATION]
+No change detected → skipping
+```
 
 ---
 
