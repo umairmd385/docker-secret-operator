@@ -48,7 +48,7 @@ func (p *VaultProvider) Init(config map[string]string) error {
 func (p *VaultProvider) GetSecret(name string) (map[string]string, error) {
 	// Vault KV v2 uses 'data' in the path
 	path := fmt.Sprintf("%s/data/%s", p.mount, name)
-	
+
 	secret, err := p.client.Logical().Read(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read vault secret %s: %w", name, err)

@@ -31,7 +31,7 @@ func NewSecretCache(ttl time.Duration) *SecretCache {
 		items: make(map[string]CacheItem),
 		ttl:   ttl,
 	}
-	
+
 	if data, err := os.ReadFile("/var/run/dso/state.json"); err == nil {
 		var state map[string]CacheItem
 		if err := json.Unmarshal(data, &state); err == nil {
@@ -74,7 +74,7 @@ func (c *SecretCache) Set(key string, data map[string]string) {
 		Hash:      ComputeHash(data),
 		ExpiresAt: time.Now().Add(c.ttl),
 	}
-	
+
 	c.saveToDisk()
 }
 

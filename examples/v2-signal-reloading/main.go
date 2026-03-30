@@ -48,7 +48,7 @@ func main() {
 	}()
 
 	fmt.Println("Server is running. Waiting for signals...")
-	
+
 	for {
 		time.Sleep(10 * time.Second)
 		globalConfig.RLock()

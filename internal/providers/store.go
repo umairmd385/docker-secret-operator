@@ -1,4 +1,4 @@
-package provider
+package providers
 
 import (
 	"fmt"
@@ -49,9 +49,9 @@ func (s *SecretStoreManager) GetProvider(providerName string, config map[string]
 			success = true
 			break
 		}
-		s.logger.Warn("Failed to initialize provider, applying backoff", 
-			zap.String("provider", providerName), 
-			zap.Error(err), 
+		s.logger.Warn("Failed to initialize provider, applying backoff",
+			zap.String("provider", providerName),
+			zap.Error(err),
 			zap.Duration("retry", backoff))
 		time.Sleep(backoff)
 		backoff *= 2

@@ -31,7 +31,7 @@ func (d *DockerInjector) ExecuteBestEffortRollingRestart(secretName string, secr
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
 
-	affectedContainers := []string{"container_worker_old"} 
+	affectedContainers := []string{"container_worker_old"}
 
 	for _, container := range affectedContainers {
 		success := false
@@ -41,7 +41,7 @@ func (d *DockerInjector) ExecuteBestEffortRollingRestart(secretName string, secr
 		for attempt := 1; attempt <= maxRetries; attempt++ {
 			d.LogInjectionEvent(secretName, container, "injection_triggered", "attempting", fmt.Sprintf("attempt %d", attempt))
 			d.Logger.Info("Creating replacement container", zap.String("secret", secretName), zap.String("old_container", container), zap.String("event_type", "new_container_created"))
-			
+
 			time.Sleep(2 * time.Second) // Simulate cloning and starting with new ENV
 
 			healthy := d.simulateHealthCheck(ctx, container+"_new")
@@ -49,7 +49,7 @@ func (d *DockerInjector) ExecuteBestEffortRollingRestart(secretName string, secr
 				d.LogInjectionEvent(secretName, container+"_new", "injection_failed", "failure", "Health check failed, throwing rollback_triggered")
 				d.Logger.Error("Health check failed, rollback_triggered", zap.String("secret", secretName), zap.String("failed_container", container+"_new"), zap.String("event_type", "rollback_triggered"))
 				observability.BackendFailuresTotal.WithLabelValues("docker_injector", "restart_failed").Inc()
-				
+
 				time.Sleep(backoff)
 				backoff *= 2
 				continue
@@ -77,7 +77,7 @@ func (d *DockerInjector) simulateHealthCheck(ctx context.Context, containerName 
 	// Simulated robust health check over 3 seconds
 	select {
 	case <-time.After(3 * time.Second):
-		return true 
+		return true
 	case <-ctx.Done():
 		return false
 	}
@@ -103,17 +103,17 @@ func (d *DockerInjector) LogInjectionEvent(secretName, containerName, eventType,
 	}
 
 	if errorMsg != "" {
-		d.Logger.Error("Secret Injection Event", 
-			zap.String("secret", secretName), 
-			zap.String("container", containerName), 
-			zap.String("event_type", eventType), 
-			zap.String("status", status), 
+		d.Logger.Error("Secret Injection Event",
+			zap.String("secret", secretName),
+			zap.String("container", containerName),
+			zap.String("event_type", eventType),
+			zap.String("status", status),
 			zap.String("error", errorMsg))
 	} else {
-		d.Logger.Info("Secret Injection Event", 
-			zap.String("secret", secretName), 
-			zap.String("container", containerName), 
-			zap.String("event_type", eventType), 
+		d.Logger.Info("Secret Injection Event",
+			zap.String("secret", secretName),
+			zap.String("container", containerName),
+			zap.String("event_type", eventType),
 			zap.String("status", status))
 	}
 }

@@ -1,4 +1,4 @@
-package reloader
+package watcher
 
 import (
 	"context"
@@ -135,7 +135,7 @@ func (r *ReloaderController) TriggerReload(ctx context.Context, secretName strin
 				observability.BackendFailuresTotal.WithLabelValues("docker_injector", "start_failed").Inc()
 				return true
 			}
-			
+
 			r.Logger.Info("Container securely restarted", zap.String("id", target.ID))
 		}
 		return true

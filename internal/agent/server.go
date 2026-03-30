@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/docker-secret-operator/dso/internal/provider"
+	"github.com/docker-secret-operator/dso/internal/providers"
 	"github.com/docker-secret-operator/dso/pkg/api"
 	"github.com/docker-secret-operator/dso/pkg/observability"
 	"go.uber.org/zap"
@@ -17,7 +17,7 @@ import (
 
 type AgentServer struct {
 	Cache  *SecretCache
-	Store  *provider.SecretStoreManager
+	Store  *providers.SecretStoreManager
 	Logger *zap.Logger
 }
 
@@ -63,7 +63,7 @@ func (s *AgentServer) GetSecret(req *api.AgentRequest, resp *api.AgentResponse) 
 	return nil
 }
 
-func StartSocketServer(socketPath string, cache *SecretCache, store *provider.SecretStoreManager, logger *zap.Logger) error {
+func StartSocketServer(socketPath string, cache *SecretCache, store *providers.SecretStoreManager, logger *zap.Logger) error {
 	server := &AgentServer{
 		Cache:  cache,
 		Store:  store,
@@ -116,9 +116,9 @@ func (s *AgentServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Attempt to get from cache or default provider
 	fetchReq := &api.AgentRequest{Secret: req.Name}
 	fetchResp := &api.AgentResponse{}
-	
+
 	err := s.GetSecret(fetchReq, fetchResp)
-	
+
 	resp := api.DockerV2SecretResponse{}
 	if err != nil || fetchResp.Error != "" {
 		errorMsg := "secret not found"
@@ -137,7 +137,7 @@ func (s *AgentServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-func StartDriverServer(socketPath string, cache *SecretCache, store *provider.SecretStoreManager, logger *zap.Logger) error {
+func StartDriverServer(socketPath string, cache *SecretCache, store *providers.SecretStoreManager, logger *zap.Logger) error {
 	server := &AgentServer{
 		Cache:  cache,
 		Store:  store,

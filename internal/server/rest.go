@@ -8,11 +8,11 @@ import (
 	"time"
 
 	"strconv"
-	
-	"github.com/gorilla/websocket"
+
 	"github.com/docker-secret-operator/dso/internal/agent"
 	"github.com/docker-secret-operator/dso/pkg/config"
 	"github.com/docker-secret-operator/dso/pkg/observability"
+	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
 )
 
@@ -75,7 +75,7 @@ func (s *RESTServer) handleEvents(w http.ResponseWriter, r *http.Request) {
 	severity := r.URL.Query().Get("severity")
 
 	events := s.EventStore.GetLast(limit, severity)
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	if len(events) == 0 {
 		w.Write([]byte("[]"))
@@ -108,7 +108,7 @@ func (s *RESTServer) handleEventWS(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	severity := r.URL.Query().Get("severity")
-	
+
 	initialEvents := s.EventStore.GetLast(limit, severity)
 	for _, ev := range initialEvents {
 		client.conn.WriteJSON(ev)

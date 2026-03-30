@@ -96,9 +96,15 @@ echo -e "${GREEN}[3/7] Building core binaries...${NC}"
 # CGO_ENABLED=0 ensures fully static binaries - no dynamic library dependencies
 # that could cause 'Unrecognized remote plugin message' crashes at runtime
 CGO_ENABLED=0 go build -ldflags="-s -w" -o dso       ./cmd/dso/
+CGO_ENABLED=0 go build -ldflags="-s -w" -o docker-dso ./cmd/docker-dso/
 CGO_ENABLED=0 go build -ldflags="-s -w" -o dso-agent ./cmd/dso-agent/
 
 mv dso dso-agent $INSTALL_DIR/
+
+echo -e "${GREEN}Installing Docker CLI Plugin (docker-dso)...${NC}"
+mkdir -p /usr/local/lib/docker/cli-plugins
+mv docker-dso /usr/local/lib/docker/cli-plugins/
+chmod +x /usr/local/lib/docker/cli-plugins/docker-dso
 
 # 5. Build and Install Plugins (user selects which providers they need)
 echo -e "${GREEN}[4/7] Setting up provider plugins...${NC}"
@@ -250,8 +256,8 @@ fi
 echo -e "${GREEN}[7/7] Verifying installation...${NC}"
 
 # Check binaries
-if [ -f "$INSTALL_DIR/dso" ] && [ -f "$INSTALL_DIR/dso-agent" ]; then
-    echo -e "${GREEN}Binaries installed successfully.${NC}"
+if [ -f "$INSTALL_DIR/dso" ] && [ -f "$INSTALL_DIR/dso-agent" ] && [ -f "/usr/local/lib/docker/cli-plugins/docker-dso" ]; then
+    echo -e "${GREEN}Binaries and plugin installed successfully.${NC}"
 else
     echo -e "${RED}Binary installation failed.${NC}"
     exit 1
@@ -272,7 +278,8 @@ echo -e "${BLUE}================================================================
 echo -e "Usage:"
 echo -e "  - Start Agent:  ${BLUE}systemctl start dso-agent${NC}"
 echo -e "  - Check Status: ${BLUE}systemctl status dso-agent${NC}"
-echo -e "  - Use CLI:      ${BLUE}dso compose up -d${NC}"
+echo -e "  - Native CLI:   ${BLUE}docker dso up -d${NC}"
+echo -e "  - Legacy CLI:   ${BLUE}dso compose up -d${NC}"
 echo -e ""
 echo -e "Refer to ${REPO_URL} for advanced configuration (dso.yaml)."
 echo -e "To uninstall, run: curl -fsSL ${REPO_URL}/raw/main/uninstall.sh | sudo bash"

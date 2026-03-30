@@ -27,3 +27,4 @@ We are committed to:
 * Keeping our dependency versions up to date to minimize security risks.
 
 Thank you for your help in keeping DSO secure!
+

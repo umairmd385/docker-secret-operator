@@ -60,9 +60,9 @@ var (
 func StartMetricsServer(addr string, logger *zap.Logger) {
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
-	
+
 	logger.Info("Starting Prometheus metrics server", zap.String("addr", addr))
-	
+
 	server := &http.Server{
 		Addr:    addr,
 		Handler: mux,

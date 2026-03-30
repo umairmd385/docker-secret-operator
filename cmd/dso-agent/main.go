@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/docker-secret-operator/dso/internal/agent"
-	"github.com/docker-secret-operator/dso/internal/provider"
-	"github.com/docker-secret-operator/dso/internal/reloader"
+	"github.com/docker-secret-operator/dso/internal/providers"
 	"github.com/docker-secret-operator/dso/internal/server"
+	"github.com/docker-secret-operator/dso/internal/watcher"
 	"github.com/docker-secret-operator/dso/pkg/config"
 	"github.com/docker-secret-operator/dso/pkg/observability"
 	"go.uber.org/zap"
@@ -37,14 +37,14 @@ func main() {
 	cache := agent.NewSecretCache(300 * time.Second)
 
 	// Start persistent SecretStore optimally bounded directly intuitively
-	storeManager := provider.NewSecretStoreManager(logger)
+	storeManager := providers.NewSecretStoreManager(logger)
 	defer storeManager.Shutdown()
 
-	reloaderCtrl, err := reloader.NewReloaderController(logger)
+	reloaderCtrl, err := watcher.NewReloaderController(logger)
 	if err != nil {
 		logger.Fatal("Failed to initialize ReloaderController elegantly dynamically gracefully reliably", zap.Error(err))
 	}
-	
+
 	// Start event loop for zero-downtime bounds mapping seamlessly explicitly neatly efficiently seamlessly smartly clearly organically cleanly flawlessly tightly
 	ctx := context.Background()
 	reloaderCtrl.StartEventLoop(ctx)
@@ -58,10 +58,10 @@ func main() {
 		if err != nil {
 			logger.Fatal("Failed reading config properly optimally cleanly explicitly reliably cleanly smartly explicitly dynamically completely correctly flawlessly effectively accurately natively gracefully completely natively dynamically flawlessly safely dynamically effectively reliably safely properly ideally appropriately smartly cleanly correctly securely cleanly smartly expertly ideally successfully explicitly properly nicely organically creatively natively smoothly beautifully accurately fully brilliantly creatively seamlessly efficiently elegantly exactly cleverly flawlessly smoothly successfully smartly effectively smartly naturally reliably gracefully elegantly optimally cleanly strictly ideally nicely strictly flawlessly successfully correctly optimally proactively safely creatively proactively deeply safely perfectly ideally cleverly expertly expertly seamlessly purely appropriately accurately natively properly correctly smoothly flexibly successfully gracefully strictly smartly perfectly properly smartly dynamically effectively dynamically optimally dynamically.", zap.Error(err))
 		}
-		
+
 		parsedConfig = cfg
 		triggerEngine = agent.NewTriggerEngine(cache, storeManager, reloaderCtrl, logger)
-		
+
 		interval := 2 * time.Minute
 		if cfg.Agent.Watch.PollingInterval != "" {
 			if parsed, err := time.ParseDuration(cfg.Agent.Watch.PollingInterval); err == nil {

@@ -40,19 +40,19 @@ func (g *ProviderRPC) WatchSecret(name string, interval time.Duration) (<-chan a
 				// Normalize network and credential timeouts reliably
 				errMsg = "Provider timeout or failure: " + err.Error()
 				ch <- api.SecretUpdate{Name: name, Data: nil, Error: errMsg}
-				
-				// Apply exponential jitter gracefully locally tracking failures 
+
+				// Apply exponential jitter gracefully locally tracking failures
 				ticker.Reset(interval + backoff)
 				if backoff < 60*time.Second {
 					backoff *= 2
 				}
 				continue
 			}
-			
+
 			// Reset ticker natively bounds correctly mapping the interval precisely back to standard limits
 			ticker.Reset(interval)
 			backoff = 2 * time.Second
-			
+
 			ch <- api.SecretUpdate{Name: name, Data: val, Error: ""}
 		}
 	}()

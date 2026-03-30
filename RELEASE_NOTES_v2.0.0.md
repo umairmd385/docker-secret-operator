@@ -1,12 +1,16 @@
-# Release Notes v2.0.0
+# 🔹 Release Notes v2.0.0
 
-## Automatic Secret Rotation with Best-Effort Rolling Restarts
+## Event-Driven Triggers and Rolling Restarts
 
-DSO v2.0.0 fundamentally changes the way dynamically fetched secrets persist continuously inside active workloads, transforming the engine into a state-aware telemetry operator.
+DSO **v2.0.0** introduces sweeping structural changes bridging the gap between static injection and real runtime responsiveness. 
 
-### High-Impact Features
+### ✨ Features
+- **Trigger Engine**: We've replaced basic polling with a comprehensive **Hybrid Event-Driven Engine**. You can now trigger secret rotation proactively using standard webhooks (`POST /api/events/secret-update`) without depending entirely on API quotas.
+- **Rolling Restarts**: When environment secrets modify dynamically, DSO no longer ignores the change. The new Best-Effort Rolling Restart framework tracks connected containers, duplicates topology under the hood, runs the new configuration, waits for valid Docker health checks, and elegantly replaces the live containers seamlessly with zero downtime!
+- **Real-Time Websocket Logging**: Connect natively to `ws://localhost:8080/api/events/ws` to scrape internal update boundaries instantly.
+- **File Injection over tmpfs overlays**: You can now define `inject: file`. In this mode, secrets bypass environments entirely and overlay temporary RAM-backed volumes directly inside container boundaries instantly without container restarts.
 
-- **Continuous Provider Watch**: Sub-routines passively monitor integrated backend API streams (AWS Secrets Manager, Azure Key Vault, HashiCorp Vault) checking payload MD5 hashes passively against the live cluster footprint utilizing new config properties like `refresh_interval: 1m`.
-- **Best-Effort Rolling Restart with Health Checks**: Workloads mapping environments strictly against dynamically rotating credential caches orchestrate explicit background rolling restarts (cloning footprints, diverting traffic based on health probes, and discarding drained instances gracefully). This strategy is best-effort and includes fallback logic.
-- **Dynamic File Overwriting**: Credentials mounted securely exclusively utilizing host `.file` architectures inherit real-time transparent overwrites bypassing workload orchestration bounds completely.
-- **Rich Telemetry Traces**: Expanded the native API and Log systems mapping structured events like `new_container_created`, `restart_failed`, and `health_check_passed` sequentially over `/api/events` and explicit system-level logs.
+### 🛠 Improvements
+- Optimized API structures with tighter error handling natively inside all provider plugins.
+- Dramatically improved config parsing with better defaults safely integrated.
+- Removed legacy unauthenticated bounds.

@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/docker-secret-operator/dso/internal/provider"
-	"github.com/docker-secret-operator/dso/internal/reloader"
+	"github.com/docker-secret-operator/dso/internal/providers"
+	"github.com/docker-secret-operator/dso/internal/watcher"
 	"github.com/docker-secret-operator/dso/pkg/config"
 	"github.com/docker-secret-operator/dso/pkg/observability"
 	"go.uber.org/zap"
@@ -17,18 +17,18 @@ import (
 
 type TriggerEngine struct {
 	Cache     *SecretCache
-	Store     *provider.SecretStoreManager
-	Reloader  *reloader.ReloaderController
+	Store     *providers.SecretStoreManager
+	Reloader  *watcher.ReloaderController
 	Logger    *zap.Logger
 	rotations sync.Map
 	events    sync.Map // Tracks recent webhook timestamps for idempotency securely natively bounds tracking
 }
 
-func NewTriggerEngine(cache *SecretCache, store *provider.SecretStoreManager, reloaderCtrl *reloader.ReloaderController, logger *zap.Logger) *TriggerEngine {
+func NewTriggerEngine(cache *SecretCache, storeManager *providers.SecretStoreManager, rw *watcher.ReloaderController, logger *zap.Logger) *TriggerEngine {
 	return &TriggerEngine{
 		Cache:    cache,
-		Store:    store,
-		Reloader: reloaderCtrl,
+		Store:    storeManager,
+		Reloader: rw,
 		Logger:   logger,
 	}
 }
@@ -36,7 +36,7 @@ func NewTriggerEngine(cache *SecretCache, store *provider.SecretStoreManager, re
 // ExecuteRotation is the unified pipeline triggered by Polling OR Webhooks securely extracting mapped limits purely explicitly mapped securely bounds explicitly bounding.
 func (t *TriggerEngine) ExecuteRotation(providerName, secretName string, secretData map[string]string, sec config.SecretMapping) {
 	cacheKey := fmt.Sprintf("%s:%s", providerName, secretName)
-	
+
 	newHash := ComputeHash(secretData)
 	oldData, exists := t.Cache.Get(cacheKey)
 	oldHash := ""
@@ -66,7 +66,7 @@ func (t *TriggerEngine) ExecuteRotation(providerName, secretName string, secretD
 					os.Rename(tmpFile, targetFile)
 				}
 				t.Logger.Info("Flushed rotated secret to volume strictly and natively.", zap.String("secret", secretName))
-				
+
 				// Send SIGHUP/Restart to opted-in containers dynamically without blocking
 				go func() {
 					ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -97,7 +97,7 @@ func (t *TriggerEngine) StartPolling(providerName string, provConfig map[string]
 
 	go func() {
 		cacheKey := fmt.Sprintf("%s:%s", providerName, sec.Name)
-		
+
 		if _, exists := t.rotations.LoadOrStore(cacheKey, true); exists {
 			t.Logger.Warn("Polling explicitly blocked natively bounds tracking reliably smoothly flawlessly natively cleanly mapping bounds correctly reliably correctly natively uniquely smartly mapped smoothly.", zap.String("secret", sec.Name))
 			return
@@ -106,11 +106,11 @@ func (t *TriggerEngine) StartPolling(providerName string, provConfig map[string]
 
 		backoff := 5 * time.Second
 		currentInterval := baseInterval
-		maxInterval := baseInterval * 4 
+		maxInterval := baseInterval * 4
 
 		for {
 			t.Logger.Info("Connecting to provider polling stream cleanly scoped gracefully firmly mapped dynamically natively mapped directly seamlessly bounds accurately securely clearly precisely smartly solidly cleanly.", zap.String("provider", providerName), zap.String("secret", sec.Name))
-			
+
 			prov, err := t.Store.GetProvider(providerName, provConfig)
 			if err != nil {
 				t.Logger.Error("Failed to load provider gracefully applying backoff solidly cleanly explicitly natively clearly gracefully smoothly properly beautifully purely seamlessly correctly efficiently correctly firmly dynamically mapped securely natively mapping purely natively correctly properly elegantly mapped strictly natively robustly strictly accurately natively cleanly efficiently properly natively bounds flawlessly accurately safely natively securely explicitly exactly deeply beautifully robustly expertly smartly natively cleanly seamlessly dynamically securely naturally bounds flawlessly natively bounded explicitly safely appropriately safely reliably gracefully firmly smartly accurately clearly strictly gracefully explicitly natively natively smoothly dynamically precisely properly.", zap.Error(err), zap.Duration("retry", backoff))
@@ -164,7 +164,7 @@ func (t *TriggerEngine) StartPolling(providerName string, provConfig map[string]
 // HandleWebhook verifies strict Idempotency limits utilizing timestamps natively triggering the unified cache flows flawlessly safely bounds purely dynamically seamlessly scoped directly logically neatly smartly neatly exclusively explicitly directly clearly bounding carefully safely smoothly intelligently securely reliably properly brilliantly exactly flawlessly exactly deeply correctly strictly mapping seamlessly clearly safely safely elegantly logically exclusively nicely gracefully safely dynamically clearly clearly safely perfectly directly securely perfectly cleverly beautifully robustly flawlessly cleanly correctly perfectly directly expertly smoothly tightly efficiently effectively naturally accurately nicely elegantly intelligently ideally clearly exactly flawlessly dynamically securely securely smoothly perfectly elegantly cleanly flawlessly cleanly cleanly completely accurately intuitively perfectly.", zap.String("provider", providerName), zap.String("secret", sec.Name))
 func (t *TriggerEngine) HandleWebhook(providerName string, provConfig map[string]string, sec config.SecretMapping, timestamp string) error {
 	cacheKey := fmt.Sprintf("%s:%s", providerName, sec.Name)
-	
+
 	idempKey := cacheKey + ":" + timestamp
 	if _, loaded := t.events.LoadOrStore(idempKey, time.Now()); loaded {
 		t.Logger.Info("Webhook payload discarded purely on idempotency timestamp collisions natively securely bounds explicitly.", zap.String("idempKey", idempKey))

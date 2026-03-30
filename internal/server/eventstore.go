@@ -22,7 +22,7 @@ func NewEventStore(limit int, hub *Hub) *EventStore {
 		limit:  limit,
 		hub:    hub,
 	}
-	
+
 	os.MkdirAll("/var/run/dso", 0755)
 	f, err := os.OpenFile("/var/run/dso/events.jsonl", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err == nil {
@@ -38,7 +38,7 @@ func (s *EventStore) Add(e Event) {
 	if len(s.events) > s.limit {
 		s.events = s.events[len(s.events)-s.limit:]
 	}
-	
+
 	if s.logFile != nil {
 		if b, err := json.Marshal(e); err == nil {
 			b = append(b, '\n')
