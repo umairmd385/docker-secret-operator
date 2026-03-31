@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "DSO",
   description: "Native secrets for Docker — without Kubernetes",
+  base: '/docs/',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: '/assets/images/dso-logo.png',

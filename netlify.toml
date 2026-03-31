@@ -1,3 +1,4 @@
 [build]
   base = "/"
+  command = "npm run docs:build && cp -r docs/.vitepress/dist landing-page-premium/docs"
   publish = "landing-page-premium/"
