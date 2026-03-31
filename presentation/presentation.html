@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSO — Docker Secret Operator | Presentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --accent: #00f5d4;
+    --accent2: #7c3aed;
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2128;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --red: #f85149;
+    --green: #3fb950;
+    --amber: #d29922;
+    --blue: #58a6ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* ── SLIDE ENGINE ── */
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 80px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .slide.active { opacity: 1; pointer-events: all; }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 12px; align-items: center;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 50px; padding: 10px 24px;
+    z-index: 100;
+  }
+  .nav button {
+    background: none; border: none; color: var(--accent);
+    font-size: 18px; cursor: pointer; padding: 4px 8px;
+    border-radius: 8px; transition: background 0.2s;
+  }
+  .nav button:hover { background: var(--surface2); }
+  .nav .counter {
+    font-size: 12px; color: var(--muted); font-weight: 600;
+    min-width: 50px; text-align: center;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.4s ease; z-index: 200;
+  }
+
+  /* ── SLIDE NUMBER ── */
+  .slide-num {
+    position: fixed; top: 16px; right: 24px;
+    font-size: 11px; color: var(--muted); font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    z-index: 100;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .kicker {
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+  }
+  h1 { font-size: 64px; font-weight: 900; line-height: 1.1; }
+  h2 { font-size: 42px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
+  h3 { font-size: 22px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+  .subtitle { font-size: 20px; color: var(--muted); line-height: 1.6; max-width: 700px; }
+  .lead { font-size: 24px; color: var(--text); line-height: 1.6; max-width: 800px; text-align: center; }
+
+  /* ── COMPONENTS ── */
+  .tag {
+    display: inline-block; padding: 4px 12px;
+    border-radius: 20px; font-size: 11px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .tag-green { background: rgba(63,185,80,.15); color: var(--green); border: 1px solid rgba(63,185,80,.3); }
+  .tag-blue  { background: rgba(88,166,255,.15); color: var(--blue); border: 1px solid rgba(88,166,255,.3); }
+  .tag-red   { background: rgba(248,81,73,.15); color: var(--red); border: 1px solid rgba(248,81,73,.3); }
+  .tag-amber { background: rgba(210,153,34,.15); color: var(--amber); border: 1px solid rgba(210,153,34,.3); }
+  .tag-purple { background: rgba(124,58,237,.15); color: #a78bfa; border: 1px solid rgba(124,58,237,.3); }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--accent); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 960px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; width: 100%; max-width: 960px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; width: 100%; max-width: 1000px; }
+
+  code, .mono {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--surface2); border-radius: 6px;
+    padding: 2px 8px; font-size: 13px; color: var(--accent);
+  }
+
+  .code-block {
+    background: #0d1117; border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    line-height: 1.8; width: 100%; text-align: left;
+  }
+  .code-block .c-green { color: var(--green); }
+  .code-block .c-blue  { color: var(--blue); }
+  .code-block .c-amber { color: var(--amber); }
+  .code-block .c-muted { color: var(--muted); }
+  .code-block .c-accent{ color: var(--accent); }
+
+  .check-list { list-style: none; text-align: left; }
+  .check-list li { padding: 8px 0; font-size: 17px; color: var(--text); display: flex; align-items: flex-start; gap: 10px; }
+  .check-list li::before { content: "✓"; color: var(--accent); font-weight: 900; flex-shrink: 0; }
+  .cross-list li::before { content: "✗"; color: var(--red); }
+
+  .flow {
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .flow-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 20px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    font-weight: 600; text-align: center; min-width: 100px;
+  }
+  .flow-box.highlight { border-color: var(--accent); background: rgba(0,245,212,.05); color: var(--accent); }
+  .flow-arrow { color: var(--muted); font-size: 20px; }
+
+  .score-bar {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; max-width: 600px;
+  }
+  .score-bar .label { font-size: 13px; color: var(--text); min-width: 200px; }
+  .score-bar .track { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .score-bar .fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+  .score-bar .pts { font-size: 12px; color: var(--red); font-family: 'JetBrains Mono', monospace; min-width: 40px; text-align: right; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: var(--surface2); color: var(--accent); font-weight: 700; padding: 12px 16px; text-align: left; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  td { padding: 10px 16px; border-bottom: 1px solid var(--border); color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+
+  /* ── SLIDE-SPECIFIC ── */
+  .hero-badge {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    justify-content: center; margin-bottom: 32px;
+  }
+
+  .big-stat { font-size: 56px; font-weight: 900; color: var(--accent); }
+  .stat-label { font-size: 14px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+
+  .timeline { display: flex; flex-direction: column; gap: 0; width: 100%; max-width: 700px; }
+  .timeline-item { display: flex; gap: 20px; padding: 16px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-step { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #000; font-weight: 900; font-size: 14px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .timeline-content { flex: 1; }
+  .timeline-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .timeline-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .metric-card { text-align: center; padding: 20px; }
+  .metric-card .metric-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); margin-bottom: 8px; }
+  .metric-card .metric-desc { font-size: 12px; color: var(--muted); }
+
+  .provider-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; max-width: 900px; }
+  .provider-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+  .provider-icon { font-size: 28px; margin-bottom: 8px; }
+  .provider-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .provider-status { font-size: 11px; color: var(--green); margin-top: 4px; }
+
+  /* ── TITLE SLIDE ACCENT ── */
+  .title-accent {
+    position: absolute; top: -100px; right: -100px;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,245,212,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .title-accent2 {
+    position: absolute; bottom: -100px; left: -100px;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,58,237,.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* keyboard hint */
+  .kb-hint { position: fixed; top: 16px; left: 24px; font-size: 11px; color: var(--border); }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="slide-num" id="slideNum"></div>
+<div class="kb-hint">← → to navigate · Space to advance</div>
+
+<div class="deck" id="deck">
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 1: TITLE
+  ═══════════════════════════════════════════════ -->
+  <div class="slide active" id="s1">
+    <div class="title-accent"></div>
+    <div class="title-accent2"></div>
+    <div class="hero-badge">
+      <span class="tag tag-green">v3.0.0</span>
+      <span class="tag tag-blue">Production Ready</span>
+      <span class="tag tag-purple">SOC2 Ready</span>
+      <span class="tag tag-amber">MIT License</span>
+    </div>
+    <div class="kicker">Introducing</div>
+    <h1 style="text-align:center">
+      Docker Secret<br><span style="color:var(--accent)">Operator</span>
+    </h1>
+    <p class="subtitle" style="text-align:center;margin-top:24px">
+      Native secrets for Docker — without Kubernetes.<br>
+      <strong style="color:var(--text)">Kubernetes-grade security. Docker-native simplicity.</strong>
+    </p>
+    <div style="margin-top:40px;font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--accent)">
+      $ docker dso up -d
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 2: THE PROBLEM
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s2">
+    <div class="kicker">The Problem</div>
+    <h2>The <span style="color:var(--red)">.env file</span> crisis</h2>
+    <p class="subtitle" style="margin-bottom:36px">Every Docker team faces this — and most don't realize the damage</p>
+    <div class="grid-2" style="max-width:860px">
+      <div class="card">
+        <h3 style="color:var(--red)">❌ Current Reality</h3>
+        <ul class="check-list cross-list" style="margin-top:12px">
+          <li>Secrets accidentally committed to GitHub</li>
+          <li>Developers Slack each other production keys</li>
+          <li>Credentials sit unencrypted on laptops</li>
+          <li>Can't centrally rotate without manual restarts</li>
+          <li style="font-weight:700;color:var(--red)">Fails SOC2 audits out of the box</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--amber)">⚠️ The "Solution" Teams Try</h3>
+        <ul class="check-list" style="margin-top:12px;list-style:none">
+          <li style="color:var(--amber)" class="check-list">Migrate to Kubernetes</li>
+        </ul>
+        <div style="margin-top:20px;padding:16px;background:var(--surface2);border-radius:10px;font-size:14px;color:var(--muted)">
+          But that means months of migration, massive complexity, and massive cost — just to secure a simple Compose stack.
+        </div>
+        <div style="margin-top:16px;font-size:15px;font-weight:700;color:var(--text)">
+          There had to be a better way.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 3: THE SOLUTION
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s3">
+    <div class="kicker">The Solution</div>
+    <h2>What is <span style="color:var(--accent)">DSO</span>?</h2>
+    <div class="grid-2" style="max-width:900px;align-items:start">
+      <div>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:20px">
+          DSO is a <strong style="color:var(--text)">native Docker CLI plugin</strong> that connects your cloud secret vaults directly to your running containers at runtime.
+        </p>
+        <ul class="check-list" style="gap:4px">
+          <li>No .env files — ever</li>
+          <li>Nothing written to disk</li>
+          <li>Works with your existing Docker Compose</li>
+          <li>No Kubernetes required</li>
+          <li>Multi-cloud: AWS, Azure, Vault, Huawei</li>
+          <li>Written in Go — ~20MB RAM, &lt;1% CPU</li>
+        </ul>
+      </div>
+      <div class="code-block">
+        <div class="c-muted"># 1. Install</div>
+        <div class="c-accent">$ curl -fsSL .../install.sh | sudo bash</div>
+        <br>
+        <div class="c-muted"># 2. Configure dso.yaml</div>
+        <div><span class="c-blue">provider:</span> <span class="c-green">aws</span></div>
+        <div><span class="c-blue">secrets:</span></div>
+        <div>&nbsp;&nbsp;<span class="c-muted">- name:</span> <span class="c-green">prod/db-password</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-muted">inject:</span> <span class="c-amber">env</span></div>
+        <br>
+        <div class="c-muted"># 3. Run</div>
+        <div class="c-accent">$ docker dso up -d</div>
+        <br>
+        <div class="c-green">✓ Secrets injected. Containers running.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 4: HOW IT WORKS (STARTUP FLOW)
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s4">
+    <div class="kicker">Core Workflow</div>
+    <h2><code>docker dso up -d</code> — step by step</h2>
+    <div class="timeline" style="margin-top:24px">
+      <div class="timeline-item">
+        <div class="timeline-step">1</div>
+        <div class="timeline-content">
+          <div class="timeline-title">Read Configuration</div>
+          <div class="timeline-desc">Parses <code>docker-compose.yml</code> + <code>dso.yaml</code>. Identifies which secrets map to which containers.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-step">2</div>
+        <div class="timeline-content">
+          <div class="timeline-title">Authenticate (No Manual Passwords)</div>
+          <div class="timeline-desc">Connects to cloud vault using IAM instance roles, service principals, or Vault tokens. Zero manual credential input.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-step">3</div>
+        <div class="timeline-content">
+          <div class="timeline-title">Inject Secrets — In Memory Only</div>
+          <div class="timeline-desc">Secrets are fetched and held in RAM. Delivered to containers via <strong style="color:var(--accent)">Docker Unix Socket</strong> — never written to disk.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-step">4</div>
+        <div class="timeline-content">
+          <div class="timeline-title">Boot Stack + Start Watcher</div>
+          <div class="timeline-desc">Containers start with enriched environment. Background Watcher Engine begins monitoring for secret drift.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 5: ARCHITECTURE
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s5">
+    <div class="kicker">Architecture</div>
+    <h2>System <span style="color:var(--accent)">Architecture</span></h2>
+    <div style="margin-top:24px;width:100%;max-width:900px">
+      <div class="flow" style="margin-bottom:20px">
+        <div class="flow-box" style="border-color:var(--amber);color:var(--amber)">☁️ Cloud Vault<br><small style="color:var(--muted);font-size:10px">AWS / Azure / Vault</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box highlight">🔐 DSO Agent<br><small style="font-size:10px">Unix Socket Server</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="border-color:var(--blue);color:var(--blue)">🐋 Docker Engine<br><small style="color:var(--muted);font-size:10px">Container Runtime</small></div>
+      </div>
+      <div style="text-align:center;color:var(--muted);font-size:13px;margin-bottom:20px">+ Watcher Engine running in parallel ↓</div>
+      <div class="grid-3" style="margin-top:0">
+        <div class="card" style="padding:16px">
+          <div style="color:var(--purple);font-size:20px;margin-bottom:8px">🔌</div>
+          <h3 style="font-size:13px">Provider RPC</h3>
+          <p style="font-size:12px;color:var(--muted)">Each cloud backend is an isolated Go RPC binary. Add providers without touching core.</p>
+        </div>
+        <div class="card" style="padding:16px">
+          <div style="color:var(--green);font-size:20px;margin-bottom:8px">👁️</div>
+          <h3 style="font-size:13px">Watcher + Debouncer</h3>
+          <p style="font-size:12px;color:var(--muted)">Subscribes to Docker event stream. Hash tracking detects drift. Debouncer prevents spam events.</p>
+        </div>
+        <div class="card" style="padding:16px">
+          <div style="color:var(--amber);font-size:20px;margin-bottom:8px">🧠</div>
+          <h3 style="font-size:13px">Strategy Engine</h3>
+          <p style="font-size:12px;color:var(--muted)">Scores containers (0–100). Decides Rolling vs Restart. Prevents data corruption on stateful workloads.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 6: STRATEGY ENGINE
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s6">
+    <div class="kicker">Intelligent Rotation</div>
+    <h2>The <span style="color:var(--accent)">Strategy Engine</span></h2>
+    <p class="subtitle" style="margin-bottom:32px">DSO doesn't blindly restart containers. It thinks first.</p>
+    <div class="grid-2" style="max-width:900px;align-items:start">
+      <div>
+        <div style="margin-bottom:16px;font-size:14px;color:var(--muted);font-weight:600">CONTAINER SCORE (starts at 100)</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="score-bar">
+            <div class="label" style="font-size:13px">Fixed port binding</div>
+            <div class="track"><div class="fill" style="width:50%;background:var(--red)"></div></div>
+            <div class="pts">-50</div>
+          </div>
+          <div class="score-bar">
+            <div class="label" style="font-size:13px">Explicit container name</div>
+            <div class="track"><div class="fill" style="width:20%;background:var(--amber)"></div></div>
+            <div class="pts">-20</div>
+          </div>
+          <div class="score-bar">
+            <div class="label" style="font-size:13px">restart_always policy</div>
+            <div class="track"><div class="fill" style="width:20%;background:var(--amber)"></div></div>
+            <div class="pts">-20</div>
+          </div>
+          <div class="score-bar">
+            <div class="label" style="font-size:13px">No health check</div>
+            <div class="track"><div class="fill" style="width:10%;background:var(--amber)"></div></div>
+            <div class="pts">-10</div>
+          </div>
+          <div class="score-bar">
+            <div class="label" style="font-size:13px">Stateful workload</div>
+            <div class="track"><div class="fill" style="width:20%;background:var(--red)"></div></div>
+            <div class="pts">-20</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px;border-color:var(--green)">
+          <div style="color:var(--green);font-weight:700;margin-bottom:8px">Score ≥ 70 → 🔄 Rolling (Blue/Green)</div>
+          <p style="font-size:13px;color:var(--muted)">Clone container → inject new secrets → health-check gateway → cut traffic → remove old container. Zero downtime.</p>
+        </div>
+        <div class="card" style="border-color:var(--amber)">
+          <div style="color:var(--amber);font-weight:700;margin-bottom:8px">Score &lt; 70 → 🔁 Graceful Restart</div>
+          <p style="font-size:13px;color:var(--muted)">Used for stateful apps (databases, fixed-port services). Safe shutdown → secret update → restart. No data corruption.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 7: PROVIDERS
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s7">
+    <div class="kicker">Multi-Cloud Support</div>
+    <h2>Supported <span style="color:var(--accent)">Providers</span></h2>
+    <p class="subtitle" style="margin-bottom:40px">Write one config file. Run securely on any cloud.</p>
+    <div class="provider-grid">
+      <div class="provider-card" style="border-color:rgba(255,153,0,.4)">
+        <div class="provider-icon">🟠</div>
+        <div class="provider-name">AWS Secrets Manager</div>
+        <div class="provider-status">✓ Production</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px">IAM Instance Profiles, no manual credentials</div>
+      </div>
+      <div class="provider-card" style="border-color:rgba(0,120,212,.4)">
+        <div class="provider-icon">🔵</div>
+        <div class="provider-name">Azure Key Vault</div>
+        <div class="provider-status">✓ Production</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px">Managed Identity + Service Principal</div>
+      </div>
+      <div class="provider-card" style="border-color:rgba(255,236,95,.4)">
+        <div class="provider-icon">🟡</div>
+        <div class="provider-name">HashiCorp Vault</div>
+        <div class="provider-status">✓ Production</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px">Token + AppRole auth, auto token renewal</div>
+      </div>
+      <div class="provider-card" style="border-color:rgba(255,100,0,.4)">
+        <div class="provider-icon">🔶</div>
+        <div class="provider-name">Huawei CSMS</div>
+        <div class="provider-status">✓ Production</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px">ECS Agency-based auth</div>
+      </div>
+    </div>
+    <div style="margin-top:28px;padding:16px 24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font-size:13px;color:var(--muted);max-width:700px;text-align:center">
+      🔌 <strong style="color:var(--text)">Plugin Architecture</strong> — Each provider is an isolated Go RPC binary. Add new providers without modifying DSO core.
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 8: SECURITY MODEL
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s8">
+    <div class="kicker">Security</div>
+    <h2>Security-<span style="color:var(--accent)">First</span> Design</h2>
+    <div class="grid-2" style="max-width:900px;align-items:start;margin-top:24px">
+      <div>
+        <div class="card" style="border-color:var(--accent);margin-bottom:16px">
+          <h3 style="margin-bottom:12px">🔒 Secrets Never Touch Disk</h3>
+          <p style="font-size:14px;color:var(--muted);line-height:1.7">All secret values are held in RAM only. Injected via Unix socket into container environment. Purged on agent shutdown. <strong style="color:var(--text)">Zero persistence. By design.</strong></p>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:12px">🔑 Zero Manual Credentials</h3>
+          <p style="font-size:14px;color:var(--muted);line-height:1.7">Uses cloud-native machine identity: AWS IAM Instance Profiles, Azure Managed Identity, Vault AppRole. No passwords stored anywhere.</p>
+        </div>
+      </div>
+      <div>
+        <table style="background:var(--surface);border-radius:12px;overflow:hidden">
+          <thead>
+            <tr><th>Property</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Disk persistence</td><td><span class="tag tag-green">None</span></td></tr>
+            <tr><td>Transport</td><td style="font-size:12px">Unix socket (local)</td></tr>
+            <tr><td>Secret visibility</td><td><span class="tag tag-green">Memory only</span></td></tr>
+            <tr><td>docker inspect exposure</td><td><span class="tag tag-green">Not visible</span></td></tr>
+            <tr><td>Provider isolation</td><td style="font-size:12px">Separate RPC process</td></tr>
+            <tr><td>SOC2</td><td><span class="tag tag-blue">Ready</span></td></tr>
+            <tr><td>Compliance</td><td><span class="tag tag-purple">Audit ready</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 9: OBSERVABILITY
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s9">
+    <div class="kicker">Production Operations</div>
+    <h2>Built-in <span style="color:var(--accent)">Observability</span></h2>
+    <p class="subtitle" style="margin-bottom:32px">Prometheus metrics + structured logging. Production-ready out of the box.</p>
+    <div class="grid-2" style="max-width:900px;align-items:start">
+      <div>
+        <div style="font-size:12px;color:var(--muted);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px">Prometheus Metrics</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="card" style="padding:12px 16px">
+            <code style="font-size:11px">dso_secret_requests_total</code>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">Total fetch attempts per provider/status</div>
+          </div>
+          <div class="card" style="padding:12px 16px">
+            <code style="font-size:11px">dso_secret_fetch_latency_seconds</code>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">Histogram of fetch latency per provider</div>
+          </div>
+          <div class="card" style="padding:12px 16px">
+            <code style="font-size:11px">dso_secret_cache_hits_total</code>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">Cache efficiency tracking per secret</div>
+          </div>
+          <div class="card" style="padding:12px 16px">
+            <code style="font-size:11px">dso_backend_failures_total</code>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">Provider errors by error type</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--muted);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px">Watch Modes</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="card" style="border-color:var(--green)">
+            <div style="font-weight:700;color:var(--green);margin-bottom:6px">📊 Polling Mode</div>
+            <p style="font-size:13px;color:var(--muted)">Checks vault on a configurable interval (e.g., every 30s). Simple and reliable.</p>
+          </div>
+          <div class="card" style="border-color:var(--blue)">
+            <div style="font-weight:700;color:var(--blue);margin-bottom:6px">⚡ Event Mode</div>
+            <p style="font-size:13px;color:var(--muted)">Receives webhook calls from your vault or CI pipeline for instant rotation.</p>
+          </div>
+          <div class="card" style="border-color:var(--accent)">
+            <div style="font-weight:700;color:var(--accent);margin-bottom:6px">🔀 Hybrid Mode</div>
+            <p style="font-size:13px;color:var(--muted)">Polling as safety net + events for instant response. Best of both worlds.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 10: CONFIGURATION REFERENCE
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s10">
+    <div class="kicker">Configuration</div>
+    <h2><span style="color:var(--accent)">dso.yaml</span> Full Schema</h2>
+    <div class="grid-2" style="max-width:1000px;align-items:start;margin-top:20px">
+      <div class="code-block" style="font-size:12px">
+        <div><span class="c-blue">provider:</span> <span class="c-green">aws</span></div>
+        <div><span class="c-blue">region:</span> <span class="c-green">us-east-1</span></div>
+        <br>
+        <div><span class="c-blue">agent:</span></div>
+        <div>&nbsp;&nbsp;<span class="c-blue">cache:</span> <span class="c-amber">true</span></div>
+        <div>&nbsp;&nbsp;<span class="c-blue">refresh_interval:</span> <span class="c-green">5m</span></div>
+        <div>&nbsp;&nbsp;<span class="c-blue">auto_sync:</span> <span class="c-amber">true</span></div>
+        <div>&nbsp;&nbsp;<span class="c-blue">watch:</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-blue">mode:</span> <span class="c-green">hybrid</span><span class="c-muted"> # polling|event|hybrid</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-blue">polling_interval:</span> <span class="c-green">30s</span></div>
+        <div>&nbsp;&nbsp;<span class="c-blue">rotation:</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-blue">strategy:</span> <span class="c-green">rolling</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-blue">health_check_timeout:</span> <span class="c-green">30s</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-blue">max_parallel:</span> <span class="c-amber">2</span></div>
+      </div>
+      <div class="code-block" style="font-size:12px">
+        <div><span class="c-blue">secrets:</span></div>
+        <div>&nbsp;&nbsp;<span class="c-muted">- name:</span> <span class="c-green">prod/db-credentials</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-muted">inject:</span> <span class="c-amber">env</span><span class="c-muted"> # env|file|socket</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-muted">rotation:</span> <span class="c-amber">true</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-muted">reload_strategy:</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-muted">type:</span> <span class="c-green">signal</span><span class="c-muted"> # signal|restart|none</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-muted">mappings:</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-green">DB_PASS: DB_PASSWORD</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-green">DB_USER: DATABASE_USER</span></div>
+        <br>
+        <div>&nbsp;&nbsp;<span class="c-muted">- name:</span> <span class="c-green">prod/tls-cert</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-muted">inject:</span> <span class="c-amber">file</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-muted">path:</span> <span class="c-green">/run/secrets/tls.crt</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 11: CLI REFERENCE
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s11">
+    <div class="kicker">Developer Experience</div>
+    <h2>CLI <span style="color:var(--accent)">Reference</span></h2>
+    <p class="subtitle" style="margin-bottom:28px">All commands are first-class Docker subcommands — no bash wrappers</p>
+    <div style="max-width:860px;width:100%">
+      <table style="background:var(--surface);border-radius:16px;overflow:hidden">
+        <thead>
+          <tr><th>Command</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>docker dso up -d</code></td>
+            <td>Start Compose stack with secrets injected. Detached mode.</td>
+          </tr>
+          <tr>
+            <td><code>docker dso down</code></td>
+            <td>Stop stack and securely purge all in-memory secrets</td>
+          </tr>
+          <tr>
+            <td><code>docker dso compose &lt;cmd&gt;</code></td>
+            <td>Run any Docker Compose subcommand with DSO secret injection</td>
+          </tr>
+          <tr>
+            <td><code>docker dso fetch &lt;name&gt;</code></td>
+            <td>Fetch and display a specific secret value from the vault</td>
+          </tr>
+          <tr>
+            <td><code>docker dso watch</code></td>
+            <td>Start continuous background secret watcher</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+        <div style="padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--muted)">
+          🔌 Installed to <code>~/.docker/cli-plugins/docker-dso</code>
+        </div>
+        <div style="padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--muted)">
+          📦 One-line installer via <code>install.sh</code>
+        </div>
+        <div style="padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--muted)">
+          🔁 Go binary — no runtime dependencies
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 12: BEFORE vs AFTER
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s12">
+    <div class="kicker">Impact</div>
+    <h2>Before <span style="color:var(--red)">vs</span> <span style="color:var(--accent)">After</span> DSO</h2>
+    <div class="grid-2" style="max-width:900px;margin-top:24px;align-items:start">
+      <div class="card" style="border-color:var(--red)">
+        <div style="font-size:16px;font-weight:800;color:var(--red);margin-bottom:16px">❌ Before — The .env Way</div>
+        <ul class="check-list cross-list">
+          <li>Secrets unencrypted on developer laptops</li>
+          <li>Impossible to audit who accessed what</li>
+          <li>Central rotation requires manual coordination</li>
+          <li>Accidental git commits expose production keys</li>
+          <li>SOC2 audit: immediate failure</li>
+          <li>New developer joins → Slack the passwords</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:var(--green)">
+        <div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:16px">✅ After — The DSO Way</div>
+        <ul class="check-list">
+          <li>Secrets centrally managed in AWS / Azure / Vault</li>
+          <li>Full cloud-native audit trail</li>
+          <li>Automated zero-downtime rotation</li>
+          <li>No credentials ever touch developer machines</li>
+          <li>SOC2: compliant by architecture</li>
+          <li>New developer joins → provision IAM role</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 13: VERSION HISTORY
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s13">
+    <div class="kicker">Product Evolution</div>
+    <h2>Version <span style="color:var(--accent)">History</span></h2>
+    <div style="max-width:800px;width:100%;margin-top:24px;display:flex;flex-direction:column;gap:16px">
+      <div class="card" style="display:flex;gap:20px;align-items:flex-start">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);flex-shrink:0">v1.0</div>
+        <div>
+          <div style="font-weight:700;margin-bottom:4px">Foundation</div>
+          <div style="font-size:13px;color:var(--muted)">Basic secret injection from AWS. CLI wrapper. Proof of concept that resonated with the developer community.</div>
+        </div>
+      </div>
+      <div class="card" style="display:flex;gap:20px;align-items:flex-start;border-color:var(--blue)">
+        <div style="background:rgba(88,166,255,.1);border:1px solid var(--blue);border-radius:10px;padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--blue);flex-shrink:0">v2.0</div>
+        <div>
+          <div style="font-weight:700;margin-bottom:4px">Event-Driven Engine</div>
+          <div style="font-size:13px;color:var(--muted)">Introduced the Watcher Engine, webhook support, rolling restart strategies, signal-based reload, and multi-provider support (Azure, Vault, Huawei).</div>
+        </div>
+      </div>
+      <div class="card" style="display:flex;gap:20px;align-items:flex-start;border-color:var(--accent)">
+        <div style="background:rgba(0,245,212,.1);border:1px solid var(--accent);border-radius:10px;padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);flex-shrink:0">v3.0 ←</div>
+        <div>
+          <div style="font-weight:700;margin-bottom:4px">Docker-Native Era <span class="tag tag-green" style="font-size:10px;margin-left:8px">CURRENT</span></div>
+          <div style="font-size:13px;color:var(--muted)">Full Docker CLI Plugin (<code>docker dso</code>). Idiomatic Go rewrite. Blue/Green container rotation. Intelligent Strategy Engine. Prometheus observability.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 14: TARGET AUDIENCE
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s14">
+    <div class="kicker">Who Is This For?</div>
+    <h2>Target <span style="color:var(--accent)">Audience</span></h2>
+    <div class="grid-2" style="max-width:880px;margin-top:28px">
+      <div class="card" style="border-color:var(--blue)">
+        <div style="font-size:28px;margin-bottom:12px">👷</div>
+        <h3 style="color:var(--blue)">DevOps Engineers</h3>
+        <p style="font-size:14px;color:var(--muted);margin-top:8px;line-height:1.7">Want SOC2 compliance and enterprise-grade secret rotation without maintaining a Kubernetes cluster.</p>
+      </div>
+      <div class="card" style="border-color:var(--green)">
+        <div style="font-size:28px;margin-bottom:12px">🚀</div>
+        <h3 style="color:var(--green)">Startups</h3>
+        <p style="font-size:14px;color:var(--muted);margin-top:8px;line-height:1.7">Running Docker Compose in production. Need enterprise security without the enterprise infrastructure overhead.</p>
+      </div>
+      <div class="card" style="border-color:var(--red)">
+        <div style="font-size:28px;margin-bottom:12px">🔐</div>
+        <h3 style="color:var(--red)">Security Teams</h3>
+        <p style="font-size:14px;color:var(--muted);margin-top:8px;line-height:1.7">Ordered to eliminate .env files from developer machines. Need an auditable, centralized credential store.</p>
+      </div>
+      <div class="card" style="border-color:var(--accent)">
+        <div style="font-size:28px;margin-bottom:12px">🏗️</div>
+        <h3 style="color:var(--accent)">Platform Engineers</h3>
+        <p style="font-size:14px;color:var(--muted);margin-top:8px;line-height:1.7">Need a multi-cloud, extensible secret management layer that integrates natively with Docker tooling.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SLIDE 15: CLOSE / CTA
+  ═══════════════════════════════════════════════ -->
+  <div class="slide" id="s15">
+    <div class="title-accent"></div>
+    <div class="title-accent2"></div>
+    <div class="kicker">Get Started Today</div>
+    <h1 style="text-align:center;font-size:52px">
+      Start using DSO<br><span style="color:var(--accent)">in 30 seconds.</span>
+    </h1>
+    <div class="code-block" style="margin:32px 0;max-width:600px;text-align:left">
+      <div class="c-muted"># Install</div>
+      <div class="c-accent">$ curl -fsSL https://raw.githubusercontent.com/<br>&nbsp;&nbsp;umairmd385/docker-secret-operator/main/install.sh | sudo bash</div>
+      <br>
+      <div class="c-muted"># Run</div>
+      <div class="c-accent">$ docker dso up -d</div>
+      <br>
+      <div class="c-green">✓ Secrets injected. Stack running. Audit trail started.</div>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+      <div style="padding:12px 24px;background:rgba(0,245,212,.1);border:1px solid var(--accent);border-radius:12px;font-size:14px;font-weight:700;color:var(--accent)">
+        ⭐ github.com/umairmd385/docker-secret-operator
+      </div>
+      <div style="padding:12px 24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--muted)">
+        🌐 dso.skycloudops.in
+      </div>
+    </div>
+    <p style="margin-top:24px;font-size:13px;color:var(--muted)">
+      MIT Licensed · Production Ready · SOC2 Ready · Built in Go
+    </p>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- NAV -->
+<nav class="nav">
+  <button onclick="prev()" title="Previous">←</button>
+  <span class="counter" id="counter">1 / 15</span>
+  <button onclick="next()" title="Next">→</button>
+</nav>
+
+<script>
+  const TOTAL = 15;
+  let current = 1;
+
+  function showSlide(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.getElementById('s' + n).classList.add('active');
+    document.getElementById('counter').textContent = n + ' / ' + TOTAL;
+    document.getElementById('slideNum').textContent = n + ' / ' + TOTAL;
+    document.getElementById('progress').style.width = (n / TOTAL * 100) + '%';
+    current = n;
+  }
+
+  function next() { if (current < TOTAL) showSlide(current + 1); }
+  function prev() { if (current > 1) showSlide(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') next();
+    if (e.key === 'ArrowLeft') prev();
+    if (e.key === 'Home') showSlide(1);
+    if (e.key === 'End') showSlide(TOTAL);
+  });
+
+  showSlide(1);
+</script>
+</body>
+</html>

@@ -213,8 +213,9 @@
       <div class="hidden md:flex items-center gap-7 text-sm text-[var(--text-secondary)]">
         <a href="#how-it-works" class="hover:text-[var(--text-primary)] transition-colors">How it works</a>
         <a href="#features" class="hover:text-[var(--text-primary)] transition-colors">Features</a>
+        <a href="#comparison" class="hover:text-[var(--text-primary)] transition-colors">Compare</a>
+        <a href="#security" class="hover:text-[var(--text-primary)] transition-colors">Security</a>
         <a href="#providers" class="hover:text-[var(--text-primary)] transition-colors">Providers</a>
-        <a href="#architecture" class="hover:text-[var(--text-primary)] transition-colors">Architecture</a>
         <a href="#getting-started" class="hover:text-[var(--text-primary)] transition-colors">Get Started</a>
         <a href="/docs/" target="_blank"
           class="hover:text-[var(--text-primary)] transition-colors">Docs</a>
@@ -266,10 +267,12 @@
           onclick="document.getElementById('mobile-menu').classList.remove('open')">How it works</a>
         <a href="#features" class="hover:text-[var(--text-primary)]"
           onclick="document.getElementById('mobile-menu').classList.remove('open')">Features</a>
+        <a href="#comparison" class="hover:text-[var(--text-primary)]"
+          onclick="document.getElementById('mobile-menu').classList.remove('open')">Compare</a>
+        <a href="#security" class="hover:text-[var(--text-primary)]"
+          onclick="document.getElementById('mobile-menu').classList.remove('open')">Security</a>
         <a href="#providers" class="hover:text-[var(--text-primary)]"
           onclick="document.getElementById('mobile-menu').classList.remove('open')">Providers</a>
-        <a href="#architecture" class="hover:text-[var(--text-primary)]"
-          onclick="document.getElementById('mobile-menu').classList.remove('open')">Architecture</a>
         <a href="#getting-started" class="hover:text-[var(--text-primary)]"
           onclick="document.getElementById('mobile-menu').classList.remove('open')">Get Started</a>
         <a href="/docs/" target="_blank"
@@ -460,9 +463,9 @@
               <span class="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold tracking-widest">Terminal</span>
               <button class="btn-copy text-[10px] text-[var(--accent)] font-bold uppercase tracking-widest" onclick="copyCode(this)">copy</button>
             </div>
-            <pre class="p-4 font-mono text-xs text-[var(--accent)]">docker plugin install dso</pre>
+            <pre class="p-4 font-mono text-xs text-[var(--accent)]">curl -fsSL https://raw.githubusercontent.com/\numairmd385/docker-secret-operator/\nmain/install.sh | sudo bash</pre>
           </div>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Download and activate the DSO agent globally across your Docker engine.</p>
+          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Installs <code class="text-[var(--accent)] bg-[var(--surface2)] px-1 rounded text-[10px]">~/.docker/cli-plugins/docker-dso</code> — a first-class Docker subcommand.</p>
         </div>
         <!-- Configure -->
         <div class="reveal space-y-4" style="transition-delay: 0.1s">
@@ -476,11 +479,16 @@
               <button class="btn-copy text-[10px] text-[var(--accent)] font-bold uppercase tracking-widest" onclick="copyCode(this)">copy</button>
             </div>
             <pre class="p-4 font-mono text-[11px] text-[var(--text-primary)] leading-relaxed"><span class="text-[var(--accent)]">provider:</span> aws
+<span class="text-[var(--accent)]">config:</span>
+  <span class="text-blue-400">region:</span> us-east-1
 <span class="text-[var(--accent)]">secrets:</span>
-  - <span class="text-[var(--accent)]">name:</span> my-secret
-    <span class="text-[var(--accent)]">inject:</span> env</pre>
+  - <span class="text-[var(--accent)]">name:</span> prod/db-credentials
+    <span class="text-[var(--accent)]">inject:</span> env
+    <span class="text-[var(--accent)]">rotation:</span> <span class="text-yellow-400">true</span>
+    <span class="text-[var(--accent)]">mappings:</span>
+      DB_PASS: DB_PASSWORD</pre>
           </div>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Define where your secrets live and how they should be delivered to your app.</p>
+          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Place at <code class="text-[var(--accent)] bg-[var(--surface2)] px-1 rounded text-[10px]">/etc/dso/dso.yaml</code> or pass via <code class="text-[var(--accent)] bg-[var(--surface2)] px-1 rounded text-[10px]">--config</code>.</p>
         </div>
         <!-- Run -->
         <div class="reveal space-y-4" style="transition-delay: 0.2s">
@@ -493,11 +501,13 @@
               <span class="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold tracking-widest">Terminal</span>
               <button class="btn-copy text-[10px] text-[var(--accent)] font-bold uppercase tracking-widest" onclick="copyCode(this)">copy</button>
             </div>
-            <pre class="p-4 font-mono text-xs text-[var(--text-primary)]"><span class="text-[var(--accent)]">$ </span>docker dso up -d</pre>
+            <pre class="p-4 font-mono text-xs text-[var(--text-primary)] leading-relaxed"><span class="text-[var(--accent)]">$ </span>docker dso up -d
+<span class="opacity-60"># Verify injection:</span>
+<span class="text-[var(--accent)]">$ </span>docker dso fetch prod/db-credentials</pre>
           </div>
           <div class="flex items-center gap-2 py-2 px-3 bg-[var(--accent)]/10 border border-[var(--accent)]/30 rounded-lg">
             <span class="text-[var(--accent)] text-xs">✔</span>
-            <span class="text-[10px] font-mono font-bold text-[var(--accent)]">Secrets injected instantly.</span>
+            <span class="text-[10px] font-mono font-bold text-[var(--accent)]">Secrets injected. Stack running. Watcher active.</span>
           </div>
         </div>
       </div>
@@ -1127,6 +1137,88 @@
       </div>
     </div>
   </section>
+  <!-- Comparison Table -->
+  <section id="comparison" class="py-24 px-6 border-t border-[var(--border-soft)]">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <div class="inline-block text-xs font-bold tracking-widest text-[var(--accent)] uppercase px-3 py-1 rounded-full bg-[var(--surface2)] border border-[var(--border)] mb-4">Why DSO?</div>
+        <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-4">Stop compromising on security</h2>
+        <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">See how DSO compares to the alternatives — and why each existing approach falls short.</p>
+      </div>
+      <div class="reveal overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="border-b border-[var(--border)]">
+              <th class="text-left py-4 px-4 text-[var(--text-muted)] font-semibold text-xs uppercase tracking-widest w-1/5">Feature</th>
+              <th class="py-4 px-4 text-center">
+                <div class="text-xs uppercase tracking-widest text-[var(--text-muted)] mb-1">Plain .env</div>
+              </th>
+              <th class="py-4 px-4 text-center">
+                <div class="text-xs uppercase tracking-widest text-[var(--text-muted)] mb-1">K8s Secrets</div>
+              </th>
+              <th class="py-4 px-4 text-center">
+                <div class="text-xs uppercase tracking-widest text-[var(--text-muted)] mb-1">Vault Agent</div>
+              </th>
+              <th class="py-4 px-4 text-center bg-[var(--accent)]/5 rounded-t-xl border border-b-0 border-[var(--accent)]/30">
+                <div class="text-xs uppercase tracking-widest text-[var(--accent)] font-bold mb-1">DSO ← You are here</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-[var(--border-soft)]">
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Works with Docker Compose</td>
+              <td class="py-3 px-4 text-center text-green-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-red-400 font-bold">✗</td>
+              <td class="py-3 px-4 text-center text-yellow-400 font-bold">⚠ Complex</td>
+              <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓ Native</td>
+            </tr>
+            <tr class="border-b border-[var(--border-soft)]">
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Secrets never on disk</td>
+              <td class="py-3 px-4 text-center text-red-400 font-bold">✗</td>
+              <td class="py-3 px-4 text-center text-yellow-400 font-bold">⚠ etcd</td>
+              <td class="py-3 px-4 text-center text-green-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓</td>
+            </tr>
+            <tr class="border-b border-[var(--border-soft)]">
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Auto secret rotation</td>
+              <td class="py-3 px-4 text-center text-red-400 font-bold">✗</td>
+              <td class="py-3 px-4 text-center text-yellow-400 font-bold">⚠ Manual</td>
+              <td class="py-3 px-4 text-center text-green-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓ Zero-downtime</td>
+            </tr>
+            <tr class="border-b border-[var(--border-soft)]">
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Multi-cloud providers</td>
+              <td class="py-3 px-4 text-center text-red-400 font-bold">✗</td>
+              <td class="py-3 px-4 text-center text-yellow-400 font-bold">⚠ via Operator</td>
+              <td class="py-3 px-4 text-center text-yellow-400 font-bold">⚠ Vault only</td>
+              <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓ AWS·Azure·Vault·Huawei</td>
+            </tr>
+            <tr class="border-b border-[var(--border-soft)]">
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Kubernetes required</td>
+              <td class="py-3 px-4 text-center text-green-400 font-bold">No</td>
+              <td class="py-3 px-4 text-center text-red-400 font-bold">Yes</td>
+              <td class="py-3 px-4 text-center text-red-400 font-bold">Yes</td>
+              <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">No</td>
+            </tr>
+            <tr class="border-b border-[var(--border-soft)]">
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">SOC2 compliant</td>
+              <td class="py-3 px-4 text-center text-red-400 font-bold">✗</td>
+              <td class="py-3 px-4 text-center text-green-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-green-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Setup time</td>
+              <td class="py-3 px-4 text-center text-[var(--text-muted)] text-xs">Minutes (risky)</td>
+              <td class="py-3 px-4 text-center text-[var(--text-muted)] text-xs">Days–Weeks</td>
+              <td class="py-3 px-4 text-center text-[var(--text-muted)] text-xs">Days (+ K8s)</td>
+              <td class="py-3 px-4 text-center text-[var(--accent)] font-bold text-xs bg-[var(--accent)]/5 border-x border-b border-[var(--accent)]/30 rounded-b-xl">~5 minutes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
   <!-- Providers -->
   <section id="providers" class="py-20 px-6 bg-[var(--surface2)] border-b border-[var(--border-soft)]">
@@ -1356,6 +1448,98 @@
                 Unix socket. Secrets never touch persistent storage.</p>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security Model -->
+  <section id="security" class="py-24 px-6 border-t border-[var(--border-soft)]">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <div class="inline-block text-xs font-bold tracking-widest text-[var(--accent)] uppercase px-3 py-1 rounded-full bg-[var(--surface2)] border border-[var(--border)] mb-4">Security Model</div>
+        <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-4">Built for trust, not just compliance</h2>
+        <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">Every design decision in DSO is a security decision. Here's exactly what happens with your secrets.</p>
+      </div>
+      <div class="reveal grid lg:grid-cols-2 gap-10 items-start">
+        <div class="space-y-5">
+          <div class="flex gap-4 p-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl hover:border-[var(--accent)]/40 transition-colors">
+            <div class="w-10 h-10 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+            </div>
+            <div>
+              <div class="font-bold text-[var(--text-primary)] mb-1">Memory-Only Store</div>
+              <p class="text-sm text-[var(--text-secondary)] leading-relaxed">Secrets are held in the agent's in-process RAM. Never written to the filesystem. Purged on shutdown.</p>
+            </div>
+          </div>
+          <div class="flex gap-4 p-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl hover:border-[var(--accent)]/40 transition-colors">
+            <div class="w-10 h-10 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+              <div class="font-bold text-[var(--text-primary)] mb-1">Unix Socket Transport</div>
+              <p class="text-sm text-[var(--text-secondary)] leading-relaxed">CLI↔Agent communication happens over a local Unix socket. No network exposure, no TLS to manage.</p>
+            </div>
+          </div>
+          <div class="flex gap-4 p-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl hover:border-[var(--accent)]/40 transition-colors">
+            <div class="w-10 h-10 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+            </div>
+            <div>
+              <div class="font-bold text-[var(--text-primary)] mb-1">IAM Role Auth — Zero Credentials on Host</div>
+              <p class="text-sm text-[var(--text-secondary)] leading-relaxed">DSO uses EC2 Instance Profiles, Managed Identity, and Vault AppRole. No static keys stored on the machine.</p>
+            </div>
+          </div>
+          <div class="flex gap-4 p-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl hover:border-[var(--accent)]/40 transition-colors">
+            <div class="w-10 h-10 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </div>
+            <div>
+              <div class="font-bold text-[var(--text-primary)] mb-1">Structured Audit Logs</div>
+              <p class="text-sm text-[var(--text-secondary)] leading-relaxed">Every fetch, rotation, and strategy decision is logged in JSON. Forward to Splunk, Datadog, or CloudWatch.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="p-6 bg-[#0d1117] border border-[var(--border)] rounded-xl mb-5">
+            <div class="text-xs font-mono text-[var(--text-muted)] uppercase tracking-widest mb-4">Threat Model</div>
+            <div class="space-y-3 text-sm">
+              <div class="flex items-start gap-3">
+                <span class="text-[var(--accent)] mt-0.5">✓</span>
+                <div><span class="text-[var(--text-primary)] font-medium">Dev commits .env to GitHub</span><span class="text-[var(--text-muted)]"> — No .env files needed</span></div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-[var(--accent)] mt-0.5">✓</span>
+                <div><span class="text-[var(--text-primary)] font-medium">Secrets visible on laptops</span><span class="text-[var(--text-muted)]"> — Never stored on disk</span></div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-[var(--accent)] mt-0.5">✓</span>
+                <div><span class="text-[var(--text-primary)] font-medium">Compromised developer machine</span><span class="text-[var(--text-muted)]"> — No credentials held on host</span></div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-[var(--accent)] mt-0.5">✓</span>
+                <div><span class="text-[var(--text-primary)] font-medium">Network interception</span><span class="text-[var(--text-muted)]"> — Unix socket only, no network port</span></div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-[var(--accent)] mt-0.5">✓</span>
+                <div><span class="text-[var(--text-primary)] font-medium">Cross-container secret leakage</span><span class="text-[var(--text-muted)]"> — Each container receives only its mapped keys</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-4 flex-wrap">
+            <div class="flex items-center gap-2 px-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-xs font-bold text-[var(--text-secondary)]">
+              <span class="w-2 h-2 rounded-full bg-[var(--accent)]"></span> SOC2 Ready
+            </div>
+            <div class="flex items-center gap-2 px-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-xs font-bold text-[var(--text-secondary)]">
+              <span class="w-2 h-2 rounded-full bg-[var(--accent)]"></span> PCI-DSS Aligned
+            </div>
+            <div class="flex items-center gap-2 px-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-xs font-bold text-[var(--text-secondary)]">
+              <span class="w-2 h-2 rounded-full bg-[var(--accent)]"></span> ISO 27001 Ready
+            </div>
+          </div>
+          <a href="/docs/guide/security" class="mt-6 inline-flex items-center gap-2 text-sm text-[var(--accent)] font-semibold hover:underline">
+            Read the full security model →
+          </a>
         </div>
       </div>
     </div>
