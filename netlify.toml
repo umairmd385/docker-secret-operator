@@ -1,2 +1,3 @@
 [build]
+  base = "/"
   publish = "landing-page-premium/"
