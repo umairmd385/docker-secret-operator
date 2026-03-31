@@ -216,7 +216,7 @@
         <a href="#comparison" class="hover:text-[var(--text-primary)] transition-colors">Compare</a>
         <a href="#security" class="hover:text-[var(--text-primary)] transition-colors">Security</a>
         <a href="#providers" class="hover:text-[var(--text-primary)] transition-colors">Providers</a>
-        <a href="#getting-started" class="hover:text-[var(--text-primary)] transition-colors">Get Started</a>
+        <a href="#for-teams" class="text-[var(--accent)] font-semibold hover:opacity-80 transition-opacity">For Teams</a>
         <a href="/docs/" target="_blank"
           class="hover:text-[var(--text-primary)] transition-colors">Docs</a>
         <button id="theme-toggle" class="hover:text-[var(--text-primary)] transition-colors p-1"
@@ -273,6 +273,8 @@
           onclick="document.getElementById('mobile-menu').classList.remove('open')">Security</a>
         <a href="#providers" class="hover:text-[var(--text-primary)]"
           onclick="document.getElementById('mobile-menu').classList.remove('open')">Providers</a>
+        <a href="#for-teams" class="text-[var(--accent)] font-semibold"
+          onclick="document.getElementById('mobile-menu').classList.remove('open')">For Teams</a>
         <a href="#getting-started" class="hover:text-[var(--text-primary)]"
           onclick="document.getElementById('mobile-menu').classList.remove('open')">Get Started</a>
         <a href="/docs/" target="_blank"
@@ -1687,6 +1689,210 @@
           </a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- For Teams -->
+  <section id="for-teams" class="py-28 px-6 relative overflow-hidden border-t border-[var(--border-soft)]">
+
+    <!-- Radial glow background accent -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full"
+           style="background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(0,201,167,0.08) 0%, transparent 70%);">
+      </div>
+      <!-- Subtle grid overlay -->
+      <div class="absolute inset-0 opacity-[0.03]"
+           style="background-image: linear-gradient(var(--accent) 1px, transparent 1px), linear-gradient(90deg, var(--accent) 1px, transparent 1px); background-size: 48px 48px;">
+      </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto relative z-10">
+
+      <!-- Section Header -->
+      <div class="reveal text-center mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--surface2)] border border-[var(--border)] mb-6 text-xs font-bold tracking-widest uppercase text-[var(--accent)]">
+          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+          </svg>
+          For Teams
+        </div>
+        <h2 class="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-5 leading-tight tracking-tight">
+          Built for Teams,<br class="hidden md:block"> Not Just Developers
+        </h2>
+        <p class="text-[var(--text-secondary)] text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
+          Running Docker in production? DSO helps your team securely manage secrets without Kubernetes complexity.
+        </p>
+      </div>
+
+      <!-- Feature Cards -->
+      <div class="reveal grid md:grid-cols-3 gap-6 mb-14">
+
+        <!-- Card 1: Fast Implementation -->
+        <div class="group relative p-7 bg-[var(--surface)] border border-[var(--border)] rounded-2xl
+                    hover:border-[var(--accent)]/50 hover:shadow-[0_0_32px_rgba(0,201,167,0.08)]
+                    transition-all duration-300 cursor-default">
+          <!-- Top accent line on hover -->
+          <div class="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
+
+          <!-- Icon -->
+          <div class="w-11 h-11 rounded-xl bg-[var(--accent-dim)] border border-[var(--accent-border)]
+                      flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+
+          <h3 class="text-lg font-bold text-[var(--text-primary)] mb-3">Fast Implementation</h3>
+          <p class="text-[var(--text-secondary)] text-sm leading-relaxed">
+            Get DSO up and running quickly with guided setup. One install command, one config file, one
+            <span class="font-mono text-xs text-[var(--accent)] bg-[var(--accent-dim)] px-1.5 py-0.5 rounded">docker dso up -d</span>.
+          </p>
+
+          <div class="mt-5 flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <span>Under 5 minutes</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <!-- Card 2: Secure by Design (featured center card) -->
+        <div class="group relative p-7 bg-[var(--surface)] border border-[var(--accent)]/30 rounded-2xl
+                    hover:border-[var(--accent)]/70 hover:shadow-[0_0_48px_rgba(0,201,167,0.12)]
+                    transition-all duration-300 cursor-default ring-1 ring-[var(--accent)]/10">
+          <!-- Top accent line always visible on center card -->
+          <div class="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent rounded-full opacity-60"></div>
+
+          <!-- Popular badge -->
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full
+                      bg-[var(--accent)] text-[#0d1117] text-[10px] font-black tracking-widest uppercase shadow-lg shadow-[var(--accent)]/20">
+            Recommended
+          </div>
+
+          <!-- Icon -->
+          <div class="w-11 h-11 rounded-xl bg-[var(--accent)]/15 border border-[var(--accent)]/30
+                      flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+
+          <h3 class="text-lg font-bold text-[var(--text-primary)] mb-3">Secure by Design</h3>
+          <p class="text-[var(--text-secondary)] text-sm leading-relaxed">
+            Follow best practices for secret management out of the box. Memory-only injection, IAM role auth,
+            SOC2-aligned audit logs — zero configuration required.
+          </p>
+
+          <div class="mt-5 flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)]">
+            <span>SOC2 · PCI-DSS · ISO 27001</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Expert Support -->
+        <div class="group relative p-7 bg-[var(--surface)] border border-[var(--border)] rounded-2xl
+                    hover:border-[var(--accent)]/50 hover:shadow-[0_0_32px_rgba(0,201,167,0.08)]
+                    transition-all duration-300 cursor-default">
+          <!-- Top accent line on hover -->
+          <div class="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
+
+          <!-- Icon -->
+          <div class="w-11 h-11 rounded-xl bg-[var(--accent-dim)] border border-[var(--accent-border)]
+                      flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/>
+            </svg>
+          </div>
+
+          <h3 class="text-lg font-bold text-[var(--text-primary)] mb-3">Expert Support</h3>
+          <p class="text-[var(--text-secondary)] text-sm leading-relaxed">
+            Get help with integration, troubleshooting, and production use. Direct access to the team that
+            built DSO — from architecture review to incident response.
+          </p>
+
+          <div class="mt-5 flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <span>Human support, fast</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Trust indicators strip -->
+      <div class="reveal flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-14 py-6
+                  border-y border-[var(--border-soft)]">
+        <div class="flex items-center gap-2.5 text-sm text-[var(--text-secondary)]">
+          <svg class="w-4 h-4 text-[var(--accent)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          No vendor lock-in
+        </div>
+        <div class="flex items-center gap-2.5 text-sm text-[var(--text-secondary)]">
+          <svg class="w-4 h-4 text-[var(--accent)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          MIT Licensed · Always open source
+        </div>
+        <div class="flex items-center gap-2.5 text-sm text-[var(--text-secondary)]">
+          <svg class="w-4 h-4 text-[var(--accent)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          AWS · Azure · Vault · Huawei
+        </div>
+        <div class="flex items-center gap-2.5 text-sm text-[var(--text-secondary)]">
+          <svg class="w-4 h-4 text-[var(--accent)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          SOC2 Ready out of the box
+        </div>
+      </div>
+
+      <!-- CTA block -->
+      <div class="reveal">
+        <div class="relative rounded-2xl border border-[var(--accent)]/20 bg-[var(--surface)] overflow-hidden">
+          <!-- Inner accent glow -->
+          <div class="absolute inset-0 pointer-events-none"
+               style="background: radial-gradient(ellipse 60% 80% at 50% 120%, rgba(0,201,167,0.07) 0%, transparent 70%);">
+          </div>
+
+          <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 px-8 py-10 md:px-12">
+            <div class="text-center md:text-left">
+              <div class="text-xs font-bold tracking-widest uppercase text-[var(--accent)] mb-2">Ready to get started?</div>
+              <h3 class="text-2xl md:text-3xl font-bold text-[var(--text-primary)] mb-2">
+                Secure your team's secrets today.
+              </h3>
+              <p class="text-[var(--text-secondary)] text-sm max-w-md leading-relaxed">
+                Book a 30-minute call to discuss your team's setup, or jump straight in with the open-source version.
+              </p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex flex-col sm:flex-row items-center gap-4 flex-shrink-0">
+              <!-- Primary: Book a Call -->
+              <a id="cta-book-call"
+                 href="mailto:umairmd385@gmail.com?subject=DSO%20Team%20Support%20%E2%80%94%20Let's%20Talk&body=Hi%2C%0A%0AI%27m%20interested%20in%20getting%20support%20for%20Docker%20Secret%20Operator%20for%20my%20team.%0A%0ATeam%20size%3A%0ACloud%20provider%3A%0AUse%20case%3A%0A"
+                 class="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm
+                        bg-[var(--accent)] text-[#0d1117]
+                        shadow-[0_0_24px_rgba(0,201,167,0.35)]
+                        hover:shadow-[0_0_40px_rgba(0,201,167,0.5)]
+                        hover:scale-[1.03] active:scale-[0.98]
+                        transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+                Book a Call
+              </a>
+
+              <!-- Secondary: View on GitHub -->
+              <a id="cta-github-teams"
+                 href="https://github.com/umairmd385/docker-secret-operator"
+                 target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm
+                        border border-[var(--border)] text-[var(--text-primary)] bg-transparent
+                        hover:bg-[var(--surface2)] hover:border-[var(--text-secondary)]
+                        hover:scale-[1.02] active:scale-[0.98]
+                        transition-all duration-200">
+                <svg class="w-4 h-4 opacity-70" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                </svg>
+                View on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
