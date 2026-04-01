@@ -25,12 +25,12 @@ They are **never** written to:
 
 DSO uses cloud-native machine identity, which means developers never handle production credentials directly.
 
-| Provider | Auth Mechanism |
-|----------|---------------|
-| AWS | IAM Instance Profile / ECS Task Role — automatic, no config needed on the machine |
-| Azure | Managed Identity (VM/ACI) or Service Principal via env vars |
-| HashiCorp Vault | Token (`VAULT_TOKEN`) or AppRole (`VAULT_ROLE_ID` + `VAULT_SECRET_ID`). DSO auto-renews tokens before expiry. |
-| Huawei CSMS | ECS Agency (IAM Agency attached to the VM) |
+| Provider | Production Auth Method | Configuration | Security Notes |
+|----------|------------------------|---------------|-----------------|
+| AWS | EC2 Instance Profile | Attach IAM role, DSO auto-detects | No static credentials |
+| Azure | Managed Identity | Enable on VM/ACI | Auto-authenticates via IMDS |
+| Vault | AppRole with wrapped secret | Use response wrapping | Secret ID never exposed |
+| Local File | File permissions | `0600`, owned by root | Never commit to git |
 
 ## Unix Socket Transport
 

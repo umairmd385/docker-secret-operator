@@ -4,28 +4,41 @@ This guide gets you from zero to injecting real cloud secrets into Docker contai
 
 ## Prerequisites
 
-- Docker Engine ≥ 20.10 with Docker Compose V2
-- One of:
+- **Docker Engine:** Version 20.10 or higher with Docker Compose V2
+- **Operating Systems:** Linux, macOS, or Windows (via WSL2)
+- **Cloud Provider:** One of:
   - An AWS account with Secrets Manager enabled
   - An Azure Key Vault
   - A running HashiCorp Vault instance
-- `curl` and `sudo` access on your host
+- **Host Tools:** `curl` and `sudo` access (if using the alternative installer)
 
 ## Step 1 — Install DSO
+
+### Recommended Installation
+
+The easiest and safest way to use DSO is as a native Docker plugin.
+
+```bash
+docker plugin install umairmd385/docker-secret-operator:latest --alias dso
+```
+
+### Alternative Installation (Script)
+
+If you prefer to run the agent directly on the host as a systemd service (good for edge routers or standalone VMs):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/install.sh | sudo bash
 ```
 
-The installer places the binary at `~/.docker/cli-plugins/docker-dso`, making `docker dso` a first-class Docker subcommand.
+Both methods make `docker dso` a first-class Docker subcommand.
 
 **Verify the installation:**
 
 ```bash
-docker dso --help
+docker dso version
 ```
 
-You should see the DSO command overview.
+You should see the DSO command version printed.
 
 ## Step 2 — Create Your Secret in the Cloud
 
