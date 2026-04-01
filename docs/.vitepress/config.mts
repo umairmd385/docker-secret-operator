@@ -26,7 +26,8 @@ export default defineConfig({
         items: [
           { text: 'What is DSO?', link: '/guide/what-is-dso' },
           { text: 'Getting Started', link: '/guide/getting-started' },
-          { text: 'Concepts', link: '/guide/concepts' }
+          { text: 'Concepts', link: '/guide/concepts' },
+          { text: 'Architecture', link: '/guide/architecture' }
         ]
       },
       {
@@ -50,6 +51,8 @@ export default defineConfig({
         items: [
           { text: 'CLI Commands', link: '/guide/cli' },
           { text: 'Security Model', link: '/guide/security' },
+          { text: 'Observability', link: '/guide/observability' },
+          { text: 'Compliance', link: '/guide/compliance' },
           { text: 'Examples', link: '/guide/examples' },
           { text: 'Troubleshooting', link: '/guide/troubleshooting' }
         ]
