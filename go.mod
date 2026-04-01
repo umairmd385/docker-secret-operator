@@ -1,6 +1,6 @@
 module github.com/docker-secret-operator/dso
 
-go 1.25.0
+go 1.24
 
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.13.1

@@ -1,9 +1,9 @@
 package agent
 
 import (
-	"crypto/md5"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"os"
 	"sync"
 	"time"
@@ -15,9 +15,11 @@ type CacheItem struct {
 	ExpiresAt time.Time
 }
 
+// ComputeHash generates a secure SHA-256 hash of the input data
 func ComputeHash(data map[string]string) string {
 	b, _ := json.Marshal(data)
-	return fmt.Sprintf("%x", md5.Sum(b))
+	hash := sha256.Sum256(b)
+	return hex.EncodeToString(hash[:])
 }
 
 type SecretCache struct {

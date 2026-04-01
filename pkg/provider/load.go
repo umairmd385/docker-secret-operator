@@ -5,12 +5,64 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"github.com/docker-secret-operator/dso/pkg/api"
 	"github.com/docker-secret-operator/dso/pkg/backend/env"
 	"github.com/docker-secret-operator/dso/pkg/backend/file"
 	"github.com/hashicorp/go-plugin"
 )
+
+// validatePluginPath performs security checks on plugin path to prevent command injection (CWE-78)
+func validatePluginPath(path string) error {
+	// 1. Check if path is absolute
+	if !filepath.IsAbs(path) {
+		return fmt.Errorf("plugin path must be absolute: %s", path)
+	}
+
+	// 2. Verify path is within allowed directory
+	allowedDirs := []string{
+		"/var/lib/dso/plugins",
+		"/usr/local/lib/dso/plugins",
+		"/etc/dso/plugins",
+	}
+
+	isAllowed := false
+	for _, dir := range allowedDirs {
+		if strings.HasPrefix(path, dir) {
+			isAllowed = true
+			break
+		}
+	}
+
+	if !isAllowed {
+		return fmt.Errorf("plugin must be in allowed directory: %s", path)
+	}
+
+	// 3. Check file exists and is not a symlink
+	info, err := os.Lstat(path)
+	if err != nil {
+		return fmt.Errorf("plugin not accessible: %w", err)
+	}
+
+	if info.Mode()&os.ModeSymlink != 0 {
+		return fmt.Errorf("plugin cannot be a symlink")
+	}
+
+	// 4. Verify file is executable
+	if info.Mode()&0111 == 0 {
+		return fmt.Errorf("plugin must be executable")
+	}
+
+	return nil
+}
+
+// sanitizeEnv returns a safe environment for plugin execution
+func sanitizeEnv() []string {
+	return []string{
+		"PATH=/usr/local/bin:/usr/bin:/bin",
+	}
+}
 
 // LoadProvider dynamically executes the provider binary and dispenses the RPC client
 func LoadProvider(providerName string, providerConfig map[string]string) (api.SecretProvider, *plugin.Client, error) {
@@ -38,10 +90,17 @@ func LoadProvider(providerName string, providerConfig map[string]string) (api.Se
 	pluginName := fmt.Sprintf("dso-provider-%s", providerName)
 	pluginPath := filepath.Join(pluginDir, pluginName)
 
+	if err := validatePluginPath(pluginPath); err != nil {
+		return nil, nil, fmt.Errorf("security validation for plugin %s failed: %w", pluginName, err)
+	}
+
+	cmd := exec.Command(pluginPath)
+	cmd.Env = sanitizeEnv()
+
 	client := plugin.NewClient(&plugin.ClientConfig{
 		HandshakeConfig: Handshake,
 		Plugins:         PluginMap,
-		Cmd:             exec.Command(pluginPath),
+		Cmd:             cmd,
 	})
 
 	rpcClient, err := client.Client()

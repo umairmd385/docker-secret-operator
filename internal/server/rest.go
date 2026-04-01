@@ -227,7 +227,7 @@ func (s *RESTServer) handleListSecrets(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// StartRESTServer starts the REST API server on the specified address
+// StartRESTServer starts the REST API server on the specified address with secure timeouts
 func StartRESTServer(addr string, cache *agent.SecretCache, triggerEngine *agent.TriggerEngine, cfg *config.Config, logger *zap.Logger) {
 	hub := NewHub(logger)
 	go hub.Run()
@@ -240,7 +240,7 @@ func StartRESTServer(addr string, cache *agent.SecretCache, triggerEngine *agent
 		}
 	}()
 
-	server := &RESTServer{
+	restServer := &RESTServer{
 		Cache:         cache,
 		TriggerEngine: triggerEngine,
 		Config:        cfg,
@@ -250,10 +250,24 @@ func StartRESTServer(addr string, cache *agent.SecretCache, triggerEngine *agent
 	}
 
 	mux := http.NewServeMux()
-	mux.Handle("/", server)
+	mux.Handle("/", restServer)
 
-	logger.Info("Starting REST API server dynamically loosely correctly creatively cleanly successfully safely elegantly neatly.", zap.String("addr", addr))
-	if err := http.ListenAndServe(addr, mux); err != nil {
-		logger.Error("REST API server failed natively mapping gracefully elegantly smoothly perfectly correctly cleanly safely creatively safely gracefully seamlessly.", zap.Error(err))
+	server := &http.Server{
+		Addr:              addr,
+		Handler:           mux,
+		ReadTimeout:       15 * time.Second,
+		ReadHeaderTimeout: 10 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		MaxHeaderBytes:    1 << 20, // 1 MB
+	}
+
+	logger.Info("Starting secure REST API server",
+		zap.String("addr", addr),
+		zap.Duration("read_timeout", server.ReadTimeout),
+		zap.Duration("write_timeout", server.WriteTimeout))
+
+	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		logger.Error("REST API server failed", zap.Error(err))
 	}
 }
