@@ -1,4 +1,35 @@
 [build]
   base = "/"
-  command = "npm run docs:build && cp -r docs/.vitepress/dist landing-page-premium/docs"
+  command = "npm run build && mkdir -p landing-page-premium/docs && cp -r docs/.vitepress/dist/* landing-page-premium/docs/"
   publish = "landing-page-premium/"
+
+# ─── Security Headers ───
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# ─── Cache: Static Assets (1 year) ───
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# ─── Cache: HTML (1 hour, revalidate) ───
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, stale-while-revalidate=86400"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, stale-while-revalidate=86400"

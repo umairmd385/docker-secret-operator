@@ -4,11 +4,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="assets/images/dso-logo.png">
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
   <title>DSO | Docker Secret Operator — Kubernetes-grade Secrets for Docker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { theme: { extend: { fontFamily: { mono: ['JetBrains Mono', 'monospace'], sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'] }, colors: { bg: 'var(--bg)', surface: 'var(--surface)', border: 'var(--border)', muted: 'var(--text-muted)', accent: 'var(--accent)', 'accent-dim': 'var(--accent-dim)' } } } }</script>
+
+<!-- FIX #3: SEO -->
+<meta name="description" content="Docker Secret Operator (DSO) — Kubernetes-grade secret management for Docker. Sync secrets from AWS, Azure, Vault & more. Zero cluster overhead. MIT licensed.">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dso.skycloudops.in/">
+<meta property="og:title" content="DSO | Docker Secret Operator — Kubernetes-grade Secrets for Docker">
+<meta property="og:description" content="Native secret management for Docker. Sync from AWS, Azure, HashiCorp Vault and more. No Kubernetes required.">
+<meta property="og:image" content="https://dso.skycloudops.in/assets/images/dso-og.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DSO | Docker Secret Operator">
+<meta name="twitter:description" content="Kubernetes-grade secrets for Docker. Sync from AWS, Azure, Vault & more.">
+<meta name="twitter:image" content="https://dso.skycloudops.in/assets/images/dso-og.png">
+
+<!-- PRODUCTION ANALYTICS (GTM / GA4 / Fathom) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script> -->
+<!-- <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
+
+<!-- PRODUCTION: Load optimized CSS -->
+<link rel="stylesheet" href="output.css">
+
+<!-- DEVELOPMENT FALLBACK: Tailwind CDN (Remove in final build) -->
+<!-- <script src="https://cdn.tailwindcss.com"></script> -->
+<!-- <script>tailwind.config = { theme: { extend: { fontFamily: { mono: ['JetBrains Mono', 'monospace'], sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'] }, colors: { bg: 'var(--bg)', surface: 'var(--surface)', border: 'var(--border)', muted: 'var(--text-muted)', accent: 'var(--accent)', 'accent-dim': 'var(--accent-dim)' } } } }</script> -->
+
+<link rel="canonical" href="https://dso.skycloudops.in/">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Docker Secret Operator (DSO)",
+    "url": "https://dso.skycloudops.in/",
+    "description": "Kubernetes-grade secret management for Docker. Sync secrets from AWS, Azure, Vault & more. Zero cluster overhead.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Linux",
+    "license": "https://opensource.org/licenses/MIT",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "SkyCloudOps", "url": "https://dso.skycloudops.in/" }
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet">
@@ -28,6 +72,11 @@
       --accent-border: rgba(0, 201, 167, 0.2);
       --grid-line: rgba(0, 201, 167, 0.04);
       --code-bg: #0d1117;
+      --code-key: #79c0ff;
+      --code-string: #a5d6ff;
+      --code-text: #e6edf3;
+      --star-bg: #2a2e35;
+      --star-bg-hover: #343942;
     }
 
     [data-theme="light"] {
@@ -45,6 +94,21 @@
       --accent-border: rgba(10, 158, 130, 0.2);
       --grid-line: rgba(10, 158, 130, 0.05);
       --code-bg: #f0f4f8;
+      --code-key: #0550ae;
+      --code-string: #0a3069;
+      --code-text: #1a2332;
+      --star-bg: #e8ecf0;
+      --star-bg-hover: #d0d7de;
+    }
+
+    /* FIX: Light mode code block overrides */
+    [data-theme="light"] .code-dark {
+      background: var(--code-bg) !important;
+      border-color: var(--border) !important;
+    }
+    [data-theme="light"] .code-dark-header {
+      background: var(--surface2) !important;
+      border-color: var(--border) !important;
     }
 
     * {
@@ -86,7 +150,7 @@
     }
 
     .hero-bg {
-      background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 201, 167, .12) 0%, transparent 60%), linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -10%, var(--accent-dim) 0%, transparent 60%), linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
       background-size: auto, 40px 40px, 40px 40px
     }
 
@@ -97,7 +161,7 @@
 
     @supports (backdrop-filter: blur(12px)) {
       nav.scrolled {
-        background: rgba(13, 17, 23, .85);
+        background: var(--bg);
       }
 
       [data-theme="light"] nav.scrolled {
@@ -158,7 +222,7 @@
       left: 0;
       right: 0;
       height: 1px;
-      background: rgba(0, 201, 167, .15);
+      background: var(--accent-border);
       animation: scan 4s linear infinite;
       pointer-events: none
     }
@@ -185,6 +249,33 @@
       animation: fadeUp 0.6s ease forwards;
       opacity: 0;
     }
+
+    /* FIX #4: Theme-aware Glow Classes */
+    .glow-accent {
+      box-shadow: 0 0 24px var(--accent-border);
+    }
+
+    .glow-accent-hover:hover {
+      box-shadow: 0 0 40px var(--accent-dim);
+    }
+
+    /* FIX: Ultra-wide screen cap */
+    @media (min-width: 1536px) {
+      .max-w-7xl {
+        max-width: 1400px;
+      }
+    }
+
+    /* FIX: Global mobile overflow protection */
+    section, nav, footer {
+      overflow-x: hidden;
+    }
+    .overflow-x-auto {
+      overflow-x: auto !important;
+    }
+    pre {
+      overflow-x: auto;
+    }
   </style>
 </head>
 
@@ -208,7 +299,9 @@
             class="absolute inset-0 bg-[var(--accent)]/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
           </div>
         </div>
-        Docker Secret Operator
+        <!-- FIX: Hide full name on small screens -->
+        <span class="hidden sm:inline">Docker Secret Operator</span>
+        <span class="sm:hidden">DSO</span>
       </a>
       <div class="hidden md:flex items-center gap-7 text-sm text-[var(--text-secondary)]">
         <a href="#how-it-works" class="hover:text-[var(--text-primary)] transition-colors">How it works</a>
@@ -241,7 +334,7 @@
       </div>
       <!-- Hamburger -->
       <button id="hamburger" class="md:hidden text-[var(--text-secondary)] hover:text-[var(--text-primary)] p-1"
-        onclick="document.getElementById('mobile-menu').classList.toggle('open')" aria-label="Menu">
+        aria-expanded="false" aria-label="Menu">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
@@ -263,20 +356,13 @@
           </svg>
           <span id="theme-text-mobile">Dark Mode</span>
         </button>
-        <a href="#how-it-works" class="hover:text-[var(--text-primary)]"
-          onclick="document.getElementById('mobile-menu').classList.remove('open')">How it works</a>
-        <a href="#features" class="hover:text-[var(--text-primary)]"
-          onclick="document.getElementById('mobile-menu').classList.remove('open')">Features</a>
-        <a href="#comparison" class="hover:text-[var(--text-primary)]"
-          onclick="document.getElementById('mobile-menu').classList.remove('open')">Compare</a>
-        <a href="#security" class="hover:text-[var(--text-primary)]"
-          onclick="document.getElementById('mobile-menu').classList.remove('open')">Security</a>
-        <a href="#providers" class="hover:text-[var(--text-primary)]"
-          onclick="document.getElementById('mobile-menu').classList.remove('open')">Providers</a>
-        <a href="#for-teams" class="text-[var(--accent)] font-semibold"
-          onclick="document.getElementById('mobile-menu').classList.remove('open')">For Teams</a>
-        <a href="#getting-started" class="hover:text-[var(--text-primary)]"
-          onclick="document.getElementById('mobile-menu').classList.remove('open')">Get Started</a>
+        <a href="#how-it-works" class="hover:text-[var(--text-primary)]">How it works</a>
+        <a href="#features" class="hover:text-[var(--text-primary)]">Features</a>
+        <a href="#comparison" class="hover:text-[var(--text-primary)]">Compare</a>
+        <a href="#security" class="hover:text-[var(--text-primary)]">Security</a>
+        <a href="#providers" class="hover:text-[var(--text-primary)]">Providers</a>
+        <a href="#for-teams" class="text-[var(--accent)] font-semibold">For Teams</a>
+        <a href="#getting-started" class="hover:text-[var(--text-primary)]">Get Started</a>
         <a href="/docs/" target="_blank"
           class="hover:text-[var(--text-primary)]">Docs</a>
         <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
@@ -286,8 +372,9 @@
   </nav>
 
   <!-- Hero -->
-  <section class="hero-bg pt-40 pb-24 px-6 relative overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent pointer-events-none">
+  <section class="hero-bg pt-40 pb-24 px-6 lg:px-12 xl:px-16 relative overflow-hidden">
+    <!-- FIX: Use theme-aware gradient -->
+    <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, var(--accent-dim), transparent);">
     </div>
     <div class="max-w-6xl mx-auto">
       <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center relative z-10">
@@ -302,7 +389,8 @@
             <span class="text-xs font-medium text-[var(--text-secondary)]">Native Docker Secret Plugin</span>
           </div>
 
-          <h1 class="text-5xl md:text-6xl font-bold leading-[1.15] mb-6 tracking-tight text-[var(--text-primary)]">
+          <!-- FIX: Responsive heading -->
+          <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.15] mb-6 tracking-tight text-[var(--text-primary)]">
             Native secrets for Docker — <span class="text-[var(--accent)]">without Kubernetes.</span>
           </h1>
           <p class="text-[var(--text-secondary)] text-xl leading-relaxed mb-4 max-w-xl">
@@ -311,13 +399,14 @@
           </p>
           <p class="text-[var(--accent)] text-sm font-semibold tracking-wide uppercase mb-10">Finally, secrets that work with Docker.</p>
 
-          <div class="flex flex-wrap gap-4 mb-10">
+          <!-- FIX: Stack buttons on mobile -->
+          <div class="flex flex-col sm:flex-row flex-wrap gap-4 mb-10">
             <a href="#getting-started"
-              class="px-8 py-3.5 bg-[var(--accent)] text-[#0d1117] font-bold rounded-lg shadow-lg shadow-[var(--accent)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-center">
+              class="px-6 py-3 sm:px-8 sm:py-3.5 bg-[var(--accent)] text-[var(--bg)] font-bold rounded-lg shadow-lg shadow-[var(--accent)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-center">
               Get Started for Free
             </a>
             <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
-              class="px-8 py-3.5 border border-[var(--border)] text-[var(--text-primary)] font-bold rounded-lg hover:bg-[var(--surface2)] transition-all text-center flex items-center justify-center gap-2">
+              class="px-6 py-3 sm:px-8 sm:py-3.5 border border-[var(--border)] text-[var(--text-primary)] font-bold rounded-lg hover:bg-[var(--surface2)] transition-all text-center flex items-center justify-center gap-2">
               <svg class="w-5 h-5 opacity-70" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
@@ -349,11 +438,11 @@
         </div>
 
         <!-- Terminal GIF Mockup -->
-        <div class="reveal relative lg:flex lg:justify-end">
+        <div class="reveal relative lg:flex lg:justify-end mt-8 lg:mt-0">
           <div class="absolute inset-0 bg-[var(--accent)]/10 blur-[100px] rounded-full pointer-events-none"></div>
           <div
-            class="relative w-full max-w-lg bg-[#0d1117] border border-[var(--border)] rounded-xl overflow-hidden shadow-2xl group">
-            <div class="flex items-center gap-2 px-4 py-3 bg-[#161b22] border-b border-[var(--border)]">
+            class="relative w-full max-w-lg mx-auto lg:mx-0 bg-[var(--code-bg)] border border-[var(--border)] rounded-xl overflow-hidden shadow-2xl group">
+            <div class="flex items-center gap-2 px-4 py-3 bg-[var(--surface2)] border-b border-[var(--border)]">
               <div class="flex gap-1.5 px-1">
                 <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
                 <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
@@ -361,8 +450,8 @@
               </div>
               <div class="text-[10px] font-mono text-[var(--text-secondary)] ml-2 opacity-60">bash — docker dso up</div>
             </div>
-            <div class="p-1.5 bg-[#0d1117]">
-              <img src="assets/gifs/demo-up.gif" alt="DSO Up Demo" class="w-full rounded-md shadow-inner">
+            <div class="p-1.5 bg-[var(--code-bg)]">
+              <img src="assets/gifs/demo-up.gif" alt="DSO Up Demo" class="w-full rounded-md shadow-inner" fetchpriority="high">
             </div>
             <div class="px-5 pb-5 pt-2 font-mono text-[13px] leading-relaxed border-t border-[var(--border-soft)]">
               <div class="flex items-start gap-3">
@@ -380,8 +469,8 @@
   </section>
 
   <!-- Social Proof Bar -->
-  <section class="py-6 px-6 border-t border-[var(--border-soft)] bg-[var(--surface)]/50">
-    <div class="max-w-5xl mx-auto">
+  <section class="py-6 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)] bg-[var(--surface)]/50">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal flex flex-wrap items-center justify-center gap-8 md:gap-16">
         <div class="flex items-center gap-3">
           <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -403,8 +492,8 @@
   </section>
 
   <!-- What is DSO -->
-  <section id="what-is-dso" class="py-24 px-6 border-t border-[var(--border-soft)]">
-    <div class="max-w-5xl mx-auto">
+  <section id="what-is-dso" class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="grid lg:grid-cols-2 gap-16 items-center">
         <div class="reveal">
           <h2 class="text-3xl font-bold mb-6 text-[var(--text-primary)]">What is Docker Secret Operator?</h2>
@@ -447,8 +536,8 @@
   </section>
 
   <!-- Quickstart -->
-  <section id="quickstart" class="py-24 px-6 bg-[var(--surface2)]/50 border-y border-[var(--border-soft)]">
-    <div class="max-w-5xl mx-auto">
+  <section id="quickstart" class="py-24 px-6 lg:px-12 xl:px-16 bg-[var(--surface2)]/50 border-y border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-16">
         <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-4">Get started in seconds</h2>
         <p class="text-[var(--text-secondary)] text-lg">Three steps to secure secret injection.</p>
@@ -457,11 +546,11 @@
         <!-- Install -->
         <div class="reveal space-y-4">
           <div class="flex items-center gap-3">
-            <span class="w-8 h-8 rounded-full bg-[var(--accent)] text-[#0d1117] flex items-center justify-center font-bold text-sm">1</span>
+            <span class="w-8 h-8 rounded-full bg-[var(--accent)] text-[var(--bg)] flex items-center justify-center font-bold text-sm">1</span>
             <h3 class="font-bold text-[var(--text-primary)] text-lg">Install Plugin</h3>
           </div>
-          <div class="code-wrap bg-[#0d1117] border border-[var(--border)] rounded-xl overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-2 border-b border-[var(--border)] bg-[#161b22]">
+          <div class="code-wrap code-dark bg-[var(--code-bg)] border border-[var(--border)] rounded-xl overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 border-b border-[var(--border)] code-dark-header bg-[var(--surface2)]">
               <span class="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold tracking-widest">Terminal</span>
               <button class="btn-copy text-[10px] text-[var(--accent)] font-bold uppercase tracking-widest" onclick="copyCode(this)">copy</button>
             </div>
@@ -472,11 +561,11 @@
         <!-- Configure -->
         <div class="reveal space-y-4" style="transition-delay: 0.1s">
           <div class="flex items-center gap-3">
-            <span class="w-8 h-8 rounded-full bg-[var(--accent)] text-[#0d1117] flex items-center justify-center font-bold text-sm">2</span>
+            <span class="w-8 h-8 rounded-full bg-[var(--accent)] text-[var(--bg)] flex items-center justify-center font-bold text-sm">2</span>
             <h3 class="font-bold text-[var(--text-primary)] text-lg">Configure</h3>
           </div>
-          <div class="code-wrap bg-[#0d1117] border border-[var(--border)] rounded-xl overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-2 border-b border-[var(--border)] bg-[#161b22]">
+          <div class="code-wrap code-dark bg-[var(--code-bg)] border border-[var(--border)] rounded-xl overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 border-b border-[var(--border)] code-dark-header bg-[var(--surface2)]">
               <span class="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold tracking-widest">dso.yaml</span>
               <button class="btn-copy text-[10px] text-[var(--accent)] font-bold uppercase tracking-widest" onclick="copyCode(this)">copy</button>
             </div>
@@ -495,11 +584,11 @@
         <!-- Run -->
         <div class="reveal space-y-4" style="transition-delay: 0.2s">
           <div class="flex items-center gap-3">
-            <span class="w-8 h-8 rounded-full bg-[var(--accent)] text-[#0d1117] flex items-center justify-center font-bold text-sm">3</span>
+            <span class="w-8 h-8 rounded-full bg-[var(--accent)] text-[var(--bg)] flex items-center justify-center font-bold text-sm">3</span>
             <h3 class="font-bold text-[var(--text-primary)] text-lg">Run</h3>
           </div>
-          <div class="code-wrap bg-[#0d1117] border border-[var(--border)] rounded-xl overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-2 border-b border-[var(--border)] bg-[#161b22]">
+          <div class="code-wrap code-dark bg-[var(--code-bg)] border border-[var(--border)] rounded-xl overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 border-b border-[var(--border)] code-dark-header bg-[var(--surface2)]">
               <span class="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold tracking-widest">Terminal</span>
               <button class="btn-copy text-[10px] text-[var(--accent)] font-bold uppercase tracking-widest" onclick="copyCode(this)">copy</button>
             </div>
@@ -517,9 +606,9 @@
   </section>
 
   <!-- CLI Reference -->
-  <section id="cli-reference" class="py-24 px-6 border-t border-[var(--border-soft)] relative z-10 bg-[var(--surface)]/30">
+  <section id="cli-reference" class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)] relative z-10 bg-[var(--surface)]/30">
     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--bg2)] pointer-events-none -z-10"></div>
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-14">
         <h2 class="text-3xl font-mono font-bold text-[var(--text-primary)] mb-3">CLI Reference</h2>
         <p class="text-[var(--text-secondary)]">Every command you need — straight from the Docker CLI.</p>
@@ -613,8 +702,8 @@
     </div>
   </section>
 
-  <section class="py-24 px-6 border-t border-[var(--border-soft)]">
-    <div class="max-w-6xl mx-auto">
+  <section class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-16">
         <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-4">Why Docker Secret Operator?</h2>
         <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">Traditional secret management for Docker is
@@ -868,8 +957,8 @@
   </section>
 
   <!-- How it works -->
-  <section id="how-it-works" class="py-20 px-6 border-b border-[var(--border-soft)]">
-    <div class="max-w-6xl mx-auto">
+  <section id="how-it-works" class="py-20 px-6 lg:px-12 xl:px-16 border-b border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-14">
         <h2 class="text-3xl font-mono font-bold text-[var(--text-primary)] mb-3">How it works</h2>
         <p class="text-[var(--text-secondary)]">Four steps from secret store to running container.</p>
@@ -955,8 +1044,8 @@
   </section>
 
   <!-- Features: Alternating Layout -->
-  <section id="features" class="py-24 px-6 border-b border-[var(--border-soft)] overflow-hidden">
-    <div class="max-w-6xl mx-auto space-y-32">
+  <section id="features" class="py-24 px-6 lg:px-12 xl:px-16 border-b border-[var(--border-soft)] overflow-hidden">
+    <div class="max-w-7xl mx-auto space-y-32">
       <!-- Feature 1: Manual vs DSO -->
       <div class="grid lg:grid-cols-2 gap-16 items-center">
         <div class="reveal">
@@ -982,8 +1071,8 @@
         </div>
         <div class="reveal order-first lg:order-last">
           <div class="relative rounded-2xl border border-[var(--border)] overflow-hidden shadow-2xl">
-            <img src="assets/gifs/demo-up.gif" alt="DSO Up Demo" class="w-full">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-transparent to-transparent opacity-40">
+            <img src="assets/gifs/demo-up.gif" alt="DSO Up Demo" class="w-full" loading="lazy">
+            <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-transparent to-transparent opacity-40">
             </div>
           </div>
         </div>
@@ -1016,7 +1105,7 @@
         </div>
         <div class="reveal">
           <div class="relative rounded-2xl border border-[var(--border)] overflow-hidden shadow-2xl">
-            <img src="assets/gifs/demo-rotation.gif" alt="DSO Rotation Demo" class="w-full">
+            <img src="assets/gifs/demo-rotation.gif" alt="DSO Rotation Demo" class="w-full" loading="lazy">
           </div>
         </div>
       </div>
@@ -1053,7 +1142,7 @@
         </div>
         <div class="reveal order-first lg:order-last">
           <div class="relative rounded-2xl border border-[var(--border)] overflow-hidden shadow-2xl">
-            <img src="assets/gifs/demo-strategy.gif" alt="DSO Strategy Demo" class="w-full">
+            <img src="assets/gifs/demo-strategy.gif" alt="DSO Strategy Demo" class="w-full" loading="lazy">
           </div>
         </div>
       </div>
@@ -1061,8 +1150,8 @@
   </section>
 
   <!-- Use Cases -->
-  <section id="use-cases" class="py-20 px-6 border-b border-[var(--border-soft)]">
-    <div class="max-w-6xl mx-auto">
+  <section id="use-cases" class="py-20 px-6 lg:px-12 xl:px-16 border-b border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-14">
         <h2 class="text-3xl font-mono font-bold text-[var(--text-primary)] mb-3">Built for real-world workflows.</h2>
         <p class="text-[var(--text-secondary)]">From local laptop to production instances.</p>
@@ -1140,8 +1229,8 @@
     </div>
   </section>
   <!-- Comparison Table -->
-  <section id="comparison" class="py-24 px-6 border-t border-[var(--border-soft)]">
-    <div class="max-w-5xl mx-auto">
+  <section id="comparison" class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-16">
         <div class="inline-block text-xs font-bold tracking-widest text-[var(--accent)] uppercase px-3 py-1 rounded-full bg-[var(--surface2)] border border-[var(--border)] mb-4">Why DSO?</div>
         <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-4">Stop compromising on security</h2>
@@ -1169,28 +1258,28 @@
           <tbody>
             <tr class="border-b border-[var(--border-soft)]">
               <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Works with Docker Compose</td>
-              <td class="py-3 px-4 text-center text-green-400 font-bold">✓</td>
-              <td class="py-3 px-4 text-center text-red-400 font-bold">✗</td>
-              <td class="py-3 px-4 text-center text-yellow-400 font-bold">⚠ Complex</td>
-              <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓ Native</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-green-400 font-bold">✓</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-red-400 font-bold">✗</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-yellow-400 font-bold">⚠ Complex</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓ Native</td>
             </tr>
             <tr class="border-b border-[var(--border-soft)]">
               <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Secrets never on disk</td>
-              <td class="py-3 px-4 text-center text-red-400 font-bold">✗</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-red-400 font-bold">✗</td>
               <td class="py-3 px-4 text-center text-yellow-400 font-bold">⚠ etcd</td>
-              <td class="py-3 px-4 text-center text-green-400 font-bold">✓</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-green-400 font-bold">✓</td>
               <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓</td>
             </tr>
             <tr class="border-b border-[var(--border-soft)]">
               <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Auto secret rotation</td>
-              <td class="py-3 px-4 text-center text-red-400 font-bold">✗</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-red-400 font-bold">✗</td>
               <td class="py-3 px-4 text-center text-yellow-400 font-bold">⚠ Manual</td>
-              <td class="py-3 px-4 text-center text-green-400 font-bold">✓</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-green-400 font-bold">✓</td>
               <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓ Zero-downtime</td>
             </tr>
             <tr class="border-b border-[var(--border-soft)]">
               <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Multi-cloud providers</td>
-              <td class="py-3 px-4 text-center text-red-400 font-bold">✗</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-red-400 font-bold">✗</td>
               <td class="py-3 px-4 text-center text-yellow-400 font-bold">⚠ via Operator</td>
               <td class="py-3 px-4 text-center text-yellow-400 font-bold">⚠ Vault only</td>
               <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓ AWS·Azure·Vault·Huawei</td>
@@ -1204,10 +1293,39 @@
             </tr>
             <tr class="border-b border-[var(--border-soft)]">
               <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">SOC2 compliant</td>
-              <td class="py-3 px-4 text-center text-red-400 font-bold">✗</td>
-              <td class="py-3 px-4 text-center text-green-400 font-bold">✓</td>
-              <td class="py-3 px-4 text-center text-green-400 font-bold">✓</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-red-400 font-bold">✗</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-green-400 font-bold">✓</td>
+              <td class="p-3 md:p-4 lg:p-6 text-center text-green-400 font-bold">✓</td>
               <td class="py-3 px-4 text-center text-[var(--accent)] font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓</td>
+            </tr>
+            <!-- FIX #7: Expanded Comparison Table -->
+            <tr class="border-b border-[var(--border-soft)]">
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Audit Logging</td>
+              <td class="py-3 px-4 text-center text-red-500/60">—</td>
+              <td class="py-3 px-4 text-center text-emerald-500">✓</td>
+              <td class="py-3 px-4 text-center text-emerald-500">✓</td>
+              <td class="py-3 px-4 text-center text-emerald-500 font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓</td>
+            </tr>
+            <tr class="border-b border-[var(--border-soft)]">
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Secret Versioning</td>
+              <td class="py-3 px-4 text-center text-red-500/60">—</td>
+              <td class="py-3 px-4 text-center text-emerald-500">✓</td>
+              <td class="py-3 px-4 text-center text-emerald-500">✓</td>
+              <td class="py-3 px-4 text-center text-emerald-500 font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓</td>
+            </tr>
+            <tr class="border-b border-[var(--border-soft)]">
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">CI/CD Pipeline Integration</td>
+              <td class="py-3 px-4 text-center text-amber-400">partial</td>
+              <td class="py-3 px-4 text-center text-emerald-500">✓</td>
+              <td class="py-3 px-4 text-center text-emerald-500">✓</td>
+              <td class="py-3 px-4 text-center text-emerald-500 font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓</td>
+            </tr>
+            <tr class="border-b border-[var(--border-soft)]">
+              <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">RBAC / Access Control</td>
+              <td class="py-3 px-4 text-center text-red-500/60">—</td>
+              <td class="py-3 px-4 text-center text-emerald-500">✓</td>
+              <td class="py-3 px-4 text-center text-emerald-500">✓</td>
+              <td class="py-3 px-4 text-center text-emerald-500 font-bold bg-[var(--accent)]/5 border-x border-[var(--accent)]/30">✓</td>
             </tr>
             <tr>
               <td class="py-3 px-4 text-[var(--text-secondary)] font-medium">Setup time</td>
@@ -1223,8 +1341,8 @@
   </section>
 
   <!-- Providers -->
-  <section id="providers" class="py-20 px-6 bg-[var(--surface2)] border-b border-[var(--border-soft)]">
-    <div class="max-w-4xl mx-auto text-center">
+  <section id="providers" class="py-20 px-6 lg:px-12 xl:px-16 bg-[var(--surface2)] border-b border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto text-center">
       <div class="reveal">
         <h2 class="text-3xl font-mono font-bold text-[var(--text-primary)] mb-3">Works with the secret stores you
           already use.</h2>
@@ -1302,8 +1420,8 @@
   </section>
 
   <!-- Example Usage -->
-  <section class="py-20 px-6 border-b border-[var(--border-soft)]">
-    <div class="max-w-6xl mx-auto">
+  <section class="py-20 px-6 lg:px-12 xl:px-16 border-b border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-12">
         <h2 class="text-3xl font-mono font-bold text-[var(--text-primary)] mb-3">Example usage</h2>
         <p class="text-[var(--text-secondary)]">Two files. That's all you need.</p>
@@ -1319,21 +1437,21 @@
           </div>
           <pre
             class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[var(--text-muted)]"># Provider configuration</span>
-<span class="text-[#79c0ff]">provider</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--accent)]">aws</span>
+<span class="text-[var(--code-key)]">provider</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--accent)]">aws</span>
 
-<span class="text-[#79c0ff]">config</span><span class="text-[var(--text-primary)]">:</span>
-  <span class="text-[#79c0ff]">region</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[#a5d6ff]">us-east-1</span>
+<span class="text-[var(--code-key)]">config</span><span class="text-[var(--text-primary)]">:</span>
+  <span class="text-[var(--code-key)]">region</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--code-string)]">us-east-1</span>
 
-<span class="text-[#79c0ff]">agent</span><span class="text-[var(--text-primary)]">:</span>
-  <span class="text-[#79c0ff]">watch</span><span class="text-[var(--text-primary)]">:</span>
-    <span class="text-[#79c0ff]">polling_interval</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[#a5d6ff]">2m</span>
+<span class="text-[var(--code-key)]">agent</span><span class="text-[var(--text-primary)]">:</span>
+  <span class="text-[var(--code-key)]">watch</span><span class="text-[var(--text-primary)]">:</span>
+    <span class="text-[var(--code-key)]">polling_interval</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--code-string)]">2m</span>
 
-<span class="text-[#79c0ff]">secrets</span><span class="text-[var(--text-primary)]">:</span>
-  <span class="text-[var(--text-primary)]">-</span> <span class="text-[#79c0ff]">name</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[#a5d6ff]">my-app-secret</span>
-    <span class="text-[#79c0ff]">inject</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--accent)]">env</span>
-    <span class="text-[#79c0ff]">mappings</span><span class="text-[var(--text-primary)]">:</span>
-      <span class="text-[#79c0ff]">DB_PASSWORD</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[#a5d6ff]">DATABASE_PASS</span>
-      <span class="text-[#79c0ff]">DB_USER</span><span class="text-[var(--text-primary)]">:</span>     <span class="text-[#a5d6ff]">DATABASE_USER</span></code></pre>
+<span class="text-[var(--code-key)]">secrets</span><span class="text-[var(--text-primary)]">:</span>
+  <span class="text-[var(--text-primary)]">-</span> <span class="text-[var(--code-key)]">name</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--code-string)]">my-app-secret</span>
+    <span class="text-[var(--code-key)]">inject</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--accent)]">env</span>
+    <span class="text-[var(--code-key)]">mappings</span><span class="text-[var(--text-primary)]">:</span>
+      <span class="text-[var(--code-key)]">DB_PASSWORD</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--code-string)]">DATABASE_PASS</span>
+      <span class="text-[var(--code-key)]">DB_USER</span><span class="text-[var(--text-primary)]">:</span>     <span class="text-[var(--code-string)]">DATABASE_USER</span></code></pre>
         </div>
         <div
           class="reveal code-wrap bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)]/50 transition-colors duration-300 rounded-xl overflow-hidden"
@@ -1345,17 +1463,17 @@
               onclick="copyCode(this)">copy</button>
           </div>
           <pre
-            class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#79c0ff]">services</span><span class="text-[var(--text-primary)]">:</span>
-  <span class="text-[#79c0ff]">app</span><span class="text-[var(--text-primary)]">:</span>
-    <span class="text-[#79c0ff]">image</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[#a5d6ff]">my-app:latest</span>
-    <span class="text-[#79c0ff]">environment</span><span class="text-[var(--text-primary)]">:</span>
-      <span class="text-[var(--text-primary)]">-</span> <span class="text-[#a5d6ff]">DB_PASSWORD_FILE=/run/secrets/DB_PASSWORD</span>
-      <span class="text-[var(--text-primary)]">-</span> <span class="text-[#a5d6ff]">DB_USER_FILE=/run/secrets/DB_USER</span>
+            class="p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code><span class="text-[var(--code-key)]">services</span><span class="text-[var(--text-primary)]">:</span>
+  <span class="text-[var(--code-key)]">app</span><span class="text-[var(--text-primary)]">:</span>
+    <span class="text-[var(--code-key)]">image</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--code-string)]">my-app:latest</span>
+    <span class="text-[var(--code-key)]">environment</span><span class="text-[var(--text-primary)]">:</span>
+      <span class="text-[var(--text-primary)]">-</span> <span class="text-[var(--code-string)]">DB_PASSWORD_FILE=/run/secrets/DB_PASSWORD</span>
+      <span class="text-[var(--text-primary)]">-</span> <span class="text-[var(--code-string)]">DB_USER_FILE=/run/secrets/DB_USER</span>
 
-  <span class="text-[#79c0ff]">db</span><span class="text-[var(--text-primary)]">:</span>
-    <span class="text-[#79c0ff]">image</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[#a5d6ff]">postgres:16</span>
-    <span class="text-[#79c0ff]">environment</span><span class="text-[var(--text-primary)]">:</span>
-      <span class="text-[var(--text-primary)]">-</span> <span class="text-[#a5d6ff]">POSTGRES_PASSWORD_FILE=/run/secrets/DB_PASSWORD</span></code></pre>
+  <span class="text-[var(--code-key)]">db</span><span class="text-[var(--text-primary)]">:</span>
+    <span class="text-[var(--code-key)]">image</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--code-string)]">postgres:16</span>
+    <span class="text-[var(--code-key)]">environment</span><span class="text-[var(--text-primary)]">:</span>
+      <span class="text-[var(--text-primary)]">-</span> <span class="text-[var(--code-string)]">POSTGRES_PASSWORD_FILE=/run/secrets/DB_PASSWORD</span></code></pre>
         </div>
       </div>
       <div
@@ -1369,8 +1487,8 @@
   </section>
 
   <!-- Architecture -->
-  <section id="architecture" class="py-24 px-6 bg-[var(--surface2)] border-b border-[var(--border-soft)]">
-    <div class="max-w-6xl mx-auto">
+  <section id="architecture" class="py-24 px-6 lg:px-12 xl:px-16 bg-[var(--surface2)] border-b border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-16">
         <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-4">Native Architecture</h2>
         <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">DSO runs as a lightweight systemd service. No
@@ -1456,8 +1574,8 @@
   </section>
 
   <!-- Security Model -->
-  <section id="security" class="py-24 px-6 border-t border-[var(--border-soft)]">
-    <div class="max-w-5xl mx-auto">
+  <section id="security" class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-16">
         <div class="inline-block text-xs font-bold tracking-widest text-[var(--accent)] uppercase px-3 py-1 rounded-full bg-[var(--surface2)] border border-[var(--border)] mb-4">Security Model</div>
         <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-4">Built for trust, not just compliance</h2>
@@ -1503,7 +1621,7 @@
           </div>
         </div>
         <div>
-          <div class="p-6 bg-[#0d1117] border border-[var(--border)] rounded-xl mb-5">
+          <div class="p-6 bg-[var(--code-bg)] border border-[var(--border)] rounded-xl mb-5">
             <div class="text-xs font-mono text-[var(--text-muted)] uppercase tracking-widest mb-4">Threat Model</div>
             <div class="space-y-3 text-sm">
               <div class="flex items-start gap-3">
@@ -1530,7 +1648,11 @@
           </div>
           <div class="flex gap-4 flex-wrap">
             <div class="flex items-center gap-2 px-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-xs font-bold text-[var(--text-secondary)]">
-              <span class="w-2 h-2 rounded-full bg-[var(--accent)]"></span> SOC2 Ready
+              <span class="w-2 h-2 rounded-full bg-[var(--accent)]"></span>
+              <!-- FIX #8: SOC2 Link -->
+              <a href="/docs/guide/security" target="_blank" class="hover:text-[var(--accent)] transition-colors underline decoration-dotted underline-offset-2">
+                SOC2 Ready
+              </a>
             </div>
             <div class="flex items-center gap-2 px-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-xs font-bold text-[var(--text-secondary)]">
               <span class="w-2 h-2 rounded-full bg-[var(--accent)]"></span> PCI-DSS Aligned
@@ -1548,8 +1670,8 @@
   </section>
 
   <!-- Getting Started -->
-  <section id="getting-started" class="py-20 px-6 bg-[var(--surface2)] border-b border-[var(--border-soft)]">
-    <div class="max-w-6xl mx-auto">
+  <section id="getting-started" class="py-20 px-6 lg:px-12 xl:px-16 bg-[var(--surface2)] border-b border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-12">
         <h2 class="text-3xl font-mono font-bold text-[var(--text-primary)] mb-3">Getting started</h2>
         <p class="text-[var(--text-secondary)]">From zero to syncing secrets in under 2 minutes.</p>
@@ -1585,10 +1707,10 @@
           <p class="text-sm text-[var(--text-secondary)] mb-4 flex-1">Define your provider and secrets mapping.</p>
           <div
             class="code-wrap bg-[var(--surface2)] border border-[var(--border)] rounded-lg overflow-hidden relative group">
-            <pre class="p-3 font-mono text-[10px] leading-relaxed text-[#e6edf3] overflow-x-auto"><span class="text-[#79c0ff]">provider:</span> aws
-<span class="text-[#79c0ff]">secrets:</span>
-  - <span class="text-[#79c0ff]">name:</span> my-secret
-    <span class="text-[#79c0ff]">inject:</span> env</pre>
+            <pre class="p-3 font-mono text-[10px] leading-relaxed text-[var(--code-text)] overflow-x-auto"><span class="text-[var(--code-key)]">provider:</span> aws
+<span class="text-[var(--code-key)]">secrets:</span>
+  - <span class="text-[var(--code-key)]">name:</span> my-secret
+    <span class="text-[var(--code-key)]">inject:</span> env</pre>
             <button
               class="btn-copy absolute top-1 right-1 bg-[var(--surface)] border border-[var(--border)] rounded md:opacity-0 group-hover:opacity-100 transition-opacity text-[10px] px-1.5 py-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
               onclick="copyCode(this)">copy</button>
@@ -1608,7 +1730,7 @@
           <div
             class="code-wrap bg-[var(--surface2)] border border-[var(--border)] rounded-lg overflow-hidden relative group">
             <pre
-              class="p-3 font-mono text-xs text-[#e6edf3] overflow-x-auto"><span class="text-[var(--accent)]">docker dso</span> up -d</pre>
+              class="p-3 font-mono text-xs text-[var(--code-text)] overflow-x-auto"><span class="text-[var(--accent)]">docker dso</span> up -d</pre>
             <button
               class="btn-copy absolute top-1 right-1 bg-[var(--surface)] border border-[var(--border)] rounded md:opacity-0 group-hover:opacity-100 transition-opacity text-[10px] px-1.5 py-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
               onclick="copyCode(this)">copy</button>
@@ -1646,8 +1768,8 @@
   </section>
 
   <!-- Final CTA + Star Action -->
-  <section class="py-32 px-6 relative overflow-hidden bg-gradient-to-b from-transparent to-[var(--bg2)]">
-    <div class="max-w-4xl mx-auto relative z-10">
+  <section class="py-32 px-6 lg:px-12 xl:px-16 relative overflow-hidden bg-gradient-to-b from-transparent to-[var(--bg2)]">
+    <div class="max-w-7xl mx-auto relative z-10">
       <div
         class="reveal bg-[var(--surface)] border border-[var(--border)] rounded-[2.5rem] p-16 text-center shadow-2xl relative group overflow-hidden">
         <!-- Logo Watermark -->
@@ -1664,7 +1786,7 @@
 
         <div class="flex flex-col sm:flex-row justify-center gap-6 mb-16">
           <a href="#getting-started"
-            class="px-10 py-5 bg-[var(--accent)] text-[#0d1117] font-bold rounded-2xl shadow-xl shadow-[var(--accent)]/20 hover:scale-105 transition-all">Get
+            class="px-10 py-5 bg-[var(--accent)] text-[var(--bg)] font-bold rounded-2xl shadow-xl shadow-[var(--accent)]/20 hover:scale-105 transition-all">Get
             Started for Free</a>
           <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
             class="px-10 py-5 border border-[var(--border)] text-[var(--text-primary)] font-bold rounded-2xl hover:bg-[var(--surface2)] transition-all flex items-center justify-center gap-3">
@@ -1683,7 +1805,7 @@
             <p class="text-xs text-[var(--text-muted)]">Join the community on GitHub</p>
           </div>
           <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
-            class="flex items-center gap-2 bg-[#2a2e35] text-[var(--text-primary)] px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#343942] transition-colors">
+            class="flex items-center gap-2 bg-[var(--star-bg)] text-[var(--text-primary)] px-4 py-2 rounded-xl text-sm font-bold hover:bg-[var(--star-bg-hover)] transition-colors">
             <span class="text-yellow-400">⭐</span> Star
             <span class="pl-2 border-l border-gray-600 ml-1 text-xs opacity-70">2.1k</span>
           </a>
@@ -1693,7 +1815,7 @@
   </section>
 
   <!-- For Teams -->
-  <section id="for-teams" class="py-28 px-6 relative overflow-hidden border-t border-[var(--border-soft)]">
+  <section id="for-teams" class="py-28 px-6 lg:px-12 xl:px-16 relative overflow-hidden border-t border-[var(--border-soft)]">
 
     <!-- Radial glow background accent -->
     <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -1764,7 +1886,7 @@
 
           <!-- Popular badge -->
           <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full
-                      bg-[var(--accent)] text-[#0d1117] text-[10px] font-black tracking-widest uppercase shadow-lg shadow-[var(--accent)]/20">
+                      bg-[var(--accent)] text-[var(--bg)] text-[10px] font-black tracking-widest uppercase shadow-lg shadow-[var(--accent)]/20">
             Recommended
           </div>
 
@@ -1860,10 +1982,14 @@
             <!-- Buttons -->
             <div class="flex flex-col sm:flex-row items-center gap-4 flex-shrink-0">
               <!-- Primary: Book a Call -->
+              <!-- FIX #2: CTA Update -->
               <a id="cta-book-call"
-                 href="mailto:umairmd385@gmail.com?subject=DSO%20Team%20Support%20%E2%80%94%20Let's%20Talk&body=Hi%2C%0A%0AI%27m%20interested%20in%20getting%20support%20for%20Docker%20Secret%20Operator%20for%20my%20team.%0A%0ATeam%20size%3A%0ACloud%20provider%3A%0AUse%20case%3A%0A"
+                 href="https://calendly.com/umairmd385/dso-demo"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 data-email="umairmd385@gmail.com"
                  class="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm
-                        bg-[var(--accent)] text-[#0d1117]
+                        bg-[var(--accent)] text-[var(--bg)]
                         shadow-[0_0_24px_rgba(0,201,167,0.35)]
                         hover:shadow-[0_0_40px_rgba(0,201,167,0.5)]
                         hover:scale-[1.03] active:scale-[0.98]
@@ -1897,8 +2023,8 @@
   </section>
 
   <!-- Footer -->
-  <footer class="py-16 px-6 bg-[var(--bg)] border-t border-[var(--border-soft)]">
-    <div class="max-w-6xl mx-auto">
+  <footer class="py-16 px-6 lg:px-12 xl:px-16 bg-[var(--bg)] border-t border-[var(--border-soft)]">
+    <div class="max-w-7xl mx-auto">
       <div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
         <div class="max-w-xs">
           <div class="flex items-center gap-3 mb-6">
@@ -1984,14 +2110,44 @@
     document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
     updateThemeIcon(); // init
 
-    // Copy buttons
+    // FIX #6: Modern Mobile Menu logic
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    hamburger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && !hamburger.contains(e.target)) {
+        mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // FIX #5 & #4: Copy buttons with error handling and theme variables
     function copyCode(btn) {
       const pre = btn.closest('.code-wrap').querySelector('pre');
-      navigator.clipboard.writeText(pre.innerText).then(() => {
-        btn.textContent = 'copied!';
-        btn.style.color = '#00c9a7';
-        setTimeout(() => { btn.textContent = 'copy'; btn.style.color = ''; }, 2000);
-      });
+      navigator.clipboard.writeText(pre.innerText)
+        .then(() => {
+          btn.textContent = 'copied!';
+          btn.style.color = 'var(--accent)';
+          setTimeout(() => {
+            btn.textContent = 'copy';
+            btn.style.color = '';
+          }, 2000);
+        })
+        .catch(() => {
+          btn.textContent = 'failed';
+          btn.style.color = 'var(--text-muted)';
+          setTimeout(() => {
+            btn.textContent = 'copy';
+            btn.style.color = '';
+          }, 2000);
+        });
     }
 
     // Smooth scroll
@@ -1999,6 +2155,9 @@
       a.addEventListener('click', e => {
         const el = document.querySelector(a.getAttribute('href'));
         if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        // Close mobile menu on internal link click
+        mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
       });
     });
   </script>

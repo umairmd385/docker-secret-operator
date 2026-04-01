@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dso.skycloudops.in/sitemap.xml

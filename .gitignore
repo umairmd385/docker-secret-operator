@@ -1,4 +1,12 @@
-test_local_secret
-.githubnode_modules/
+node_modules/
+.DS_Store
+.idea/
+.vscode/
+
+# Build artifacts
 docs/.vitepress/dist/
 landing-page-premium/docs/
+landing-page-premium/output.css
+
+# Other
+test_local_secret
