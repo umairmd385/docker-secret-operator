@@ -11,13 +11,21 @@ Use DSO with HashiCorp Vault for self-hosted secret management.
 
 ```yaml
 provider: vault
-vault_addr: "http://vault.example.com:8200"
-vault_mount: "secret"  # KV mount path
+config:
+  address: "http://vault.example.com:8200"
+  mount: "secret"  # KV mount path
+  token: "s.xxxxxxx" # Or use VAULT_TOKEN env var
 
 secrets:
   - name: my-app/db-password   # Path within the mount
     inject: env
-    as: DB_PASSWORD
+    mappings:
+      password: DB_PASSWORD    # Map JSON key 'password' -> Env Var
+  
+  - name: my-app/api-key?version=3 # KV v2 version pinning
+    inject: env
+    mappings:
+      apiKey: API_KEY
 ```
 
 ## Authentication

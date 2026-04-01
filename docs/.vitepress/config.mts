@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitepress'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
-export default defineConfig({
+export default withMermaid(
+  defineConfig({
   title: "DSO — Docker Secret Operator",
   description: "Native Kubernetes-grade secret management for Docker. Inject secrets from AWS, Azure, Vault directly into containers at runtime.",
   base: '/docs/',
@@ -72,3 +74,4 @@ export default defineConfig({
     }
   }
 })
+)

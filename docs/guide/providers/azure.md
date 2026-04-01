@@ -11,16 +11,19 @@ Connect DSO to Azure Key Vault for enterprise-grade secret management.
 
 ```yaml
 provider: azure
-tenant_id: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-vault_url: "https://my-key-vault.vault.azure.net/"
+config:
+  vault_url: "https://my-key-vault.vault.azure.net/"
 
 secrets:
-  - name: db-password      # Secret name in Key Vault
+  - name: db-password      # Note: underscores are automatically converted to hyphens
     inject: env
-    as: DB_PASSWORD
+    mappings:
+      value: DB_PASSWORD   # Azure default key is 'value'
   - name: tls-certificate
     inject: file
     path: /run/secrets/tls.pem
+    mappings:
+      value: "."           # Mount the entire secret value as a file
 ```
 
 ## Authentication

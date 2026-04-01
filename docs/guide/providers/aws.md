@@ -11,15 +11,20 @@ This guide walks you through connecting DSO to AWS Secrets Manager.
 
 ```yaml
 provider: aws
-region: us-east-1
+config:
+  region: us-east-1
 
 secrets:
   - name: prod/my-app/db-password
     inject: env
-    as: DB_PASSWORD
+    rotation: true
+    mappings:
+      password: DB_PASSWORD # Source key 'password' -> Env Var 'DB_PASSWORD'
+
   - name: prod/my-app/api-key
     inject: env
-    as: API_KEY
+    mappings:
+      _TAG_Environment: APP_ENV # Map AWS Secret Tag 'Environment' to Env Var
 ```
 
 ## IAM Permissions
