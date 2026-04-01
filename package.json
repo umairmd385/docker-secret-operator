@@ -15,8 +15,10 @@
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.2",
     "autoprefixer": "^10.4.27",
+    "mermaid": "^11.14.0",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.2",
-    "vitepress": "^1.6.4"
+    "vitepress": "^1.6.4",
+    "vitepress-plugin-mermaid": "^2.0.17"
   }
 }
