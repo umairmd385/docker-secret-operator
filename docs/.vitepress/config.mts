@@ -3,75 +3,58 @@ import { withMermaid } from 'vitepress-plugin-mermaid'
 
 export default withMermaid(
   defineConfig({
-  title: "DSO — Docker Secret Operator",
-  description: "Native Kubernetes-grade secret management for Docker. Inject secrets from AWS, Azure, Vault directly into containers at runtime.",
-  base: '/docs/',
-  themeConfig: {
-    logo: '/assets/images/dso-logo.png',
-    siteTitle: 'DSO Docs',
-    nav: [
-      { text: 'Guide', link: '/guide/what-is-dso' },
-      { text: 'Concepts', link: '/guide/concepts' },
-      { text: 'CLI', link: '/guide/cli' },
-      { text: 'Providers', link: '/guide/providers/aws' },
-      {
-        text: 'v3.0.0',
-        items: [
-          { text: 'Release Notes', link: 'https://github.com/umairmd385/docker-secret-operator/releases' },
-          { text: 'Changelog', link: 'https://github.com/umairmd385/docker-secret-operator/blob/main/CHANGELOG.md' }
-        ]
-      }
-    ],
-    sidebar: [
-      {
-        text: 'Introduction',
-        items: [
-          { text: 'What is DSO?', link: '/guide/what-is-dso' },
-          { text: 'Getting Started', link: '/guide/getting-started' },
-          { text: 'Concepts', link: '/guide/concepts' },
-          { text: 'Architecture', link: '/guide/architecture' }
+    title: "DSO",
+    description: "Native secrets for Docker — without Kubernetes",
+    base: '/docs/',
+    head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+    themeConfig: {
+      logo: '/assets/images/logo-transparent.png',  // Ensure this has transparent background
+      nav: [
+        { text: 'Guide', link: '/guide/what-is-dso' },
+        { text: 'Concepts', link: '/guide/concepts' },
+        { text: 'CLI', link: '/guide/cli' },
+        { text: 'Providers', link: '/guide/providers/aws' }
+      ],
+      sidebar: {
+        '/guide/': [
+          {
+            text: 'Getting Started',
+            items: [
+              { text: 'Introduction', link: '/guide/what-is-dso' },
+              { text: 'Installation', link: '/guide/getting-started' },
+              { text: 'Concepts', link: '/guide/concepts' }
+            ]
+          },
+          {
+            text: 'Providers',
+            items: [
+              { text: 'AWS', link: '/guide/providers/aws' },
+              { text: 'Azure', link: '/guide/providers/azure' },
+              { text: 'Huawei', link: '/guide/providers/huawei' },
+              { text: 'HashiCorp Vault', link: '/guide/providers/vault' },
+              { text: 'Local File', link: '/guide/providers/local' }
+            ]
+          },
+          {
+            text: 'Guides',
+            items: [
+              { text: 'Examples', link: '/guide/examples' },
+              { text: 'Security', link: '/guide/security' },
+              { text: 'Troubleshooting', link: '/guide/troubleshooting' },
+              { text: 'Observability', link: '/guide/observability' },
+              { text: 'Architecture', link: '/guide/architecture' }
+            ]
+          }
         ]
       },
-      {
-        text: 'Configuration',
-        items: [
-          { text: 'dso.yaml Reference', link: '/guide/configuration' },
-          { text: 'Best Practices', link: '/guide/best-practices' }
-        ]
+      socialLinks: [
+        { icon: 'github', link: 'https://github.com/umairmd385/docker-secret-operator' }
+      ],
+      footer: {
+        message: 'Released under the MIT License.',
+        copyright: 'Copyright © 2024-present DSO Team'
       },
-      {
-        text: 'Providers',
-        items: [
-          { text: 'AWS Secrets Manager', link: '/guide/providers/aws' },
-          { text: 'Azure Key Vault', link: '/guide/providers/azure' },
-          { text: 'HashiCorp Vault', link: '/guide/providers/vault' },
-          { text: 'Local Files (Dev)', link: '/guide/providers/local' }
-        ]
-      },
-      {
-        text: 'Reference',
-        items: [
-          { text: 'CLI Commands', link: '/guide/cli' },
-          { text: 'Security Model', link: '/guide/security' },
-          { text: 'Observability', link: '/guide/observability' },
-          { text: 'Compliance', link: '/guide/compliance' },
-          { text: 'Examples', link: '/guide/examples' },
-          { text: 'Troubleshooting', link: '/guide/troubleshooting' }
-        ]
-      }
-    ],
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/umairmd385/docker-secret-operator' }
-    ],
-    footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2024-present DSO Team'
-    },
-    search: { provider: 'local' },
-    editLink: {
-      pattern: 'https://github.com/umairmd385/docker-secret-operator/edit/main/docs/:path',
-      text: 'Edit this page on GitHub'
+      search: { provider: 'local' }
     }
-  }
-})
+  })
 )

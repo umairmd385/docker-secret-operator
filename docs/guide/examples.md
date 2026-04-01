@@ -2,145 +2,51 @@
 
 Real-world Docker Compose stacks using DSO with different cloud providers.
 
-## Multi-Provider Production Setup
+## AWS Secrets Manager with Docker Compose
 
-DSO allows you to fetch from multiple backends simultaneously in a single stack. This is ideal when migrating or when different teams manage different secret stores.
-
-**`dso.yaml`:**
-```yaml
-providers:
-  - name: aws-prod
-    type: aws
-    region: us-east-1
-    role_arn: arn:aws:iam::123456789012:role/dso-role
-  
-  - name: vault-staging
-    type: vault
-    address: https://vault.internal:8200
-    auth_method: approle
-
-secrets:
-  - name: database/credentials/prod
-    provider: aws-prod
-    inject: env
-    rotation: true
-    mappings:
-      DB_PASSWORD: password
-      DB_USER: username
-  
-  - name: tls-certificates/api
-    inject: file
-    mount_path: /run/secrets/tls
-    rotation: true
-    file_mode: "0600"
-```
-
----
-
-## AWS — MySQL + phpMyAdmin
-
-Inject MySQL credentials from AWS Secrets Manager into a database stack.
+This example shows how to use DSO to inject database credentials into a standard application stack.
 
 **`dso.yaml`:**
 ```yaml
 provider: aws
 config:
-  region: us-east-2
-
-agent:
-  cache: true
-  watch:
-    mode: polling
-    polling_interval: 5m
-  restart_strategy:
-    type: rolling
-    health_check_timeout: 45s
-    grace_period: 20s
+  region: us-east-1
 
 secrets:
-  - name: arn:aws:secretsmanager:us-east-2:123456789:secret:production-db
+  - name: myapp/database
     inject: env
-    rotation: true
-    reload_strategy:
-      type: restart
     mappings:
-      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
-      MYSQL_USER: MYSQL_USER
-      MYSQL_PASSWORD: MYSQL_PASSWORD
+      DB_USER: username
+      DB_PASSWORD: password
+    rotation: true
+
+  - name: myapp/api-keys
+    inject: file
+    mount_path: /run/secrets/api
+    file_mode: "0600"
 ```
 
-**`docker-compose.yml`:**
+**`docker-compose.yaml`:**
 ```yaml
 services:
-  mysql_db:
-    image: mysql:8.0
+  app:
+    image: myapp:latest
     environment:
-      - MYSQL_ROOT_PASSWORD   # ← injected by DSO
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-    volumes:
-      - mysql-data:/var/lib/mysql
-
-  phpmyadmin:
-    image: phpmyadmin:latest
-    ports:
-      - "8080:80"
-    environment:
-      PMA_HOST: mysql_db
-
-volumes:
-  mysql-data:
-```
-
-**Run:**
-```bash
-docker dso up -d
-```
-
-→ [Full example with screenshots](https://github.com/umairmd385/docker-secret-operator/tree/main/examples/aws-compose)
-
----
-
-## Azure — MySQL + phpMyAdmin
-
-Same stack using Azure Key Vault. Note the `value` mapping key specific to Azure.
-
-**`dso.yaml`:**
-```yaml
-provider: azure
-config:
-  vault_url: "https://my-keyvault.vault.azure.net/"
-
-agent:
-  cache: true
-  watch:
-    mode: polling
-    polling_interval: 5m
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    secrets:
+      - api-key
 
 secrets:
-  - name: MYSQL-ROOT-PASSWORD   # Azure uses hyphens, not underscores
-    inject: env
-    mappings:
-      value: MYSQL_ROOT_PASSWORD   # Azure always uses 'value' as the key
-
-  - name: MYSQL-USER
-    inject: env
-    mappings:
-      value: MYSQL_USER
-
-  - name: MYSQL-PASSWORD
-    inject: env
-    mappings:
-      value: MYSQL_PASSWORD
+  api-key:
+    external: true
 ```
-
-→ [Full example with screenshots](https://github.com/umairmd385/docker-secret-operator/tree/main/examples/azure-compose)
 
 ---
 
 ## Signal-Based Hot Reload
 
-Apps that handle `SIGHUP` can reload configuration without any container restart. This example shows a Go app and a Python app doing live config reloads.
+Apps that handle `SIGHUP` can reload configuration without any container restart. This example shows a Go app doing live config reloads.
 
 **`dso.yaml`:**
 ```yaml
@@ -159,70 +65,27 @@ secrets:
       DATABASE_URL: DATABASE_URL
 ```
 
-**Go app snipped (`main.go`):**
-```go
-sigs := make(chan os.Signal, 1)
-signal.Notify(sigs, syscall.SIGHUP)
-go func() {
-    for range sigs {
-        log.Println("SIGHUP received — reloading config")
-        reloadConfig()
-    }
-}()
-```
-
-→ [Full Go + Python signal reload example](https://github.com/umairmd385/docker-secret-operator/tree/main/examples/v2-signal-reloading)
-
 ---
 
-## Rolling Restart Rotation
+## Azure — MySQL + phpMyAdmin
 
-Demonstrates zero-downtime secret rotation where DSO clones the container with updated secrets, waits for healthcheck, then removes the old one.
+Same stack using Azure Key Vault.
 
 **`dso.yaml`:**
-```yaml
-provider: aws
-config:
-  region: us-east-1
 
-agent:
-  rotation:
-    strategy: rolling
-    health_check_timeout: 30s
-    max_parallel: 1
+```yaml
+provider: azure
+config:
+  vault_url: "https://my-keyvault.vault.azure.net/"
 
 secrets:
-  - name: myapp/api-key
+  - name: MYSQL-ROOT-PASSWORD
     inject: env
-    rotation: true
-    reload_strategy:
-      type: restart
     mappings:
-      API_KEY: API_KEY
+      value: MYSQL_ROOT_PASSWORD
+
+  - name: MYSQL-USER
+    inject: env
+    mappings:
+      value: MYSQL_USER
 ```
-
-→ [Full rolling restart example](https://github.com/umairmd385/docker-secret-operator/tree/main/examples/v2-rotation-rolling-restart)
-
----
-
-## Docker Swarm
-
-DSO works with Docker Swarm service definitions.
-
-→ [Docker Swarm example](https://github.com/umairmd385/docker-secret-operator/tree/main/examples/docker-swarm)
-
----
-
-## Huawei Cloud CSMS
-
-For teams running on Huawei Cloud using ECS Agency authentication.
-
-→ [Huawei CSMS example](https://github.com/umairmd385/docker-secret-operator/tree/main/examples/huawei-compose)
-
----
-
-## Production Compose Setup
-
-A full production-hardened Compose stack with health checks, restart policies, and explicit secret rotation.
-
-→ [Production compose example](https://github.com/umairmd385/docker-secret-operator/tree/main/examples/production-compose)

@@ -14,6 +14,79 @@ DSO consists of three principal logical components:
 
 ---
 
+## Provider Plugin Architecture
+
+DSO uses a plugin-based architecture for secret providers. Each provider runs as an isolated Go binary, communicating with the main DSO daemon via RPC.
+
+```mermaid
+graph TB
+    subgraph "DSO Daemon"
+        A[DSO Main Process]
+        B[Config Watcher]
+        C[Audit Logger]
+        D[Secret Cache]
+    end
+    
+    subgraph "Provider Plugins"
+        E[AWS Provider Plugin]
+        F[Azure Provider Plugin]
+        G[Vault Provider Plugin]
+        H[Huawei Provider Plugin]
+    end
+    
+    subgraph "Cloud Secret Stores"
+        I[AWS Secrets Manager]
+        J[Azure Key Vault]
+        K[HashiCorp Vault]
+        L[Huawei CSMS]
+    end
+    
+    A -->|Load| E
+    A -->|Load| F
+    A -->|Load| G
+    A -->|Load| H
+    
+    E -->|Fetch| I
+    F -->|Fetch| J
+    G -->|Fetch| K
+    H -->|Fetch| L
+    
+    A -->|Log| C
+    A -->|Store| D
+    B -->|Reload| A
+    
+    style A fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style E fill:#FF9800,stroke:#E65100,color:#fff
+    style F fill:#FF9800,stroke:#E65100,color:#fff
+    style G fill:#FF9800,stroke:#E65100,color:#fff
+    style H fill:#FF9800,stroke:#E65100,color:#fff
+```
+
+### Secret Fetch Flow with Plugins
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant CLI as Docker DSO CLI
+    participant Daemon as DSO Daemon
+    participant Plugin as Provider Plugin
+    participant Cloud as Cloud Secret Store
+    participant Container
+    
+    User->>CLI: docker dso up -d
+    CLI->>Daemon: gRPC: Start stack
+    Daemon->>Plugin: Load provider binary
+    Daemon->>Plugin: Fetch secret
+    Plugin->>Cloud: API call with IAM/auth
+    Cloud-->>Plugin: Secret value
+    Plugin-->>Daemon: Return secret
+    Daemon->>Daemon: Store in memory cache
+    Daemon->>Container: Inject via Unix socket
+    Container-->>User: Running with secrets
+```
+
+---
+
 ## Installation Flow
 
 The following sequence illustrates how the `docker plugin install` command interacts with Docker Engine and the DSO image bundle.
@@ -32,40 +105,6 @@ sequenceDiagram
     Docker->>Host: Start Plugin daemon process (dso-agent)
     Host-->>Docker: agent running, socket created at /run/docker/plugins/dso.sock
     Docker-->>User: Plugin 'dso' successfully installed
-```
-
----
-
-## Secret Fetch and Injection Sequence
-
-When you execute a deployment via `docker dso up`, the following synchronous injection flow occurs to ensure zero disk persistence of plaintext secrets.
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant CLI as docker dso
-    participant Agent as dso-agent (socket)
-    participant Provider as Provider Plugin (RPC)
-    participant Cloud as Cloud Vault (AWS/Azure)
-    participant Docker as Docker Engine
-
-    CLI->>CLI: Parse docker-compose.yml & dso.yaml
-    CLI->>Agent: FetchAllEnvs(config)
-    
-    loop For each Secret Mapping
-        Agent->>Provider: GetSecret("prod/db")
-        Provider->>Cloud: REST API Call (with Machine Auth)
-        Cloud-->>Provider: Encrypted JSON/String Payload
-        Provider-->>Agent: Parsed map[string]string
-        Agent->>Agent: Apply 'mappings' re-keying & Cache
-    end
-    
-    Agent-->>CLI: Final Environment Variable Map
-    CLI->>CLI: Generate secure tmpfs env file
-    CLI->>Docker: compose --env-file /tmp/dso-*.env up
-    Docker-->>CLI: Containers started
-    CLI->>CLI: Delete /tmp/dso-*.env
-    CLI-->>User: Deployment Successful
 ```
 
 ---
@@ -103,31 +142,4 @@ sequenceDiagram
     Strategy->>Docker: Stop & Remove "api" (Graceful drain)
     Docker-->>Strategy: Old container removed
     Strategy->>Docker: Rename "api-new" -> "api"
-```
-
----
-
-## Provider Plugin Architecture
-
-DSO employs HashiCorp's `go-plugin` framework over `net/rpc`. Providers act as completely isolated operating system processes.
-
-```mermaid
-graph TD
-    subgraph Host System
-        A[dso-agent] -->|net/rpc (Unix Socket)| B(dso-provider-aws)
-        A -->|net/rpc (Unix Socket)| C(dso-provider-vault)
-        A -->|net/rpc (Unix Socket)| D(dso-provider-azure)
-    end
-    
-    B -->|HTTPS| E[AWS Secrets Manager]
-    C -->|HTTPS| F[HashiCorp Vault]
-    D -->|HTTPS| G[Azure Key Vault]
-
-    classDef agent fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef plugin fill:#bbf,stroke:#333,stroke-width:1px;
-    classDef cloud fill:#ffe,stroke:#e6a23c,stroke-width:2px,stroke-dasharray: 5 5;
-    
-    class A agent;
-    class B,C,D plugin;
-    class E,F,G cloud;
 ```

@@ -1,0 +1,28 @@
+/* Remove white backgrounds from cards */
+.VPFeature,
+.VPDoc,
+.custom-block {
+  background: transparent !important;
+}
+
+/* Ensure dark mode compatibility */
+:root {
+  --vp-c-bg: transparent;
+  --vp-c-bg-soft: rgba(0, 0, 0, 0.05);
+}
+
+.dark {
+  --vp-c-bg-soft: rgba(255, 255, 255, 0.05);
+}
+
+/* Fix button backgrounds */
+.VPButton {
+  background: var(--vp-c-brand) !important;
+}
+
+/* Ensure cards in documentation pages use proper theming */
+.vp-doc .custom-block {
+  background: var(--vp-c-bg-soft);
+  border-radius: 8px;
+  padding: 16px;
+}
