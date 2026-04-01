@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/docker-secret-operator/dso/pkg/api"
@@ -46,10 +47,26 @@ func (p *VaultProvider) Init(config map[string]string) error {
 }
 
 func (p *VaultProvider) GetSecret(name string) (map[string]string, error) {
-	// Vault KV v2 uses 'data' in the path
-	path := fmt.Sprintf("%s/data/%s", p.mount, name)
+	// Support ?version= kv v2 version pinning
+	version := ""
+	cleanName := name
+	if strings.Contains(name, "?version=") {
+		parts := strings.SplitN(name, "?version=", 2)
+		cleanName = parts[0]
+		version = parts[1]
+	}
 
-	secret, err := p.client.Logical().Read(path)
+	// Vault KV v2 uses 'data' in the path
+	path := fmt.Sprintf("%s/data/%s", p.mount, cleanName)
+
+	var secret *vault.Secret
+	var err error
+	if version != "" {
+		secret, err = p.client.Logical().ReadWithData(path, map[string][]string{"version": {version}})
+	} else {
+		secret, err = p.client.Logical().Read(path)
+	}
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to read vault secret %s: %w", name, err)
 	}

@@ -21,7 +21,7 @@ type ComposeFile struct {
 }
 
 // RunComposeUpWithEnv parses the compose file, fetches DSO custom secrets for file overrides, merges them with dso.yaml ENV configurations, and dynamically runs docker compose.
-func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string) error {
+func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string, dryRun bool) error {
 	envMap := make(map[string]string)
 	for _, e := range os.Environ() {
 		parts := strings.SplitN(e, "=", 2)
@@ -171,6 +171,40 @@ func RunComposeUpWithEnv(filename string, extraArgs []string, configPath string)
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
 	cmd.Env = finalEnvs
+
+	if dryRun {
+		fmt.Printf("DRY RUN: DSO would securely inject the following secrets into %s:\n", filename)
+		for _, e := range finalEnvs {
+			if cfg != nil {
+				// Hide actual secret values for safety by checking if the env var matches our config
+				parts := strings.SplitN(e, "=", 2)
+				if len(parts) == 2 {
+					isSecret := false
+					for _, s := range cfg.Secrets {
+						for _, mapKey := range s.Mappings {
+							if mapKey == parts[0] {
+								isSecret = true
+								break
+							}
+						}
+					}
+					if isSecret {
+						fmt.Printf("  - %s=******** (masking length %d)\n", parts[0], len(parts[1]))
+					}
+				}
+			}
+		}
+		for secretName, configRaw := range parsed.Secrets {
+			if cfgMap, ok := configRaw.(map[string]interface{}); ok {
+				if fileUrl, exists := cfgMap["file"]; exists {
+					fmt.Printf("  - file mount: %s -> %v [auto-tmpfs injected]\n", secretName, fileUrl)
+				}
+			}
+		}
+		fmt.Println("DRY RUN completed successfully. Use without --dry-run to deploy.")
+		_ = os.RemoveAll(secDir)
+		return nil
+	}
 
 	fmt.Printf("DSO securely injecting secrets for %s...\n", filename)
 	err = cmd.Run()

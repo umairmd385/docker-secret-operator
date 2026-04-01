@@ -23,6 +23,7 @@ func NewUpCmd() *cobra.Command {
 
 			var dockerArgs []string
 			skip := false
+			dryRun := false
 			for i, arg := range args {
 				if skip {
 					skip = false
@@ -46,6 +47,10 @@ func NewUpCmd() *cobra.Command {
 				if strings.HasPrefix(arg, "--config=") {
 					continue
 				}
+				if arg == "--dry-run" {
+					dryRun = true
+					continue
+				}
 				dockerArgs = append(dockerArgs, arg)
 			}
 
@@ -61,7 +66,7 @@ func NewUpCmd() *cobra.Command {
 			}
 
 			// Core compose logic: parse, fetch secrets, rewrite and execute
-			err := core.RunComposeUpWithEnv(composeFile, dockerArgs, configPath)
+			err := core.RunComposeUpWithEnv(composeFile, dockerArgs, configPath, dryRun)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error running up: %v\n", err)
 				os.Exit(1)

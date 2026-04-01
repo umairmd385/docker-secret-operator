@@ -55,7 +55,18 @@ func (p *AWSProvider) GetSecret(name string) (map[string]string, error) {
 	var data map[string]string
 	// attempt JSON decode. If fail, assume raw string map
 	if err := json.Unmarshal([]byte(*result.SecretString), &data); err != nil {
-		return map[string]string{"value": *result.SecretString}, nil
+		data = map[string]string{"value": *result.SecretString}
+	}
+
+	// Fetch tags
+	descInput := &secretsmanager.DescribeSecretInput{SecretId: &name}
+	descResult, err := p.client.DescribeSecret(context.TODO(), descInput)
+	if err == nil && descResult.Tags != nil {
+		for _, tag := range descResult.Tags {
+			if tag.Key != nil && tag.Value != nil {
+				data["_TAG_"+*tag.Key] = *tag.Value
+			}
+		}
 	}
 
 	return data, nil

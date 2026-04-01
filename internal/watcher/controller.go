@@ -175,7 +175,7 @@ func (r *ReloaderController) TriggerReload(ctx context.Context, secretName strin
 						as.Emit(fmt.Sprintf("\033[1;36m[DSO EXECUTION]\033[0m\nStrategy: restart (compose)\n🔄 Native rotation: Scaling %s from compose context.", target.ComposePath))
 					}
 				}
-				err := core.RunComposeUpWithEnv(target.ComposePath, []string{"-d"}, "")
+				err := core.RunComposeUpWithEnv(target.ComposePath, []string{"-d"}, "", false)
 				if err != nil {
 					r.Logger.Error("Background rotation failed", zap.Error(err))
 				} else {
