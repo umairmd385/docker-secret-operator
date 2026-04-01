@@ -1,31 +1,45 @@
 # AWS Secrets Manager
 
-This guide walks you through connecting DSO to AWS Secrets Manager.
+Connect DSO to AWS Secrets Manager to manage application secrets securely at scale.
+
+## Configuration
+
+```yaml
+# dso.yaml - AWS Provider
+provider: aws
+config:
+  region: us-east-1
+  # Optional: Use IAM role instead of credentials
+  # role_arn: arn:aws:iam::123456789012:role/dso-role
+
+secrets:
+  - name: prod/database/credentials
+    inject: env
+    rotation: true
+    mappings:
+      DB_USER: username
+      DB_PASSWORD: password
+      DB_HOST: host
+```
+
+## AWS Tag Support
+
+DSO automatically injects secret tags as environment variables with `_TAG_` prefix.
+
+Example: If your secret has tags:
+- `environment: production`
+- `service: api`
+
+The following env vars are injected:
+- `_TAG_ENVIRONMENT=production`
+- `_TAG_SERVICE=api`
+
+This enables rotation strategies based on tags.
 
 ## Prerequisites
 - An AWS account with Secrets Manager enabled
 - A secret already created in your target region
 - IAM credentials with `secretsmanager:GetSecretValue` permission
-
-## Configuration
-
-```yaml
-provider: aws
-config:
-  region: us-east-1
-
-secrets:
-  - name: prod/my-app/db-password
-    inject: env
-    rotation: true
-    mappings:
-      password: DB_PASSWORD # Source key 'password' -> Env Var 'DB_PASSWORD'
-
-  - name: prod/my-app/api-key
-    inject: env
-    mappings:
-      _TAG_Environment: APP_ENV # Map AWS Secret Tag 'Environment' to Env Var
-```
 
 ## IAM Permissions
 

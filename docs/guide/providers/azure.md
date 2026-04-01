@@ -2,29 +2,39 @@
 
 Connect DSO to Azure Key Vault for enterprise-grade secret management.
 
+## Configuration
+
+```yaml
+# dso.yaml - Azure Provider
+provider: azure
+config:
+  vault_url: https://my-keyvault.vault.azure.net
+  # Use Managed Identity (recommended for production)
+  # or Service Principal credentials
+
+secrets:
+  - name: my-secret-name
+    inject: env
+    rotation: true
+    mappings:
+      DB_PASSWORD: secret-value
+      # Note: Azure Key Vault converts underscores to hyphens automatically
+```
+
+## Azure Key Vault Naming
+
+Azure Key Vault does not allow underscores (`_`) in secret names. DSO automatically:
+- Converts underscores to hyphens when fetching from Azure
+- Maps back to your desired environment variable names
+
+Example:
+- Secret in Azure: `database-credentials`
+- Mapped to: `DB_PASSWORD` (env var)
+
 ## Prerequisites
 - An Azure account with Key Vault resource created
 - A secret stored in your Key Vault
 - A Service Principal or Managed Identity with `Key Vault Secrets User` role
-
-## Configuration
-
-```yaml
-provider: azure
-config:
-  vault_url: "https://my-key-vault.vault.azure.net/"
-
-secrets:
-  - name: db-password      # Note: underscores are automatically converted to hyphens
-    inject: env
-    mappings:
-      value: DB_PASSWORD   # Azure default key is 'value'
-  - name: tls-certificate
-    inject: file
-    path: /run/secrets/tls.pem
-    mappings:
-      value: "."           # Mount the entire secret value as a file
-```
 
 ## Authentication
 
