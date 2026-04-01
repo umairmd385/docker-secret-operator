@@ -1,6 +1,41 @@
 # Examples
 
-Real-world Docker Compose stacks using DSO with different cloud providers. All examples are available in the [`examples/`](https://github.com/umairmd385/docker-secret-operator/tree/main/examples) directory of the repository.
+Real-world Docker Compose stacks using DSO with different cloud providers.
+
+## Multi-Provider Production Setup
+
+DSO allows you to fetch from multiple backends simultaneously in a single stack. This is ideal when migrating or when different teams manage different secret stores.
+
+**`dso.yaml`:**
+```yaml
+providers:
+  - name: aws-prod
+    type: aws
+    region: us-east-1
+    role_arn: arn:aws:iam::123456789012:role/dso-role
+  
+  - name: vault-staging
+    type: vault
+    address: https://vault.internal:8200
+    auth_method: approle
+
+secrets:
+  - name: database/credentials/prod
+    provider: aws-prod
+    inject: env
+    rotation: true
+    mappings:
+      DB_PASSWORD: password
+      DB_USER: username
+  
+  - name: tls-certificates/api
+    inject: file
+    mount_path: /run/secrets/tls
+    rotation: true
+    file_mode: "0600"
+```
+
+---
 
 ## AWS — MySQL + phpMyAdmin
 

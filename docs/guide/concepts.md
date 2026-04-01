@@ -74,19 +74,30 @@ When you run `docker dso up -d`:
 > [!IMPORTANT]
 > Secrets are injected via Docker's standard environment variable mechanism — the agent does **not** modify the Docker image or write to any persistent storage.
 
-## The Watcher Engine
+## How Secret Rotation Works
+
+### Polling Mechanism
 
 When `rotation: true` is set on a secret, the agent starts a background polling loop:
 
-```
-Every polling_interval:
-  1. Call provider.GetSecret(name) → get current value
-  2. Hash the response and compare to last known hash
-  3. If hash changed:
-     a. Update the in-memory cache
-     b. Invoke the Strategy Engine to decide rotation method
-     c. Execute rotation on affected containers
-```
+- **Default polling interval:** 2 minutes (configurable per-environment)
+- DSO polls the upstream cloud providers at these defined intervals.
+- Example Configuration: `agent.watch.polling_interval: 30s`
+
+### Atomic Update Process
+
+1. DSO detects a secret change in the upstream provider by hashing the new payload.
+2. It fetches the new value while continuing to hold the old value in memory, ensuring zero downtime.
+3. It applies the update based on the configured injection strategy:
+   - **env**: Sends a `SIGHUP` (or custom `reload_signal`) to the running container, prompting the application to reload its environment cleanly.
+   - **file**: Uses an atomic rename operation on the mounted tmpfs payload. It writes the new secret to a temporary file, calls `rename()` to swap it, and unlinks the old file. This guarantees that file-watching applications never read a partially written secret.
+   - **restart**: Performs a graceful container restart with health check verification.
+
+### Handling Rotation Failures
+
+- **Resilience:** If the new secret is invalid, malformed, or the provider API is unreachable, DSO aborts the rotation and retains the old valid value.
+- **Audit Logging:** The error is immediately recorded to the structured JSON audit log.
+- **Retry Backoff:** DSO supports configurable retry attempts and exponential backoff, preventing rate-limiting from cloud providers during outages.
 
 ### Debouncer
 
