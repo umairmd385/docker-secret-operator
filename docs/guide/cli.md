@@ -1,150 +1,83 @@
-# CLI Commands
+# CLI Reference
 
-DSO integrates as a native Docker CLI plugin. All commands use the form `docker dso <subcommand>`.
+DSO is implemented as a native Docker CLI plugin. All interactions are performed via the `docker dso` command space.
 
-## `docker dso up`
+---
 
-Start a Docker Compose stack with secrets injected from your vault.
+## Command: `up`
+Synchronizes secrets and initializes a Docker Compose stack.
 
 ```bash
 docker dso up [flags] [compose-args...]
 ```
 
-**Examples:**
+**Mechanics:**
+1.  **Pre-flight**: Parses `dso.yaml` and establishes a connection to the `dso-agent` via the Unix socket.
+2.  **Resolution**: Fetches the latest secret values from the configured provider (AWS/Azure/Vault).
+3.  **Injection**: Maps secret values to the environment of services defined in `docker-compose.yml`.
+4.  **Execution**: Calls `docker compose up` with the enriched environment.
 
-```bash
-# Start in detached mode (most common)
-docker dso up -d
-
-# Use a specific compose file
-docker dso up -f docker-compose.prod.yml -d
-
-# Use a custom DSO config file
-docker dso up --config /etc/dso/prod.yaml -d
-
-# Scale a specific service
-docker dso up -d --scale api=3
-```
-
-**What it does:**
-1. Reads `dso.yaml` (or `--config` path)
-2. Connects to the DSO agent via Unix socket
-3. Fetches secrets and injects them as environment variables
-4. Calls `docker compose up` with the enriched environment
+**Common Flags:**
+- `-d, --detach`: Run containers in the background.
+- `-c, --config`: Path to a custom `dso.yaml` (Default: `./dso.yaml`).
+- `-f, --file`: Path to a custom `docker-compose.yml`.
 
 ---
 
-## `docker dso down`
-
-Stop the stack and securely purge all in-memory secrets.
+## Command: `down`
+Stops the stack and performs a secure memory purge.
 
 ```bash
 docker dso down [compose-args...]
 ```
 
-**Examples:**
-
-```bash
-docker dso down
-
-# Remove volumes too
-docker dso down -v
-```
+**Mechanics:**
+1.  **Termination**: Calls `docker compose down` to stop and remove containers.
+2.  **Purge**: Signals the `dso-agent` to flush the sensitive secret cache from its process memory.
 
 ---
 
-## `docker dso compose`
-
-Run any Docker Compose subcommand with DSO secret injection enabled.
-
-```bash
-docker dso compose <subcommand> [args...]
-```
-
-**Examples:**
-
-```bash
-# View logs
-docker dso compose logs -f api
-
-# Check status
-docker dso compose ps
-
-# Run a one-off command with secrets injected
-docker dso compose run --rm api python manage.py migrate
-
-# Pull images
-docker dso compose pull
-```
-
----
-
-## `docker dso fetch`
-
-Fetch and display a specific secret from the configured provider.
+## Command: `fetch`
+Resolves and displays a specific secret (for debugging purposes).
 
 ```bash
 docker dso fetch <secret-name>
 ```
 
-**Examples:**
-
-```bash
-docker dso fetch myapp/db
-docker dso fetch MYSQL-ROOT-PASSWORD
-```
-
-**Output:**
-
-```
-Secret: myapp/db
-  DB_PASSWORD: [REDACTED]
-  DB_USER: myapp
-```
-
-> [!TIP]
-> Use `docker dso fetch` to verify connectivity and authentication to your vault before running `docker dso up`.
+**Usage:**
+Use this command to verify that your host has the correct IAM permissions or API access to reach the vault before launching a full stack. **Note**: Secret values are masked in the terminal output to prevent "shoulder surfing" leaks.
 
 ---
 
-## `docker dso watch`
-
-Start the background watcher in foreground mode — useful for debugging rotation events.
+## Command: `watch`
+Starts the Watcher Engine in foreground mode.
 
 ```bash
 docker dso watch
 ```
 
-The watcher will print rotation events as they occur:
+**Usage:**
+Ideal for debugging rotation strategies and SIGHUP signals. The command streams real-time reconciliation logs, showing exactly when a secret drift is detected and how the Reloader Controller responds.
 
-```
-[DSO WATCHER] Polling secret: myapp/db
-[DSO ANALYZER] Container: api_container
-  - Fixed Port: NO
-  - Stateful: NO
-  - Health Check: YES
-[DSO STRATEGY] Selected: rolling | Score: 80
-[DSO ROTATION] Secret changed. Starting rolling update...
-[DSO ROTATION] New container started: api_container_blue
-[DSO ROTATION] Health check passed. Removing: api_container
-[DSO ROTATION] Done.
+---
+
+## Command: `version`
+Displays the DSO binary version and build metadata.
+
+```bash
+docker dso version
 ```
 
 ---
 
-## Global Flags
+## Global Configuration Resolution
+DSO resolves its configuration using the following priority:
+1.  Explicit flag via `--config`.
+2.  Environment variable `DSO_CONFIG`.
+3.  Local file `./dso.yaml`.
+4.  System-wide file `/etc/dso/dso.yaml`.
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--config`, `-c` | `./dso.yaml` | Path to `dso.yaml` config file |
-| `--file`, `-f` | `docker-compose.yml` | Path to Docker Compose file |
-
----
-
-## Config Resolution Order
-
-If `--config` is not specified, DSO looks for `dso.yaml` in this order:
-
-1. Path from `--config` flag
-2. `./dso.yaml` (current directory)
-3. `/etc/dso/dso.yaml` (system-wide default)
+## Next Steps
+- **[System Architecture](/guide/architecture)**: Learn how the CLI interacts with the Agent.
+- **[Configuration Reference](/guide/configuration)**: Detailed `dso.yaml` schema.
+- **[Security Model](/guide/security)**: How the CLI-to-Agent socket is protected.

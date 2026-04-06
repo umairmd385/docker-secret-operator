@@ -1,96 +1,76 @@
-# Troubleshooting Guide
+# Troubleshooting & Diagnostics
 
-When errors happen, DSO is designed to fail securely rather than mask problems. This guide covers the most common issues and how to resolve them.
-
-## Common Issues
-
-### 1. Installation Failures
-
-**Symptom:** `docker plugin install` hangs or returns `permission denied`.
-
-**Resolution:**
-- Ensure the Docker daemon is running (`systemctl status docker`).
-- The installation must be executed by a user in the `docker` group, or via `sudo`.
-- For the alternative shell-script install, ensure `curl` is installed and you are executing it with `sudo bash`.
+DSO is designed to fail securely. When a synchronization or rotation event fails, the system prioritizes existing secret integrity over applying potentially corrupted or unauthorized updates.
 
 ---
 
-### 2. Provider Authentication Errors
+## 1. Provider Authentication Failures
+**Symptom**: `ERROR: [Watcher] Failed to fetch secret 'myapp/db': AccessDenied`
 
-**Symptom:** You see errors like `failed fetching secret from aws: AccessDeniedException`.
+DSO relies on **Machine Identity**. Authentication failures typically indicate a mismatch between the host's IAM profile and the required vault permissions.
 
-**Resolution:**
-The DSO provider cannot authenticate with your cloud provider.
-- **AWS:** Verify the instance profile has `secretsmanager:GetSecretValue` permissions for the specific secret ARN.
-- **Vault:** Check if the passed `vault_token` in `dso.yaml` has expired or lacks the correct policy.
-- **Azure:** Ensure the Managed Identity attached to the VM has "Key Vault Secrets User" permissions.
-
-Diagnostic command:
-```bash
-# Test connectivity manually
-docker dso test --provider aws
-```
+**Diagnostic Steps**:
+1.  **Verify IAM Policy**: Ensure the host's IAM Role (AWS) or Managed Identity (Azure) has explicit `GetSecretValue` permissions for the specific Resource ARN.
+2.  **Context Check**: If running in a containerized environment (e.g., Docker-in-Docker), ensure the cloud metadata service (IMDS) is reachable from within the network namespace.
+3.  **Manual Resolution Test**: Use the DSO CLI to verify connectivity independently of the rotation engine:
+    ```bash
+    docker dso fetch <secret-name>
+    ```
 
 ---
 
-### 3. Secret Not Found
+## 2. Secret Drift & Rotation Stalls
+**Symptom**: Secret updated in Vault, but container remains on the legacy version.
 
-**Symptom:** `vault secret myapp/db not found` or similar.
-
-**Resolution:**
-The authentication succeeded, but the secret name or path is incorrect.
-- Ensure the spelling matches exactly.
-- **Azure:** Key Vault paths use hyphens (`-`), not underscores (`_`).
-- **Vault:** Ensure you are querying the correct mount path. KV v2 engines require `data/` in API calls (handled automatically if the mount path is correct).
+**Diagnostic Steps**:
+1.  **Watcher Mode**: Verify `agent.watch.polling_interval` in `dso.yaml`. If the interval is high (e.g., `10m`), the "Reconciliation Gap" may be expected.
+2.  **Debouncer Interaction**: DSO ignores rapid successions of vault updates to prevent "flapping." Check logs for `[Debouncer] Update suppressed`.
+3.  **Label Verification**: Ensure the target container has `dso.reloader=true`. DSO ignores all containers without this explicit opt-in label.
 
 ---
 
-### 4. Container Fails to Start
+## 3. Atomic Rotation Failures (Rolling Strategy)
+**Symptom**: `ERROR: [Reloader] Rolling update failed for 'api': Healthcheck timeout`
 
-**Symptom:** Container exits immediately with `Missing required environment variable DB_PASSWORD`.
+When using the `rolling` strategy, DSO starts a new container and waits for it to become `healthy` before removing the old one. If the new container fails its healthcheck, DSO aborts the rotation.
 
-**Resolution:**
-- Verify your `docker-compose.yml`. Did you set `DB_PASSWORD=` instead of just declaring `- DB_PASSWORD`? Setting an empty value overrides DSO's injection.
-- Run `docker dso inspect <container-id>` to see if DSO injected the expected values. 
-
----
-
-### 5. Rotation Not Working
-
-**Symptom:** The secret changes in Vault, but the container doesn't get updated.
-
-**Resolution:**
-- Ensure `rotation: true` is set for the secret mapping in `dso.yaml`.
-- Ensure the `agent.watch.mode` is set correctly. If using polling, check `polling_interval`.
-- Look for debouncer messages. If the secret was updated multiple times rapidly, DSO debounces the changes for 30 seconds before acting.
-- If using `reload_strategy: signal`, verify the container application actually implements a `SIGHUP` reload routine.
+**Diagnostic Steps**:
+1.  **Healthcheck Definition**: Ensure a valid `healthcheck` is defined in `docker-compose.yml`.
+2.  **Logs Inspection**: Check the logs of the "Candidate" container (usually named `<service>_dso_new`) to see if the application failed to boot with the new secret.
+3.  **Timeout Adjustment**: If the application has a long cold-start time, increase `agent.rotation.health_check_timeout`.
 
 ---
 
-### 6. Permission Denied Errors
+## 4. Signal-Based Reload Issues (SIGHUP)
+**Symptom**: `INFO: [Reloader] Signal SIGHUP sent to 'proxy'`, but configuration remains old.
 
-**Symptom:** Error reading `/var/run/dso.sock`.
+**Diagnostic Steps**:
+1.  **PID 1 Requirement**: DSO sends signals to the container's PID 1. If your entrypoint is a shell script (`sh -c ...`), the signal may not be propagated to the application. Use `exec` in your entrypoint scripts.
+2.  **App Support**: Verify that the application (e.g., Nginx, Go-binary) actually implements a handler for `SIGHUP` to reload its configuration from the environment or filesystem.
 
-**Resolution:**
-The CLI plugin cannot communicate with the agent daemon.
-Check the DSO daemon status:
-```bash
-systemctl status dso
-journalctl -u dso -f
-```
-Ensure the socket file exists and is writable by the docker group.
+---
 
-## Diagnostic Commands
+## 5. Socket Connectivity
+**Symptom**: `failed to connect to /run/docker/plugins/dso.sock: connection refused`
 
-DSO includes several built-in commands to help you identify problems.
+**Diagnostic Steps**:
+1.  **Plugin Status**: Verify the DSO plugin is enabled: `docker plugin ls`.
+2.  **Daemon Logs**: Inspect the plugin's internal logs via the host's journal:
+    ```bash
+    # For native installs
+    journalctl -u dso-agent -f
+    ```
 
-```bash
-# Verify the dso.yaml syntax and configuration schema is valid
-docker dso validate
+## Diagnostic Reference
 
-# Inspect exactly what environments are exported to a running container
-docker dso inspect <container-id>
+| Command | Purpose |
+|---------|---------|
+| `docker dso version` | Check binary version and build hash |
+| `docker dso fetch <name>` | Test vault connectivity and resolution |
+| `docker dso watch` | Foreground watcher logs (real-time diagnostics) |
+| `docker dso inspect <id>` | View active secret mappings for a container |
 
-# Run a dry-run composed deployment to see what will happen
-docker dso up --dry-run
-```
+## Next Steps
+- **[System Architecture](/guide/architecture)**: Understand the internal reconciliation loop.
+- **[Security Model](/guide/security)**: Detailed boundaries and threat mitigations.
+- **[Production Readiness](/guide/production-readiness)**: Best practices to avoid common issues.

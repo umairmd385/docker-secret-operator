@@ -1,145 +1,83 @@
-# Architecture & Internals
+# System Architecture
 
-Docker Secret Operator (DSO) uses a robust client-server architecture, combined with a plugin-based provider system, to securely manage the entire lifecycle of secrets.
+Docker Secret Operator (DSO) is built on an event-driven, micro-kernel architecture designed for high-security container environments. It operates as a bridge between specialized secret providers (Vaults) and the Docker Engine.
 
-This guide provides deep-dive sequence diagrams of the most critical flows.
+## Core Components
 
-## Component Overview
+The DSO binary encapsulates four primary internal engines that coordinate the secret lifecycle.
 
-DSO consists of three principal logical components:
+### 1. Watcher Engine
+The Watcher is the "Eyes" of the system. It maintains two concurrent observation steams:
+- **Provider Stream**: Performs periodic polling/long-polling of cloud secret managers (AWS, Azure, Vault). It uses hashing to detect "Secret Drift" without reading the actual secret value unless a change is confirmed.
+- **Docker Event Stream**: Listens to the `/events` endpoint of the Docker Unix socket. This ensures that manually restarted containers or new deployments are immediately intercepted and injected with the latest secrets.
 
-1. **CLI Plugin (`docker dso`)**: The user-facing tool that intercepts commands, parses configurations, and invokes Docker APIs.
-2. **Daemon Agent (`dso-agent`)**: A background service exposing a Unix socket. It handles caching, rotation engines, and provider orchestration.
-3. **Provider Plugins (`dso-provider-*`)**: Standalone RPC binaries that execute cloud-specific authentication and retrieval logic.
+### 2. Reloader Controller
+The Reloader is the "Brain" of the system. When the Watcher detects a drift or a new container event, the Reloader:
+1.  Identifies affected containers based on labels (`dso.reloader=true`).
+2.  Selects an **Atomic Rotation Strategy** (Rolling, SIGHUP, or Restart).
+3.  Coordinates the sequence of injection and verification.
 
----
+### 3. Tar Streamer
+The Tar Streamer is the "Hands" of the system and DSO's core security innovation. 
+Instead of writing secrets to the host filesystem and mounting them (which risks persistence on disk), the Tar Streamer:
+1.  Generates an in-memory TAR archive containing the secret files.
+2.  Streams this archive directly into the target container's filesystem via the `CopyToContainer` Docker API.
+3.  Injects the files into a `tmpfs` (RAM-backed) mount point within the container.
 
-## Provider Plugin Architecture
-
-DSO uses a plugin-based architecture for secret providers. Each provider runs as an isolated Go binary, communicating with the main DSO daemon via RPC.
-
-```mermaid
-graph TB
-    subgraph "DSO Daemon"
-        A[DSO Main Process]
-        B[Config Watcher]
-        C[Audit Logger]
-        D[Secret Cache]
-    end
-    
-    subgraph "Provider Plugins"
-        E[AWS Provider Plugin]
-        F[Azure Provider Plugin]
-        G[Vault Provider Plugin]
-        H[Huawei Provider Plugin]
-    end
-    
-    subgraph "Cloud Secret Stores"
-        I[AWS Secrets Manager]
-        J[Azure Key Vault]
-        K[HashiCorp Vault]
-        L[Huawei CSMS]
-    end
-    
-    A -->|Load| E
-    A -->|Load| F
-    A -->|Load| G
-    A -->|Load| H
-    
-    E -->|Fetch| I
-    F -->|Fetch| J
-    G -->|Fetch| K
-    H -->|Fetch| L
-    
-    A -->|Log| C
-    A -->|Store| D
-    B -->|Reload| A
-    
-    style A fill:#4CAF50,stroke:#2E7D32,color:#fff
-    style E fill:#FF9800,stroke:#E65100,color:#fff
-    style F fill:#FF9800,stroke:#E65100,color:#fff
-    style G fill:#FF9800,stroke:#E65100,color:#fff
-    style H fill:#FF9800,stroke:#E65100,color:#fff
-```
-
-### Secret Fetch Flow with Plugins
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant CLI as Docker DSO CLI
-    participant Daemon as DSO Daemon
-    participant Plugin as Provider Plugin
-    participant Cloud as Cloud Secret Store
-    participant Container
-    
-    User->>CLI: docker dso up -d
-    CLI->>Daemon: gRPC: Start stack
-    Daemon->>Plugin: Load provider binary
-    Daemon->>Plugin: Fetch secret
-    Plugin->>Cloud: API call with IAM/auth
-    Cloud-->>Plugin: Secret value
-    Plugin-->>Daemon: Return secret
-    Daemon->>Daemon: Store in memory cache
-    Daemon->>Container: Inject via Unix socket
-    Container-->>User: Running with secrets
-```
+### 4. Provider RPC Layer
+DSO uses a plugin-based provider model. Each provider (AWS, Vault, etc.) runs as an isolated Go process. This ensures that a failure or vulnerability in a specific cloud SDK cannot compromise the core DSO agent or other providers.
 
 ---
 
-## Installation Flow
+## Technical Workflows
 
-The following sequence illustrates how the `docker plugin install` command interacts with Docker Engine and the DSO image bundle.
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Docker as Docker Engine
-    participant Registry as Docker Hub
-    participant Host as Host OS
-
-    User->>Docker: docker plugin install umairmd385/docker-secret-operator:latest --alias dso
-    Docker->>Registry: Pull DSO Plugin Image bundle
-    Registry-->>Docker: Download plugin layers
-    Docker->>Host: Create rootfs for plugin
-    Docker->>Host: Start Plugin daemon process (dso-agent)
-    Host-->>Docker: agent running, socket created at /run/docker/plugins/dso.sock
-    Docker-->>User: Plugin 'dso' successfully installed
-```
-
----
-
-## Rotation Lifecycle
-
-DSO supports automated secret rotations via its built-in polling and trigger subsystem. The "Rolling" strategy prevents downtime by spawning an updated clone before destroying the old container.
+### The Synchronization Loop (Reconciliation)
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Cloud as Cloud Vault
-    participant Watcher as DSO Watcher Engine
-    participant Strategy as Strategy Engine
+    participant Vault as Cloud Secret Manager
+    participant Watcher as Watcher Engine
+    participant Reloader as Reloader Controller
+    participant Streamer as Tar Streamer
     participant Docker as Docker Engine
 
-    loop Every polling_interval
-        Watcher->>Cloud: Fetch latest secret hashes
-        Cloud-->>Watcher: New Hash Detected
-    end
-
-    Watcher->>Strategy: Trigger Rotation (Secret: "prod/api-key")
-    Strategy->>Docker: Inspect running containers
-    Docker-->>Strategy: Matches "api" container (Score: 85)
-    Strategy->>Strategy: Select "Rolling" Strategy
-
-    Strategy->>Docker: Clone "api" -> "api-new" with updated Envs
-    Docker-->>Strategy: "api-new" Started
-    
-    loop Wait for Health
-        Strategy->>Docker: Inspect "api-new" healthcheck
-        Docker-->>Strategy: "healthy"
-    end
-    
-    Strategy->>Docker: Stop & Remove "api" (Graceful drain)
-    Docker-->>Strategy: Old container removed
-    Strategy->>Docker: Rename "api-new" -> "api"
+    Watcher->>Vault: Check Secret Hash (SHA-256)
+    Vault-->>Watcher: Hash Mismatch Detected
+    Watcher->>Reloader: Trigger Refresh for 'app-prod'
+    Reloader->>Vault: Fetch Full Secret Value (Memory-Only)
+    Reloader->>Streamer: Generate In-Memory Tarball
+    Streamer->>Docker: Stream Tarball to Container (Atomic)
+    Docker-->>Reloader: 200 OK (Injected to /run/secrets)
+    Reloader->>Watcher: Reconciliation Complete
 ```
+
+### Event-Driven Injection
+
+When a new container starts, DSO intercepts the standard Docker lifecycle to ensure secrets are present before the entrypoint executes.
+
+```mermaid
+sequenceDiagram
+    participant Engine as Docker Engine
+    participant Watcher as Watcher Engine
+    participant Reloader as Reloader Controller
+    
+    Engine->>Watcher: Event: container.start (id: abc)
+    Watcher->>Reloader: Intercept Start
+    Reloader->>Reloader: Check Labels (dso.reloader=true)
+    Reloader->>Reloader: Fetch Secrets
+    Reloader->>Engine: Inject Secrets to 'abc'
+    Reloader->>Engine: Resume Container Start
+```
+
+## Security Boundaries
+
+- **Process Memory**: Secrets reside in the `dso-agent` heap only during the injection window.
+- **Unix Socket**: All communication between the DSO CLI and Agent happens over a restricted Unix socket (`/run/docker/plugins/dso.sock`).
+- **No Disk I/O**: The system is designed to operate on read-only filesystems. It never requires write access to the host disk for secret handling.
+
+## Next Steps
+
+- **[Security Model](/guide/security)**: Deep dive into the threat mititagtion.
+- **[Configuration](/guide/configuration)**: How to define providers and mappings.
+- **[Production Readiness](/guide/production-readiness)**: Best practices for deployment.

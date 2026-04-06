@@ -1,51 +1,40 @@
 # What is DSO?
 
-**Docker Secret Operator (DSO)** is a native Docker CLI plugin that injects secrets from cloud vaults (AWS, Azure, HashiCorp Vault, Huawei CSMS) directly into your Docker containers at runtime — without `.env` files, without hardcoded credentials, and without Kubernetes.
+**Docker Secret Operator (DSO)** is an event-driven secret lifecycle manager for Docker. It provides a native mechanism to synchronize, inject, and rotate secrets from enterprise vaults (AWS, Azure, HashiCorp Vault) directly into containerized workloads.
 
-## The Problem
+DSO is designed to eliminate the risks associated with static secret management, specifically targeting **Secret Proliferation** (credentials left in images, `.env` files, or host storage) and **Secret Drift** (stale credentials in running containers).
 
-Every Docker team eventually hits the same wall:
+## The Core Design: The Control Loop
 
-```bash
-# The .env way — a security disaster
-DB_PASSWORD=my-super-secret-password-123  # sitting on every developer laptop
-API_KEY=sk-prod-abcdef                    # accidentally committed to GitHub
+DSO does not just "copy" secrets; it manages a continuous reconciliation loop that ensures the state of your running containers matches the current state of your secret store.
+
+```mermaid
+graph TD
+    Watcher[Watcher Engine] -->|Secret Change| Strategy[Strategy Engine]
+    Strategy -->|Decision| Reloader[Reloader Controller]
+    Reloader -->|Injection| Docker[Docker API / Target Container]
+    Docker -->|Event| Watcher
 ```
 
-The "proper" solution is Kubernetes with external-secrets — but that's months of migration and massive operational overhead for teams running Docker Compose stacks.
+1.  **Watch**: The system monitors cloud providers for secret updates and the Docker socket for container lifecycle events.
+2.  **Analyze**: When a change is detected, the Strategy Engine determines the safest way to rotate the secret (Restart, SIGHUP, or Mount update).
+3.  **Inject**: The Tar Streamer securely pushes the new secret into the container's RAMfs-backed secret mount.
+4.  **Reconcile**: The system verifies the container's health and ensures the rotation was successful.
 
-**DSO solves this without leaving Docker.**
+## Core Pillars
 
-## How it Works
+- **Event-Driven**: Immediate response to secret rotation in the vault or container restarts.
+- **Zero-Persistence**: Secrets are stored in-process RAM and injected into `tmpfs`. They never touch the host's physical disk.
+- **Docker-Native**: Built to work with Docker Engine and Docker Compose, leveraging native labels (`dso.reloader=true`) and the Docker socket.
+- **Least Privilege**: DSO requires only a secure Unix socket connection to Docker and machine-identity-based access to the vault.
 
-DSO runs as a native Docker Engine plugin (`~/.docker/cli-plugins/docker-dso`). When you run `docker dso up -d`, it:
+## Why DSO?
 
-1. Reads your `dso.yaml` to know which secrets to fetch and from where
-2. Authenticates to your cloud vault using machine identity (IAM role, Managed Identity, Vault token)
-3. Fetches secrets and holds them **in memory only** — nothing written to disk
-4. Injects secrets into containers via the Docker Unix socket
-5. Starts a background **Watcher Engine** that monitors for secret changes and rotates automatically
-
-## Key Properties
-
-| Property | Detail |
-|----------|--------|
-| **Runtime only** | Secrets exist only while your stack is running |
-| **Memory-only** | Never written to disk, not visible in `docker inspect` |
-| **Zero manual credentials** | Uses cloud-native identity (IAM, Managed Identity) |
-| **Multi-cloud** | AWS, Azure, HashiCorp Vault, Huawei CSMS |
-| **Docker-native** | First-class `docker dso` CLI subcommand |
-| **Auto-rotation** | Detects secret changes and rotates containers intelligently |
-
-## Who Is It For?
-
-- **DevOps engineers** who need SOC2 compliance without migrating to Kubernetes
-- **Startups** running production workloads on Docker Compose
-- **Security teams** eliminating `.env` files from developer machines
-- **Platform engineers** building a multi-cloud secret management layer
+While Kubernetes has mature secret operators, the Docker ecosystem has historically lacked a professional-grade alternative to insecure `.env` files or manual injection. DSO fills this gap by bringing enterprise-grade secret orchestration to teams running Docker on-premise, on the edge, or in standard cloud instances without the overhead of a full orchestration layer.
 
 ## Next Steps
 
-- [Get Started in 5 minutes →](/guide/getting-started)
-- [Understand the internals →](/guide/concepts)
-- [View configuration reference →](/guide/configuration)
+- **[Design Principles](/guide/design-principles)**: Understand the philosophy behind the project.
+- **[System Architecture](/guide/architecture)**: Deep dive into the Watcher, Reloader, and Streamer.
+- **[Security Model](/guide/security)**: How we protect secrets from host-level compromise.
+- **[Quickstart](/guide/getting-started)**: Get running in under 2 minutes.
