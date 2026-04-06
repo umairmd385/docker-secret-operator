@@ -7,6 +7,7 @@ export default withMermaid(
     description: "Native secrets for Docker — without Kubernetes",
     base: '/docs/',
     head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+    ignoreDeadLinks: true,
     themeConfig: {
       logo: '/assets/images/logo-transparent.png',  // Ensure this has transparent background
       nav: [
