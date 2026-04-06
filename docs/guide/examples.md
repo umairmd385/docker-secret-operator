@@ -1,91 +1,117 @@
-# Examples
+# Production Examples
 
-Real-world Docker Compose stacks using DSO with different cloud providers.
-
-## AWS Secrets Manager with Docker Compose
-
-This example shows how to use DSO to inject database credentials into a standard application stack.
-
-**`dso.yaml`:**
-```yaml
-provider: aws
-config:
-  region: us-east-1
-
-secrets:
-  - name: myapp/database
-    inject: env
-    mappings:
-      DB_USER: username
-      DB_PASSWORD: password
-    rotation: true
-
-  - name: myapp/api-keys
-    inject: file
-    mount_path: /run/secrets/api
-    file_mode: "0600"
-```
-
-**`docker-compose.yaml`:**
-```yaml
-services:
-  app:
-    image: myapp:latest
-    environment:
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-    secrets:
-      - api-key
-
-secrets:
-  api-key:
-    external: true
-```
+These examples demonstrate common DSO patterns for managing secrets in enterprise Docker environments.
 
 ---
 
-## Signal-Based Hot Reload
+## 1. Stateless API with Rolling Rotation (AWS)
+This pattern is ideal for microservices that can scale horizontally. DSO performs a "Blue/Green" style update, starting a new container with the updated secret before removing the old one.
 
-Apps that handle `SIGHUP` can reload configuration without any container restart. This example shows a Go app doing live config reloads.
-
-**`dso.yaml`:**
+**`dso.yaml`**
 ```yaml
 provider: aws
 config:
   region: us-east-1
 
 secrets:
-  - name: myapp/config
+  - name: prod/api/keys
     inject: env
     rotation: true
     reload_strategy:
-      type: signal    # sends SIGHUP — zero downtime reload
+      type: signal
+      signal: SIGHUP
     mappings:
-      API_KEY: API_KEY
-      DATABASE_URL: DATABASE_URL
+      STRIPE_API_KEY: STRIPE_KEY
+      SENDGRID_API_KEY: MAIL_KEY
+```
+
+**`docker-compose.yml`**
+```yaml
+services:
+  api:
+    image: mycorp/api:v1.2.0
+    labels:
+      - "dso.reloader=true"
+      - "dso.strategy=rolling"
+    environment:
+      - STRIPE_KEY
+      - MAIL_KEY
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 ```
 
 ---
 
-## Azure — MySQL + phpMyAdmin
+## 2. Stateful Database with Restart Strategy (Vault)
+For databases or services with fixed host ports, a `rolling` strategy will fail due to port conflicts. Use the `restart` strategy to ensure a clean cutover.
 
-Same stack using Azure Key Vault.
+**`dso.yaml`**
+```yaml
+provider: vault
+config:
+  vault_addr: "https://vault.internal:8200"
 
-**`dso.yaml`:**
+secrets:
+  - name: database/mysql/prod
+    inject: env
+    rotation: true
+    reload_strategy:
+      type: restart
+    mappings:
+      password: MYSQL_ROOT_PASSWORD
+```
 
+**`docker-compose.yml`**
+```yaml
+services:
+  db:
+    image: mysql:8.0
+    labels:
+      - "dso.reloader=true"
+      - "dso.strategy=restart"
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD
+```
+
+---
+
+## 3. Signal-Based Reload (Nginx)
+Nginx can reload its configuration without dropping connections using `SIGHUP`. DSO can trigger this automatically when a secret (like an SSL certificate or API upstream key) changes.
+
+**`dso.yaml`**
 ```yaml
 provider: azure
 config:
-  vault_url: "https://my-keyvault.vault.azure.net/"
+  vault_url: "https://prod-kv.vault.azure.net/"
 
 secrets:
-  - name: MYSQL-ROOT-PASSWORD
+  - name: PROXY-AUTH-TOKEN
     inject: env
+    rotation: true
+    reload_strategy:
+      type: signal
+      signal: SIGHUP
     mappings:
-      value: MYSQL_ROOT_PASSWORD
-
-  - name: MYSQL-USER
-    inject: env
-    mappings:
-      value: MYSQL_USER
+      value: PROXY_TOKEN
 ```
+
+**`docker-compose.yml`**
+```yaml
+services:
+  proxy:
+    image: nginx:alpine
+    labels:
+      - "dso.reloader=true"
+    environment:
+      - PROXY_TOKEN
+```
+
+## Next Steps
+- **[Configuration Reference](/guide/configuration)**: Detailed schema for `dso.yaml`.
+- **[System Architecture](/guide/architecture)**: How the rotation engines operate.
+- **[Troubleshooting](/guide/troubleshooting)**: Diagnosing failed rotation events.

@@ -18,31 +18,37 @@ export default withMermaid(
       sidebar: {
         '/guide/': [
           {
-            text: 'Getting Started',
+            text: 'Project',
             items: [
               { text: 'Introduction', link: '/guide/what-is-dso' },
+              { text: 'Design Principles', link: '/guide/design-principles' },
+              { text: 'When Not to Use', link: '/guide/when-not-to-use' }
+            ]
+          },
+          {
+            text: 'Architecture',
+            items: [
+              { text: 'System Architecture', link: '/guide/architecture' },
+              { text: 'Core Concepts', link: '/guide/concepts' },
+              { text: 'Security Model', link: '/guide/security' }
+            ]
+          },
+          {
+            text: 'Operations',
+            items: [
               { text: 'Installation', link: '/guide/getting-started' },
-              { text: 'Concepts', link: '/guide/concepts' }
+              { text: 'Production Readiness', link: '/guide/production-readiness' },
+              { text: 'Configuration', link: '/guide/configuration' },
+              { text: 'Observability', link: '/guide/observability' }
             ]
           },
           {
-            text: 'Providers',
+            text: 'Reference',
             items: [
-              { text: 'AWS', link: '/guide/providers/aws' },
-              { text: 'Azure', link: '/guide/providers/azure' },
-              { text: 'Huawei', link: '/guide/providers/huawei' },
-              { text: 'HashiCorp Vault', link: '/guide/providers/vault' },
-              { text: 'Local File', link: '/guide/providers/local' }
-            ]
-          },
-          {
-            text: 'Guides',
-            items: [
+              { text: 'CLI Reference', link: '/guide/cli' },
+              { text: 'Providers', link: '/guide/providers/aws' },
               { text: 'Examples', link: '/guide/examples' },
-              { text: 'Security', link: '/guide/security' },
-              { text: 'Troubleshooting', link: '/guide/troubleshooting' },
-              { text: 'Observability', link: '/guide/observability' },
-              { text: 'Architecture', link: '/guide/architecture' }
+              { text: 'Troubleshooting', link: '/guide/troubleshooting' }
             ]
           }
         ]

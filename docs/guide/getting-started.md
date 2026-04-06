@@ -1,198 +1,113 @@
-# Getting Started
+# Quickstart Guide
 
-This guide gets you from zero to injecting real cloud secrets into Docker containers in under 10 minutes.
+This guide will help you set up **Docker Secret Operator (DSO)** and synchronize your first secret from a cloud vault to a running container in under 2 minutes.
 
-## Prerequisites
+---
 
-- **Docker Engine:** Version 20.10 or higher with Docker Compose V2
-- **Operating Systems:** Linux, macOS, or Windows (via WSL2)
-- **Cloud Provider:** One of:
-  - An AWS account with Secrets Manager enabled
-  - An Azure Key Vault
-  - A running HashiCorp Vault instance
-- **Host Tools:** `curl` and `sudo` access (if using the alternative installer)
+## 1. Installation
 
-## Step 1 — Install DSO
-
-### Recommended Installation
-
-The easiest and safest way to use DSO is as a native Docker plugin.
+The recommended way to run DSO is as a native Docker CLI plugin. This integrates DSO directly into the `docker` command space.
 
 ```bash
+# Install the official DSO plugin
 docker plugin install umairmd385/docker-secret-operator:latest --alias dso
 ```
 
-### Alternative Installation (Script)
-
-If you prefer to run the agent directly on the host as a systemd service (good for edge routers or standalone VMs):
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/install.sh | sudo bash
-```
-
-Both methods make `docker dso` a first-class Docker subcommand.
-
-**Verify the installation:**
+### Verify Installation
+Check that the `dso` subcommand is available:
 
 ```bash
 docker dso version
 ```
 
-You should see the DSO command version printed.
+---
 
-## Step 2 — Create Your Secret in the Cloud
+## 2. Infrastructure Identity
 
-### AWS (Secrets Manager)
+DSO is designed to use **Machine Identity** (IAM Roles, Managed Identities) to avoid storing static credentials on your host.
 
-```bash
-aws secretsmanager create-secret \
-  --name "myapp/db" \
-  --secret-string '{"DB_PASSWORD":"supersecret","DB_USER":"myapp"}'
+### AWS (IAM Instance Profile)
+Ensure your EC2 instance or host has an IAM role with the following policy:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Action": "secretsmanager:GetSecretValue",
+    "Resource": "arn:aws:secretsmanager:*:*:secret:myapp/*"
+  }]
+}
 ```
 
-### Azure (Key Vault)
+---
 
-```bash
-az keyvault secret set --vault-name my-vault --name DB-PASSWORD --value "supersecret"
-az keyvault secret set --vault-name my-vault --name DB-USER --value "myapp"
-```
+## 3. Define the Secret Mapping (`dso.yaml`)
 
-### HashiCorp Vault
+Create a `dso.yaml` file in your project root. This file tells DSO which secrets to fetch and how to map them to your containers.
 
-```bash
-vault kv put secret/myapp/db DB_PASSWORD=supersecret DB_USER=myapp
-```
-
-## Step 3 — Configure `dso.yaml`
-
-Create `dso.yaml` in your project directory (or at `/etc/dso/dso.yaml` for system-wide use):
-
-::: code-group
-
-```yaml [AWS]
+```yaml
+# dso.yaml
 provider: aws
 config:
   region: us-east-1
 
-agent:
-  cache: true
-  watch:
-    mode: polling
-    polling_interval: 5m
-
 secrets:
-  - name: myapp/db           # Secret ARN or name in Secrets Manager
-    inject: env
-    rotation: true
-    reload_strategy:
-      type: signal           # Send SIGHUP to reload, or use 'restart'
-    mappings:
-      DB_PASSWORD: DB_PASSWORD
-      DB_USER: DB_USER
-```
-
-```yaml [Azure]
-provider: azure
-config:
-  vault_url: "https://my-vault.vault.azure.net/"
-
-agent:
-  cache: true
-  watch:
-    mode: polling
-    polling_interval: 5m
-
-secrets:
-  - name: DB-PASSWORD        # Azure secret names are hyphenated
-    inject: env
-    mappings:
-      value: DB_PASSWORD     # Azure secrets use 'value' as the key
-
-  - name: DB-USER
-    inject: env
-    mappings:
-      value: DB_USER
-```
-
-```yaml [Vault]
-provider: vault
-config:
-  vault_addr: "http://vault.example.com:8200"
-  vault_mount: "secret"
-
-agent:
-  cache: true
-  watch:
-    mode: polling
-    polling_interval: 5m
-
-secrets:
-  - name: myapp/db           # Path within the KV mount
+  - name: myapp/db-credentials
     inject: env
     rotation: true
     mappings:
-      DB_PASSWORD: DB_PASSWORD
-      DB_USER: DB_USER
+      password: DB_PASSWORD
+      username: DB_USER
 ```
 
-:::
+---
 
-## Step 4 — Write Your `docker-compose.yml`
+## 4. Prepare your Docker Compose
 
-Declare environment variable names without values — DSO fills them in:
+In your `docker-compose.yml`, define the environment variable names as keys without values. DSO will intercept these and inject the values from the vault at runtime.
 
 ```yaml
+# docker-compose.yml
 services:
-  app:
-    image: my-app:latest
+  api:
+    image: myapp/api:latest
+    labels:
+      - "dso.reloader=true"
     environment:
-      - DB_PASSWORD    # ← DSO injects this from your vault
-      - DB_USER        # ← DSO injects this from your vault
-    ports:
-      - "8080:8080"
+      - DB_PASSWORD
+      - DB_USER
 ```
 
-> [!TIP]
-> Do not set `DB_PASSWORD=` in your compose file. Just list the key name. DSO will inject the value at runtime.
+---
 
-## Step 5 — Run
+## 5. Launch the Stack
+
+Use the `docker dso up` command. DSO will automatically resolve the secrets, inject them into the environment, and start the stack.
 
 ```bash
 docker dso up -d
 ```
 
-DSO reads `dso.yaml`, fetches your secrets, injects them, and runs your stack.
+---
 
-## Step 6 — Verify
+## 6. Verify Injection
 
-```bash
-# Inspect the running container's environment
-docker exec <container-name> env | grep DB_
-
-# Or use DSO's fetch command to test connectivity
-docker dso fetch myapp/db
-```
-
-Expected output:
-```
-Secret: myapp/db
-  DB_PASSWORD: *****
-  DB_USER: myapp
-```
-
-> [!NOTE]
-> Secret values are masked in DSO's output by default. Your container receives the real value.
-
-## Step 7 — Tear Down
+Verify that the secrets have been successfully injected into the running container's environment:
 
 ```bash
-docker dso down
+docker exec -it api_container env | grep DB_
 ```
 
-This stops all containers and securely purges all in-memory secrets.
+You can also use the DSO CLI to check the connectivity and value resolution (values are masked by default):
+
+```bash
+docker dso fetch myapp/db-credentials
+```
+
+---
 
 ## Next Steps
 
-- [Understand how DSO works internally →](/guide/concepts)
-- [Full `dso.yaml` configuration reference →](/guide/configuration)
-- [CLI command reference →](/guide/cli)
+- **[System Architecture](/guide/architecture)**: Learn how the Watcher and Streamer engines work.
+- **[Configuration Reference](/guide/configuration)**: Detailed documentation for `dso.yaml`.
+- **[Production Readiness](/guide/production-readiness)**: Best practices for scaling DSO in production.

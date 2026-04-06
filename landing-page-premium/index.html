@@ -30,9 +30,9 @@
 <!-- PRODUCTION: Load optimized CSS -->
 <link rel="stylesheet" href="output.css">
 
-<!-- DEVELOPMENT FALLBACK: Tailwind CDN (Remove in final build) -->
-<!-- <script src="https://cdn.tailwindcss.com"></script> -->
-<!-- <script>tailwind.config = { theme: { extend: { fontFamily: { mono: ['JetBrains Mono', 'monospace'], sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'] }, colors: { bg: 'var(--bg)', surface: 'var(--surface)', border: 'var(--border)', muted: 'var(--text-muted)', accent: 'var(--accent)', 'accent-dim': 'var(--accent-dim)' } } } }</script> -->
+<!-- DEVELOPMENT FALLBACK: Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { mono: ['JetBrains Mono', 'monospace'], sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'] }, colors: { bg: 'var(--bg)', surface: 'var(--surface)', border: 'var(--border)', muted: 'var(--text-muted)', accent: 'var(--accent)', 'accent-dim': 'var(--accent-dim)' } } } }</script>
 
 <link rel="canonical" href="https://dso.skycloudops.in/">
 
@@ -294,21 +294,18 @@
     <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
       <a href="#" class="flex items-center gap-2.5 text-[var(--text-primary)] font-bold text-lg group">
         <div class="relative">
-          <img src="assets/images/dso-logo.png" alt="DSO" class="w-8 h-8 object-contain relative z-10">
+          <img src="assets/images/dso-logo.png" alt="DSO" width="32" height="32" class="w-8 h-8 object-contain relative z-10">
           <div
             class="absolute inset-0 bg-[var(--accent)]/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
           </div>
         </div>
-        <!-- FIX: Hide full name on small screens -->
         <span class="hidden sm:inline">Docker Secret Operator</span>
         <span class="sm:hidden">DSO</span>
       </a>
-      <div class="hidden md:flex items-center gap-7 text-sm text-[var(--text-secondary)]">
-        <a href="#how-it-works" class="hover:text-[var(--text-primary)] transition-colors">How it works</a>
+      <div class="hidden md:flex items-center gap-7 text-sm text-[var(--text-secondary)] font-medium">
         <a href="#architecture" class="hover:text-[var(--text-primary)] transition-colors">Architecture</a>
         <a href="#features" class="hover:text-[var(--text-primary)] transition-colors">Features</a>
         <a href="#security" class="hover:text-[var(--text-primary)] transition-colors">Security</a>
-        <a href="#for-teams" class="text-[var(--accent)] font-semibold hover:opacity-80 transition-opacity">For Teams</a>
         <a href="/docs/" target="_blank"
           class="hover:text-[var(--text-primary)] transition-colors">Docs</a>
         <button id="theme-toggle" class="hover:text-[var(--text-primary)] transition-colors p-1"
@@ -322,7 +319,7 @@
               d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
         </button>
-        <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
+        <a href="https://github.com/docker-secret-operator/dso" target="_blank"
           class="flex items-center gap-2 bg-[var(--surface2)] border border-[var(--border)] text-[var(--text-primary)] px-4 py-1.5 rounded-md text-xs font-medium hover:border-[var(--text-secondary)] transition-colors">
           <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -355,92 +352,60 @@
           </svg>
           <span id="theme-text-mobile">Dark Mode</span>
         </button>
-        <a href="#how-it-works" class="hover:text-[var(--text-primary)]">How it works</a>
+        <a href="#architecture" class="hover:text-[var(--text-primary)]">Architecture</a>
         <a href="#features" class="hover:text-[var(--text-primary)]">Features</a>
-        <a href="#comparison" class="hover:text-[var(--text-primary)]">Compare</a>
         <a href="#security" class="hover:text-[var(--text-primary)]">Security</a>
-        <a href="#providers" class="hover:text-[var(--text-primary)]">Providers</a>
-        <a href="#for-teams" class="text-[var(--accent)] font-semibold">For Teams</a>
-        <a href="#getting-started" class="hover:text-[var(--text-primary)]">Get Started</a>
         <a href="/docs/" target="_blank"
           class="hover:text-[var(--text-primary)]">Docs</a>
-        <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
+        <a href="https://github.com/docker-secret-operator/dso" target="_blank"
           class="text-[var(--text-primary)] flex items-center gap-2 font-medium">GitHub ↗</a>
       </div>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero-bg pt-40 pb-24 px-6 lg:px-12 xl:px-16 relative overflow-hidden">
-    <!-- FIX: Use theme-aware gradient -->
-    <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, var(--accent-dim), transparent);">
-    </div>
-    <div class="max-w-6xl mx-auto">
-      <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center relative z-10">
-        <div class="reveal">
+  <section class="hero-bg pt-48 pb-24 px-6 lg:px-12 xl:px-16 relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle at 50% -20%, var(--accent-dim), transparent);"></div>
+    <div class="max-w-6xl mx-auto relative z-10">
+
+      <!-- Two-column hero grid -->
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+        <!-- Left Column: Text Content -->
+        <div class="flex flex-col items-center lg:items-start text-center lg:text-left">
           <div
             class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--surface2)] border border-[var(--border)] mb-8">
             <span class="relative flex h-2 w-2">
-              <span
-                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75"></span>
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]"></span>
             </span>
-            <span class="text-xs font-medium text-[var(--text-secondary)]">Native Docker Secret Plugin</span>
+            <span class="text-xs font-mono font-medium text-[var(--accent)] uppercase tracking-widest">v3.x Native Secret Plugin</span>
           </div>
 
-          <!-- FIX: Responsive heading -->
-          <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.15] mb-6 tracking-tight text-[var(--text-primary)]">
-            Native secrets for Docker — <span class="text-[var(--accent)]">without Kubernetes.</span>
+          <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-[3.5rem] xl:text-6xl font-bold leading-[1.1] mb-8 tracking-tight text-[var(--text-primary)]">
+            Secret Lifecycle Management for <span class="text-[var(--accent)]">Docker.</span>
           </h1>
-          <p class="text-[var(--text-secondary)] text-xl leading-relaxed mb-4 max-w-xl">
-            Kubernetes-grade secret security without the complexity. DSO injects cloud secrets directly into your Docker
-            Compose stacks at runtime.
+          <p class="text-[var(--text-secondary)] text-lg md:text-xl leading-relaxed mb-12 max-w-xl">
+            Event-driven, zero-persistence secret orchestration for standalone Docker and Docker Compose environments. No Kubernetes required.
           </p>
-          <p class="text-[var(--accent)] text-sm font-semibold tracking-wide uppercase mb-10">Finally, secrets that work with Docker.</p>
 
-          <!-- FIX: Stack buttons on mobile -->
-          <div class="flex flex-col sm:flex-row flex-wrap gap-4 mb-10">
-            <a href="#getting-started"
-              class="px-6 py-3 sm:px-8 sm:py-3.5 bg-[var(--accent)] text-[var(--bg)] font-bold rounded-lg shadow-lg shadow-[var(--accent)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-center">
-              Get Started for Free
+          <div class="flex flex-col sm:flex-row items-center gap-4 mb-0">
+            <a href="/docs/guide/getting-started" target="_blank"
+              class="px-8 py-3.5 bg-[var(--accent)] text-[var(--bg)] font-bold rounded-lg shadow-lg shadow-[var(--accent)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all min-w-[200px] text-center">
+              Read Documentation
             </a>
-            <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
-              class="px-6 py-3 sm:px-8 sm:py-3.5 border border-[var(--border)] text-[var(--text-primary)] font-bold rounded-lg hover:bg-[var(--surface2)] transition-all text-center flex items-center justify-center gap-2">
-              <svg class="w-5 h-5 opacity-70" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-              </svg>
-              Star on GitHub
+            <a href="https://github.com/docker-secret-operator/dso" target="_blank"
+              class="px-8 py-3.5 border border-[var(--border)] text-[var(--text-primary)] font-bold rounded-lg hover:bg-[var(--surface2)] transition-all min-w-[200px] flex items-center justify-center gap-2">
+              View Source
             </a>
-          </div>
-
-          <div class="flex flex-wrap gap-8 py-6 border-t border-[var(--border-soft)]">
-            <div class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-              </svg>
-              <span class="text-sm font-medium text-[var(--text-secondary)]">Docker Plugin</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-              </svg>
-              <span class="text-sm font-medium text-[var(--text-secondary)]">Built in Go</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-              </svg>
-              <span class="text-sm font-medium text-[var(--text-secondary)]">Open Source</span>
-            </div>
           </div>
         </div>
 
-        <!-- Terminal GIF Mockup -->
-        <div class="reveal relative lg:flex lg:justify-end mt-8 lg:mt-0">
-          <div class="absolute inset-0 bg-[var(--accent)]/10 blur-[100px] rounded-full pointer-events-none"></div>
+        <!-- Right Column: Terminal Mockup -->
+        <div class="reveal relative">
+          <div class="absolute -inset-8 bg-[var(--accent)]/5 blur-[80px] rounded-full pointer-events-none"></div>
           <div
-            class="relative w-full max-w-lg mx-auto lg:mx-0 bg-[var(--code-bg)] border border-[var(--border)] rounded-xl overflow-hidden shadow-2xl group">
+            class="relative w-full max-w-lg mx-auto bg-[var(--code-bg)] border border-[var(--border)] rounded-xl overflow-hidden shadow-2xl group">
             <div class="flex items-center gap-2 px-4 py-3 bg-[var(--surface2)] border-b border-[var(--border)]">
               <div class="flex gap-1.5 px-1">
                 <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
@@ -450,7 +415,7 @@
               <div class="text-[10px] font-mono text-[var(--text-secondary)] ml-2 opacity-60">bash — docker dso up</div>
             </div>
             <div class="p-1.5 bg-[var(--code-bg)]">
-              <img src="assets/gifs/demo-up.gif" alt="DSO Up Demo" class="w-full rounded-md shadow-inner" fetchpriority="high">
+              <img src="assets/gifs/demo-up.gif" alt="DSO Up Demo" class="w-full rounded-md shadow-inner" width="480" height="270" fetchpriority="high">
             </div>
             <div class="px-5 pb-5 pt-2 font-mono text-[13px] leading-relaxed border-t border-[var(--border-soft)]">
               <div class="flex items-start gap-3">
@@ -464,725 +429,222 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- What is DSO -->
-  <section id="what-is-dso" class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)] scroll-mt-24">
-    <div class="max-w-7xl mx-auto">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="reveal">
-          <h2 class="text-3xl font-bold mb-6 text-[var(--text-primary)]">What is Docker Secret Operator?</h2>
-          <p class="text-[var(--text-secondary)] text-lg leading-relaxed mb-6">
-            DSO is a native Docker plugin that bridges the gap between your cloud secret managers and your running containers. No Kubernetes. No sidecars. No jargon.
-          </p>
-          
-          <div class="space-y-4 mb-8">
-            <div class="flex items-start gap-4">
-              <span class="text-[var(--accent)] text-xl flex-shrink-0">✓</span>
-              <p class="text-sm text-[var(--text-secondary)] leading-relaxed">
-                <span class="text-[var(--text-primary)] font-semibold">Multi-Cloud:</span> Fetches from AWS, Azure, Vault, and more.
-              </p>
-            </div>
-            <div class="flex items-start gap-4">
-              <span class="text-[var(--accent)] text-xl flex-shrink-0">✓</span>
-              <p class="text-sm text-[var(--text-secondary)] leading-relaxed">
-                <span class="text-[var(--text-primary)] font-semibold">Zero-Restart:</span> Updates secrets in-place without killing your service.
-              </p>
-            </div>
-          </div>
-
-          <!-- Security Callout -->
-          <div class="flex items-start gap-3 p-4 bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-xl">
-            <svg class="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z"/></svg>
-            <div>
-              <p class="text-sm font-bold text-[var(--accent)] mb-1">Secrets never touch disk.</p>
-              <p class="text-xs text-[var(--text-secondary)] leading-relaxed">All secret values are held in memory only, injected via Unix socket. Zero persistence by design.</p>
-            </div>
-          </div>
+      <!-- Pillar Badges (centered below hero grid) -->
+      <div class="flex flex-wrap justify-center gap-10 py-10 mt-12 border-t border-[var(--border-soft)]">
+        <div class="flex items-center gap-2 text-sm font-mono text-[var(--text-secondary)]">
+          <span class="text-[var(--accent)] font-bold">01.</span> <span>Zero Persistence</span>
         </div>
-        <div class="reveal grid grid-cols-2 gap-4">
-          <div class="p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl glow-accent-hover transition-all">
-            <div class="text-[var(--accent)] font-bold text-xl mb-2">Native</div>
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Native Docker Engine plugin. No cluster overhead.</p>
-          </div>
-          <div class="p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl glow-accent-hover transition-all">
-            <div class="text-[var(--accent)] font-bold text-xl mb-2">Hot-Reload</div>
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Secrets update in-place. Zero downtime rotation.</p>
-          </div>
-          <div class="p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl glow-accent-hover transition-all">
-            <div class="text-[var(--accent)] font-bold text-xl mb-2">Unified</div>
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">One config for AWS, Azure, Vault, and local files.</p>
-          </div>
-          <div class="p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl glow-accent-hover transition-all">
-            <div class="text-[var(--accent)] font-bold text-xl mb-2">Secure</div>
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Unix socket communication. No secrets on disk.</p>
-          </div>
+        <div class="flex items-center gap-2 text-sm font-mono text-[var(--text-secondary)]">
+          <span class="text-[var(--accent)] font-bold">02.</span> <span>Event-Driven</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm font-mono text-[var(--text-secondary)]">
+          <span class="text-[var(--accent)] font-bold">03.</span> <span>Docker-Native</span>
         </div>
       </div>
     </div>
   </section>
-
-  <!-- Quickstart -->
-  <section id="quickstart" class="py-24 px-6 lg:px-12 xl:px-16 bg-[var(--surface2)]/50 border-y border-[var(--border-soft)] scroll-mt-24">
-    <div class="max-w-7xl mx-auto">
+    <!-- Design Principles -->
+  <section id="principles" class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)]">
+    <div class="max-w-6xl mx-auto">
       <div class="reveal text-center mb-16">
-        <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-4">Get started in seconds</h2>
-        <p class="text-[var(--text-secondary)] text-lg">Three steps to secure secret injection.</p>
-      </div>
-      <div class="grid lg:grid-cols-3 gap-10 md:gap-12">
-        <!-- Install -->
-        <div class="reveal space-y-4">
-          <div class="flex items-center gap-3">
-            <span class="w-8 h-8 rounded-full bg-[var(--accent)] text-[var(--bg)] flex items-center justify-center font-bold text-sm">1</span>
-            <h3 class="font-bold text-[var(--text-primary)] text-lg">Install Plugin</h3>
-          </div>
-          <div class="code-wrap code-dark bg-[var(--code-bg)] border border-[var(--border)] rounded-xl overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-2 border-b border-[var(--border)] code-dark-header bg-[var(--surface2)]">
-              <span class="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold tracking-widest">Terminal</span>
-              <button class="btn-copy text-[10px] text-[var(--accent)] font-bold uppercase tracking-widest" onclick="copyCode(this)">copy</button>
-            </div>
-            <pre class="p-4 font-mono text-xs text-[var(--accent)]">curl -fsSL https://raw.githubusercontent.com/umairmd385/docker-secret-operator/main/install.sh | sudo bash</pre>
-          </div>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Installs <code class="text-[var(--accent)] bg-[var(--surface2)] px-1 rounded text-[10px]">~/.docker/cli-plugins/docker-dso</code> — a first-class Docker subcommand.</p>
-        </div>
-        <!-- Configure -->
-        <div class="reveal space-y-4" style="transition-delay: 0.1s">
-          <div class="flex items-center gap-3">
-            <span class="w-8 h-8 rounded-full bg-[var(--accent)] text-[var(--bg)] flex items-center justify-center font-bold text-sm">2</span>
-            <h3 class="font-bold text-[var(--text-primary)] text-lg">Configure</h3>
-          </div>
-          <div class="code-wrap code-dark bg-[var(--code-bg)] border border-[var(--border)] rounded-xl overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-2 border-b border-[var(--border)] code-dark-header bg-[var(--surface2)]">
-              <span class="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold tracking-widest">dso.yaml</span>
-              <button class="btn-copy text-[10px] text-[var(--accent)] font-bold uppercase tracking-widest" onclick="copyCode(this)">copy</button>
-            </div>
-            <pre class="p-4 font-mono text-[11px] text-[var(--text-primary)] leading-relaxed"><span class="text-[var(--accent)]">provider:</span> aws
-<span class="text-[var(--accent)]">config:</span>
-  <span class="text-blue-400">region:</span> us-east-1
-<span class="text-[var(--accent)]">secrets:</span>
-  - <span class="text-[var(--accent)]">name:</span> prod/db-credentials
-    <span class="text-[var(--accent)]">inject:</span> env
-    <span class="text-[var(--accent)]">rotation:</span> <span class="text-yellow-400">true</span>
-    <span class="text-[var(--accent)]">mappings:</span>
-      DB_PASS: DB_PASSWORD</pre>
-          </div>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Place at <code class="text-[var(--accent)] bg-[var(--surface2)] px-1 rounded text-[10px]">/etc/dso/dso.yaml</code> or pass via <code class="text-[var(--accent)] bg-[var(--surface2)] px-1 rounded text-[10px]">--config</code>.</p>
-        </div>
-        <!-- Run -->
-        <div class="reveal space-y-4" style="transition-delay: 0.2s">
-          <div class="flex items-center gap-3">
-            <span class="w-8 h-8 rounded-full bg-[var(--accent)] text-[var(--bg)] flex items-center justify-center font-bold text-sm">3</span>
-            <h3 class="font-bold text-[var(--text-primary)] text-lg">Run</h3>
-          </div>
-          <div class="code-wrap code-dark bg-[var(--code-bg)] border border-[var(--border)] rounded-xl overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-2 border-b border-[var(--border)] code-dark-header bg-[var(--surface2)]">
-              <span class="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold tracking-widest">Terminal</span>
-              <button class="btn-copy text-[10px] text-[var(--accent)] font-bold uppercase tracking-widest" onclick="copyCode(this)">copy</button>
-            </div>
-            <pre class="p-4 font-mono text-xs text-[var(--text-primary)] leading-relaxed"><span class="text-[var(--accent)]">$ </span>docker dso up -d
-<span class="opacity-60"># Verify injection:</span>
-<span class="text-[var(--accent)]">$ </span>docker dso fetch prod/db-credentials</pre>
-          </div>
-          <div class="flex items-center gap-2 py-2 px-3 bg-[var(--accent)]/10 border border-[var(--accent)]/30 rounded-lg">
-            <span class="text-[var(--accent)] text-xs">✔</span>
-            <span class="text-[10px] font-mono font-bold text-[var(--accent)]">Secrets injected. Stack running. Watcher active.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CLI Reference -->
-  <section id="cli-reference" class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)] relative z-10 bg-[var(--surface)]/30 scroll-mt-24">
-    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--bg2)] pointer-events-none -z-10"></div>
-    <div class="max-w-7xl mx-auto">
-      <div class="reveal text-center mb-14">
-        <h2 class="text-3xl font-mono font-bold text-[var(--text-primary)] mb-3">CLI Reference</h2>
-        <p class="text-[var(--text-secondary)]">Every command you need — straight from the Docker CLI.</p>
-      </div>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-        <!-- Install -->
-        <div
-          class="reveal code-wrap bg-[var(--surface2)] border border-[var(--border)] hover:border-[var(--accent)]/50 rounded-xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.12)] transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,201,167,0.1)]">
-          <div class="flex items-center justify-between px-4 py-2.5 border-b border-[var(--border)] bg-[var(--bg)]">
-            <span class="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-semibold">1.
-              Install</span>
-            <button
-              class="btn-copy font-mono text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)] uppercase tracking-wider transition-colors"
-              onclick="copyCode(this)">copy</button>
-          </div>
-          <div class="p-5 bg-[var(--code-bg)] min-h-[90px] flex items-center">
-            <pre
-              class="font-mono text-sm overflow-x-auto"><code class="text-[var(--accent)]">docker plugin install dso</code></pre>
-          </div>
-          <div class="p-4 border-t border-[var(--border-soft)] bg-[var(--surface2)] min-h-[76px]">
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Download and install the latest plugin
-              globally.</p>
-          </div>
-        </div>
-
-        <!-- Run -->
-        <div
-          class="reveal code-wrap bg-[var(--surface2)] border border-[var(--border)] hover:border-[var(--accent)]/50 rounded-xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.12)] transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,201,167,0.1)]"
-          style="transition-delay:.1s">
-          <div class="flex items-center justify-between px-4 py-2.5 border-b border-[var(--border)] bg-[var(--bg)]">
-            <span class="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-semibold">2.
-              Run</span>
-            <button
-              class="btn-copy font-mono text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)] uppercase tracking-wider transition-colors"
-              onclick="copyCode(this)">copy</button>
-          </div>
-          <div class="p-5 bg-[var(--code-bg)] min-h-[90px] flex items-center">
-            <pre
-              class="font-mono text-sm overflow-x-auto"><code class="text-[var(--text-primary)]"><span class="text-[var(--accent)] select-none">$ </span>docker dso up -d</code></pre>
-          </div>
-          <div class="p-4 border-t border-[var(--border-soft)] bg-[var(--surface2)] min-h-[76px]">
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Start the independent daemon to begin
-              syncing.</p>
-          </div>
-        </div>
-
-        <!-- Stop -->
-        <div
-          class="reveal code-wrap bg-[var(--surface2)] border border-[var(--border)] hover:border-[var(--accent)]/50 rounded-xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.12)] transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,201,167,0.1)]"
-          style="transition-delay:.2s">
-          <div class="flex items-center justify-between px-4 py-2.5 border-b border-[var(--border)] bg-[var(--bg)]">
-            <span class="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-semibold">3.
-              Stop</span>
-            <button
-              class="btn-copy font-mono text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)] uppercase tracking-wider transition-colors"
-              onclick="copyCode(this)">copy</button>
-          </div>
-          <div class="p-5 bg-[var(--code-bg)] min-h-[90px] flex items-center">
-            <pre
-              class="font-mono text-sm overflow-x-auto"><code class="text-[var(--text-primary)]"><span class="text-[var(--accent)] select-none">$ </span>docker dso down</code></pre>
-          </div>
-          <div class="p-4 border-t border-[var(--border-soft)] bg-[var(--surface2)] min-h-[76px]">
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Safely spin down and clear any cached memory
-              secrets.</p>
-          </div>
-        </div>
-
-        <!-- Compose -->
-        <div
-          class="reveal code-wrap bg-[var(--surface2)] border border-[var(--border)] hover:border-[var(--accent)]/50 rounded-xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.12)] transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,201,167,0.1)]"
-          style="transition-delay:.3s">
-          <div class="flex items-center justify-between px-4 py-2.5 border-b border-[var(--border)] bg-[var(--bg)]">
-            <span class="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-semibold">4.
-              Compose</span>
-            <button
-              class="btn-copy font-mono text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)] uppercase tracking-wider transition-colors"
-              onclick="copyCode(this)">copy</button>
-          </div>
-          <div class="p-5 bg-[var(--code-bg)] min-h-[90px] flex items-center">
-            <pre
-              class="font-mono text-sm overflow-x-auto"><code class="text-[var(--text-primary)]"><span class="text-[var(--accent)] select-none">$ </span>docker dso compose up -d</code></pre>
-          </div>
-          <div class="p-4 border-t border-[var(--border-soft)] bg-[var(--surface2)] min-h-[76px]">
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Inject secrets directly into a Docker
-              Compose stack.</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <section class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)]">
-    <div class="max-w-7xl mx-auto">
-      <div class="reveal text-center mb-16">
-        <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-4">Why Docker Secret Operator?</h2>
-        <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">Traditional secret management for Docker is
-          either too basic or too complex. DSO is the sweet spot.</p>
-      </div>
-
-      <p class="reveal text-center text-sm text-[var(--text-muted)] mb-8 -mt-8 font-medium">See how DSO compares to existing solutions at a glance.</p>
-
-      <!-- Comparison Table -->
-      <div class="reveal overflow-x-auto mb-20">
-        <table
-          class="w-full border-collapse bg-[var(--surface)] border border-[var(--border)] rounded-xl overflow-hidden">
-          <thead>
-            <tr class="bg-[var(--surface2)] border-b border-[var(--border)]">
-              <th class="p-6 text-left text-sm font-bold text-[var(--text-muted)] uppercase tracking-wider">Feature</th>
-              <th class="p-6 text-center text-sm font-bold text-[var(--text-muted)] uppercase tracking-wider">Docker
-                Secrets</th>
-              <th class="p-6 text-center text-sm font-bold text-[var(--text-muted)] uppercase tracking-wider">Kubernetes
-              </th>
-              <th
-                class="p-6 text-center text-sm font-bold text-[var(--accent)] uppercase tracking-wider bg-[var(--accent)]/5">
-                DSO (Native)</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-[var(--border-soft)]">
-            <tr>
-              <td class="p-6 text-sm font-medium text-[var(--text-primary)]">Cloud Native Sync (AWS/Azure)</td>
-              <td class="p-6 text-center text-red-500/60">—</td>
-              <td class="p-6 text-center text-emerald-500">✓</td>
-              <td class="p-6 text-center text-emerald-500 bg-[var(--accent)]/5">✓</td>
-            </tr>
-            <tr>
-              <td class="p-6 text-sm font-medium text-[var(--text-primary)]">Zero-Downtime Hot Reload</td>
-              <td class="p-6 text-center text-red-500/60">—</td>
-              <td class="p-6 text-center text-emerald-500">✓</td>
-              <td class="p-6 text-center text-emerald-500 bg-[var(--accent)]/5">✓</td>
-            </tr>
-            <tr>
-              <td class="p-6 text-sm font-medium text-[var(--text-primary)]">No Cluster Overhead</td>
-              <td class="p-6 text-center text-emerald-500">✓</td>
-              <td class="p-6 text-center text-red-500/60">—</td>
-              <td class="p-6 text-center text-emerald-500 bg-[var(--accent)]/5">✓</td>
-            </tr>
-            <tr>
-              <td class="p-6 text-sm font-medium text-[var(--text-primary)]">Works with Docker Compose</td>
-              <td class="p-6 text-center text-emerald-500">✓</td>
-              <td class="p-6 text-center text-red-500/60">—</td>
-              <td class="p-6 text-center text-emerald-500 bg-[var(--accent)]/5">✓</td>
-            </tr>
-          </tbody>
-        </table>
+        <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-4 tracking-tight">Design Principles</h2>
+        <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">Architecture-first approach to local secret orchestration.</p>
       </div>
 
       <div class="grid md:grid-cols-3 gap-8">
-        <div class="reveal p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl">
-          <div class="w-12 h-12 bg-red-500/10 rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+        <div class="reveal p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl text-center">
+          <div class="w-12 h-12 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center mb-6 mx-auto">
+            <svg class="w-6 h-6 text-[var(--accent)]" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z"/></svg>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-[var(--text-primary)]">No more .env leaks</h3>
-          <p class="text-[var(--text-secondary)] leading-relaxed">Stop committing secrets to git or sharing raw .env
-            files. DSO pulls directly from source-of-truth secret managers.</p>
+          <h3 class="text-lg font-bold mb-3 text-[var(--text-primary)]">Zero Persistence</h3>
+          <p class="text-[var(--text-secondary)] text-sm leading-relaxed">Secrets are never written to host storage. They reside strictly in process memory and are streamed directly into target container memory-mapped filesystems (tmpfs).</p>
         </div>
-        <div class="reveal p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl"
-          style="transition-delay: 0.1s">
-          <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
+        <div class="reveal p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl text-center">
+          <div class="w-12 h-12 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center mb-6 mx-auto">
+            <svg class="w-6 h-6 text-[var(--accent)]" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-[var(--text-primary)]">Zero manual rotation</h3>
-          <p class="text-[var(--text-secondary)] leading-relaxed">Containers pick up secret updates automatically via
-            local poll. No manual restarts. No production downtime.</p>
+          <h3 class="text-lg font-bold mb-3 text-[var(--text-primary)]">Event-Driven</h3>
+          <p class="text-[var(--text-secondary)] text-sm leading-relaxed">Leverages the Docker Event stream for real-time lifecycle hooks. Responds instantly to container start, stop, and update events without continuous CPU-heavy polling.</p>
         </div>
-        <div class="reveal p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl"
-          style="transition-delay: 0.2s">
-          <div class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
+        <div class="reveal p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl text-center">
+          <div class="w-12 h-12 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center mb-6 mx-auto">
+            <svg class="w-6 h-6 text-[var(--accent)]" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/></svg>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-[var(--text-primary)]">Lightweight Native</h3>
-          <p class="text-[var(--text-secondary)] leading-relaxed">A single binary that respects your existing Docker
-            workflow. No heavy JVM, no complex CRDs, no sidecar agents.</p>
+          <h3 class="text-lg font-bold mb-3 text-[var(--text-primary)]">Docker-Native</h3>
+          <p class="text-[var(--text-secondary)] text-sm leading-relaxed">Operates as a first-class Docker plugin. Integrates with existing Docker Compose workflows via standard labels, requiring zero changes to application code.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Solution -->
-  <!-- How DSO fits in your stack -->
-  <section id="architecture-overview" class="py-24 px-6 border-b border-[var(--border-soft)] relative overflow-hidden scroll-mt-24">
-    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/[0.02] to-transparent pointer-events-none"></div>
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="reveal text-center mb-16">
-        <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-4">How DSO fits in your stack</h2>
-        <p class="text-[var(--text-secondary)] text-lg">A seamless pipeline from secure cloud vault to running container.</p>
-      </div>
-      
-      <div class="reveal relative py-12 flex flex-col md:flex-row items-stretch justify-center gap-4 md:gap-0">
-        <!-- Connecting Line (Desktop) -->
-        <div class="hidden md:block absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent -translate-y-1/2 -z-10"></div>
-        
-        <!-- Step 1: Cloud Store -->
-        <div class="flex-1 flex flex-col items-center group">
-          <div class="w-24 h-24 rounded-3xl bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center mb-4 transition-all duration-500 group-hover:border-orange-500/50 group-hover:shadow-[0_0_30px_rgba(249,115,22,0.1)]">
-            <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-          </div>
-          <div class="text-center">
-            <h4 class="text-[var(--text-primary)] font-bold text-sm mb-1 uppercase tracking-tight">Cloud Store</h4>
-            <p class="text-[10px] text-[var(--text-muted)] font-medium">AWS / Azure / Vault</p>
-          </div>
-        </div>
-
-        <div class="hidden md:flex items-center text-[var(--border)]"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5-5 5"/></svg></div>
-
-        <!-- Step 2: Runtime Plugin -->
-        <div class="flex-1 flex flex-col items-center group">
-          <div class="w-24 h-24 rounded-3xl bg-[var(--accent)]/5 border border-[var(--accent)]/30 flex items-center justify-center mb-4 transition-all duration-500 group-hover:bg-[var(--accent)]/10 group-hover:shadow-[0_0_40px_rgba(0,201,167,0.15)] relative">
-            <div class="absolute inset-0 bg-[var(--accent)]/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <code class="relative text-sm font-mono font-bold text-[var(--accent)]">DSO Agent</code>
-          </div>
-          <div class="text-center">
-            <h4 class="text-[var(--text-primary)] font-bold text-sm mb-1 uppercase tracking-tight">DSO Plugin</h4>
-            <p class="text-[10px] text-[var(--text-muted)] font-medium">Native Docker Daemon</p>
-          </div>
-        </div>
-
-        <div class="hidden md:flex items-center text-[var(--border)]"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5-5 5"/></svg></div>
-
-        <!-- Step 3: Secure Stack -->
-        <div class="flex-1 flex flex-col items-center group">
-          <div class="w-24 h-24 rounded-3xl bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center mb-4 transition-all duration-500 group-hover:border-blue-500/50 group-hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]">
-            <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          </div>
-          <div class="text-center">
-            <h4 class="text-[var(--text-primary)] font-bold text-sm mb-1 uppercase tracking-tight">Safe Stack</h4>
-            <p class="text-[10px] text-[var(--text-muted)] font-medium">Compose / Swarm</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Platform Capabilities -->
-  <section class="py-24 px-6 bg-[var(--surface2)]/30 border-b border-[var(--border-soft)]">
-    <div class="max-w-5xl mx-auto">
-      <div class="reveal text-center mb-16">
-        <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-4">Built for production</h2>
-        <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">DSO isn't just a CLI — it's a cloud-native platform with enterprise-grade internals.</p>
+  <!-- Architecture -->
+  <section id="architecture" class="py-24 px-6 lg:px-12 xl:px-16 bg-[var(--surface2)]/50 border-y border-[var(--border-soft)] scroll-mt-24">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal mb-20 text-center">
+        <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-4 tracking-tight">System Architecture</h2>
+        <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">A modular approach to secret distribution.</p>
       </div>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Extensible Providers -->
-        <div class="reveal p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl hover:border-[var(--accent)]/40 transition-all group">
-          <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/></svg>
-          </div>
-          <h3 class="text-base font-bold text-[var(--text-primary)] mb-2">Plugin Architecture</h3>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Providers are isolated Go binaries. Add new secret stores by dropping in a plugin — no core changes needed.</p>
-        </div>
-
-        <!-- Memory-Only -->
-        <div class="reveal p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl hover:border-[var(--accent)]/40 transition-all group" style="transition-delay:.05s">
-          <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z"/></svg>
-          </div>
-          <h3 class="text-base font-bold text-[var(--text-primary)] mb-2">Memory-Only Secrets</h3>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Secrets are held in-memory and injected via Unix socket. Nothing is written to disk — ever. Purged on shutdown.</p>
-        </div>
-
-        <!-- Observability -->
-        <div class="reveal p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl hover:border-[var(--accent)]/40 transition-all group" style="transition-delay:.1s">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-          </div>
-          <h3 class="text-base font-bold text-[var(--text-primary)] mb-2">Observability Built-In</h3>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Prometheus-compatible metrics endpoint and structured logging via Go's <code class="text-[var(--accent)] text-[10px]">slog</code> for production visibility.</p>
-        </div>
-
-        <!-- Cloud-Native -->
-        <div class="reveal p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl hover:border-[var(--accent)]/40 transition-all group" style="transition-delay:.15s">
-          <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
-          </div>
-          <h3 class="text-base font-bold text-[var(--text-primary)] mb-2">Cloud-Native Design</h3>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Designed for multi-cloud from day one. Unified config syntax across AWS, Azure, Vault, and more.</p>
-        </div>
-
-        <!-- Systemd Native -->
-        <div class="reveal p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl hover:border-[var(--accent)]/40 transition-all group" style="transition-delay:.2s">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
-          </div>
-          <h3 class="text-base font-bold text-[var(--text-primary)] mb-2">Systemd Service</h3>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Runs as a lightweight system service. ~20MB memory, &lt;1% CPU. Auto-restarts on failure.</p>
-        </div>
-
-        <!-- Atomic Updates -->
-        <div class="reveal p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl hover:border-[var(--accent)]/40 transition-all group" style="transition-delay:.25s">
-          <div class="w-10 h-10 rounded-xl bg-[var(--accent)]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-          </div>
-          <h3 class="text-base font-bold text-[var(--text-primary)] mb-2">Atomic Rotation</h3>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Secret updates are applied atomically. Configurable strategies: restart, signal, or file mount refresh.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- How it works -->
-  <section id="how-it-works" class="py-20 px-6 lg:px-12 xl:px-16 border-b border-[var(--border-soft)] scroll-mt-24">
-    <div class="max-w-7xl mx-auto">
-      <div class="reveal text-center mb-14">
-        <h2 class="text-3xl font-mono font-bold text-[var(--text-primary)] mb-3">How it works</h2>
-        <p class="text-[var(--text-secondary)]">Four steps from secret store to running container.</p>
-      </div>
-      <div class="grid md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] gap-2 items-center">
-        <!-- Step 1 -->
-        <div class="reveal bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6">
-          <svg class="w-5 h-5 text-[var(--accent)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-          </svg>
-          <div
-            class="w-8 h-8 bg-[var(--accent-dim)] border border-[var(--accent-border)] rounded-lg flex items-center justify-center font-mono font-bold text-[var(--accent)] text-sm mb-4">
-            1</div>
-          <h4 class="font-semibold text-[var(--text-primary)] mb-2">Store secrets</h4>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Add your secrets to AWS Secrets Manager, Azure
-            Key Vault, or another supported provider.</p>
-        </div>
-        <!-- Arrow 1 -->
-        <div class="hidden md:flex items-center justify-center px-1">
-          <svg class="w-6 h-6 flow-arrow text-[var(--accent)] opacity-60" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
-        <!-- Step 2 -->
-        <div class="reveal bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6"
-          style="transition-delay:.1s">
-          <svg class="w-5 h-5 text-[var(--accent)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-          </svg>
-          <div
-            class="w-8 h-8 bg-[var(--accent-dim)] border border-[var(--accent-border)] rounded-lg flex items-center justify-center font-mono font-bold text-[var(--accent)] text-sm mb-4">
-            2</div>
-          <h4 class="font-semibold text-[var(--text-primary)] mb-2">DSO fetches</h4>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">The DSO agent polls the provider and retrieves
-            secret values over a secure connection.</p>
-        </div>
-        <!-- Arrow 2 -->
-        <div class="hidden md:flex items-center justify-center px-1">
-          <svg class="w-6 h-6 flow-arrow text-[var(--accent)]" style="opacity:0.6; animation-delay:.5s" fill="none"
-            stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
-        <!-- Step 3 -->
-        <div class="reveal bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6"
-          style="transition-delay:.2s">
-          <svg class="w-5 h-5 text-[var(--accent)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          <div
-            class="w-8 h-8 bg-[var(--accent-dim)] border border-[var(--accent-border)] rounded-lg flex items-center justify-center font-mono font-bold text-[var(--accent)] text-sm mb-4">
-            3</div>
-          <h4 class="font-semibold text-[var(--text-primary)] mb-2">DSO injects</h4>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">Secrets are pushed into running containers as
-            env vars or via <code class="text-[var(--accent)]">/run/secrets/</code> file mounts.</p>
-        </div>
-        <!-- Arrow 3 -->
-        <div class="hidden md:flex items-center justify-center px-1">
-          <svg class="w-6 h-6 flow-arrow text-[var(--accent)]" style="opacity:0.6; animation-delay:1s" fill="none"
-            stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
-        <!-- Step 4 -->
-        <div class="reveal bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6"
-          style="transition-delay:.3s">
-          <svg class="w-5 h-5 text-[var(--accent)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          <div
-            class="w-8 h-8 bg-[var(--accent-dim)] border border-[var(--accent-border)] rounded-lg flex items-center justify-center font-mono font-bold text-[var(--accent)] text-sm mb-4">
-            4</div>
-          <h4 class="font-semibold text-[var(--text-primary)] mb-2">Auto-updated</h4>
-          <p class="text-xs text-[var(--text-secondary)] leading-relaxed">When the upstream value changes, containers
-            receive the new value automatically. No restart needed.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features: Alternating Layout -->
-  <section id="features" class="py-24 px-6 lg:px-12 xl:px-16 border-b border-[var(--border-soft)] overflow-hidden scroll-mt-24">
-    <div class="max-w-7xl mx-auto space-y-32">
-      <!-- Feature 1: Manual vs DSO -->
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="reveal">
-          <div class="w-12 h-12 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
-          </div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 bg-[var(--accent)]/10 text-[var(--accent)] text-[10px] font-bold uppercase rounded-md mb-4">
-            Instant Stack Provisioning
-          </div>
-          <h2 class="text-3xl font-bold mb-6 text-[var(--text-primary)] tracking-tight leading-tight">One command to
-            deploy <br>multi-cloud secrets.</h2>
-          <p class="text-[var(--text-secondary)] text-lg leading-relaxed mb-8">
-            DSO takes over the complexity of secret discovery. Map your AWS or Azure secrets once, and deploy them to
-            any environment using standard Docker commands.
-          </p>
-          <div class="bg-[var(--surface2)] border border-[var(--border)] rounded-lg p-5">
-            <div class="flex items-center gap-2 mb-3">
-              <div class="w-2 h-2 rounded-full bg-[var(--accent)]"></div>
-              <span class="text-xs font-mono font-bold tracking-wider text-[var(--text-muted)] uppercase">Command</span>
+      <div class="grid lg:grid-cols-2 gap-12 mb-20">
+        <div class="reveal space-y-8">
+          <div class="flex gap-6 group">
+            <div class="w-12 h-12 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-[var(--accent)]">
+              <svg class="w-6 h-6" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
             </div>
-            <code class="text-sm font-mono text-[var(--accent)]">docker dso up -d</code>
+            <div>
+              <h4 class="text-[var(--text-primary)] font-bold mb-2">Watcher Engine</h4>
+              <p class="text-[var(--text-secondary)] text-sm leading-relaxed">Monitors the Docker API for lifecycle events and specific labels (`dso.reloader=true`). Identifies target containers for reconciliation.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-6 group">
+            <div class="w-12 h-12 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-[var(--accent)]">
+              <svg class="w-6 h-6" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </div>
+            <div>
+              <h4 class="text-[var(--text-primary)] font-bold mb-2">Reloader Controller</h4>
+              <p class="text-[var(--text-secondary)] text-sm leading-relaxed">Orchestrates atomic updates. Verifies container health post-injection and triggers automated rollbacks on failure.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-6 group">
+            <div class="w-12 h-12 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-[var(--accent)]">
+              <svg class="w-6 h-6" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            </div>
+            <div>
+              <h4 class="text-[var(--text-primary)] font-bold mb-2">Tar Streamer</h4>
+              <p class="text-[var(--text-secondary)] text-sm leading-relaxed">Low-level injection mechanism. Streams secret data directly into the container's virtual filesystem using `tar` over the Docker socket.</p>
+            </div>
           </div>
         </div>
-        <div class="reveal order-first lg:order-last">
-          <div class="relative rounded-2xl border border-[var(--border)] overflow-hidden shadow-2xl">
-            <img src="assets/gifs/demo-up.gif" alt="DSO Up Demo" class="w-full" loading="lazy">
-            <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-transparent to-transparent opacity-40">
+
+        <div class="reveal bg-[var(--bg)] border border-[var(--border)] rounded-3xl p-8 flex items-center justify-center relative overflow-hidden group">
+          <div class="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/[0.03] to-transparent pointer-events-none"></div>
+          <div class="relative w-full max-w-md">
+            <div class="space-y-6">
+              <div class="flex items-center justify-between p-4 bg-[var(--surface2)] border border-[var(--border)] rounded-xl">
+                <span class="text-xs font-mono font-bold text-[var(--accent)] uppercase">Docker Event Bus</span>
+                <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></span>
+              </div>
+              <div class="flex flex-col items-center gap-4">
+                <svg class="w-4 h-4 text-[var(--border)]" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7-7-7m14-8l-7 7-7-7"/></svg>
+                <div class="w-full p-6 bg-[var(--accent)]/5 border border-[var(--accent)]/30 rounded-2xl text-center">
+                  <span class="text-sm font-bold text-[var(--text-primary)]">Control Loop Reconciliation</span>
+                  <div class="mt-2 text-[10px] text-[var(--text-secondary)] font-mono">Watch · Analyze · Inject · Reconcile</div>
+                </div>
+                <svg class="w-4 h-4 text-[var(--border)]" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7-7-7m14-8l-7 7-7-7"/></svg>
+              </div>
+              <div class="p-4 bg-[var(--surface2)] border border-[var(--border)] rounded-xl text-center">
+                <span class="text-xs font-mono font-bold text-[var(--text-secondary)] uppercase">Container RAM (tmpfs)</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <!-- Feature 2: Auto-Rotation -->
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="reveal lg:order-last">
-          <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
+  <!-- Operational Excellence -->
+  <section id="operations" class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)] scroll-mt-24">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-4 tracking-tight">Operational Excellence</h2>
+        <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">Resilient secret orchestration for production environments.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-16">
+        <div class="reveal space-y-8">
+          <div class="p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl">
+            <h4 class="text-[var(--text-primary)] font-bold mb-3 flex items-center gap-3">
+              <span class="w-2 h-2 rounded-full bg-[var(--accent)]"></span>
+              Atomic Secret Rotation
+            </h4>
+            <p class="text-[var(--text-secondary)] text-sm leading-relaxed">DSO ensures that secret updates are atomic. During rotation, the system verifies the integrity of the new secret stream before committing changes to the container lifecycle.</p>
           </div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase rounded-md mb-4">
-            Real-time Secret Refreshing
+          <div class="p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl">
+            <h4 class="text-[var(--text-primary)] font-bold mb-3 flex items-center gap-3">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+              Automated Rollbacks
+            </h4>
+            <p class="text-[var(--text-secondary)] text-sm leading-relaxed">If a container fails its health check precisely after a secret update, DSO can automatically revert to the previous known-good version of the secret to maintain availability.</p>
           </div>
-          <h2 class="text-3xl font-bold mb-6 text-[var(--text-primary)] tracking-tight leading-tight">Zero-downtime
-            <br>secret rotation.
-          </h2>
-          <p class="text-[var(--text-secondary)] text-lg leading-relaxed mb-8">
-            When you rotate a secret in AWS Secrets Manager, DSO detects the change and updates the container's
-            environment or file mount in real-time. No restart required.
-          </p>
-          <ul class="space-y-3">
-            <li class="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
-              <span class="text-[var(--accent)]">✓</span> Real-time polling detection
+        </div>
+
+        <div class="reveal p-8 bg-[var(--surface2)]/30 border border-[var(--border)] rounded-2xl">
+          <h4 class="text-[var(--text-primary)] font-bold mb-6 font-mono text-sm uppercase tracking-widest">Rollout Strategies</h4>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-4 bg-[var(--bg)] border border-[var(--border)] rounded-xl">
+              <span class="text-xs font-mono text-[var(--text-primary)]">Strategy: RESTART</span>
+              <span class="text-[10px] px-2 py-1 bg-emerald-500/10 text-emerald-500 rounded uppercase font-bold">Standard</span>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-[var(--bg)] border border-[var(--border)] rounded-xl">
+              <span class="text-xs font-mono text-[var(--text-primary)]">Strategy: RELOAD (SIGHUP)</span>
+              <span class="text-[10px] px-2 py-1 bg-blue-500/10 text-blue-500 rounded uppercase font-bold">Hot-Reload</span>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-[var(--bg)] border border-[var(--border)] rounded-xl">
+              <span class="text-xs font-mono text-[var(--text-primary)]">Strategy: MOUNT</span>
+              <span class="text-[10px] px-2 py-1 bg-orange-500/10 text-orange-500 rounded uppercase font-bold">Native File</span>
+            </div>
+          </div>
+          <p class="mt-6 text-xs text-[var(--text-muted)] italic leading-relaxed">Strategies are defined per-secret in `dso.yaml`, allowing granular control over application behavior.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security Model -->
+  <section id="security" class="py-24 px-6 lg:px-12 xl:px-16 bg-[var(--surface)] border-y border-[var(--border-soft)] scroll-mt-24">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-4 tracking-tight">Security Engineering</h2>
+        <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">Hardened by design. Secrets belong in memory, not on disk.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-12">
+        <div class="reveal space-y-6">
+          <div class="flex gap-4">
+            <svg class="w-6 h-6 text-[var(--accent)] shrink-0" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <div>
+              <h5 class="text-[var(--text-primary)] font-bold mb-1">Authenticated Socket Only</h5>
+              <p class="text-[var(--text-secondary)] text-xs leading-relaxed">Communication with the Docker Engine is strictly restricted to the local Unix socket, leveraging host-level ACLs.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <svg class="w-6 h-6 text-[var(--accent)] shrink-0" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z"/></svg>
+            <div>
+              <h5 class="text-[var(--text-primary)] font-bold mb-1">Zero-Persistence RAMfs</h5>
+              <p class="text-[var(--text-secondary)] text-xs leading-relaxed">Secrets are mapped to `tmpfs` mounts. They are lost immediately if the host or container loses power, preventing cold-boot or forensic theft.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <svg class="w-6 h-6 text-[var(--accent)] shrink-0" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <div>
+              <h5 class="text-[var(--text-primary)] font-bold mb-1">Least Privilege Agent</h5>
+              <p class="text-[var(--text-secondary)] text-xs leading-relaxed">The DSO agent requires only set capabilities (`CAP_CHOWN`, `CAP_FOWNER`) to manage secret mounts, avoiding full `root` escalation where possible.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal bg-[var(--surface2)] border border-[var(--border)] rounded-2xl p-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+            <div class="text-[var(--text-primary)] font-bold text-sm uppercase tracking-widest font-mono">Threat Mitigation</div>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-center justify-between border-b border-[var(--border-soft)] pb-3">
+              <span class="text-xs text-[var(--text-secondary)]">Unauthorized Image Access</span>
+              <span class="text-[10px] text-emerald-500 font-bold uppercase">Blocked</span>
             </li>
-            <li class="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
-              <span class="text-[var(--accent)]">✓</span> Atomic in-place updates
+            <li class="flex items-center justify-between border-b border-[var(--border-soft)] pb-3">
+              <span class="text-xs text-[var(--text-secondary)]">Cold-Boot Disk Theft</span>
+              <span class="text-[10px] text-emerald-500 font-bold uppercase">Mitigated</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-[var(--border-soft)] pb-3">
+              <span class="text-xs text-[var(--text-secondary)]">Secret Leakage in Logs</span>
+              <span class="text-[10px] text-emerald-500 font-bold uppercase">Redacted</span>
             </li>
           </ul>
-        </div>
-        <div class="reveal">
-          <div class="relative rounded-2xl border border-[var(--border)] overflow-hidden shadow-2xl">
-            <img src="assets/gifs/demo-rotation.gif" alt="DSO Rotation Demo" class="w-full" loading="lazy">
-          </div>
-        </div>
-      </div>
-
-      <!-- Feature 3: Smart Strategy -->
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="reveal">
-          <div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-          </div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/10 text-purple-400 text-[10px] font-bold uppercase rounded-md mb-4">
-            Adaptive Update Orchestration
-          </div>
-          <h2 class="text-3xl font-bold mb-6 text-[var(--text-primary)] tracking-tight leading-tight">Intelligent
-            rollout <br>strategies.</h2>
-          <p class="text-[var(--text-secondary)] text-lg leading-relaxed mb-8">
-            Choose how your updates are delivered. DSO supports rolling updates, direct replacement, and strategic
-            reload triggers for different application types.
-          </p>
-          <div class="flex items-center gap-4">
-            <div
-              class="px-4 py-2 bg-[var(--surface2)] border border-[var(--border)] rounded flex items-center gap-2 text-xs font-mono font-bold text-[var(--text-muted)]">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> RESTART
-            </div>
-            <div
-              class="px-4 py-2 bg-[var(--surface2)] border border-[var(--border)] rounded flex items-center gap-2 text-xs font-mono font-bold text-[var(--text-muted)]">
-              <span class="w-2 h-2 rounded-full bg-blue-500"></span> SIGNAL
-            </div>
-            <div
-              class="px-4 py-2 bg-[var(--surface2)] border border-[var(--border)] rounded flex items-center gap-2 text-xs font-mono font-bold text-[var(--text-muted)]">
-              <span class="w-2 h-2 rounded-full bg-orange-500"></span> MOUNT
-            </div>
-          </div>
-        </div>
-        <div class="reveal order-first lg:order-last">
-          <div class="relative rounded-2xl border border-[var(--border)] overflow-hidden shadow-2xl">
-            <img src="assets/gifs/demo-strategy.gif" alt="DSO Strategy Demo" class="w-full" loading="lazy">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Use Cases -->
-  <section id="use-cases" class="py-20 px-6 lg:px-12 xl:px-16 border-b border-[var(--border-soft)] scroll-mt-24">
-    <div class="max-w-7xl mx-auto">
-      <div class="reveal text-center mb-14">
-        <h2 class="text-3xl font-mono font-bold text-[var(--text-primary)] mb-3">Built for real-world workflows.</h2>
-        <p class="text-[var(--text-secondary)]">From local laptop to production instances.</p>
-      </div>
-      <div class="grid md:grid-cols-2 gap-6">
-        <div
-          class="reveal bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6 flex gap-5 hover:border-[var(--accent)]/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-300 group">
-          <div
-            class="w-12 h-12 rounded-xl bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--accent)]/10 group-hover:border-[var(--accent)]/30 transition-colors">
-            <svg class="w-6 h-6 text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-semibold text-lg text-[var(--text-primary)] mb-2">Local Development</h3>
-            <p class="text-sm text-[var(--text-secondary)] leading-relaxed">Stop sharing unsafe <code
-                class="text-[var(--text-primary)] text-xs bg-[var(--surface2)] px-1 py-0.5 rounded">.env</code> files.
-              Securely pull and sync your secrets from the cloud straight into local processes.</p>
-          </div>
-        </div>
-        <div
-          class="reveal bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6 flex gap-5 hover:border-[var(--accent)]/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-300 group"
-          style="transition-delay:.1s">
-          <div
-            class="w-12 h-12 rounded-xl bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--accent)]/10 group-hover:border-[var(--accent)]/30 transition-colors">
-            <svg class="w-6 h-6 text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-semibold text-lg text-[var(--text-primary)] mb-2">Docker Compose Production</h3>
-            <p class="text-sm text-[var(--text-secondary)] leading-relaxed">Run multi-container setups on a VPS
-              perfectly, without needing to wrestle with heavy Kubernetes overhead.</p>
-          </div>
-        </div>
-        <div
-          class="reveal bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6 flex gap-5 hover:border-[var(--accent)]/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-300 group"
-          style="transition-delay:.2s">
-          <div
-            class="w-12 h-12 rounded-xl bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--accent)]/10 group-hover:border-[var(--accent)]/30 transition-colors">
-            <svg class="w-6 h-6 text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-semibold text-lg text-[var(--text-primary)] mb-2">Multi-cloud Secret Sync</h3>
-            <p class="text-sm text-[var(--text-secondary)] leading-relaxed">Unify secrets from AWS, Azure, and HashiCorp
-              Vault into a single standard injection layout for your apps.</p>
-          </div>
-        </div>
-        <div
-          class="reveal bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6 flex gap-5 hover:border-[var(--accent)]/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-300 group"
-          style="transition-delay:.3s">
-          <div
-            class="w-12 h-12 rounded-xl bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--accent)]/10 group-hover:border-[var(--accent)]/30 transition-colors">
-            <svg class="w-6 h-6 text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-semibold text-lg text-[var(--text-primary)] mb-2">Secure CI/CD Environments</h3>
-            <p class="text-sm text-[var(--text-secondary)] leading-relaxed">Inject short-lived, rotation-ready
-              credentials securely during integration tests without committing keys to disk.</p>
-          </div>
         </div>
       </div>
     </div>
@@ -1351,7 +813,7 @@
           <div
             class="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-5 flex items-center gap-4 hover:border-gray-400/40 hover:-translate-y-0.5 transition-all duration-200">
             <div class="w-10 h-10 rounded-lg bg-[var(--border-soft)] flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-[var(--text-secondary)]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -1430,7 +892,7 @@
       <span class="text-[var(--text-primary)]">-</span> <span class="text-[var(--code-string)]">DB_USER_FILE=/run/secrets/DB_USER</span>
 
   <span class="text-[var(--code-key)]">db</span><span class="text-[var(--text-primary)]">:</span>
-    <span class="text-[var(--code-key)]">image</span><span class="text-[var(--text-primary)]">:</span> <span class="text-[var(--code-string)]">postgres:16</span>
+    <span class="text-[var(--code-key)]">image</span><span class="text-[var(--text-string)]">postgres:16</span>
     <span class="text-[var(--code-key)]">environment</span><span class="text-[var(--text-primary)]">:</span>
       <span class="text-[var(--text-primary)]">-</span> <span class="text-[var(--code-string)]">POSTGRES_PASSWORD_FILE=/run/secrets/DB_PASSWORD</span></code></pre>
         </div>
@@ -1445,8 +907,8 @@
     </div>
   </section>
 
-  <!-- Architecture -->
-  <section id="architecture" class="py-24 px-6 lg:px-12 xl:px-16 bg-[var(--surface2)] border-b border-[var(--border-soft)] scroll-mt-24">
+  <!-- System Details -->
+  <section id="system-details" class="py-24 px-6 lg:px-12 xl:px-16 bg-[var(--surface2)] border-b border-[var(--border-soft)] scroll-mt-24">
     <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-16">
         <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-4">Native Architecture</h2>
@@ -1533,7 +995,7 @@
   </section>
 
   <!-- Security Model -->
-  <section id="security" class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)] scroll-mt-24">
+  <section id="security-model" class="py-24 px-6 lg:px-12 xl:px-16 border-t border-[var(--border-soft)] scroll-mt-24">
     <div class="max-w-7xl mx-auto">
       <div class="reveal text-center mb-16">
         <div class="inline-block text-xs font-bold tracking-widest text-[var(--accent)] uppercase px-3 py-1 rounded-full bg-[var(--surface2)] border border-[var(--border)] mb-4">Security Model</div>
@@ -1544,7 +1006,7 @@
         <div class="space-y-5">
           <div class="flex gap-4 p-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl hover:border-[var(--accent)]/40 transition-colors">
             <div class="w-10 h-10 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+              <svg class="w-5 h-5 text-[var(--accent)]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
             </div>
             <div>
               <div class="font-bold text-[var(--text-primary)] mb-1">Memory-Only Store</div>
@@ -1553,7 +1015,7 @@
           </div>
           <div class="flex gap-4 p-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl hover:border-[var(--accent)]/40 transition-colors">
             <div class="w-10 h-10 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <svg class="w-5 h-5 text-[var(--accent)]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             </div>
             <div>
               <div class="font-bold text-[var(--text-primary)] mb-1">Unix Socket Transport</div>
@@ -1562,7 +1024,7 @@
           </div>
           <div class="flex gap-4 p-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl hover:border-[var(--accent)]/40 transition-colors">
             <div class="w-10 h-10 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+              <svg class="w-5 h-5 text-[var(--accent)]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
             </div>
             <div>
               <div class="font-bold text-[var(--text-primary)] mb-1">IAM Role Auth — Zero Credentials on Host</div>
@@ -1571,7 +1033,7 @@
           </div>
           <div class="flex gap-4 p-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl hover:border-[var(--accent)]/40 transition-colors">
             <div class="w-10 h-10 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              <svg class="w-5 h-5 text-[var(--accent)]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
             </div>
             <div>
               <div class="font-bold text-[var(--text-primary)] mb-1">Structured Audit Logs</div>
@@ -1708,7 +1170,7 @@
             automatically upon rotation.</p>
           <div
             class="bg-[var(--surface2)] border border-[var(--accent)]/30 rounded-lg overflow-hidden py-2 px-3 flex items-center justify-center">
-            <svg class="w-5 h-5 text-[var(--accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-5 h-5 text-[var(--accent)]" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -1726,256 +1188,15 @@
     </div>
   </section>
 
-  <!-- Final CTA + Star Action -->
-  <section class="py-32 px-6 lg:px-12 xl:px-16 relative overflow-hidden bg-gradient-to-b from-transparent to-[var(--bg2)]">
-    <div class="max-w-7xl mx-auto relative z-10">
-      <div
-        class="reveal bg-[var(--surface)] border border-[var(--border)] rounded-[2.5rem] p-16 text-center shadow-2xl relative group overflow-hidden">
-        <!-- Logo Watermark -->
-        <img src="assets/images/dso-logo.png" alt=""
-          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 opacity-[0.03] pointer-events-none">
-
-        <p class="text-sm font-semibold text-[var(--accent)] uppercase tracking-widest mb-4">Ready to ship?</p>
-
-        <h2 class="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-8 tracking-tight">Start using DSO
-          <br><span class="text-[var(--accent)]">today.</span>
-        </h2>
-        <p class="text-[var(--text-secondary)] text-xl mb-12 max-w-xl mx-auto">Standardize your Docker secret management
-          in under 2 minutes. Open source and built for developers who ship fast.</p>
-
-        <div class="flex flex-col sm:flex-row justify-center gap-6 mb-16">
-          <a href="#getting-started"
-            class="px-10 py-5 bg-[var(--accent)] text-[var(--bg)] font-bold rounded-2xl shadow-xl shadow-[var(--accent)]/20 hover:scale-105 transition-all">Get
-            Started for Free</a>
-          <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
-            class="px-10 py-5 border border-[var(--border)] text-[var(--text-primary)] font-bold rounded-2xl hover:bg-[var(--surface2)] transition-all flex items-center justify-center gap-3">
-            <svg class="w-6 h-6 opacity-70" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-            </svg>
-            GitHub Repository
-          </a>
-        </div>
-
-        <div
-          class="inline-flex items-center gap-6 p-6 bg-[var(--surface2)]/50 border border-[var(--border)] rounded-3xl">
-          <div class="text-left">
-            <p class="text-sm font-bold text-[var(--text-primary)]">Loved by developers</p>
-            <p class="text-xs text-[var(--text-muted)]">Join the community on GitHub</p>
-          </div>
-          <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank"
-            class="flex items-center gap-2 bg-[var(--star-bg)] text-[var(--text-primary)] px-4 py-2 rounded-xl text-sm font-bold hover:bg-[var(--star-bg-hover)] transition-colors">
-            <span class="text-yellow-400">⭐</span> Star
-            <span class="pl-2 border-l border-gray-600 ml-1 text-xs opacity-70">2.1k</span>
-          </a>
-        </div>
+  <!-- Final CTA -->
+  <section class="py-32 px-6 lg:px-12 xl:px-16 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto text-center reveal">
+      <h2 class="text-4xl font-bold text-[var(--text-primary)] mb-6 tracking-tight">Standardize your secret lifecycle.</h2>
+      <p class="text-[var(--text-secondary)] text-lg mb-10 max-w-2xl mx-auto">DSO is open source and built for high-security Docker environments. Start injecting secrets in minutes.</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="https://github.com/umairmd385/docker-secret-operator" target="_blank" class="px-8 py-4 bg-[var(--accent)] text-[var(--bg)] font-bold rounded-xl shadow-lg hover:scale-105 transition-all">View on GitHub</a>
+        <a href="/docs/" target="_blank" class="px-8 py-4 border border-[var(--border)] text-[var(--text-primary)] font-bold rounded-xl hover:bg-[var(--surface2)] transition-all">Read Documentation</a>
       </div>
-    </div>
-  </section>
-
-  <!-- For Teams -->
-  <section id="for-teams" class="py-28 px-6 lg:px-12 xl:px-16 relative overflow-hidden border-t border-[var(--border-soft)] scroll-mt-24">
-
-    <!-- Radial glow background accent -->
-    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full"
-           style="background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(0,201,167,0.08) 0%, transparent 70%);">
-      </div>
-      <!-- Subtle grid overlay -->
-      <div class="absolute inset-0 opacity-[0.03]"
-           style="background-image: linear-gradient(var(--accent) 1px, transparent 1px), linear-gradient(90deg, var(--accent) 1px, transparent 1px); background-size: 48px 48px;">
-      </div>
-    </div>
-
-    <div class="max-w-5xl mx-auto relative z-10">
-
-      <!-- Section Header -->
-      <div class="reveal text-center mb-16">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--surface2)] border border-[var(--border)] mb-6 text-xs font-bold tracking-widest uppercase text-[var(--accent)]">
-          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
-          </svg>
-          For Teams
-        </div>
-        <h2 class="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-5 leading-tight tracking-tight">
-          Built for Teams,<br class="hidden md:block"> Not Just Developers
-        </h2>
-        <p class="text-[var(--text-secondary)] text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-          Running Docker in production? DSO helps your team securely manage secrets without Kubernetes complexity.
-        </p>
-      </div>
-
-      <!-- Feature Cards -->
-      <div class="reveal grid md:grid-cols-3 gap-6 mb-14">
-
-        <!-- Card 1: Fast Implementation -->
-        <div class="group relative p-7 bg-[var(--surface)] border border-[var(--border)] rounded-2xl
-                    hover:border-[var(--accent)]/50 hover:shadow-[0_0_32px_rgba(0,201,167,0.08)]
-                    transition-all duration-300 cursor-default">
-          <!-- Top accent line on hover -->
-          <div class="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent
-                      opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
-
-          <!-- Icon -->
-          <div class="w-11 h-11 rounded-xl bg-[var(--accent-dim)] border border-[var(--accent-border)]
-                      flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-            <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-          </div>
-
-          <h3 class="text-lg font-bold text-[var(--text-primary)] mb-3">Fast Implementation</h3>
-          <p class="text-[var(--text-secondary)] text-sm leading-relaxed">
-            Get DSO up and running quickly with guided setup. One install command, one config file, one
-            <span class="font-mono text-xs text-[var(--accent)] bg-[var(--accent-dim)] px-1.5 py-0.5 rounded">docker dso up -d</span>.
-          </p>
-
-          <div class="mt-5 flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <span>Under 5 minutes</span>
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-
-        <!-- Card 2: Secure by Design (featured center card) -->
-        <div class="group relative p-7 bg-[var(--surface)] border border-[var(--accent)]/30 rounded-2xl
-                    hover:border-[var(--accent)]/70 hover:shadow-[0_0_48px_rgba(0,201,167,0.12)]
-                    transition-all duration-300 cursor-default ring-1 ring-[var(--accent)]/10">
-          <!-- Top accent line always visible on center card -->
-          <div class="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent rounded-full opacity-60"></div>
-
-          <!-- Popular badge -->
-          <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full
-                      bg-[var(--accent)] text-[var(--bg)] text-[10px] font-black tracking-widest uppercase shadow-lg shadow-[var(--accent)]/20">
-            Recommended
-          </div>
-
-          <!-- Icon -->
-          <div class="w-11 h-11 rounded-xl bg-[var(--accent)]/15 border border-[var(--accent)]/30
-                      flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-            <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-            </svg>
-          </div>
-
-          <h3 class="text-lg font-bold text-[var(--text-primary)] mb-3">Secure by Design</h3>
-          <p class="text-[var(--text-secondary)] text-sm leading-relaxed">
-            Follow best practices for secret management out of the box. Memory-only injection, IAM role auth,
-            SOC2-aligned audit logs — zero configuration required.
-          </p>
-
-          <div class="mt-5 flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)]">
-            <span>SOC2 · PCI-DSS · ISO 27001</span>
-          </div>
-        </div>
-
-        <!-- Card 3: Expert Support -->
-        <div class="group relative p-7 bg-[var(--surface)] border border-[var(--border)] rounded-2xl
-                    hover:border-[var(--accent)]/50 hover:shadow-[0_0_32px_rgba(0,201,167,0.08)]
-                    transition-all duration-300 cursor-default">
-          <!-- Top accent line on hover -->
-          <div class="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent
-                      opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
-
-          <!-- Icon -->
-          <div class="w-11 h-11 rounded-xl bg-[var(--accent-dim)] border border-[var(--accent-border)]
-                      flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-            <svg class="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/>
-            </svg>
-          </div>
-
-          <h3 class="text-lg font-bold text-[var(--text-primary)] mb-3">Expert Support</h3>
-          <p class="text-[var(--text-secondary)] text-sm leading-relaxed">
-            Get help with integration, troubleshooting, and production use. Direct access to the team that
-            built DSO — from architecture review to incident response.
-          </p>
-
-          <div class="mt-5 flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <span>Human support, fast</span>
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Trust indicators strip -->
-      <div class="reveal flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-14 py-6
-                  border-y border-[var(--border-soft)]">
-        <div class="flex items-center gap-2.5 text-sm text-[var(--text-secondary)]">
-          <svg class="w-4 h-4 text-[var(--accent)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-          No vendor lock-in
-        </div>
-        <div class="flex items-center gap-2.5 text-sm text-[var(--text-secondary)]">
-          <svg class="w-4 h-4 text-[var(--accent)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-          MIT Licensed · Always open source
-        </div>
-        <div class="flex items-center gap-2.5 text-sm text-[var(--text-secondary)]">
-          <svg class="w-4 h-4 text-[var(--accent)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-          AWS · Azure · Vault · Huawei
-        </div>
-        <div class="flex items-center gap-2.5 text-sm text-[var(--text-secondary)]">
-          <svg class="w-4 h-4 text-[var(--accent)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-          SOC2 Ready out of the box
-        </div>
-      </div>
-
-      <!-- CTA block -->
-      <div class="reveal">
-        <div class="relative rounded-2xl border border-[var(--accent)]/20 bg-[var(--surface)] overflow-hidden">
-          <!-- Inner accent glow -->
-          <div class="absolute inset-0 pointer-events-none"
-               style="background: radial-gradient(ellipse 60% 80% at 50% 120%, rgba(0,201,167,0.07) 0%, transparent 70%);">
-          </div>
-
-          <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 px-8 py-10 md:px-12">
-            <div class="text-center md:text-left">
-              <div class="text-xs font-bold tracking-widest uppercase text-[var(--accent)] mb-2">Ready to get started?</div>
-              <h3 class="text-2xl md:text-3xl font-bold text-[var(--text-primary)] mb-2">
-                Secure your team's secrets today.
-              </h3>
-              <p class="text-[var(--text-secondary)] text-sm max-w-md leading-relaxed">
-                Book a 30-minute call to discuss your team's setup, or jump straight in with the open-source version.
-              </p>
-            </div>
-
-            <!-- Buttons -->
-            <div class="flex flex-col sm:flex-row items-center gap-4 flex-shrink-0">
-              <!-- Primary: Book a Call -->
-              <a id="cta-book-call"
-                 href="https://calendar.zoho.in/eventreqForm/zz080212306015c0e0b6dda39a0dbbe6e502684f80748e3be0b02b2b9d859aadee90aacd079adc2495a22fb25775cd52a8662fb89a?theme=0&l=en&tz=Asia/Kolkata"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 class="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm
-                        bg-[var(--accent)] text-[var(--bg)]
-                        shadow-[0_0_24px_rgba(0,201,167,0.35)]
-                        hover:shadow-[0_0_40px_rgba(0,201,167,0.5)]
-                        hover:scale-[1.03] active:scale-[0.98]
-                        transition-all duration-200">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                </svg>
-                Book a Call
-              </a>
-
-              <!-- Secondary: View on GitHub -->
-              <a id="cta-github-teams"
-                 href="https://github.com/umairmd385/docker-secret-operator"
-                 target="_blank" rel="noopener"
-                 class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm
-                        border border-[var(--border)] text-[var(--text-primary)] bg-transparent
-                        hover:bg-[var(--surface2)] hover:border-[var(--text-secondary)]
-                        hover:scale-[1.02] active:scale-[0.98]
-                        transition-all duration-200">
-                <svg class="w-4 h-4 opacity-70" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                </svg>
-                View on GitHub
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </section>
 
