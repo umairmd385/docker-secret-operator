@@ -8,6 +8,7 @@ const providers = [
   { label: "AWS Secrets Manager", color: "#f97316", auth: "IAM / OAuth2" },
   { label: "HashiCorp Vault",     color: "#a78bfa", auth: "AppRole / Token" },
   { label: "Azure Key Vault",     color: "#38bdf8", auth: "Managed ID" },
+  { label: "Huawei CSMS",         color: "#ef4444", auth: "ECS Agency" },
   { label: "Local Filesystem",    color: "#94a3b8", auth: "POSIX" },
 ];
 
@@ -217,7 +218,7 @@ export const Architecture = () => {
                     id={`in-${i}`}
                     x1={0} y1={py}
                     x2={250} y2={agentY}
-                    color={providers[i].color}
+                    color={providers[i]?.color || "#00e6c0"}
                     delay={0.2 + i * 0.1}
                     label="Encrypted"
                   />

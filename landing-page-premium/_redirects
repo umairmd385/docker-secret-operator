@@ -1,3 +1,0 @@
-# Netlify Redirects for DSO Landing Page
-# Ensure all traffic is handled correctly even if single-page/SPA style navigation is added.
-/*    /index.html   200

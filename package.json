@@ -1,24 +1,30 @@
 {
-  "name": "dso-docs",
-  "version": "1.0.0",
-  "description": "DSO Documentation",
+  "name": "frontend-v3",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs",
-    "landing:dev": "npx @tailwindcss/cli -i ./landing-page-premium/input.css -o ./landing-page-premium/output.css --watch",
-    "landing:build": "npx @tailwindcss/cli -i ./landing-page-premium/input.css -o ./landing-page-premium/output.css --minify",
-    "build": "npm run landing:build && npm run docs:build",
-    "postbuild": "mkdir -p landing-page-premium/docs && cp -r docs/.vitepress/dist/* landing-page-premium/docs/",
-    "dev": "npm run landing:dev"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.8.0",
+    "next": "16.2.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.2.2",
-    "autoprefixer": "^10.4.27",
-    "mermaid": "^11.14.0",
-    "postcss": "^8.5.8",
-    "tailwindcss": "^4.2.2",
-    "vitepress": "^1.6.4",
-    "vitepress-plugin-mermaid": "^2.0.17"
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

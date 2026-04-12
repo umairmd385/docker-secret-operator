@@ -5,9 +5,9 @@ layout: home
 hero:
   name: "DSO Documentation"
   text: "Native Secret Lifecycle for Docker"
-  tagline: "Event-driven, zero-persistence secret orchestration for containerized workloads"
+  tagline: "No Files. No Leaks. No Restarts. Native secret orchestration for Docker."
   image:
-    src: /assets/images/dso-logo.png
+    src: /assets/images/logo-transparent.png
     alt: DSO Logo
   actions:
     - theme: brand
@@ -22,7 +22,7 @@ features:
     details: "All secret values are held in-memory and injected via Unix socket. Zero persistence to disk by design."
     icon: 🔒
   - title: Unified Configuration
-    details: "One standard YAML format for AWS, Azure, HashiCorp Vault, and Local File providers."
+    details: "One standard YAML format for AWS, Azure, Huawei Cloud, HashiCorp Vault, and Local File providers."
     icon: 🛠️
   - title: Smart Rotation
     details: "Hot-reload secrets without restarting your services. Atomic updates ensure zero downtime."
@@ -40,5 +40,5 @@ DSO provides a **Kubernetes-grade** control loop for Docker Engine. It ensures t
 
 - **Zero Persistence**: Secrets reside only in process RAM and target container memory-mapped filesystems.
 - **Event-Driven**: Immediate reconciliation of container lifecycle events.
-- **Provider Agnostic**: Standardized interface for AWS, Azure, GCP, and self-hosted Vaults.
+- **Provider Agnostic**: Standardized interface for AWS, Azure, Huawei Cloud, and HashiCorp Vault.
 - **Operations First**: Built-in strategy engine for rolling updates and atomic shifts.

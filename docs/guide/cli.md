@@ -8,7 +8,7 @@ DSO is implemented as a native Docker CLI plugin. All interactions are performed
 Synchronizes secrets and initializes a Docker Compose stack.
 
 ```bash
-docker dso up [flags] [compose-args...]
+docker dso up -c dso.yaml -f docker-compose.yml -d
 ```
 
 **Mechanics:**
@@ -21,6 +21,20 @@ docker dso up [flags] [compose-args...]
 - `-d, --detach`: Run containers in the background.
 - `-c, --config`: Path to a custom `dso.yaml` (Default: `./dso.yaml`).
 - `-f, --file`: Path to a custom `docker-compose.yml`.
+
+---
+
+## Command: `validate`
+Performs a structural and connectivity check on your configuration without starting any containers.
+
+```bash
+docker dso validate -c dso.yaml
+```
+
+**Mechanics:**
+1.  **Schema Check**: Validates the `dso.yaml` syntax against the official JSON schema.
+2.  **Provider Probe**: Attempts to authenticate with the cloud provider (AWS/Huawei/Vault) to verify IAM/Permissions.
+3.  **Mapping Audit**: Checks if all environment variables mapped in `dso.yaml` exist in the target `docker-compose.yml`.
 
 ---
 

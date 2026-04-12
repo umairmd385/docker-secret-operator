@@ -96,7 +96,7 @@ export const Hero = () => {
               </Button>
             </div>
             
-            <p className="mt-6 text-sm text-gray-500 font-mono">Open Source • MIT Licensed • Works with AWS, Vault, Azure</p>
+            <p className="mt-6 text-sm text-gray-500 font-mono">Open Source • MIT Licensed • Works with AWS, Vault, Azure, Huawei</p>
           </motion.div>
 
           {/* Right: Terminal Mockup */}
