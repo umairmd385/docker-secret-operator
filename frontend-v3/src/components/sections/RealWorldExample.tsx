@@ -1,0 +1,76 @@
+"use client";
+
+import React from "react";
+import { motion } from "framer-motion";
+import { CodeSnippet } from "@/components/ui/CodeSnippet";
+import { Badge } from "@/components/ui/Badge";
+import { ArrowRight } from "lucide-react";
+
+export const RealWorldExample = () => {
+  return (
+    <section className="py-24 border-t border-border bg-[#05080f]">
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <Badge className="mb-4">Implementation</Badge>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground mb-4">
+            How it looks in practice
+          </h2>
+          <p className="text-accent text-xl font-medium max-w-2xl mx-auto mb-2">
+            Your application never sees the secret until runtime.
+          </p>
+          <p className="text-gray-400 text-md max-w-2xl mx-auto">
+            Decouple your credentials completely from your git repository. Notice how the \`docker-compose.yml\` has zero knowledge of the actual secrets.
+          </p>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-2 gap-8 items-start relative">
+          {/* Decorative link between the two blocks */}
+          <div className="hidden lg:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-surface border border-accent/30 rounded-full items-center justify-center shadow-[0_0_20px_rgba(0,230,192,0.2)]">
+            <ArrowRight className="w-5 h-5 text-accent" />
+          </div>
+
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="space-y-4"
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-gray-200">1. Standard Compose File</h3>
+              <Badge variant="ghost">docker-compose.yml</Badge>
+            </div>
+            <p className="text-sm text-gray-400">Deploy your apps using native docker-compose syntax. Secrets are referenced, but the explicit values are intentionally omitted.</p>
+            <CodeSnippet 
+              language="yaml" 
+              fileName="docker-compose.yml"
+              code={"services:\n  api:\n    image: node:18-alpine\n    command: npm start\n    secrets:\n      - PROD_DB_PASS\n\nsecrets:\n  PROD_DB_PASS:\n    external: true"}
+            />
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="space-y-4"
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-accent">2. DSO Mapping configuration</h3>
+              <Badge variant="success">dso.yaml</Badge>
+            </div>
+            <p className="text-sm text-gray-400">DSO intercepts the container startup and maps the cloud backend specifically to the tmpfs file boundary.</p>
+            <CodeSnippet 
+              language="yaml" 
+              fileName="dso.yaml"
+              code={"providers:\n  aws:\n    type: aws-sm\n    region: us-east-1\n\nsecrets:\n  - name: team-alpha-db-pass\n    inject:\n      target: /run/secrets/PROD_DB_PASS"}
+            />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};

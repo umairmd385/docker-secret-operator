@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0d1117;
+  --foreground: #e2e8f0;
+  --surface: #161b22;
+  --surface-hover: #1c2128;
+  --accent: #00e6c0;
+  --accent-dim: rgba(0, 230, 192, 0.1);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-soft: rgba(255, 255, 255, 0.05);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+
+  --font-sans: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prose utility — apply to section body text for consistent max-width + line-height */
+.prose-block {
+  max-width: 42rem;   /* ~672px, equivalent to Tailwind max-w-2xl */
+  line-height: 1.75;
+}
+
+/* Section spacing baseline */
+.section-gap {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
