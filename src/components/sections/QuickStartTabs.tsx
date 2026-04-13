@@ -47,13 +47,13 @@ export const QuickStartTabs = () => {
                 <div className="flex gap-2 p-2 border-b border-border/50">
                   <button 
                     onClick={() => setActiveOS("linux")}
-                    className={`px-4 py-1.5 text-xs font-bold rounded-md transition-colors ${activeOS === "linux" ? "bg-accent/20 text-accent" : "text-gray-400 hover:text-white"}`}
+                    className={`px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded-md transition-colors ${activeOS === "linux" ? "bg-accent/20 text-accent" : "text-gray-400 hover:text-white"}`}
                   >
                     Linux / Local macOS
                   </button>
                   <button 
                     onClick={() => setActiveOS("windows")}
-                    className={`px-4 py-1.5 text-xs font-bold rounded-md transition-colors ${activeOS === "windows" ? "bg-accent/20 text-accent" : "text-gray-400 hover:text-white"}`}
+                    className={`px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded-md transition-colors ${activeOS === "windows" ? "bg-accent/20 text-accent" : "text-gray-400 hover:text-white"}`}
                   >
                     Windows PowerShell
                   </button>

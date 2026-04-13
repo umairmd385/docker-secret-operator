@@ -9,7 +9,7 @@ interface LogoProps {
 export const Logo = ({ className = "", size = 32 }: LogoProps) => (
   <div className={`relative flex items-center justify-center ${className}`} style={{ width: size, height: size }}>
     <Image
-      src="/logo.png"
+      src="/dso-logo.png"
       alt="Docker Secret Operator Logo"
       width={size}
       height={size}

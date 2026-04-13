@@ -75,28 +75,28 @@ export const Hero = () => {
               v3.1 Native Secret Plugin
             </Badge>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-sans tracking-tight leading-[1.1] text-foreground mb-6">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-sans tracking-tight leading-[1.1] text-foreground mb-6">
               Secret Lifecycle Management for <span className="text-accent">Docker.</span>
             </h1>
             
-            <p className="text-lg text-gray-400 leading-relaxed mb-3 max-w-xl">
+            <p className="text-base sm:text-lg text-gray-400 leading-relaxed mb-3 max-w-xl">
               Inject secrets into Docker containers at runtime — without storing them on disk or restarting services.
             </p>
-            <p className="text-sm font-mono tracking-wide text-accent/70 mb-10">
+            <p className="text-xs sm:text-sm font-mono tracking-wide text-accent/70 mb-10">
               No files. No leaks. No restarts.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Button href="#quick-start" size="lg" className="group" aria-label="Jump to Quick Start installation guide">
+              <Button href="#quick-start" size="lg" className="group w-full sm:w-auto justify-center" aria-label="Jump to Quick Start installation guide">
                 Quick Start
                 <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button href="/docs" variant="secondary" size="lg" aria-label="Open DSO documentation">
+              <Button href="/docs" variant="secondary" size="lg" className="w-full sm:w-auto justify-center" aria-label="Open DSO documentation">
                 Read Documentation
               </Button>
             </div>
             
-            <p className="mt-6 text-sm text-gray-500 font-mono">Open Source • MIT Licensed • Works with AWS, Vault, Azure, Huawei</p>
+            <p className="mt-8 text-[10px] sm:text-sm text-gray-500 font-mono text-center sm:text-left w-full sm:w-auto">Open Source • MIT Licensed • Works with AWS, Vault, Azure, Huawei</p>
           </motion.div>
 
           {/* Right: Terminal Mockup */}
@@ -104,23 +104,23 @@ export const Hero = () => {
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.45, delay: 0.15 }}
-            className="relative"
+            className="relative w-full max-w-[600px] lg:max-w-none mx-auto lg:mx-0"
           >
             <div className="absolute -inset-4 bg-accent/10 blur-[60px] rounded-full pointer-events-none" />
             <div className="relative rounded-xl overflow-hidden border border-border bg-[#0a0f16] shadow-2xl">
               {/* Toolbar */}
-              <div className="flex items-center gap-2 px-4 py-3 bg-surface border-b border-border">
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-surface border-b border-border">
                 <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/80" />
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80" />
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500/80" />
                 </div>
-                <div className="ml-2 text-xs font-mono text-gray-500">bash — docker dso</div>
+                <div className="ml-2 text-[10px] sm:text-xs font-mono text-gray-500">bash — docker dso</div>
               </div>
 
               {/* Terminal Content */}
               <div
-                className="p-5 font-mono text-sm leading-relaxed min-h-[300px]"
+                className="p-3 sm:p-5 font-mono text-[11px] sm:text-sm leading-relaxed min-h-[200px] sm:min-h-[300px]"
                 role="log"
                 aria-live="polite"
                 aria-label="DSO terminal demo"

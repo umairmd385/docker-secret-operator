@@ -14,17 +14,17 @@ export const RealWorldExample = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
           <Badge className="mb-4">Implementation</Badge>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-4">
             How it looks in practice
           </h2>
-          <p className="text-accent text-xl font-medium max-w-2xl mx-auto mb-2">
+          <p className="text-accent text-lg sm:text-xl font-medium max-w-2xl mx-auto mb-2">
             Your application never sees the secret until runtime.
           </p>
-          <p className="text-gray-400 text-md max-w-2xl mx-auto">
-            Decouple your credentials completely from your git repository. Notice how the \`docker-compose.yml\` has zero knowledge of the actual secrets.
+          <p className="text-sm sm:text-md text-gray-400 max-w-2xl mx-auto px-4 sm:px-0">
+            Decouple your credentials completely from your git repository. Notice how the `docker-compose.yml` has zero knowledge of the actual secrets.
           </p>
         </motion.div>
 
