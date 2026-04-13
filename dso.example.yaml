@@ -1,0 +1,29 @@
+# ── Global Provider ──────────────────────────────────────────
+provider: aws                  # Options: aws | azure | vault
+
+config:                        # Provider-specific auth/endpoint configuration
+  region: us-east-1            # AWS: Region
+
+# ── Agent Orchestration ──────────────────────────────────────
+agent:
+  watch:
+    polling_interval: 2m       # Frequency of vault synchronization
+  
+  rotation:
+    max_parallel: 2            # Concurrent container rotations
+    health_check_timeout: 45s  # Wait time for container health verification
+    strategy: rolling          # Global default strategy: rolling | restart
+
+# ── Secret Definitions ───────────────────────────────────────
+secrets:
+  - name: production/api-secrets # Path inside the provider
+    inject: env                # Target: env (RAM-only)
+    rotation: true             # Enable continuous reconciliation
+    
+    reload_strategy:           # How to update the container
+      type: signal             # Options: signal | restart | none
+      signal: SIGHUP           # Signal to send if type is 'signal'
+
+    mappings:                  # Vault Key → Container Env Var
+      DB_PASSWORD: PROD_DB_PASS
+      API_KEY: APP_API_KEY

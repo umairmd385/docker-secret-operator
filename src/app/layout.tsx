@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     description: "Inject secrets into Docker containers at runtime. No disk writes. No restarts. Open source, MIT licensed.",
     url: "https://dso.run",
     siteName: "Docker Secret Operator",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Docker Secret Operator" }],
+    images: [{ url: "/dso-logo.png", width: 1200, height: 630, alt: "Docker Secret Operator" }],
     locale: "en_US",
     type: "website",
   },
@@ -40,7 +40,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Docker Secret Operator",
     description: "Zero-persistence secret injection for standalone Docker. MIT licensed.",
-    images: ["/og-image.jpeg"],
+    images: ["/dso-logo.png"],
+  },
+  icons: {
+    icon: "/favicon.png",
+    apple: "/favicon.png",
   }
 };
 

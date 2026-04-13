@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  web-api:
+    image: mycorp/api-service:latest
+    ports:
+      - "8080:8080"
+    labels:
+      # Opt-in for DSO management
+      dso.reloader: "true"
+      # Use rolling update strategy for zero-downtime secret rotation
+      dso.strategy: "rolling"
+      # Send SIGHUP to the process to reload config
+      dso.signal: "SIGHUP"
+    secrets:
+      - production/api-secrets
+
+  worker:
+    image: mycorp/worker:latest
+    labels:
+      dso.reloader: "true"
+      # Restart strategy is safer for some legacy workers
+      dso.strategy: "restart"
+    secrets:
+      - production/api-secrets
+
+secrets:
+  # This secret is managed externally by DSO
+  production/api-secrets:
+    external: true

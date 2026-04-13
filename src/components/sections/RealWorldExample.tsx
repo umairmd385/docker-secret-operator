@@ -48,7 +48,7 @@ export const RealWorldExample = () => {
             <CodeSnippet 
               language="yaml" 
               fileName="docker-compose.yml"
-              code={"services:\n  api:\n    image: node:18-alpine\n    command: npm start\n    secrets:\n      - PROD_DB_PASS\n\nsecrets:\n  PROD_DB_PASS:\n    external: true"}
+              code={"services:\n  api:\n    image: mycorp/api:latest\n    labels:\n      dso.reloader: \"true\"\n      dso.strategy: \"rolling\"\n    secrets:\n      - PROD_DB_PASS\n\nsecrets:\n  PROD_DB_PASS:\n    external: true"}
             />
           </motion.div>
 
@@ -66,7 +66,7 @@ export const RealWorldExample = () => {
             <CodeSnippet 
               language="yaml" 
               fileName="dso.yaml"
-              code={"providers:\n  aws:\n    type: aws-sm\n    region: us-east-1\n\nsecrets:\n  - name: team-alpha-db-pass\n    inject:\n      target: /run/secrets/PROD_DB_PASS"}
+              code={"provider: aws\nconfig:\n  region: us-east-1\n\nsecrets:\n  - name: production/db-pass\n    inject: env\n    rotation: true\n    reload_strategy:\n      type: signal\n      signal: SIGHUP\n    mappings:\n      password: PROD_DB_PASS"}
             />
           </motion.div>
         </div>

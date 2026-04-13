@@ -76,7 +76,7 @@ export const QuickStartTabs = () => {
               <CodeSnippet 
                 language="yaml" 
                 fileName="dso.yaml"
-                code={"providers:\n  aws:\n    type: aws-sm\n    region: us-east-1\n\nsecrets:\n  - name: my-db-password\n    inject:\n      type: file\n      target: /run/secrets/DB_PASS"} 
+                code={"provider: aws\nconfig:\n  region: us-east-1\n\nsecrets:\n  - name: production/db-pass\n    inject: env\n    rotation: true\n    mappings:\n      password: DB_PASSWORD"} 
               />
             </div>
           </div>
