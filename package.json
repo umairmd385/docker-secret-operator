@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build:docs": "vitepress build docs --outDir ../public/docs",
+    "build:docs": "vitepress build docs --outDir public/docs",
     "build": "npm run build:docs && next build",
     "start": "next start",
     "lint": "eslint"
