@@ -1,15 +1,40 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 
 /* ─────────────────────── Node data ─────────────────────── */
 const providers = [
-  { label: "AWS Secrets Manager", color: "#f97316", auth: "IAM / OAuth2" },
-  { label: "HashiCorp Vault",     color: "#a78bfa", auth: "AppRole / Token" },
-  { label: "Azure Key Vault",     color: "#38bdf8", auth: "Managed ID" },
-  { label: "Huawei CSMS",         color: "#ef4444", auth: "ECS Agency" },
-  { label: "Local Filesystem",    color: "#94a3b8", auth: "POSIX" },
+  { 
+    label: "AWS Secrets Manager", 
+    color: "#FF9900", 
+    auth: "IAM / OAuth2",
+    logo: "https://cdn.simpleicons.org/amazonaws" 
+  },
+  { 
+    label: "HashiCorp Vault",     
+    color: "#FF0000", 
+    auth: "AppRole / Token",
+    logo: "https://cdn.simpleicons.org/hashicorpvault"
+  },
+  { 
+    label: "Azure Key Vault",     
+    color: "#008AD7", 
+    auth: "Managed ID",
+    logo: "https://cdn.simpleicons.org/microsoftazure"
+  },
+  { 
+    label: "Huawei CSMS",         
+    color: "#FF0000", 
+    auth: "ECS Agency",
+    logo: "https://cdn.simpleicons.org/huawei"
+  },
+  { 
+    label: "Local Filesystem",    
+    color: "#FCC624", 
+    auth: "POSIX",
+    logo: "https://cdn.simpleicons.org/linux"
+  },
 ];
 
 const containers = [
@@ -19,128 +44,179 @@ const containers = [
 ];
 
 /* ─────────────────────── Sub-components ─────────────────── */
-const Pill = ({
-  label,
-  auth,
-  accent,
-  className = "",
-  delay = 0,
-}: {
+const Pill = React.forwardRef<HTMLDivElement, {
   label: string;
   auth: string;
   accent: string;
+  logo?: string;
   className?: string;
   delay?: number;
-}) => (
+}>(({ label, auth, accent, logo, className = "", delay = 0 }, ref) => (
   <motion.div
-    initial={{ opacity: 0, x: -12 }}
-    whileInView={{ opacity: 1, x: 0 }}
+    ref={ref}
+    initial={{ opacity: 0, scale: 0.95 }}
+    whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
     transition={{ duration: 0.35, delay }}
-    className={`flex flex-col gap-0.5 px-4 py-2.5 rounded-lg border bg-[#0d1117] relative group ${className}`}
-    style={{ borderColor: `${accent}33` }}
+    whileHover={{ y: -2, borderColor: `${accent}44` }}
+    className={`flex flex-col gap-1 px-3 sm:px-4 py-2 sm:py-3 rounded-xl border bg-[#0d1117]/80 backdrop-blur-sm relative group cursor-default transition-colors ${className}`}
+    style={{ borderColor: `${accent}22` }}
   >
-    <div className="flex items-center gap-2">
-      <span
-        className="w-2 h-2 rounded-full shrink-0 animate-pulse"
-        style={{ backgroundColor: accent }}
-      />
-      <span className="text-sm font-mono font-medium text-gray-200">{label}</span>
+    <div className="flex items-center gap-2.5">
+      {logo ? (
+        <div className="w-5 h-5 sm:w-6 sm:h-6 shrink-0 flex items-center justify-center relative">
+          <img src={logo} alt={label} className="w-full h-full object-contain relative z-10" />
+          <div className="absolute inset-0 blur-md opacity-20 scale-150" style={{ backgroundColor: accent }} />
+        </div>
+      ) : (
+        <span
+          className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full shrink-0 shadow-[0_0_8px_rgba(0,0,0,0.5)]"
+          style={{ backgroundColor: accent, boxShadow: `0 0 10px ${accent}66` }}
+        />
+      )}
+      <span className="text-[10px] sm:text-sm font-mono font-medium text-gray-200 tracking-tight">{label}</span>
     </div>
-    <span className="text-[9px] font-mono text-gray-500 pl-4 uppercase tracking-tighter">{auth}</span>
+    <span className="text-[7px] sm:text-[9px] font-mono text-gray-500 pl-[30px] sm:pl-[34px] uppercase tracking-widest">{auth}</span>
   </motion.div>
-);
+));
+Pill.displayName = "Pill";
 
-const ContainerPill = ({
-  label,
-  port,
-  type,
-  delay = 0,
-}: {
+const ContainerPill = React.forwardRef<HTMLDivElement, {
   label: string;
   port: string;
   type: string;
   delay?: number;
-}) => (
+  className?: string;
+}>(({ label, port, type, delay = 0, className = "" }, ref) => (
   <motion.div
-    initial={{ opacity: 0, x: 12 }}
-    whileInView={{ opacity: 1, x: 0 }}
+    ref={ref}
+    initial={{ opacity: 0, scale: 0.95 }}
+    whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
     transition={{ duration: 0.35, delay }}
-    className="flex flex-col px-4 py-2.5 rounded-lg border border-blue-500/25 bg-[#0d1117] relative"
+    whileHover={{ y: -2, borderColor: "rgba(59, 130, 246, 0.4)" }}
+    className={`flex flex-col px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-blue-500/10 bg-[#0d1117]/80 backdrop-blur-sm relative cursor-default transition-colors ${className}`}
   >
-    <div className="flex items-center justify-between">
-      <span className="text-sm font-mono font-semibold text-gray-200">{label}</span>
-      <span className="text-[8px] bg-blue-500/10 text-blue-400 px-1 border border-blue-500/20 rounded uppercase">{type}</span>
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-[10px] sm:text-sm font-mono font-semibold text-gray-200 tracking-tight">{label}</span>
+      <span className="text-[7px] sm:text-[8px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 border border-blue-500/20 rounded-md uppercase shrink-0 font-bold">{type}</span>
     </div>
-    <span className="text-[10px] font-mono text-gray-500 mt-1">{port}</span>
+    <span className="text-[8px] sm:text-[10px] font-mono text-gray-500 mt-1 truncate opacity-70">{port}</span>
   </motion.div>
-);
+));
+ContainerPill.displayName = "ContainerPill";
 
 /* ─────────────────────── SVG connector lines ─────────────── */
 const AnimatedDashedLine = ({
-  id, x1, y1, x2, y2, color = "#00e6c0", delay = 0, label = "", reverse = false
+  x1, y1, x2, y2, color = "#00e6c0", delay = 0, reverse = false
 }: {
-  id: string; x1: number; y1: number; x2: number; y2: number;
-  color?: string; delay?: number; label?: string; reverse?: boolean;
+  x1: number; y1: number; x2: number; y2: number;
+  color?: string; delay?: number; reverse?: boolean;
 }) => {
-  const mid = (x1 + x2) / 2;
-  const d = `M${x1},${y1} C${mid},${y1} ${mid},${y2} ${x2},${y2}`;
+  const midY = (y1 + y2) / 2;
+  const d = `M${x1},${y1} C${x1},${midY} ${x2},${midY} ${x2},${y2}`;
   
   return (
     <g>
-      {/* Background static line */}
       <motion.path
         d={d}
         fill="none"
         stroke={color}
         strokeWidth={1}
-        strokeOpacity={0.15}
+        strokeOpacity={0.08}
         initial={{ pathLength: 0 }}
-        whileInView={{ pathLength: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, delay }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.2, delay }}
       />
-
-      {/* Animated Flowing Particles */}
       <motion.path
         d={d}
         fill="none"
         stroke={color}
-        strokeWidth={2}
-        strokeDasharray="4 20"
-        strokeOpacity={0.6}
-        initial={{ strokeDashoffset: reverse ? -48 : 48, opacity: 0 }}
-        animate={{ strokeDashoffset: reverse ? 48 : -48, opacity: 1 }}
+        strokeWidth={1.2}
+        strokeDasharray="4 16"
+        strokeOpacity={0.3}
+        initial={{ strokeDashoffset: reverse ? -40 : 40, opacity: 0 }}
+        animate={{ strokeDashoffset: reverse ? 40 : -40, opacity: 1 }}
         transition={{
-          strokeDashoffset: { duration: 2, repeat: Infinity, ease: "linear" },
-          opacity: { duration: 0.5, delay }
+          strokeDashoffset: { duration: 3, repeat: Infinity, ease: "linear" },
+          opacity: { duration: 0.8, delay }
         }}
       />
-
-      {/* Hover Information Label (Invisible by default, appears on path hover) */}
-      {label && (
-        <text
-          x={mid}
-          y={y2 - 10}
-          fill={color}
-          fontSize="8"
-          fontFamily="monospace"
-          textAnchor="middle"
-          className="opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none uppercase font-bold"
-        >
-          {label}
-        </text>
-      )}
     </g>
   );
 };
 
 /* ─────────────────────── Main Section ───────────────────── */
 export const Architecture = () => {
-  const providerY = [70, 130, 190, 250];
-  const containerY = [100, 180, 260];
-  const agentY = 170;
+  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [coords, setCoords] = useState<{
+    providers: { x: number; y: number }[];
+    containers: { x: number; y: number }[];
+    agent: { x: number; y: number; width: number; height: number };
+  } | null>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const providerRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const agentRef = useRef<HTMLDivElement>(null);
+
+  const updateCoords = useCallback(() => {
+    if (!svgRef.current || !agentRef.current) return;
+
+    const svgRect = svgRef.current.getBoundingClientRect();
+    const agentRect = agentRef.current.getBoundingClientRect();
+
+    const getCenter = (el: HTMLElement | null, type: 'top' | 'bottom') => {
+      if (!el) return { x: 0, y: 0 };
+      const rect = el.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2 - svgRect.left,
+        y: type === 'top' ? rect.top - svgRect.top : rect.bottom - svgRect.top
+      };
+    };
+
+    const newCoords = {
+      providers: providerRefs.current.map(ref => getCenter(ref, 'bottom')),
+      containers: containerRefs.current.map(ref => getCenter(ref, 'top')),
+      agent: {
+        x: agentRect.left + agentRect.width / 2 - svgRect.left,
+        y: agentRect.top + agentRect.height / 2 - svgRect.top,
+        width: agentRect.width,
+        height: agentRect.height
+      }
+    };
+
+    setCoords(newCoords);
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!mounted) return;
+
+    const checkViewport = () => setIsMobile(window.innerWidth < 1024);
+    checkViewport();
+
+    const observer = new ResizeObserver(() => {
+      updateCoords();
+      checkViewport();
+    });
+
+    if (containerRef.current) observer.observe(containerRef.current);
+    window.addEventListener("resize", updateCoords);
+    
+    const timer = setTimeout(updateCoords, 150);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateCoords);
+      clearTimeout(timer);
+    };
+  }, [mounted, updateCoords]);
 
   return (
     <section id="architecture" className="section-gap border-b border-border overflow-hidden bg-background">
@@ -152,163 +228,136 @@ export const Architecture = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45 }}
-          className="text-center max-w-2xl mx-auto mb-20"
+          className="text-center max-w-2xl mx-auto mb-16 sm:mb-24"
         >
-          <h2 className="text-3xl font-bold tracking-tight text-foreground mb-3">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground mb-4 font-outfit">
             System Architecture
           </h2>
-          <p className="prose-block mx-auto text-gray-400 text-lg">
+          <p className="prose-block mx-auto text-gray-400 text-base sm:text-lg">
             A deterministic pipeline for secret synchronization. Decrypted payloads are 
             atomic streamed into memory-backed filesystems.
           </p>
         </motion.div>
 
         {/* Node Graph Wrapper */}
-        <div className="relative w-full max-w-5xl mx-auto group">
-          {/* Visual indicators for flow direction */}
-          <div className="absolute top-0 left-[20%] text-[9px] font-mono text-accent/30 tracking-[0.3em] uppercase hidden md:block">
-            Secure Retrieval
-          </div>
-          <div className="absolute top-0 right-[20%] text-[9px] font-mono text-accent/30 tracking-[0.3em] uppercase hidden md:block">
-            In-Memory Injection
-          </div>
+        <div ref={containerRef} className="relative w-full max-w-5xl mx-auto">
+          
+          {/* SVG Canvas */}
+          {mounted && (
+            <svg
+              ref={svgRef}
+              className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible"
+              aria-hidden="true"
+            >
+              {coords && (
+                <>
+                  {/* Input Lines */}
+                  {coords.providers.map((pCoord, i) => (
+                    <AnimatedDashedLine
+                      key={`in-${i}`}
+                      x1={pCoord.x} y1={pCoord.y}
+                      x2={coords.agent.x} y2={coords.agent.y - coords.agent.height / 2}
+                      color={providers[i].color}
+                      delay={0.2 + i * 0.05}
+                    />
+                  ))}
+                  {/* Output Lines */}
+                  {coords.containers.map((cCoord, i) => (
+                    <AnimatedDashedLine
+                      key={`out-${i}`}
+                      x1={coords.agent.x} y1={coords.agent.y + coords.agent.height / 2}
+                      x2={cCoord.x} y2={cCoord.y}
+                      color="#00e6c0"
+                      delay={0.6 + i * 0.05}
+                    />
+                  ))}
+                </>
+              )}
+            </svg>
+          )}
 
-          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-12 min-h-[400px]">
+          <div className="relative flex flex-col items-center gap-12 sm:gap-20 lg:gap-24">
 
-            {/* ── Left: Providers ── */}
-            <div className="flex flex-col gap-4 z-10 w-full lg:w-auto">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-gray-500" />
-                Source Backends
-              </div>
+            {/* ── Providers ── */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-row justify-center gap-3 sm:gap-6 z-20 w-full lg:w-auto">
               {providers.map((p, i) => (
                 <Pill
                   key={p.label}
-                  label={p.label}
+                  ref={el => { providerRefs.current[i] = el; }}
+                  label={isMobile && p.label.split(' ')[0] ? p.label.split(' ')[0] : p.label}
                   auth={p.auth}
                   accent={p.color}
-                  delay={i * 0.1}
+                  logo={p.logo}
+                  delay={i * 0.05}
+                  className="min-w-[100px] sm:min-w-[150px]"
                 />
               ))}
             </div>
 
-            {/* ── Center: SVG Canvas + Agent ── */}
-            <div className="flex-1 relative flex items-center justify-center min-w-0 h-[340px] w-full lg:w-auto">
-              {/* SVG Canvas */}
-              <svg
-                className="absolute inset-0 w-full h-full"
-                viewBox="0 0 500 340"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-              >
-                <defs>
-                  <filter id="glow">
-                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                {/* Left side flows: Providers -> Agent */}
-                {providerY.map((py, i) => (
-                  <AnimatedDashedLine
-                    key={`in-${i}`}
-                    id={`in-${i}`}
-                    x1={0} y1={py}
-                    x2={250} y2={agentY}
-                    color={providers[i]?.color || "#00e6c0"}
-                    delay={0.2 + i * 0.1}
-                    label="Encrypted"
-                  />
-                ))}
-
-                {/* Right side flows: Agent -> Containers */}
-                {containerY.map((cy, i) => (
-                  <AnimatedDashedLine
-                    key={`out-${i}`}
-                    id={`out-${i}`}
-                    x1={250} y1={agentY}
-                    x2={500} y2={cy}
-                    color="#00e6c0"
-                    delay={0.6 + i * 0.1}
-                    label="Streaming"
-                  />
-                ))}
-              </svg>
-
+            {/* ── Center: Agent Core ── */}
+            <div className="relative flex items-center justify-center w-full min-h-[160px] sm:min-h-[250px]">
               {/* DSO Agent Node */}
               <motion.div
+                ref={agentRef}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="relative z-10"
               >
-                <div className="relative p-7 rounded-2xl border border-accent/40 bg-[#0d1117] shadow-[0_0_60px_rgba(0,230,192,0.1)] text-center min-w-[170px]">
-                  {/* Internal Glow Pulse */}
+                <div className="relative p-6 sm:p-10 rounded-3xl border border-accent/30 bg-[#0d1117] shadow-[0_0_80px_rgba(0,230,192,0.15)] text-center min-w-[160px] sm:min-w-[220px]">
                   <motion.div 
-                    animate={{ opacity: [0.1, 0.3, 0.1] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="absolute inset-0 bg-accent rounded-2xl pointer-events-none"
+                    animate={{ opacity: [0.05, 0.15, 0.05] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                    className="absolute inset-0 bg-accent rounded-3xl pointer-events-none"
                   />
                   
-                  <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-accent/60 mb-2 relative z-10">
+                  <div className="text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-accent/60 mb-3 relative z-10 font-mono">
                     Agent Core
                   </div>
-                  <div className="text-3xl font-black text-white mb-1 tracking-tighter relative z-10">DSO</div>
-                  <div className="text-[10px] text-accent font-mono relative z-10 flex items-center justify-center gap-1.5">
-                    <span className="w-1 h-1 rounded-full bg-accent animate-ping" />
+                  <div className="text-3xl sm:text-5xl font-black text-white mb-1 tracking-tighter relative z-10 font-outfit">DSO</div>
+                  <div className="text-[10px] sm:text-[12px] text-accent font-mono relative z-10 flex items-center justify-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
                     RUNNING
                   </div>
                   
-                  {/* Metric-like indicators */}
-                  <div className="flex flex-col gap-1.5 mt-4 pt-4 border-t border-accent/10 relative z-10">
-                    <div className="flex justify-between text-[8px] font-mono text-gray-500">
-                      <span>STREAMS</span>
-                      <span className="text-accent">ACTIVE</span>
+                  <div className="flex flex-col gap-2 mt-5 sm:mt-8 pt-5 sm:pt-8 border-t border-accent/10 relative z-10 text-[9px] sm:text-[11px] font-mono text-gray-400">
+                    <div className="flex justify-between">
+                      <span className="opacity-60 uppercase tracking-tighter">Streams</span>
+                      <span className="text-accent font-bold italic">ACTIVE</span>
                     </div>
-                    <div className="flex justify-between text-[8px] font-mono text-gray-500">
-                      <span>LATENCY</span>
-                      <span className="text-accent">~1.2ms</span>
+                    <div className="flex justify-between">
+                      <span className="opacity-60 uppercase tracking-tighter">Latency</span>
+                      <span className="text-accent underline decoration-accent/20">1.2ms</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Orbital Rings - Kong inspired */}
                 <motion.div 
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-[-20px] border border-accent/5 rounded-full pointer-events-none"
-                />
-                <motion.div 
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-[-40px] border border-accent/5 rounded-full border-dashed pointer-events-none"
+                  transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-[-25px] sm:inset-[-40px] border border-accent/5 rounded-full pointer-events-none"
                 />
               </motion.div>
             </div>
 
-            {/* ── Right: Containers ── */}
-            <div className="flex flex-col gap-4 z-10 w-full lg:w-auto">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                Target Runtimes
-              </div>
+            {/* ── Containers ── */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 z-20 w-full lg:w-auto">
               {containers.map((c, i) => (
-                <ContainerPill key={c.label} {...c} delay={0.7 + i * 0.1} />
+                <ContainerPill 
+                  key={c.label} 
+                  ref={el => { containerRefs.current[i] = el; }}
+                  {...c} 
+                  delay={0.7 + i * 0.05} 
+                  className="w-full lg:min-w-[200px]"
+                />
               ))}
-              <div className="mt-1 text-[10px] font-mono text-accent/50 bg-accent/5 py-1 px-3 rounded-full border border-accent/10 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                tmpfs /run/secrets MOUNTED
-              </div>
             </div>
           </div>
         </div>
 
         {/* Feature Highlights */}
-        <div className="grid md:grid-cols-3 gap-6 mt-24">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 mt-24 sm:mt-40">
           {[
             {
               title: "Native Lifecycle",
@@ -332,17 +381,19 @@ export const Architecture = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="p-8 rounded-2xl bg-surface/30 border border-border/50 hover:border-accent/40 transition-all duration-300 relative group"
+              className="p-8 sm:p-10 rounded-3xl bg-surface/20 border border-border/40 hover:border-accent/30 transition-all duration-500 relative group overflow-hidden"
             >
-              <div className="flex gap-1.5 mb-4">
+              <div className="flex gap-2 mb-6">
                 {item.tags.map(tag => (
-                  <span key={tag} className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface border border-border text-gray-500 group-hover:text-accent group-hover:border-accent/30 transition-colors">
+                  <span key={tag} className="text-[9px] font-mono px-2 py-1 rounded-lg bg-surface border border-border text-gray-500 group-hover:text-accent group-hover:border-accent/20 transition-all duration-300">
                     {tag}
                   </span>
                 ))}
               </div>
-              <h3 className="text-base font-bold text-foreground mb-3">{item.title}</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
+              <h3 className="text-lg font-bold text-foreground mb-4 tracking-tight font-outfit">{item.title}</h3>
+              <p className="text-sm text-gray-400 leading-relaxed font-medium opacity-80">{item.desc}</p>
+              
+              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-accent/5 rounded-full blur-3xl group-hover:bg-accent/10 transition-colors" />
             </motion.div>
           ))}
         </div>

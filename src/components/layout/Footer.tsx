@@ -1,6 +1,11 @@
+"use client";
+
 import React from "react";
-import { Copy, BookOpen } from "lucide-react";
+import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
+
+import { DSO3DHero } from "@/components/ui/DSO3DHero";
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -17,12 +22,10 @@ const navLinks = [
 ];
 
 export const Footer = () => (
-  <footer className="border-t border-border bg-[#080c12]" role="contentinfo">
+  <footer className="border-t border-border bg-[#080c12] relative z-10" role="contentinfo">
 
     {/* ── Top nav strip ── */}
     <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 border-b border-border/40">
-
-      {/* Brand */}
       <a href="#" className="flex items-center gap-2.5 group shrink-0">
         <div className="w-8 h-8 flex items-center justify-center group-hover:scale-105 transition-transform">
           <Logo className="w-7 h-7" aria-hidden="true" />
@@ -30,7 +33,6 @@ export const Footer = () => (
         <span className="text-base font-bold text-foreground tracking-tight">Docker Secret Operator</span>
       </a>
 
-      {/* Nav links */}
       <nav aria-label="Footer navigation">
         <ul className="flex flex-wrap items-center gap-x-8 gap-y-3">
           {navLinks.map((l) => (
@@ -75,33 +77,39 @@ export const Footer = () => (
     <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-600 border-b border-border/30">
       <p>© {new Date().getFullYear()} Docker Secret Operator. Released under the MIT License.</p>
       <div className="flex items-center gap-6">
-        <a href="https://github.com/docker-secret-operator/dso" target="_blank" rel="noreferrer" className="hover:text-gray-400 transition-colors" aria-label="View DSO on GitHub">
+        <a
+          href="https://github.com/docker-secret-operator/dso"
+          target="_blank" rel="noreferrer"
+          className="hover:text-gray-400 transition-colors"
+          aria-label="View DSO on GitHub"
+        >
           <GithubIcon className="w-4 h-4" />
         </a>
-        <span className="text-gray-700">CNCF Sandbox Aligned</span>
+        <span className="text-gray-700 font-medium tracking-tight">CNCF Sandbox Aligned</span>
       </div>
     </div>
 
-    {/* ── KongHQ-style large wordmark ── */}
-    <div className="relative overflow-hidden select-none" aria-hidden="true">
-      {/* Radial glow behind wordmark */}
-      <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-accent/5 to-transparent pointer-events-none" />
-      <div className="absolute inset-x-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] bg-accent/8 blur-[120px] rounded-full pointer-events-none" />
-
-      <p
-        className="text-center font-black uppercase tracking-[-0.04em] leading-none"
-        style={{
-          fontSize: "clamp(5rem, 20vw, 18rem)",
-          WebkitTextStroke: "1px rgba(0,230,192,0.18)",
-          color: "transparent",
-          backgroundImage: "linear-gradient(180deg, rgba(0,230,192,0.12) 0%, rgba(0,230,192,0.03) 60%, transparent 100%)",
-          WebkitBackgroundClip: "text",
-          backgroundClip: "text",
-          paddingBottom: "0.05em",
-        }}
+    {/* ── Cinematic 3D DSO Wordmark ── */}
+    <div className="relative overflow-hidden bg-[#080c12]" aria-hidden="true">
+      {/* Label above the 3D scene */}
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="text-center text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.4em] text-accent/30 pt-10 pb-2 select-none"
       >
-        DSO
-      </p>
+        Docker Secret Operator
+      </motion.p>
+
+      {/* Three.js Canvas — dynamic, no SSR */}
+      <DSO3DHero />
+
+      {/* Bottom edge accent line */}
+      <div
+        className="absolute bottom-0 inset-x-0 h-px pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(0,230,192,0.25) 40%, rgba(100,220,0,0.3) 50%, rgba(0,230,192,0.25) 60%, transparent)" }}
+      />
     </div>
 
   </footer>
