@@ -9,19 +9,19 @@ const providers = [
     label: "AWS Secrets Manager", 
     color: "#FF9900", 
     auth: "IAM / OAuth2",
-    logo: "https://cdn.simpleicons.org/amazonaws" 
+    logo: "/logos/aws.svg" 
   },
   { 
     label: "HashiCorp Vault",     
     color: "#FF0000", 
     auth: "AppRole / Token",
-    logo: "https://cdn.simpleicons.org/hashicorpvault"
+    logo: "/logos/vault.png"
   },
   { 
     label: "Azure Key Vault",     
     color: "#008AD7", 
     auth: "Managed ID",
-    logo: "https://cdn.simpleicons.org/microsoftazure"
+    logo: "/logos/azure.png"
   },
   { 
     label: "Huawei CSMS",         
