@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     description: "Inject secrets into Docker containers at runtime. No disk writes. No restarts. Open source, MIT licensed.",
     url: "https://dso.run",
     siteName: "Docker Secret Operator",
-    images: [{ url: "/dso-logo.png", width: 1200, height: 630, alt: "Docker Secret Operator" }],
+    images: [{ url: "/dso-logo.png", width: 1024, height: 1024, alt: "Docker Secret Operator" }],
     locale: "en_US",
     type: "website",
   },

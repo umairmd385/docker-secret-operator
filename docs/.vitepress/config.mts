@@ -37,7 +37,7 @@ export default withMermaid(
           {
             text: 'Operations',
             items: [
-              { text: 'Installation', link: '/guide/getting-started' },
+              { text: 'Installation', link: '/guide/installation' },
               { text: 'Production Readiness', link: '/guide/production-readiness' },
               { text: 'Configuration', link: '/guide/configuration' },
               { text: 'Observability', link: '/guide/observability' }
@@ -47,6 +47,9 @@ export default withMermaid(
             text: 'Reference',
             items: [
               { text: 'CLI Reference', link: '/guide/cli' },
+              { text: 'CLI: Init', link: '/guide/cli-init' },
+              { text: 'CLI: System', link: '/guide/cli-system' },
+              { text: 'CLI: Secrets', link: '/guide/cli-secret' },
               { text: 'Providers', link: '/guide/providers/aws' },
               { text: 'Examples', link: '/guide/examples' },
               { text: 'Troubleshooting', link: '/guide/troubleshooting' }

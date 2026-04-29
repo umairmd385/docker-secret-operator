@@ -4,10 +4,10 @@ layout: home
 
 hero:
   name: "DSO Documentation"
-  text: "Native Secret Lifecycle for Docker"
-  tagline: "No Files. No Leaks. No Restarts. Native secret orchestration for Docker."
+  text: "Secrets for Docker — Local to Cloud"
+  tagline: "Inject secrets at runtime without storing them on disk. Use local encrypted vaults or cloud providers with the same workflow."
   image:
-    src: /assets/images/logo-transparent.png
+    src: /dso-logo.png
     alt: DSO Logo
   actions:
     - theme: brand
@@ -18,15 +18,15 @@ hero:
       link: /guide/getting-started
 
 features:
+  - title: Dual-Mode Execution
+    details: "Seamlessly switch between Local Mode (Native AES-256 Vault) and Cloud Mode (AWS, Azure, Huawei) with automatic detection."
+    icon: ⚡
   - title: Secret Isolation
-    details: "All secret values are held in-memory and injected via Unix socket. Zero persistence to disk by design."
+    details: "All secret values are held in-memory and injected via Unix socket. Zero persistence to disk as plaintext."
     icon: 🔒
-  - title: Unified Configuration
-    details: "One standard YAML format for AWS, Azure, Huawei Cloud, HashiCorp Vault, and Local File providers."
-    icon: 🛠️
-  - title: Smart Rotation
-    details: "Hot-reload secrets without restarting your services. Atomic updates ensure zero downtime."
-    icon: 🔄
+  - title: Verified Plugins
+    details: "Selective, SHA256-verified plugin installation. Only install what you need, with full integrity checks."
+    icon: 🛡️
 
 ---
 

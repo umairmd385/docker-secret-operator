@@ -7,7 +7,7 @@ import { ArrowRight, ExternalLink } from "lucide-react";
 
 export const FinalCTA = () => {
   return (
-    <section className="relative py-32 overflow-hidden border-t border-border">
+    <section className="relative py-20 md:py-24 overflow-hidden border-t border-border">
       {/* Background: slightly darker surface with layered radial glows */}
       <div className="absolute inset-0 bg-[#060a0f] pointer-events-none" />
       <div className="absolute inset-0 pointer-events-none"
@@ -40,8 +40,8 @@ export const FinalCTA = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button href="#quick-start" size="lg" className="group min-w-[180px]">
-              Get Started
+            <Button href="#quick-start" size="lg" className="group min-w-[220px]">
+              Start using DSO in 30 seconds
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button

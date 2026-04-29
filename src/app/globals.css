@@ -47,8 +47,8 @@ html {
   line-height: 1.75;
 }
 
-/* Section spacing baseline */
-.section-gap {
-  padding-top: 6rem;
-  padding-bottom: 6rem;
+/* Prose utility — apply to section body text for consistent max-width + line-height */
+.prose-block {
+  max-width: 42rem;   /* ~672px, equivalent to Tailwind max-w-2xl */
+  line-height: 1.75;
 }

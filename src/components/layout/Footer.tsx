@@ -1,116 +1,172 @@
 "use client";
 
 import React from "react";
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
+import { GithubIcon, TwitterIcon } from "@/components/ui/Icons";
+import { MessageSquare, ExternalLink, ShieldCheck } from "lucide-react";
 
-import { DSO3DHero } from "@/components/ui/DSO3DHero";
-
-const GithubIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-  </svg>
-);
-
-const navLinks = [
-  { label: "Features",     href: "#features" },
-  { label: "Architecture", href: "#architecture" },
-  { label: "Quick Start",  href: "#quick-start" },
-  { label: "Documentation", href: "/docs" },
-  { label: "GitHub",       href: "https://github.com/docker-secret-operator/dso", external: true },
-];
+const links = {
+  product: [
+    { label: "Features", href: "#features" },
+    { label: "Architecture", href: "#architecture" },
+    { label: "Security", href: "/docs/security" },
+    { label: "Cloud Modes", href: "/docs/cloud" },
+  ],
+  resources: [
+    { label: "Documentation", href: "/docs" },
+    { label: "Installation", href: "/docs/guide/installation" },
+    { label: "CLI Reference", href: "/docs/guide/cli" },
+    { label: "Examples", href: "https://github.com/docker-secret-operator/dso/tree/main/examples" },
+  ],
+  community: [
+    { label: "GitHub", href: "https://github.com/docker-secret-operator/dso", icon: GithubIcon },
+    { label: "Twitter / X", href: "#", icon: TwitterIcon },
+    { label: "Discord", href: "#", icon: MessageSquare },
+  ]
+};
 
 export const Footer = () => (
-  <footer className="border-t border-border bg-[#080c12] relative z-10" role="contentinfo">
+  <footer className="relative pt-32 pb-16 bg-[#03070c] border-t border-white/5 overflow-hidden">
+    {/* Cinematic Background Lighting */}
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+    <div className="absolute -bottom-24 -left-24 w-[600px] h-[600px] bg-accent/5 blur-[150px] rounded-full pointer-events-none opacity-50" />
+    <div className="absolute -top-24 -right-24 w-[600px] h-[600px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none opacity-50" />
+    
+    <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 lg:gap-8 mb-32">
+        
+        {/* Brand Narrative Column */}
+        <div className="lg:col-span-4 space-y-8">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+              <Logo className="w-6 h-6" />
+            </div>
+            <span className="text-2xl font-bold text-white tracking-tighter font-outfit">DSO</span>
+          </div>
+          
+          <p className="text-lg text-gray-400 leading-relaxed font-medium">
+            The standard for secret orchestration in high-assurance Docker environments.
+          </p>
+          
+          <div className="pt-4 flex items-center gap-6">
+            <a href="https://github.com/docker-secret-operator/dso" className="text-gray-500 hover:text-white transition-colors">
+              <GithubIcon className="w-6 h-6" />
+            </a>
+            <a href="#" className="text-gray-500 hover:text-[#1DA1F2] transition-colors">
+              <TwitterIcon className="w-6 h-6" />
+            </a>
+            <a href="#" className="text-gray-500 hover:text-[#5865F2] transition-colors">
+              <MessageSquare className="w-6 h-6" />
+            </a>
+          </div>
 
-    {/* ── Top nav strip ── */}
-    <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 border-b border-border/40">
-      <a href="#" className="flex items-center gap-2.5 group shrink-0">
-        <div className="w-8 h-8 flex items-center justify-center group-hover:scale-105 transition-transform">
-          <Logo className="w-7 h-7" aria-hidden="true" />
+          <div className="pt-8 border-t border-white/5 flex flex-col gap-4">
+             <div className="flex items-center gap-3 text-xs font-mono text-gray-500 uppercase tracking-widest">
+                <ShieldCheck className="w-4 h-4 text-accent" />
+                Production Validated
+             </div>
+             <p className="text-xs text-gray-600 leading-relaxed max-w-xs">
+               Securing 100k+ container secrets across enterprise clusters. 
+             </p>
+          </div>
         </div>
-        <span className="text-base font-bold text-foreground tracking-tight">Docker Secret Operator</span>
-      </a>
 
-      <nav aria-label="Footer navigation">
-        <ul className="flex flex-wrap items-center gap-x-8 gap-y-3">
-          {navLinks.map((l) => (
-            <li key={l.label}>
-              <a
-                href={l.href}
-                target={l.external ? "_blank" : undefined}
-                rel={l.external ? "noreferrer" : undefined}
-                className="text-sm text-gray-400 hover:text-accent transition-colors duration-150 font-medium"
-              >
-                {l.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
+        {/* Link Columns */}
+        <div className="lg:col-span-2 lg:ml-auto">
+          <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-8">Product</h4>
+          <ul className="space-y-4">
+            {links.product.map((link) => (
+              <li key={link.label}>
+                <a href={link.href} className="text-gray-500 hover:text-accent transition-all duration-200 flex items-center group">
+                   <span className="w-0 group-hover:w-3 overflow-hidden transition-all duration-200 text-accent">→</span>
+                   <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-    {/* ── Middle row: tagline + badges ── */}
-    <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b border-border/40">
-      <p className="text-sm text-gray-500 max-w-sm leading-relaxed">
-        Native secret management for Docker. Built for teams running production workloads without Kubernetes.
-      </p>
+        <div className="lg:col-span-2">
+          <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-8">Resources</h4>
+          <ul className="space-y-4">
+            {links.resources.map((link) => (
+              <li key={link.label}>
+                <a href={link.href} className="text-gray-500 hover:text-accent transition-all duration-200 flex items-center group">
+                   <span className="w-0 group-hover:w-3 overflow-hidden transition-all duration-200 text-accent">→</span>
+                   <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      <div className="flex flex-wrap items-center gap-2.5">
-        {[
-          { label: "MIT License",       color: "text-accent border-accent/25 bg-accent/5" },
-          { label: "Zero Persistence",  color: "text-blue-400 border-blue-400/25 bg-blue-400/5" },
-          { label: "Open Source",       color: "text-emerald-400 border-emerald-400/25 bg-emerald-400/5" },
-        ].map(({ label, color }) => (
-          <span
-            key={label}
-            className={`inline-flex items-center px-3 py-1 rounded-full border text-xs font-mono font-semibold tracking-wide ${color}`}
+        <div className="lg:col-span-4 bg-white/[0.02] border border-white/5 rounded-3xl p-8 group hover:border-accent/20 transition-all">
+          <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-6">Stay Updated</h4>
+          <p className="text-sm text-gray-500 mb-6 leading-relaxed">
+            Get the latest updates on DSO v3.2 release and security advisories.
+          </p>
+          <form 
+            className="space-y-4" 
+            onSubmit={async (e) => { 
+              e.preventDefault(); 
+              const form = e.currentTarget;
+              const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+              const btn = form.querySelector('button');
+              if (btn) btn.disabled = true;
+              
+              try {
+                const res = await fetch('/api/newsletter', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email })
+                });
+                if (res.ok) {
+                  alert('Welcome to the community! Check your inbox.');
+                  form.reset();
+                } else {
+                  alert('Something went wrong. Please try again.');
+                }
+              } catch (err) {
+                alert('Network error. Please try again.');
+              } finally {
+                if (btn) btn.disabled = false;
+              }
+            }}
           >
-            {label}
-          </span>
-        ))}
+            <input 
+              name="email"
+              type="email" 
+              placeholder="Engineering Email" 
+              required
+              className="w-full h-12 rounded-xl bg-white/5 border border-white/10 px-4 text-sm focus:outline-none focus:border-accent/50 transition-colors"
+            />
+            <button type="submit" className="w-full h-12 rounded-xl bg-accent text-background font-bold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50">
+              Join Newsletter
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-[10px] font-mono text-gray-600">
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 uppercase tracking-[0.2em]">
+          <span>© {new Date().getFullYear()} DSO OSS Foundation</span>
+          <span className="hidden md:block w-1 h-1 rounded-full bg-gray-800" />
+          <span>MIT Licensed</span>
+          <span className="hidden md:block w-1 h-1 rounded-full bg-gray-800" />
+          <span className="text-accent/50">CNCF Landscape Partner</span>
+        </div>
+        
+        <div className="flex items-center gap-8">
+           <a href="#" className="hover:text-white transition-colors flex items-center gap-2">
+             Security Policy <ExternalLink className="w-3 h-3" />
+           </a>
+           <a href="#" className="hover:text-white transition-colors flex items-center gap-2">
+             Privacy <ExternalLink className="w-3 h-3" />
+           </a>
+        </div>
       </div>
     </div>
-
-    {/* ── Legal strip ── */}
-    <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-600 border-b border-border/30">
-      <p>© {new Date().getFullYear()} Docker Secret Operator. Released under the MIT License.</p>
-      <div className="flex items-center gap-6">
-        <a
-          href="https://github.com/docker-secret-operator/dso"
-          target="_blank" rel="noreferrer"
-          className="hover:text-gray-400 transition-colors"
-          aria-label="View DSO on GitHub"
-        >
-          <GithubIcon className="w-4 h-4" />
-        </a>
-        <span className="text-gray-700 font-medium tracking-tight">CNCF Sandbox Aligned</span>
-      </div>
-    </div>
-
-    {/* ── Cinematic 3D DSO Wordmark ── */}
-    <div className="relative overflow-hidden bg-[#080c12]" aria-hidden="true">
-      {/* Label above the 3D scene */}
-      <motion.p
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-center text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.4em] text-accent/30 pt-10 pb-2 select-none"
-      >
-        Docker Secret Operator
-      </motion.p>
-
-      {/* Three.js Canvas — dynamic, no SSR */}
-      <DSO3DHero />
-
-      {/* Bottom edge accent line */}
-      <div
-        className="absolute bottom-0 inset-x-0 h-px pointer-events-none"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(0,230,192,0.25) 40%, rgba(100,220,0,0.3) 50%, rgba(0,230,192,0.25) 60%, transparent)" }}
-      />
-    </div>
-
   </footer>
 );

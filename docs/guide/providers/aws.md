@@ -2,6 +2,10 @@
 
 Connect DSO to AWS Secrets Manager to manage application secrets securely at scale.
 
+> [!IMPORTANT]
+> The AWS provider is a **selective plugin**. You must install it before use:
+> `docker dso system setup --providers aws`
+
 ## Configuration
 
 ```yaml

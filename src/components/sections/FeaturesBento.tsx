@@ -2,79 +2,74 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Copy, Shield, Layers, Zap, Cpu, RefreshCw, Lock } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
+import { Shield, Zap, Lock, Cpu, RefreshCw } from "lucide-react";
 
 const features = [
   {
-    title: "Zero Persistence RAMfs",
-    description: "Secrets are mapped to tmpfs RAM limits. They are lost immediately if the host loses power, preventing cold-boot forensic theft. Never written to the host filesystem.",
-    icon: Shield,
-    colSpan: "md:col-span-2 lg:col-span-2",
+    title: "Dual-Mode Execution",
+    description: "Automatic environment detection for seamless switching between Native Vault and Cloud plugins.",
+    icon: Zap
   },
   {
-    title: "Docker Event Driven",
-    description: "Leverages the Docker Event stream for real-time lifecycle hooks instead of CPU-heavy polling intervals.",
-    icon: Zap,
-    colSpan: "md:col-span-1 lg:col-span-1",
+    title: "Zero Persistence RAMfs",
+    description: "Secrets are mapped to tmpfs RAM limits. Never written to host disk as plaintext.",
+    icon: Shield
+  },
+  {
+    title: "Verified Plugin System",
+    description: "Selective, SHA256-verified plugin installation for AWS, Azure, and HashiCorp Vault.",
+    icon: Lock
+  },
+  {
+    title: "Unified Diagnostics",
+    description: "Built-in 'system doctor' to verify binary integrity and plugin connectivity.",
+    icon: Cpu
   },
   {
     title: "Smart Checksum Rotation",
-    description: "Calculates an SHA-256 hash. Triggers docker container rotation only if the secret payload actually changes.",
-    icon: RefreshCw,
-    colSpan: "md:col-span-1 lg:col-span-1",
-  },
-  {
-    title: "Multi-Cloud Capable",
-    description: "A single instance can bridge AWS Secrets Manager, HashiCorp Vault, Azure Key Vault, and local files directly into containers.",
-    icon: Layers,
-    colSpan: "md:col-span-2 lg:col-span-2",
-  },
-  {
-    title: "Native CLI Plugin",
-    description: "DSO is bundled as a single binary Docker CLI plugin. Execute `docker dso up` directly from your root project.",
-    icon: Cpu,
-    colSpan: "col-span-1 lg:col-span-3",
+    description: "Disruption-free rotation. Triggers only when secret payload actually changes.",
+    icon: RefreshCw
   }
 ];
 
 export const FeaturesBento = () => {
   return (
-    <section id="features" className="py-24 border-y border-border">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="features" className="py-20 bg-background relative overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="text-center max-w-2xl mx-auto mb-20"
         >
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">
-            Architecture-first approach to local secret orchestration.
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6 font-outfit">
+            Enterprise-grade by design.
           </h2>
-          <p className="text-gray-400 text-lg leading-relaxed max-w-xl mx-auto">
-            Stop compromising on security. Provide production credentials safely without the Kubernetes learning curve.
+          <p className="text-gray-400 text-lg leading-relaxed">
+            Architected for security teams who need high-assurance secret orchestration without the overhead of Kubernetes.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {features.map((feature, idx) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {features.map((f, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className={feature.colSpan}
+              className="group relative p-8 rounded-2xl border border-white/5 bg-white/[0.02] hover:border-white/10 transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
             >
-              <Card className="group h-full hover:border-accent/40 bg-[#0a0f16]">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <feature.icon className="w-6 h-6 text-accent" />
-                  </div>
-                  <CardTitle className="mb-2">{feature.title}</CardTitle>
-                  <CardDescription>{feature.description}</CardDescription>
-                </CardHeader>
-              </Card>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-xl bg-accent/5 border border-accent/20 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-accent/40 shadow-[0_0_15px_rgba(0,230,192,0.1)] transition-all">
+                  <f.icon className="w-6 h-6 text-accent" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3 tracking-tight font-outfit">{f.title}</h3>
+                <p className="text-sm text-gray-400 leading-relaxed font-medium">
+                  {f.description}
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>
