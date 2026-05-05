@@ -135,6 +135,17 @@
     padding: 1rem 0;
   }
 
+  /* Images on mobile */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+
   /* Badge/pill elements */
   .badge {
     padding: 0.5rem 0.75rem;
