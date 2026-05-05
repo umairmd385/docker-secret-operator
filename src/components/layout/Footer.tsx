@@ -11,13 +11,13 @@ const links = {
   product: [
     { label: "Features", href: "#features" },
     { label: "Architecture", href: "#architecture" },
-    { label: "Security Model", href: "https://github.com/docker-secret-operator/dso/blob/main/docs/guide/security.md" },
-    { label: "Cloud Modes", href: "https://github.com/docker-secret-operator/dso/blob/main/docs/guide/providers" },
+    { label: "Security Model", href: "/docs/guide/security.html" },
+    { label: "Cloud Modes", href: "/docs/guide/providers/aws.html" },
   ],
   resources: [
-    { label: "Documentation", href: "https://github.com/docker-secret-operator/dso/tree/main/docs" },
-    { label: "Installation", href: "https://github.com/docker-secret-operator/dso/blob/main/docs/guide/installation.md" },
-    { label: "CLI Reference", href: "https://github.com/docker-secret-operator/dso/blob/main/docs/guide/cli.md" },
+    { label: "Documentation", href: "/docs" },
+    { label: "Installation", href: "/docs/guide/installation.html" },
+    { label: "CLI Reference", href: "/docs/guide/cli.html" },
     { label: "Examples", href: "https://github.com/docker-secret-operator/dso/tree/main/examples" },
   ],
   community: [
@@ -163,10 +163,10 @@ export const Footer = () => (
         </div>
 
         <div className="flex items-center gap-6 text-xs">
-          <a href="https://github.com/docker-secret-operator/dso/blob/main/docs/guide/security.md" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
+          <a href="/docs/guide/security.html" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
             Security <ExternalLink className="w-3 h-3" />
           </a>
-          <a href="https://github.com/docker-secret-operator/dso/blob/main/docs/guide/privacy.md" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
+          <a href="/docs/guide/privacy.html" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
             Privacy <ExternalLink className="w-3 h-3" />
           </a>
         </div>

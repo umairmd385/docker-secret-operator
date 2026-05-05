@@ -4,8 +4,8 @@ import { getWelcomeEmailHTML, getAlreadySubscribedEmailHTML } from '@/lib/email-
 import * as fs from 'fs';
 import * as path from 'path';
 
-// Subscriber tracking using JSON file
-const SUBSCRIBERS_FILE = path.join(process.cwd(), '.next', 'cache', 'subscribers.json');
+// Subscriber tracking - persistent storage in project root
+const SUBSCRIBERS_FILE = path.join(process.cwd(), 'subscribers.json');
 
 async function getSubscribers(): Promise<string[]> {
   try {
