@@ -4,32 +4,44 @@ import { getWelcomeEmailHTML, getAlreadySubscribedEmailHTML } from '@/lib/email-
 import * as fs from 'fs';
 import * as path from 'path';
 
-// Subscriber tracking - persistent storage in project root
+// In-memory subscriber set for current process
+const subscribersSet = new Set<string>();
+
+// Initialize from file if it exists
 const SUBSCRIBERS_FILE = path.join(process.cwd(), 'subscribers.json');
 
-async function getSubscribers(): Promise<string[]> {
+function initializeSubscribers() {
   try {
     if (fs.existsSync(SUBSCRIBERS_FILE)) {
       const data = fs.readFileSync(SUBSCRIBERS_FILE, 'utf-8');
-      return JSON.parse(data);
+      const subscribers = JSON.parse(data);
+      subscribers.forEach((email: string) => subscribersSet.add(email.toLowerCase()));
     }
   } catch (error) {
-    console.error('Error reading subscribers:', error);
+    console.error('Error initializing subscribers:', error);
   }
-  return [];
+}
+
+async function getSubscribers(): Promise<string[]> {
+  return Array.from(subscribersSet);
+}
+
+async function isSubscribed(email: string): Promise<boolean> {
+  initializeSubscribers();
+  return subscribersSet.has(email.toLowerCase());
 }
 
 async function addSubscriber(email: string): Promise<void> {
   try {
-    const subscribers = await getSubscribers();
-    if (!subscribers.includes(email)) {
-      subscribers.push(email);
-      const dir = path.dirname(SUBSCRIBERS_FILE);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-      }
-      fs.writeFileSync(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2));
+    const normalizedEmail = email.toLowerCase();
+    subscribersSet.add(normalizedEmail);
+
+    const subscribers = Array.from(subscribersSet);
+    const dir = path.dirname(SUBSCRIBERS_FILE);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
     }
+    fs.writeFileSync(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2));
   } catch (error) {
     console.error('Error saving subscriber:', error);
   }
@@ -57,9 +69,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
     }
 
-    // Check if already subscribed
-    const subscribers = await getSubscribers();
-    const isAlreadySubscribed = subscribers.includes(email);
+    // Check if already subscribed (case-insensitive)
+    const isAlreadySubscribed = await isSubscribed(email);
 
     // Configure the transporter with Gmail
     const transporter = nodemailer.createTransport({

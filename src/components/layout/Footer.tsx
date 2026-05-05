@@ -3,8 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
-import { GithubIcon, TwitterIcon } from "@/components/ui/Icons";
-import { MessageSquare, ExternalLink, ShieldCheck } from "lucide-react";
+import { GithubIcon } from "@/components/ui/Icons";
+import { MessageSquare, ExternalLink, ShieldCheck, Linkedin } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
 const links = {
@@ -22,7 +22,7 @@ const links = {
   ],
   community: [
     { label: "GitHub", href: "https://github.com/docker-secret-operator/dso", icon: GithubIcon },
-    { label: "Twitter / X", href: "https://x.com/skycloudops", icon: TwitterIcon },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/mdumair250801/", icon: Linkedin },
     { label: "Discord", href: "https://discord.gg/skycloudops", icon: MessageSquare },
   ]
 };
@@ -54,8 +54,8 @@ export const Footer = () => (
             <a href="https://github.com/docker-secret-operator/dso" className="text-gray-500 hover:text-white transition-colors" title="GitHub">
               <GithubIcon className="w-6 h-6" />
             </a>
-            <a href="https://x.com/skycloudops" className="text-gray-500 hover:text-[#1DA1F2] transition-colors" title="Twitter / X">
-              <TwitterIcon className="w-6 h-6" />
+            <a href="https://www.linkedin.com/in/mdumair250801/" className="text-gray-500 hover:text-[#0A66C2] transition-colors" title="LinkedIn">
+              <Linkedin className="w-6 h-6" />
             </a>
             <a href="https://discord.gg/skycloudops" className="text-gray-500 hover:text-[#5865F2] transition-colors" title="Discord">
               <MessageSquare className="w-6 h-6" />
