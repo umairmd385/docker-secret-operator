@@ -1,47 +1,61 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { createClient } from 'redis';
 import { getWelcomeEmailHTML, getAlreadySubscribedEmailHTML } from '@/lib/email-template';
-import * as fs from 'fs';
-import * as path from 'path';
 
-// In-memory subscriber set for current process
-const subscribersSet = new Set<string>();
+let redisClient: any = null;
 
-// Initialize from file if it exists
-const SUBSCRIBERS_FILE = path.join(process.cwd(), 'subscribers.json');
-
-function initializeSubscribers() {
-  try {
-    if (fs.existsSync(SUBSCRIBERS_FILE)) {
-      const data = fs.readFileSync(SUBSCRIBERS_FILE, 'utf-8');
-      const subscribers = JSON.parse(data);
-      subscribers.forEach((email: string) => subscribersSet.add(email.toLowerCase()));
+// Initialize Redis connection
+async function getRedisClient() {
+  if (!redisClient) {
+    try {
+      redisClient = await createClient({
+        url: process.env.REDIS_URL || 'redis://localhost:6379',
+      }).connect();
+    } catch (error) {
+      console.error('Redis connection error:', error);
+      return null;
     }
-  } catch (error) {
-    console.error('Error initializing subscribers:', error);
   }
-}
-
-async function getSubscribers(): Promise<string[]> {
-  return Array.from(subscribersSet);
+  return redisClient;
 }
 
 async function isSubscribed(email: string): Promise<boolean> {
-  initializeSubscribers();
-  return subscribersSet.has(email.toLowerCase());
+  try {
+    const normalizedEmail = email.toLowerCase();
+    const client = await getRedisClient();
+
+    if (!client) {
+      console.warn('Redis not available');
+      return false;
+    }
+
+    const exists = await client.exists(`subscriber:${normalizedEmail}`);
+    return exists === 1;
+  } catch (error) {
+    console.error('Error checking subscription:', error);
+    return false;
+  }
 }
 
 async function addSubscriber(email: string): Promise<void> {
   try {
     const normalizedEmail = email.toLowerCase();
-    subscribersSet.add(normalizedEmail);
+    const client = await getRedisClient();
 
-    const subscribers = Array.from(subscribersSet);
-    const dir = path.dirname(SUBSCRIBERS_FILE);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    if (!client) {
+      console.warn('Redis not available, skipping subscriber storage');
+      return;
     }
-    fs.writeFileSync(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2));
+
+    await client.set(
+      `subscriber:${normalizedEmail}`,
+      JSON.stringify({
+        email: normalizedEmail,
+        subscribedAt: new Date().toISOString(),
+      }),
+      { EX: 31536000 } // 1 year expiry
+    );
   } catch (error) {
     console.error('Error saving subscriber:', error);
   }
