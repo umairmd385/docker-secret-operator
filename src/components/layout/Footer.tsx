@@ -11,13 +11,13 @@ const links = {
   product: [
     { label: "Features", href: "#features" },
     { label: "Architecture", href: "#architecture" },
-    { label: "Security", href: "/docs/security" },
-    { label: "Cloud Modes", href: "/docs/cloud" },
+    { label: "Security Model", href: "https://github.com/docker-secret-operator/dso/blob/main/docs/guide/security.md" },
+    { label: "Cloud Modes", href: "https://github.com/docker-secret-operator/dso/blob/main/docs/guide/providers" },
   ],
   resources: [
-    { label: "Documentation", href: "/docs" },
-    { label: "Installation", href: "/docs/guide/installation" },
-    { label: "CLI Reference", href: "/docs/guide/cli" },
+    { label: "Documentation", href: "https://github.com/docker-secret-operator/dso/tree/main/docs" },
+    { label: "Installation", href: "https://github.com/docker-secret-operator/dso/blob/main/docs/guide/installation.md" },
+    { label: "CLI Reference", href: "https://github.com/docker-secret-operator/dso/blob/main/docs/guide/cli.md" },
     { label: "Examples", href: "https://github.com/docker-secret-operator/dso/tree/main/examples" },
   ],
   community: [
@@ -163,10 +163,10 @@ export const Footer = () => (
         </div>
 
         <div className="flex items-center gap-6 text-xs">
-          <a href="/docs/guide/security" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
+          <a href="https://github.com/docker-secret-operator/dso/blob/main/docs/guide/security.md" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
             Security <ExternalLink className="w-3 h-3" />
           </a>
-          <a href="/docs/guide/privacy" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
+          <a href="https://github.com/docker-secret-operator/dso/blob/main/docs/guide/privacy.md" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
             Privacy <ExternalLink className="w-3 h-3" />
           </a>
         </div>

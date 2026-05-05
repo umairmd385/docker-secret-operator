@@ -12,8 +12,10 @@ const DockerLogo = () => (
 );
 
 const AWSLogo = () => (
-  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5.5 14.2l2-1.2v-3l-2-1.2v5.4zM12 5l-5 2.9v8.2l5 2.9 5-2.9V7.9L12 5zm0 12.5l-3.5-2v-4.5L12 14l3.5-2v4.5L12 17.5zm5-8.3l2 1.2v-5.4l-2 1.2v3z"/>
+  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7 8l5-3 5 3v4l-5 3-5-3V8z" fill="currentColor" opacity="0.8"/>
+    <path d="M7 12l5 3 5-3" strokeLinecap="round" strokeLinejoin="round"/>
+    <rect x="3" y="16" width="18" height="4" rx="0.5" fill="currentColor" opacity="0.4"/>
   </svg>
 );
 
@@ -26,8 +28,8 @@ const VaultLogo = () => (
 
 const AzureLogo = () => (
   <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6.5 2L2 10h5l3-8H6.5zm6 0H8.5L11.5 10h5L12.5 2zm6.5 0L14 10h8l-3-8h-2z"/>
-    <path d="M2 12h8v10H2v-10zm10 0h8v10h-8v-10z"/>
+    <path d="M3 4h8l6 8H9l6 8H3z" opacity="0.8"/>
+    <path d="M6 10h6l-2 3h-4z" fill="currentColor" opacity="0.5"/>
   </svg>
 );
 
