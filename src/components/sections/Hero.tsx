@@ -83,10 +83,11 @@ export const Hero = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[600px]">
           
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex flex-col items-start"
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex flex-col items-start will-change-transform"
           >
             <Badge variant="success" className="mb-8 px-4 py-1.5 border-accent/20 bg-accent/10 text-accent">
               <span className="w-1.5 h-1.5 rounded-full bg-accent mr-2.5 animate-pulse" />
@@ -122,7 +123,8 @@ export const Hero = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-md lg:max-w-none mx-auto lg:ml-auto"
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+            className="relative w-full max-w-md lg:max-w-none mx-auto lg:ml-auto will-change-transform"
           >
             <div className="absolute -inset-4 bg-accent/10 blur-[80px] rounded-full pointer-events-none opacity-50" />
             
@@ -183,7 +185,7 @@ export const Hero = () => {
                           <span className="text-accent mt-1 shrink-0 font-bold">{">"}</span>
                           <span className="text-white font-medium flex items-center tracking-tight">
                             {currentTypedText.replace("$ ", "")}
-                            <motion.span animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-2 h-4 bg-accent ml-1" />
+                            <motion.span animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 1.0 }} className="w-2 h-4 bg-accent ml-1" style={{ willChange: "opacity" }} />
                           </span>
                         </div>
                       </>

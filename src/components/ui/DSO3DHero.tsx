@@ -27,9 +27,9 @@ export function DSO3DHero({ className = "" }: DSO3DHeroProps) {
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 select-none flex flex-col items-center w-full max-w-7xl mx-auto px-6 px-10 gap-8"
+        viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative z-10 select-none flex flex-col items-center w-full max-w-7xl mx-auto px-6 px-10 gap-8 will-change-transform"
       >
         
         {/* Fake 3D "DSO" Text matches the clean stroke-style + solid block shadow */}

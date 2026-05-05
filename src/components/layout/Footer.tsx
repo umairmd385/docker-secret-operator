@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
 import { GithubIcon, TwitterIcon } from "@/components/ui/Icons";
 import { MessageSquare, ExternalLink, ShieldCheck } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 const links = {
   product: [
@@ -21,8 +22,8 @@ const links = {
   ],
   community: [
     { label: "GitHub", href: "https://github.com/docker-secret-operator/dso", icon: GithubIcon },
-    { label: "Twitter / X", href: "#", icon: TwitterIcon },
-    { label: "Discord", href: "#", icon: MessageSquare },
+    { label: "Twitter / X", href: "https://x.com/skycloudops", icon: TwitterIcon },
+    { label: "Discord", href: "https://discord.gg/skycloudops", icon: MessageSquare },
   ]
 };
 
@@ -50,13 +51,13 @@ export const Footer = () => (
           </p>
           
           <div className="pt-4 flex items-center gap-6">
-            <a href="https://github.com/docker-secret-operator/dso" className="text-gray-500 hover:text-white transition-colors">
+            <a href="https://github.com/docker-secret-operator/dso" className="text-gray-500 hover:text-white transition-colors" title="GitHub">
               <GithubIcon className="w-6 h-6" />
             </a>
-            <a href="#" className="text-gray-500 hover:text-[#1DA1F2] transition-colors">
+            <a href="https://x.com/skycloudops" className="text-gray-500 hover:text-[#1DA1F2] transition-colors" title="Twitter / X">
               <TwitterIcon className="w-6 h-6" />
             </a>
-            <a href="#" className="text-gray-500 hover:text-[#5865F2] transition-colors">
+            <a href="https://discord.gg/skycloudops" className="text-gray-500 hover:text-[#5865F2] transition-colors" title="Discord">
               <MessageSquare className="w-6 h-6" />
             </a>
           </div>
@@ -101,20 +102,20 @@ export const Footer = () => (
           </ul>
         </div>
 
-        <div className="lg:col-span-4 bg-white/[0.02] border border-white/5 rounded-3xl p-8 group hover:border-accent/20 transition-all">
+        <div className="lg:col-span-4 bg-gradient-to-br from-white/5 to-white/[0.01] border border-accent/10 rounded-3xl p-8 group hover:border-accent/30 hover:from-white/10 transition-all duration-300 shadow-lg shadow-accent/5">
           <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-6">Stay Updated</h4>
-          <p className="text-sm text-gray-500 mb-6 leading-relaxed">
-            Get the latest updates on DSO v3.2 release and security advisories.
+          <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+            Get updates on DSO v3.2 features, security advisories, and architecture deep-dives.
           </p>
           <form 
             className="space-y-4" 
-            onSubmit={async (e) => { 
-              e.preventDefault(); 
+            onSubmit={async (e) => {
+              e.preventDefault();
               const form = e.currentTarget;
               const email = (form.elements.namedItem('email') as HTMLInputElement).value;
               const btn = form.querySelector('button');
               if (btn) btn.disabled = true;
-              
+
               try {
                 const res = await fetch('/api/newsletter', {
                   method: 'POST',
@@ -122,49 +123,52 @@ export const Footer = () => (
                   body: JSON.stringify({ email })
                 });
                 if (res.ok) {
+                  trackEvent.newsletterSignup(email, true);
                   alert('Welcome to the community! Check your inbox.');
                   form.reset();
                 } else {
+                  trackEvent.newsletterSignup(email, false);
                   alert('Something went wrong. Please try again.');
                 }
               } catch (err) {
+                trackEvent.newsletterSignup(email, false);
                 alert('Network error. Please try again.');
               } finally {
                 if (btn) btn.disabled = false;
               }
             }}
           >
-            <input 
+            <input
               name="email"
-              type="email" 
-              placeholder="Engineering Email" 
+              type="email"
+              placeholder="your.email@company.com"
               required
-              className="w-full h-12 rounded-xl bg-white/5 border border-white/10 px-4 text-sm focus:outline-none focus:border-accent/50 transition-colors"
+              className="w-full h-12 rounded-xl bg-white/[0.03] border border-white/10 px-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent/50 focus:bg-white/5 transition-all"
             />
-            <button type="submit" className="w-full h-12 rounded-xl bg-accent text-background font-bold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50">
-              Join Newsletter
+            <button type="submit" className="w-full h-12 rounded-xl bg-accent hover:bg-accent/90 text-background font-bold text-sm shadow-lg shadow-accent/30 hover:shadow-accent/50 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              Subscribe
             </button>
           </form>
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-[10px] font-mono text-gray-600">
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 uppercase tracking-[0.2em]">
-          <span>© {new Date().getFullYear()} DSO OSS Foundation</span>
-          <span className="hidden md:block w-1 h-1 rounded-full bg-gray-800" />
-          <span>MIT Licensed</span>
-          <span className="hidden md:block w-1 h-1 rounded-full bg-gray-800" />
-          <span className="text-accent/50">CNCF Landscape Partner</span>
+      <div className="mt-16 pt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 text-xs text-gray-500 uppercase tracking-wider">
+          <span>© {new Date().getFullYear()} Docker Secret Operator</span>
+          <span className="hidden md:block w-1 h-1 rounded-full bg-gray-700" />
+          <span>MIT Licensed • Open Source</span>
+          <span className="hidden md:block w-1 h-1 rounded-full bg-gray-700" />
+          <span className="text-accent/60">CNCF Landscape</span>
         </div>
-        
-        <div className="flex items-center gap-8">
-           <a href="#" className="hover:text-white transition-colors flex items-center gap-2">
-             Security Policy <ExternalLink className="w-3 h-3" />
-           </a>
-           <a href="#" className="hover:text-white transition-colors flex items-center gap-2">
-             Privacy <ExternalLink className="w-3 h-3" />
-           </a>
+
+        <div className="flex items-center gap-6 text-xs">
+          <a href="/docs/guide/security" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
+            Security <ExternalLink className="w-3 h-3" />
+          </a>
+          <a href="/docs/guide/privacy" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
+            Privacy <ExternalLink className="w-3 h-3" />
+          </a>
         </div>
       </div>
     </div>

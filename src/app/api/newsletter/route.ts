@@ -9,19 +9,32 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
+    }
+
+    const gmailUser = process.env.GMAIL_USER;
+    const gmailPass = process.env.GMAIL_PASS;
+
+    if (!gmailUser || !gmailPass) {
+      console.error('Gmail credentials not configured');
+      return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
+    }
+
     // Configure the transporter with Gmail
-    // IMPORTANT: You must use an "App Password" from Gmail, not your regular password.
-    // Go to: Google Account > Security > 2-Step Verification > App Passwords
+    // IMPORTANT: Credentials from environment variables (GMAIL_USER, GMAIL_PASS)
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'umairmd385@gmail.com',
-        pass: 'qxuf xkbr vaoq orhm', 
+        user: gmailUser,
+        pass: gmailPass,
       },
     });
 
     const mailOptions = {
-      from: '"DSO Team" <umairmd385@gmail.com>',
+      from: `"DSO Team" <${gmailUser}>`,
       to: email,
       subject: 'Welcome to the DSO Community — Secure Your Docker Secrets',
       html: `

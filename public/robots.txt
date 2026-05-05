@@ -1,0 +1,40 @@
+# Docker Secret Operator - SEO Robots Configuration
+# Allow search engines to crawl and index all content
+
+User-agent: *
+Allow: /
+Allow: /docs/
+Allow: /guide/
+Disallow: /api/
+Disallow: /*.json
+Disallow: /.next/
+Disallow: /private/
+
+# Sitemap location
+Sitemap: https://dso.run/sitemap.xml
+
+# Crawl delay (prevent server overload)
+Crawl-delay: 1
+
+# Specific search engine optimizations
+User-agent: Googlebot
+Allow: /
+Priority: high
+
+User-agent: Bingbot
+Allow: /
+Priority: high
+
+User-agent: Slurp
+Allow: /
+Priority: medium
+
+# Block bad actors
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /

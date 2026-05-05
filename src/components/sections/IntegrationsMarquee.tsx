@@ -2,15 +2,51 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Database, Lock, Key, FileText, CloudRain, ShieldCheck, Zap, GitBranch } from "lucide-react";
+import { ShieldCheck, Zap, GitBranch } from "lucide-react";
+
+// Brand logos as SVG components
+const DockerLogo = () => (
+  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.7 4.33c-.77-1.36-2.34-2.14-3.94-2.14-2.25 0-4.24 1.67-4.58 3.83H3c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V7.02c0-.55-.45-1-1-1h-2.38c-.34-2.16-2.33-3.83-4.58-3.83-1.6 0-3.17.78-3.94 2.14zM9.76 4.33c.27-.79.89-1.44 1.64-1.78.37-.17.79-.22 1.21-.22.42 0 .84.05 1.21.22.75.34 1.37.99 1.64 1.78H9.76zm3.24 13.67c-2.49 0-4.5-2.01-4.5-4.5s2.01-4.5 4.5-4.5 4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5z"/>
+  </svg>
+);
+
+const AWSLogo = () => (
+  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5.5 14.2l2-1.2v-3l-2-1.2v5.4zM12 5l-5 2.9v8.2l5 2.9 5-2.9V7.9L12 5zm0 12.5l-3.5-2v-4.5L12 14l3.5-2v4.5L12 17.5zm5-8.3l2 1.2v-5.4l-2 1.2v3z"/>
+  </svg>
+);
+
+const VaultLogo = () => (
+  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="10" opacity="0.2"/>
+    <path d="M12 3C6.48 3 2 6.58 2 11v8.5h20V11c0-4.42-4.48-8-10-8zm0 2c3.86 0 7 2.69 7 6s-3.14 6-7 6-7-2.69-7-6 3.14-6 7-6zm0 2c-2.21 0-4 1.34-4 3s1.79 3 4 3 4-1.34 4-3-1.79-3-4-3z"/>
+  </svg>
+);
+
+const AzureLogo = () => (
+  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6.5 2L2 10h5l3-8H6.5zm6 0H8.5L11.5 10h5L12.5 2zm6.5 0L14 10h8l-3-8h-2z"/>
+    <path d="M2 12h8v10H2v-10zm10 0h8v10h-8v-10z"/>
+  </svg>
+);
+
+const HuaweiLogo = () => (
+  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <rect x="2" y="6" width="4" height="12" />
+    <rect x="8" y="4" width="4" height="14" />
+    <rect x="14" y="6" width="4" height="12" />
+    <rect x="20" y="8" width="2" height="8" />
+  </svg>
+);
 
 export const IntegrationsMarquee = () => {
   const logos = [
-    { icon: Database, label: "AWS Secrets Manager" },
-    { icon: Lock, label: "HashiCorp Vault" },
-    { icon: Key, label: "Azure Key Vault" },
-    { icon: CloudRain, label: "Huawei Cloud CSMS" },
-    { icon: FileText, label: "Local Filesystem" },
+    { icon: DockerLogo, label: "Docker Engine", color: "#2496ED" },
+    { icon: AWSLogo, label: "AWS Secrets Manager", color: "#FF9900" },
+    { icon: VaultLogo, label: "HashiCorp Vault", color: "#000000" },
+    { icon: AzureLogo, label: "Azure Key Vault", color: "#0078D4" },
+    { icon: HuaweiLogo, label: "Huawei Cloud CSMS", color: "#EE3124" },
   ];
 
   // duplicate for seamless infinite loop
@@ -53,9 +89,11 @@ export const IntegrationsMarquee = () => {
             }}
           >
             {duplicatedLogos.map((logo, idx) => (
-              <div key={idx} className="flex items-center gap-3 text-gray-500 shrink-0">
-                <logo.icon className="w-8 h-8 opacity-80" />
-                <span className="font-bold text-lg">{logo.label}</span>
+              <div key={idx} className="flex items-center gap-3 text-gray-500 shrink-0 hover:text-accent transition-colors duration-300">
+                <div className="flex items-center justify-center w-8 h-8">
+                  <logo.icon />
+                </div>
+                <span className="font-bold text-sm whitespace-nowrap">{logo.label}</span>
               </div>
             ))}
           </motion.div>
