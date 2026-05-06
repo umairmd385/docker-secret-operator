@@ -1,10 +1,9 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
 import { Logo } from "@/components/ui/Logo";
 import { GithubIcon } from "@/components/ui/Icons";
-import { MessageSquare, ExternalLink, ShieldCheck } from "lucide-react";
+import { MessageSquare, ExternalLink, ShieldCheck, Loader2, Check } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
 // LinkedIn Icon Component
@@ -35,7 +34,11 @@ const links = {
   ]
 };
 
-export const Footer = () => (
+export const Footer = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  return (
   <footer className="relative pt-32 pb-16 bg-[#03070c] border-t border-white/5 overflow-hidden">
     {/* Cinematic Background Lighting */}
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
@@ -115,48 +118,61 @@ export const Footer = () => (
           <p className="text-sm text-gray-400 mb-6 leading-relaxed">
             Get updates on DSO v3.2 features, security advisories, and architecture deep-dives.
           </p>
-          <form 
-            className="space-y-4" 
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const form = e.currentTarget;
-              const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-              const btn = form.querySelector('button');
-              if (btn) btn.disabled = true;
+          {showSuccess ? (
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald-400/10 border border-emerald-400/30">
+              <Check className="w-5 h-5 text-emerald-400 flex-shrink-0" aria-hidden="true" />
+              <p className="text-sm text-emerald-400 font-medium">You are already subscribed to our Newsletter</p>
+            </div>
+          ) : (
+            <form
+              className="space-y-4"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+                setIsSubmitting(true);
+                setShowSuccess(false);
 
-              try {
-                const res = await fetch('/api/newsletter', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ email })
-                });
-                if (res.ok) {
-                  trackEvent.newsletterSignup(email, true);
-                  alert('Welcome to the community! Check your inbox.');
-                  form.reset();
-                } else {
+                try {
+                  const res = await fetch('/api/newsletter', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                  });
+                  if (res.ok) {
+                    trackEvent.newsletterSignup(email, true);
+                    form.reset();
+                    setShowSuccess(true);
+                    setTimeout(() => setShowSuccess(false), 3000);
+                  } else {
+                    trackEvent.newsletterSignup(email, false);
+                  }
+                } catch {
                   trackEvent.newsletterSignup(email, false);
-                  alert('Something went wrong. Please try again.');
+                } finally {
+                  setIsSubmitting(false);
                 }
-              } catch (err) {
-                trackEvent.newsletterSignup(email, false);
-                alert('Network error. Please try again.');
-              } finally {
-                if (btn) btn.disabled = false;
-              }
-            }}
-          >
-            <input
-              name="email"
-              type="email"
-              placeholder="your.email@company.com"
-              required
-              className="w-full h-12 rounded-xl bg-white/[0.03] border border-white/10 px-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent/50 focus:bg-white/5 transition-all"
-            />
-            <button type="submit" className="w-full h-12 rounded-xl bg-accent hover:bg-accent/90 text-background font-bold text-sm shadow-lg shadow-accent/30 hover:shadow-accent/50 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-              Subscribe
-            </button>
-          </form>
+              }}
+            >
+              <input
+                name="email"
+                type="email"
+                placeholder="your.email@company.com"
+                required
+                className="w-full h-12 rounded-xl bg-white/[0.03] border border-white/10 px-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent/50 focus:bg-white/5 transition-all"
+              />
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full h-12 rounded-xl bg-accent hover:bg-accent/90 text-background font-bold text-sm shadow-lg shadow-accent/30 hover:shadow-accent/50 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span className="inline-flex items-center justify-center gap-2">
+                  {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}
+                  <span>{isSubmitting ? "Subscribing..." : "Subscribe"}</span>
+                </span>
+              </button>
+            </form>
+          )}
         </div>
       </div>
 
@@ -181,4 +197,5 @@ export const Footer = () => (
       </div>
     </div>
   </footer>
-);
+  );
+};

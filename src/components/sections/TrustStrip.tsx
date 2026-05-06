@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 
 const partners = [
   { name: "Docker", logo: "https://cdn.simpleicons.org/docker/ffffff" },
-  { name: "AWS", logo: "https://cdn.simpleicons.org/amazonwebservices/ffffff" },
+  { name: "AWS", logo: "https://img.icons8.com/?size=100&id=G0CnLqqcRBXl&format=png&color=ffffff" },
   { name: "HashiCorp", logo: "https://cdn.simpleicons.org/hashicorp/ffffff" },
   { name: "Kubernetes", logo: "https://cdn.simpleicons.org/kubernetes/ffffff" },
-  { name: "Azure", logo: "https://cdn.simpleicons.org/microsoftazure/ffffff" },
+  { name: "Azure", logo: "https://img.icons8.com/?size=100&id=81727&format=png&color=ffffff" },
   { name: "Huawei", logo: "https://cdn.simpleicons.org/huawei/ffffff" },
 ];
 

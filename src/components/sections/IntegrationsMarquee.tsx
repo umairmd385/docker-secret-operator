@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, Zap, GitBranch } from "lucide-react";
+import Image from "next/image";
 
 // SVG Logo Components
 const DockerLogo = () => (
@@ -13,8 +14,7 @@ const DockerLogo = () => (
 
 const AWSLogo = () => (
   <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6.5 14.8c0 .3.2.5.5.5h1c.3 0 .5-.2.5-.5v-3.6c0-.3-.2-.5-.5-.5h-1c-.3 0-.5.2-.5.5v3.6zm3.5 0c0 .3.2.5.5.5h1c.3 0 .5-.2.5-.5v-3.6c0-.3-.2-.5-.5-.5h-1c-.3 0-.5.2-.5.5v3.6zm3.5 0c0 .3.2.5.5.5h1c.3 0 .5-.2.5-.5v-3.6c0-.3-.2-.5-.5-.5h-1c-.3 0-.5.2-.5.5v3.6z"/>
-    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z" opacity="0.5"/>
+    <path d="M5 8h2v8H5V8zm4-2h2v12H9V6zm4 2h2v8h-2V8z"/>
   </svg>
 );
 
@@ -26,8 +26,7 @@ const VaultLogo = () => (
 
 const AzureLogo = () => (
   <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 3l8 6.5L7 18h5l5-8.5L12 2H4z"/>
-    <path d="M12 10l3 4H9l3-4z" opacity="0.6"/>
+    <path d="M3 3h9l6 15H9L6 18H3L6 3zm9 0h9l-9 15v-15zm-6 15h3l9-12H9l-3 12z"/>
   </svg>
 );
 
@@ -49,22 +48,22 @@ const KubernetesLogo = () => (
 
 export const IntegrationsMarquee = () => {
   const logos = [
-    { icon: DockerLogo, label: "Docker Engine", color: "#2496ED" },
-    { icon: AWSLogo, label: "AWS Secrets Manager", color: "#FF9900" },
-    { icon: VaultLogo, label: "HashiCorp Vault", color: "#000000" },
-    { icon: AzureLogo, label: "Azure Key Vault", color: "#0078D4" },
-    { icon: KubernetesLogo, label: "Kubernetes", color: "#326CE5" },
-    { icon: HuaweiLogo, label: "Huawei Cloud CSMS", color: "#EE3124" },
+    { icon: DockerLogo, label: "Docker Engine", color: "#2496ED", type: "svg" },
+    { icon: null, label: "AWS Secrets Manager", color: "#FF9900", type: "image", imageSrc: "https://img.icons8.com/?size=100&id=G0CnLqqcRBXl&format=png&color=ffffff" },
+    { icon: VaultLogo, label: "HashiCorp Vault", color: "#000000", type: "svg" },
+    { icon: null, label: "Azure Key Vault", color: "#0078D4", type: "image", imageSrc: "https://img.icons8.com/?size=100&id=81727&format=png&color=ffffff" },
+    { icon: KubernetesLogo, label: "Kubernetes", color: "#326CE5", type: "svg" },
+    { icon: HuaweiLogo, label: "Huawei Cloud CSMS", color: "#EE3124", type: "svg" },
   ];
 
   // duplicate for seamless infinite loop
   const duplicatedLogos = [...logos, ...logos, ...logos];
 
   return (
-    <section id="integrations" className="py-24 overflow-hidden border-b border-border bg-surface2/30">
-      <div className="max-w-7xl mx-auto px-6 text-center mb-10">
-        <h3 className="text-xl font-bold text-foreground mb-2">Works with your existing secret providers</h3>
-        <p className="text-gray-400 text-sm mb-8">Via the extensible Go plugin architecture</p>
+    <section id="integrations" className="py-16 sm:py-20 md:py-24 overflow-x-hidden border-b border-border bg-surface2/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center mb-8 sm:mb-10">
+        <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2 break-words">Works with your existing secret providers</h3>
+        <p className="text-gray-400 text-xs sm:text-sm mb-6 sm:mb-8">Via the extensible Go plugin architecture</p>
 
         {/* Proof Badges */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
@@ -81,14 +80,14 @@ export const IntegrationsMarquee = () => {
         </div>
       </div>
 
-      <div className="relative w-full max-w-7xl flex flex-col items-center mx-auto overflow-hidden">
+      <div className="relative w-full max-w-7xl flex flex-col items-center mx-auto overflow-hidden px-2 sm:px-4">
         {/* Gradients to fade edges */}
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-10" />
-        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent z-10" />
+        <div className="absolute inset-y-0 left-0 w-16 sm:w-24 md:w-32 bg-gradient-to-r from-background to-transparent z-10" />
+        <div className="absolute inset-y-0 right-0 w-16 sm:w-24 md:w-32 bg-gradient-to-l from-background to-transparent z-10" />
 
-        <div className="flex">
+        <div className="flex w-full overflow-hidden">
           <motion.div
-            className="flex gap-16 pr-16 items-center"
+            className="flex gap-6 sm:gap-8 md:gap-12 lg:gap-16 pr-6 sm:pr-8 md:pr-12 lg:pr-16 items-center"
             animate={{ x: ["0%", "-33.333333%"] }}
             transition={{
               ease: "linear",
@@ -97,11 +96,21 @@ export const IntegrationsMarquee = () => {
             }}
           >
             {duplicatedLogos.map((logo, idx) => (
-              <div key={idx} className="flex items-center gap-3 text-gray-500 shrink-0 hover:text-accent transition-colors duration-300">
-                <div className="flex items-center justify-center w-8 h-8">
-                  <logo.icon />
+              <div key={idx} className="flex items-center gap-2 sm:gap-3 text-gray-500 shrink-0 hover:text-accent transition-colors duration-300">
+                <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8">
+                  {logo.type === "image" ? (
+                    <Image
+                      src={logo.imageSrc}
+                      alt={logo.label}
+                      width={32}
+                      height={32}
+                      className="w-6 h-6 sm:w-8 sm:h-8 object-contain"
+                    />
+                  ) : (
+                    <logo.icon />
+                  )}
                 </div>
-                <span className="font-bold text-sm whitespace-nowrap">{logo.label}</span>
+                <span className="font-bold text-xs sm:text-sm whitespace-nowrap break-words">{logo.label}</span>
               </div>
             ))}
           </motion.div>
