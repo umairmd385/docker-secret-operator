@@ -11,7 +11,7 @@ Disallow: /.next/
 Disallow: /private/
 
 # Sitemap location
-Sitemap: https://dso.run/sitemap.xml
+Sitemap: https://dso.skycloudops.in/sitemap.xml
 
 # Crawl delay (prevent server overload)
 Crawl-delay: 1

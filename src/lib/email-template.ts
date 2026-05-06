@@ -44,7 +44,7 @@ export const getWelcomeEmailHTML = (email: string) => `
             <p class="text">That's it! DSO starts in Local Mode with native AES-256 encryption.</p>
 
             <div class="links">
-                📖 <a href="https://dso.run/docs/">Documentation</a> •
+                📖 <a href="https://dso.skycloudops.in/docs/">Documentation</a> •
                 ⭐ <a href="https://github.com/docker-secret-operator/dso">GitHub</a> •
                 💬 <a href="https://discord.gg/skycloudops">Discord</a>
             </div>
@@ -52,7 +52,7 @@ export const getWelcomeEmailHTML = (email: string) => `
 
         <div class="footer">
             <p>The DSO Team • Powered by SkyCloudOps</p>
-            <p><a href="https://dso.run/docs/guide/privacy.html">Privacy</a> • <a href="#">Unsubscribe</a></p>
+            <p><a href="https://dso.skycloudops.in/docs/guide/privacy.html">Privacy</a> • <a href="#">Unsubscribe</a></p>
         </div>
     </div>
 </body>
@@ -93,7 +93,7 @@ export const getAlreadySubscribedEmailHTML = () => `
             <p class="text">You'll receive updates about DSO features, security advisories, and architecture deep-dives.</p>
 
             <p class="text" style="margin-top: 20px;">
-                📖 <a href="https://dso.run/docs/" style="color: #00ffd1; text-decoration: none;">View Documentation</a> •
+                📖 <a href="https://dso.skycloudops.in/docs/" style="color: #00ffd1; text-decoration: none;">View Documentation</a> •
                 💬 <a href="https://discord.gg/skycloudops" style="color: #00ffd1; text-decoration: none;">Join Discord</a>
             </p>
         </div>

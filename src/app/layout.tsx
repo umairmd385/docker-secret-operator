@@ -22,7 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://dso.run"),
+  metadataBase: new URL("https://dso.skycloudops.in"),
   title: {
     default: "Docker Secret Operator (DSO) | CNCF Sandbox Project",
     template: "%s | DSO",
@@ -68,12 +68,12 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://dso.run",
+    canonical: "https://dso.skycloudops.in",
   },
   openGraph: {
     title: "Docker Secret Operator — Zero-Persistence Secret Injection",
     description: "Event-driven secret management for Docker. Inject secrets at runtime without disk writes. CNCF Sandbox project.",
-    url: "https://dso.run",
+    url: "https://dso.skycloudops.in",
     siteName: "Docker Secret Operator",
     images: [
       {
@@ -131,8 +131,8 @@ export default function RootLayout({
       applicationCategory: "DeveloperApplication",
       operatingSystem: ["Linux", "macOS", "Windows"],
       description: "Event-driven, zero-persistence secret injection for standalone Docker environments. Open source, CNCF Sandbox project, MIT licensed.",
-      url: "https://dso.run",
-      image: "https://dso.run/dso-logo.png",
+      url: "https://dso.skycloudops.in",
+      image: "https://dso.skycloudops.in/dso-logo.png",
       license: "https://opensource.org/licenses/MIT",
       offers: {
         "@type": "Offer",
@@ -152,7 +152,7 @@ export default function RootLayout({
       },
       softwareHelp: {
         "@type": "CreativeWork",
-        url: "https://dso.run/docs",
+        url: "https://dso.skycloudops.in/docs",
       },
       maintainer: {
         "@type": "Organization",
@@ -165,8 +165,8 @@ export default function RootLayout({
       "@context": "https://schema.org",
       "@type": "Organization",
       name: "Docker Secret Operator",
-      url: "https://dso.run",
-      logo: "https://dso.run/dso-logo.png",
+      url: "https://dso.skycloudops.in",
+      logo: "https://dso.skycloudops.in/dso-logo.png",
       sameAs: [
         "https://github.com/docker-secret-operator/dso",
         "https://x.com/skycloudops",
@@ -186,13 +186,13 @@ export default function RootLayout({
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://dso.run",
+          item: "https://dso.skycloudops.in",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Documentation",
-          item: "https://dso.run/docs",
+          item: "https://dso.skycloudops.in/docs",
         },
         {
           "@type": "ListItem",

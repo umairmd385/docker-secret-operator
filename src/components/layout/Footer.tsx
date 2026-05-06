@@ -37,6 +37,7 @@ const links = {
 export const Footer = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showAlreadySubscribed, setShowAlreadySubscribed] = useState(false);
 
   return (
   <footer className="relative pt-32 pb-16 bg-[#03070c] border-t border-white/5 overflow-hidden">
@@ -121,7 +122,7 @@ export const Footer = () => {
           {showSuccess ? (
             <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald-400/10 border border-emerald-400/30">
               <Check className="w-5 h-5 text-emerald-400 flex-shrink-0" aria-hidden="true" />
-              <p className="text-sm text-emerald-400 font-medium">You are already subscribed to our Newsletter</p>
+              <p className="text-sm text-emerald-400 font-medium">Welcome! Check your email for the welcome message.</p>
             </div>
           ) : (
             <form
@@ -140,10 +141,15 @@ export const Footer = () => {
                     body: JSON.stringify({ email })
                   });
                   if (res.ok) {
+                    const data = await res.json();
                     trackEvent.newsletterSignup(email, true);
                     form.reset();
-                    setShowSuccess(true);
-                    setTimeout(() => setShowSuccess(false), 3000);
+                    if (data.message?.toLowerCase().includes('already')) {
+                      setShowAlreadySubscribed(true);
+                    } else {
+                      setShowSuccess(true);
+                      setTimeout(() => setShowSuccess(false), 3000);
+                    }
                   } else {
                     trackEvent.newsletterSignup(email, false);
                   }
@@ -196,6 +202,28 @@ export const Footer = () => {
         </div>
       </div>
     </div>
+
+    {showAlreadySubscribed && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowAlreadySubscribed(false)}>
+        <div className="relative bg-[#0d1117] border border-accent/30 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl shadow-accent/10" onClick={(e) => e.stopPropagation()}>
+          <div className="flex flex-col items-center text-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center">
+              <Check className="w-6 h-6 text-accent" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Already Subscribed</h3>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              You are already subscribed to this newsletter, please stay updated.
+            </p>
+            <button
+              onClick={() => setShowAlreadySubscribed(false)}
+              className="mt-2 w-full h-11 rounded-xl bg-accent hover:bg-accent/90 text-background font-bold text-sm transition-all active:scale-95"
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
   </footer>
   );
 };
