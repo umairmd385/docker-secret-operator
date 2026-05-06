@@ -46,8 +46,12 @@ const KubernetesLogo = () => (
   </svg>
 );
 
+type SvgLogo = { icon: React.ComponentType<{ className?: string }>, label: string, color: string, type: "svg" };
+type ImageLogo = { icon: null, label: string, color: string, type: "image", imageSrc: string };
+type Logo = SvgLogo | ImageLogo;
+
 export const IntegrationsMarquee = () => {
-  const logos = [
+  const logos: Logo[] = [
     { icon: DockerLogo, label: "Docker Engine", color: "#2496ED", type: "svg" },
     { icon: null, label: "AWS Secrets Manager", color: "#FF9900", type: "image", imageSrc: "https://img.icons8.com/?size=100&id=G0CnLqqcRBXl&format=png&color=ffffff" },
     { icon: VaultLogo, label: "HashiCorp Vault", color: "#000000", type: "svg" },
