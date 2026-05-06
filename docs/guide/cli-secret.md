@@ -51,3 +51,51 @@ Removes a secret from the vault.
 ```bash
 docker dso secret rm <KEY>
 ```
+
+---
+
+### 5. `env import`
+Bulk-import secrets from a `.env` file into the vault.
+
+#### Usage
+```bash
+docker dso env import <file> [project]
+```
+
+#### Description
+Parses a standard `.env` file (KEY=VALUE format) and imports all secrets into the vault under a specified project namespace.
+
+#### Examples
+```bash
+# Import into default project
+docker dso env import .env.local
+
+# Import into specific project
+docker dso env import .env.prod myapp
+```
+
+#### Input Format
+```env
+# Comments are ignored
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASSWORD=mysecretpass
+API_KEY=sk-1234567890abcdef
+```
+
+#### Output
+```
+[INFO] Importing secrets from .env.local...
+[OK] Successfully imported 4 secrets
+
+Imported secrets:
+  ✓ db_host
+  ✓ db_user
+  ✓ db_password
+  ✓ api_key
+
+Project: default
+Total secrets: 15 (4 new)
+```
+
+👉 **Learn more**: [CLI: Management](/guide/cli-management#env-import)

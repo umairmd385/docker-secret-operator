@@ -44,12 +44,21 @@ export default withMermaid(
             ]
           },
           {
+            text: 'CLI Reference',
+            items: [
+              { text: 'CLI Overview', link: '/guide/cli' },
+              { text: 'CLI: Init', link: '/guide/cli-init' },
+              { text: 'CLI: Up', link: '/guide/cli-up' },
+              { text: 'CLI: Down', link: '/guide/cli-down' },
+              { text: 'CLI: Compose', link: '/guide/cli-compose' },
+              { text: 'CLI: Secrets', link: '/guide/cli-secret' },
+              { text: 'CLI: Management & Diagnostics', link: '/guide/cli-management' },
+              { text: 'CLI: System', link: '/guide/cli-system' }
+            ]
+          },
+          {
             text: 'Reference',
             items: [
-              { text: 'CLI Reference', link: '/guide/cli' },
-              { text: 'CLI: Init', link: '/guide/cli-init' },
-              { text: 'CLI: System', link: '/guide/cli-system' },
-              { text: 'CLI: Secrets', link: '/guide/cli-secret' },
               { text: 'Providers', link: '/guide/providers/aws' },
               { text: 'Examples', link: '/guide/examples' },
               { text: 'Troubleshooting', link: '/guide/troubleshooting' }
