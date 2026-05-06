@@ -25,31 +25,31 @@ export const ConfigDeepDive = () => {
   ];
 
   return (
-    <section className="py-24 border-t border-border bg-surface2/10">
-      <div className="max-w-7xl mx-auto px-6">
-        <motion.div 
+    <section className="py-12 sm:py-16 md:py-20 lg:py-24 border-t border-border bg-surface2/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
         >
-          <h2 className="text-3xl font-bold tracking-tight text-foreground mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-3 sm:mb-4">
             Under the hood
           </h2>
-          <p className="text-gray-400 text-lg leading-relaxed">
+          <p className="text-gray-400 text-sm sm:text-base lg:text-lg leading-relaxed">
             A closer look at how DSO configurations provide maximum deterministic safety.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
           {internals.map((item, idx) => (
             <Card key={idx} className="group hover:bg-surface/50 border-border/50">
-              <CardHeader>
-                <div className="w-10 h-10 rounded-lg bg-surface border border-accent/20 flex items-center justify-center mb-4 group-hover:border-accent transition-colors">
-                  <item.icon className="w-5 h-5 text-accent" />
+              <CardHeader className="p-4 sm:p-6">
+                <div className="w-8 sm:w-10 h-8 sm:h-10 rounded-lg bg-surface border border-accent/20 flex items-center justify-center mb-3 sm:mb-4 group-hover:border-accent transition-colors shrink-0">
+                  <item.icon className="w-4 sm:w-5 h-4 sm:h-5 text-accent" />
                 </div>
-                <CardTitle className="text-lg font-bold mb-2">{item.title}</CardTitle>
-                <CardDescription className="text-sm text-gray-400 leading-relaxed mt-1">
+                <CardTitle className="text-base sm:text-lg font-bold mb-2">{item.title}</CardTitle>
+                <CardDescription className="text-xs sm:text-sm text-gray-400 leading-relaxed mt-1">
                   {item.description}
                 </CardDescription>
               </CardHeader>

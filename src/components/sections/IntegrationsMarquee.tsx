@@ -64,21 +64,22 @@ export const IntegrationsMarquee = () => {
   const duplicatedLogos = [...logos, ...logos, ...logos];
 
   return (
-    <section id="integrations" className="py-16 sm:py-20 md:py-24 overflow-x-hidden border-b border-border bg-surface2/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center mb-8 sm:mb-10">
-        <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2 break-words">Works with your existing secret providers</h3>
-        <p className="text-gray-400 text-xs sm:text-sm mb-6 sm:mb-8">Via the extensible Go plugin architecture</p>
+    <section id="integrations" className="py-12 sm:py-16 md:py-20 lg:py-24 overflow-x-hidden border-b border-border bg-surface2/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center mb-6 sm:mb-10">
+        <h3 className="text-base sm:text-lg lg:text-xl font-bold text-foreground mb-2 break-words">Works with your existing secret providers</h3>
+        <p className="text-gray-400 text-xs sm:text-sm mb-4 sm:mb-6 lg:mb-8">Via the extensible Go plugin architecture</p>
 
         {/* Proof Badges */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8 lg:mb-10">
           {[
             { icon: ShieldCheck, label: "Zero Disk Persistence" },
             { icon: Zap, label: "Event-Driven" },
             { icon: GitBranch, label: "Checksum Verified" },
           ].map(({ icon: Icon, label }) => (
-            <div key={label} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/20 bg-accent/5 text-accent/80 text-xs font-mono tracking-wide">
-              <Icon className="w-3 h-3" />
-              {label}
+            <div key={label} className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-accent/20 bg-accent/5 text-accent/80 text-[10px] sm:text-xs font-mono tracking-wide">
+              <Icon className="w-3 h-3 flex-shrink-0" />
+              <span className="hidden xs:inline">{label}</span>
+              <span className="xs:hidden">{label.split(" ")[0]}</span>
             </div>
           ))}
         </div>

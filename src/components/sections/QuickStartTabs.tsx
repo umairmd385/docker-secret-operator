@@ -17,37 +17,39 @@ export const QuickStartTabs = () => {
   const [activeMode, setActiveMode] = useState<Mode>("local");
 
   return (
-    <section id="quick-start" className="py-20 bg-surface2/30 border-t border-border">
-      <div className="max-w-4xl mx-auto px-6">
+    <section id="quick-start" className="py-12 sm:py-20 bg-surface2/30 border-t border-border">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
-          <h2 className="text-3xl font-bold tracking-tight text-foreground mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-4">
             Get Started in Under 2 Minutes
           </h2>
 
-          <div className="flex justify-center gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4 mb-8">
             <button
               onClick={() => setActiveMode("local")}
-              className={`px-6 py-2 rounded-full border transition-all ${activeMode === "local" ? "bg-accent border-accent text-white shadow-lg shadow-accent/20" : "border-border text-gray-400 hover:border-gray-500"}`}
+              className={`px-3 sm:px-6 py-2 rounded-full border transition-all text-xs sm:text-sm whitespace-nowrap ${activeMode === "local" ? "bg-accent border-accent text-white shadow-lg shadow-accent/20" : "border-border text-gray-400 hover:border-gray-500"}`}
             >
-              Local Mode (Native Vault)
+              <span className="hidden sm:inline">Local Mode (Native Vault)</span>
+              <span className="sm:hidden">Local</span>
             </button>
             <button
               onClick={() => setActiveMode("cloud")}
-              className={`px-6 py-2 rounded-full border transition-all ${activeMode === "cloud" ? "bg-accent border-accent text-white shadow-lg shadow-accent/20" : "border-border text-gray-400 hover:border-gray-500"}`}
+              className={`px-3 sm:px-6 py-2 rounded-full border transition-all text-xs sm:text-sm whitespace-nowrap ${activeMode === "cloud" ? "bg-accent border-accent text-white shadow-lg shadow-accent/20" : "border-border text-gray-400 hover:border-gray-500"}`}
             >
-              Cloud Mode (AWS/Azure/Vault)
+              <span className="hidden sm:inline">Cloud Mode (AWS/Azure/Vault)</span>
+              <span className="sm:hidden">Cloud</span>
             </button>
           </div>
         </motion.div>
 
-        <div className="space-y-12">
+        <div className="space-y-8 sm:space-y-12">
           {/* Step 1: Install */}
-          <div className="flex flex-col md:flex-row gap-8 items-start">
+          <div className="flex flex-col md:flex-row gap-4 sm:gap-8 items-start">
             <div className="w-12 h-12 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent font-bold shrink-0 shadow-sm mt-1 text-lg">
               1
             </div>

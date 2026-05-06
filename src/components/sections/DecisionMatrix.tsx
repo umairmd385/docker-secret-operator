@@ -17,48 +17,48 @@ export const DecisionMatrix = () => {
   ];
 
   return (
-    <section className="py-24 border-t border-border relative overflow-hidden">
+    <section className="py-12 sm:py-16 md:py-20 lg:py-24 border-t border-border relative overflow-hidden">
       {/* Background flare */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto px-6 relative z-10">
-        <motion.div 
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
-          <h2 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-2">
             When should you use DSO?
           </h2>
-          <p className="text-sm font-mono text-accent/70 tracking-wide mb-4">
+          <p className="text-xs sm:text-sm font-mono text-accent/70 tracking-wide mb-3 sm:mb-4">
             Built for Docker, not Kubernetes.
           </p>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-400 text-sm sm:text-base lg:text-lg">
             DSO is purpose-built for Docker — not Kubernetes.
           </p>
         </motion.div>
 
-        <Card className="p-8 md:p-12 shadow-2xl bg-[#0a0f16]/80 border-accent/20">
-          <ul className="space-y-6">
+        <Card className="p-4 sm:p-6 md:p-8 lg:p-12 shadow-2xl bg-[#0a0f16]/80 border-accent/20">
+          <ul className="space-y-4 sm:space-y-6">
             {criteria.map((item, idx) => (
-              <motion.li 
+              <motion.li
                 key={idx}
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="flex items-start gap-4"
+                className="flex items-start gap-3 sm:gap-4"
               >
-                <div className={`mt-1 w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${item.match ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
-                  {item.match ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
+                <div className={`mt-0.5 sm:mt-1 w-5 sm:w-6 h-5 sm:h-6 rounded-full flex items-center justify-center shrink-0 ${item.match ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+                  {item.match ? <Check className="w-3 sm:w-4 h-3 sm:h-4" /> : <X className="w-3 sm:w-4 h-3 sm:h-4" />}
                 </div>
-                <div>
-                  <p className="text-lg text-gray-200">
+                <div className="min-w-0">
+                  <p className="text-sm sm:text-base lg:text-lg text-gray-200 break-words">
                     {item.text}
                   </p>
                   {item.note && (
-                    <p className="text-sm text-gray-500 mt-1 font-mono">→ {item.note}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1 font-mono">→ {item.note}</p>
                   )}
                 </div>
               </motion.li>

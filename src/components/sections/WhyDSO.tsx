@@ -47,22 +47,22 @@ export const WhyDSO = () => {
   ];
 
   return (
-    <section id="why" className="py-20 md:py-24 bg-surface2/30 border-t border-border">
-      <div className="max-w-7xl mx-auto px-6">
-        <motion.div 
+    <section id="why" className="py-12 sm:py-20 md:py-24 bg-surface2/30 border-t border-border">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.35 }}
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="text-center max-w-2xl mx-auto mb-12 sm:mb-16"
         >
-          <h2 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-2">
             Why Not .env or Docker Secrets?
           </h2>
-          <p className="text-sm font-mono text-accent/70 tracking-wide mb-4">
+          <p className="text-xs sm:text-sm font-mono text-accent/70 tracking-wide mb-4">
             Securing the entire secret lifecycle.
           </p>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-400 text-sm sm:text-base lg:text-lg">
             Traditional approaches either leak secrets via disk or require complex infrastructure. DSO provides a unified, secure workflow for both local development and production.
           </p>
         </motion.div>
@@ -70,11 +70,11 @@ export const WhyDSO = () => {
         <div className="overflow-x-auto rounded-2xl border border-border/50 bg-[#0a0f16] shadow-xl">
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
-              <tr className="bg-surface border-b border-border/50 text-[11px] uppercase tracking-widest text-gray-500">
-                <th className="px-6 py-4 font-bold">Approach</th>
-                <th className="px-6 py-4 font-bold">Security Posture</th>
-                <th className="px-6 py-4 font-bold">Persistence</th>
-                <th className="px-6 py-4 font-bold">Dynamic Rotation</th>
+              <tr className="bg-surface border-b border-border/50 text-[10px] sm:text-[11px] uppercase tracking-widest text-gray-500">
+                <th className="px-3 sm:px-6 py-3 sm:py-4 font-bold">Approach</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 font-bold">Security Posture</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 font-bold">Persistence</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 font-bold">Dynamic Rotation</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/30">
@@ -90,20 +90,20 @@ export const WhyDSO = () => {
                   {row.highlight && (
                     <td className="absolute left-0 top-0 bottom-0 w-1 bg-accent"></td>
                   )}
-                  <td className={`p-6 font-bold text-foreground flex items-center gap-3 ${row.highlight ? 'text-accent' : ''}`}>
+                  <td className={`p-3 sm:p-6 font-bold text-xs sm:text-sm text-foreground flex items-center gap-2 sm:gap-3 ${row.highlight ? 'text-accent' : ''}`}>
                     {row.icon}
                     {row.method}
                   </td>
-                  <td className={`p-6 font-mono text-sm ${row.securityColor} ${row.highlight ? 'font-bold' : ''}`}>
+                  <td className={`p-3 sm:p-6 font-mono text-xs sm:text-sm ${row.securityColor} ${row.highlight ? 'font-bold' : ''}`}>
                     {row.security}
                   </td>
-                  <td className={`p-6 text-sm text-gray-300 ${row.highlight ? 'font-medium text-gray-100' : ''}`}>
-                    <div className="flex items-center">
+                  <td className={`p-3 sm:p-6 text-xs sm:text-sm text-gray-300 ${row.highlight ? 'font-medium text-gray-100' : ''}`}>
+                    <div className="flex items-center gap-1 sm:gap-2">
                       {row.persistenceIcon}
                       {row.persistence}
                     </div>
                   </td>
-                  <td className={`p-6 text-sm text-gray-300 flex items-center gap-2 ${row.highlight ? 'font-medium text-accent' : ''}`}>
+                  <td className={`p-3 sm:p-6 text-xs sm:text-sm text-gray-300 flex items-center gap-1 sm:gap-2 ${row.highlight ? 'font-medium text-accent' : ''}`}>
                     {row.method.includes("DSO") ? <Zap className="w-4 h-4 text-accent" /> : null}
                     {row.dynamic}
                   </td>

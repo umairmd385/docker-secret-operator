@@ -17,33 +17,33 @@ const composeCode = `services:
 
 export const ComposeExample = () => {
   return (
-    <section className="py-20 md:py-24 bg-background border-y border-white/5 relative overflow-hidden">
+    <section className="py-12 sm:py-20 md:py-24 bg-background border-y border-white/5 relative overflow-hidden">
       {/* Background depth */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-center">
           <div>
-            <div className="text-xs font-mono text-accent uppercase tracking-[0.3em] mb-6 font-bold">Key Integration</div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 tracking-tight font-outfit leading-tight">
+            <div className="text-[10px] sm:text-xs font-mono text-accent uppercase tracking-[0.3em] mb-4 sm:mb-6 font-bold">Key Integration</div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 sm:mb-8 tracking-tight font-outfit leading-tight">
               One protocol. <br />
               Infinite possibilities.
             </h2>
-            <p className="text-gray-400 text-lg mb-10 leading-relaxed font-medium">
+            <p className="text-gray-400 text-sm sm:text-base lg:text-lg mb-8 sm:mb-10 leading-relaxed font-medium">
               DSO leverages the <code className="text-accent bg-accent/5 px-2 py-0.5 rounded border border-accent/20">dso://</code> protocol to intercept Docker Compose environment resolution. No code changes, no sidecars, no complexity.
             </p>
             
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {[
                 { title: "Zero Image Bloat", desc: "Keep secrets out of your container images and build arguments." },
                 { title: "Universal Compatibility", desc: "Works with any container that accepts env vars or file paths." },
                 { title: "Atomic Injection", desc: "Secrets are injected during the 'create' phase of the container lifecycle." }
               ].map((item, i) => (
-                <div key={i} className="flex items-start gap-4 group">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent mt-2 group-hover:scale-150 transition-transform" />
+                <div key={i} className="flex items-start gap-3 sm:gap-4 group">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 sm:mt-2 group-hover:scale-150 transition-transform shrink-0" />
                   <div>
-                    <h4 className="text-white font-bold mb-1 tracking-tight">{item.title}</h4>
-                    <p className="text-sm text-gray-500 font-medium">{item.desc}</p>
+                    <h4 className="text-sm sm:text-base text-white font-bold mb-1 tracking-tight">{item.title}</h4>
+                    <p className="text-xs sm:text-sm text-gray-500 font-medium">{item.desc}</p>
                   </div>
                 </div>
               ))}
