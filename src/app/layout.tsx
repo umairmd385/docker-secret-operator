@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     default: "Docker Secret Operator (DSO) | CNCF Sandbox Project",
     template: "%s | DSO",
   },
-  description: "Docker Secret Operator (DSO) - Secret operator for Docker & Kubernetes. Zero-persistence secret management with event-driven injection. CNCF sandbox project alternative to Vault. MIT licensed.",
+  description: "Docker Secret Operator (DSO) - Secret operator for Docker & Kubernetes. Zero-persistence secret management with event-driven injection. CNCF sandbox project alternative to Vault. Apache 2.0 licensed.",
   keywords: [
     "docker secret operator",
     "secret operator docker",
@@ -130,10 +130,10 @@ export default function RootLayout({
       name: "Docker Secret Operator",
       applicationCategory: "DeveloperApplication",
       operatingSystem: ["Linux", "macOS", "Windows"],
-      description: "Event-driven, zero-persistence secret injection for standalone Docker environments. Open source, CNCF Sandbox project, MIT licensed.",
+      description: "Event-driven, zero-persistence secret injection for standalone Docker environments. Open source, CNCF Sandbox project, Apache 2.0 licensed.",
       url: "https://dso.skycloudops.in",
       image: "https://dso.skycloudops.in/dso-logo.png",
-      license: "https://opensource.org/licenses/MIT",
+      license: "https://www.apache.org/licenses/LICENSE-2.0",
       offers: {
         "@type": "Offer",
         price: "0",
@@ -224,7 +224,7 @@ export default function RootLayout({
       description: "Open source secret management operator for Docker. Zero-persistence, event-driven secret injection. CNCF Sandbox project.",
       codeRepository: "https://github.com/docker-secret-operator/dso",
       programmingLanguage: ["Go", "Shell"],
-      license: "https://opensource.org/licenses/MIT",
+      license: "https://www.apache.org/licenses/LICENSE-2.0",
       url: "https://dso.skycloudops.in",
       author: {
         "@type": "Organization",
@@ -250,7 +250,7 @@ export default function RootLayout({
           name: "Is Docker Secret Operator free to use?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes, Docker Secret Operator is completely free and open source, licensed under the MIT license. It is available on GitHub at https://github.com/docker-secret-operator/dso.",
+            text: "Yes, Docker Secret Operator is completely free and open source, licensed under the Apache License 2.0. It is available on GitHub at https://github.com/docker-secret-operator/dso.",
           },
         },
         {

@@ -107,7 +107,7 @@ Branded:
 ### Schema Markup
 - Software Application type
 - Version information
-- License (MIT)
+- License (Apache 2.0)
 - Download URL
 
 ### CNCF Visibility
@@ -170,7 +170,7 @@ https://dso.run/
 ### When Submitting:
 1. **Link to docs**: https://dso.run/docs
 2. **Highlight**: Zero-persistence architecture
-3. **Emphasize**: Open-source, MIT licensed
+3. **Emphasize**: Open-source, Apache 2.0 licensed
 4. **Showcase**: Multi-provider support
 5. **Reference**: GitHub stars & community
 

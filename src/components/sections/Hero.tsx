@@ -77,11 +77,11 @@ export const Hero = () => {
   }, [mode]);
 
   return (
-    <section className="relative pt-20 pb-20 overflow-hidden bg-background">
+    <section className="relative pt-12 sm:pt-20 pb-12 sm:pb-20 overflow-hidden bg-background">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-accent/5 blur-[180px] rounded-full pointer-events-none z-0" />
-      
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[600px]">
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center lg:min-h-[600px]">
           
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -114,7 +114,7 @@ export const Hero = () => {
             </div>
             
             <div className="mt-12 flex items-center gap-4 text-xs font-mono text-gray-500 uppercase tracking-widest">
-              <span className="flex items-center gap-1.5"><Shield className="w-3 h-3" /> MIT Licensed</span>
+              <span className="flex items-center gap-1.5"><Shield className="w-3 h-3" /> Apache 2.0 Licensed</span>
               <span className="w-1 h-1 rounded-full bg-gray-700" />
               <span>Enterprise Ready</span>
             </div>
@@ -130,23 +130,23 @@ export const Hero = () => {
             
             <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#0a0f16]/95 backdrop-blur-xl shadow-2xl">
               <div className="flex items-center justify-between px-6 py-4 bg-white/5 border-b border-white/10">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
-                    <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-                    <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
+                    <div className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#ff5f56]" />
+                    <div className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#ffbd2e]" />
+                    <div className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#27c93f]" />
                   </div>
-                  <span className="ml-3 text-[10px] font-mono text-gray-500 uppercase tracking-widest">
-                    {mode === "local" ? "Native Vault Mode" : "Cloud Provider Mode"}
+                  <span className="text-[9px] sm:text-[10px] font-mono text-gray-500 uppercase tracking-widest">
+                    {mode === "local" ? "Vault" : "Cloud"}
                   </span>
                 </div>
-                <div className="flex items-center gap-4">
-                   <div className={`text-[10px] font-mono px-2 py-0.5 rounded border transition-colors ${mode === 'local' ? 'border-accent text-accent bg-accent/5' : 'border-white/10 text-gray-500'}`}>LOCAL</div>
-                   <div className={`text-[10px] font-mono px-2 py-0.5 rounded border transition-colors ${mode === 'cloud' ? 'border-blue-400 text-blue-400 bg-blue-400/5' : 'border-white/10 text-gray-500'}`}>CLOUD</div>
+                <div className="flex items-center gap-2 sm:gap-4">
+                   <div className={`text-[9px] sm:text-[10px] font-mono px-1.5 sm:px-2 py-0.5 rounded border transition-colors ${mode === 'local' ? 'border-accent text-accent bg-accent/5' : 'border-white/10 text-gray-500'}`}>LOCAL</div>
+                   <div className={`text-[9px] sm:text-[10px] font-mono px-1.5 sm:px-2 py-0.5 rounded border transition-colors ${mode === 'cloud' ? 'border-blue-400 text-blue-400 bg-blue-400/5' : 'border-white/10 text-gray-500'}`}>CLOUD</div>
                 </div>
               </div>
 
-              <div className="p-8 font-mono text-sm sm:text-base leading-relaxed h-[360px] overflow-hidden">
+              <div className="p-4 sm:p-8 font-mono text-xs sm:text-sm lg:text-base leading-relaxed h-80 sm:h-96 lg:h-[360px] overflow-y-auto">
                 <AnimatePresence mode="popLayout">
                   {lines.map((line, i) => (
                     <motion.div 

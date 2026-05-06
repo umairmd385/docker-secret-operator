@@ -1,4 +1,4 @@
-/* Mobile Responsiveness Fixes */
+/* Mobile Responsiveness Fixes - v3-deploy frontend */
 
 /* Base mobile optimizations */
 @media (max-width: 640px) {
@@ -8,12 +8,14 @@
 
   body {
     overflow-x: hidden;
+    width: 100%;
   }
 
   /* Fix horizontal overflow */
   main {
     overflow-x: hidden;
     width: 100%;
+    max-width: 100%;
   }
 
   /* Navbar adjustments */
@@ -76,30 +78,62 @@
   }
 
   /* Hero section */
+  section {
+    overflow-x: hidden;
+  }
+
+  /* Grid layout - ensure responsive */
+  .lg\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  /* Hero grid minimum height for mobile */
+  [class*="grid"] {
+    min-height: auto !important;
+  }
+
   .hero-section {
     min-height: auto;
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
   .hero-section h1 {
     font-size: 1.75rem;
     margin-bottom: 1rem;
+    line-height: 1.2;
   }
 
   .hero-section p {
     max-width: 100%;
     margin-bottom: 1.5rem;
+    font-size: 0.95rem;
   }
 
   /* Terminal/code blocks */
   .terminal-block,
   pre,
   code {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     line-height: 1.4;
     overflow-x: auto;
     padding: 0.75rem;
+    word-break: break-word;
+  }
+
+  /* Hero terminal block responsive height */
+  [class*="h-\[360px\]"] {
+    height: auto !important;
+    max-height: 40vh;
+    overflow-y: auto;
+  }
+
+  /* Terminal/pre tag fixes */
+  div[class*="rounded-2xl"] > div[class*="font-mono"] {
+    font-size: 0.75rem;
+    max-height: 50vh;
+    overflow-y: auto;
   }
 
   /* Cards */
