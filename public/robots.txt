@@ -13,21 +13,15 @@ Disallow: /private/
 # Sitemap location
 Sitemap: https://dso.skycloudops.in/sitemap.xml
 
-# Crawl delay (prevent server overload)
-Crawl-delay: 1
-
 # Specific search engine optimizations
 User-agent: Googlebot
 Allow: /
-Priority: high
 
 User-agent: Bingbot
 Allow: /
-Priority: high
 
 User-agent: Slurp
 Allow: /
-Priority: medium
 
 # Block bad actors
 User-agent: MJ12bot

@@ -171,6 +171,7 @@ export default function RootLayout({
         "https://github.com/docker-secret-operator/dso",
         "https://x.com/skycloudops",
         "https://discord.gg/skycloudops",
+        "https://www.linkedin.com/in/mdumair250801/",
       ],
       contactPoint: {
         "@type": "ContactPoint",
@@ -199,6 +200,90 @@ export default function RootLayout({
           position: 3,
           name: "GitHub",
           item: "https://github.com/docker-secret-operator/dso",
+        },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "Docker Secret Operator",
+      url: "https://dso.skycloudops.in",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: "https://dso.skycloudops.in/docs?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareSourceCode",
+      name: "Docker Secret Operator",
+      description: "Open source secret management operator for Docker. Zero-persistence, event-driven secret injection. CNCF Sandbox project.",
+      codeRepository: "https://github.com/docker-secret-operator/dso",
+      programmingLanguage: ["Go", "Shell"],
+      license: "https://opensource.org/licenses/MIT",
+      url: "https://dso.skycloudops.in",
+      author: {
+        "@type": "Organization",
+        name: "Docker Secret Operator Community",
+        url: "https://github.com/docker-secret-operator",
+      },
+      keywords: "docker, secret-management, secret-operator, kubernetes, devops, cncf, security, vault-alternative",
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "What is Docker Secret Operator (DSO)?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Docker Secret Operator (DSO) is an open-source, CNCF Sandbox project that provides zero-persistence, event-driven secret injection for Docker containers. It allows you to securely inject secrets at runtime without ever writing them to disk.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Is Docker Secret Operator free to use?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes, Docker Secret Operator is completely free and open source, licensed under the MIT license. It is available on GitHub at https://github.com/docker-secret-operator/dso.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How does DSO compare to HashiCorp Vault?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "DSO is a lightweight, Docker-native alternative to HashiCorp Vault. While Vault requires complex infrastructure setup, DSO works directly with Docker using a simple CLI. It supports local encrypted vaults as well as cloud providers like AWS Secrets Manager and Azure Key Vault with zero-persistence secret injection.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Which cloud providers does Docker Secret Operator support?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Docker Secret Operator supports AWS Secrets Manager, Azure Key Vault, HashiCorp Vault, Huawei Cloud Secret Manager, and a local encrypted vault mode. All providers use the same CLI workflow.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How do I install Docker Secret Operator?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Install DSO with a single command: curl -fsSL https://dso.skycloudops.in/install.sh | sudo bash. Then run 'docker dso init' to initialize. Full documentation is available at https://dso.skycloudops.in/docs/guide/installation.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What is zero-persistence secret management?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Zero-persistence means secrets are injected directly into container memory at runtime and never written to disk, environment files, or Docker layers. This eliminates the risk of secrets being exposed through file system access, docker inspect, or image layer scanning.",
+          },
         },
       ],
     },
