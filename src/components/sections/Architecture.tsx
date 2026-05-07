@@ -5,13 +5,13 @@ import { motion } from "framer-motion";
 import { HardDrive, Server, Shield, Cpu, ChevronRight } from "lucide-react";
 
 const FlowItem = ({ icon: Icon, label, sublabel }: { icon: any, label: string, sublabel?: string }) => (
-  <div className="flex-shrink-0 flex flex-col items-center gap-2 w-16 sm:w-20">
-    <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center border border-accent/20">
-      <Icon className="w-6 h-6 text-accent" />
+  <div className="flex-shrink-0 flex flex-col items-center gap-2 w-20 sm:w-24">
+    <div className="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center border border-accent/20 flex-shrink-0">
+      <Icon className="w-5 h-5 text-accent" />
     </div>
-    <div className="text-center">
-      <div className="text-sm font-bold text-foreground">{label}</div>
-      {sublabel && <div className="text-[10px] font-mono text-gray-500 uppercase">{sublabel}</div>}
+    <div className="text-center w-full">
+      <div className="text-xs font-bold text-foreground leading-tight whitespace-nowrap">{label}</div>
+      {sublabel && <div className="text-[9px] font-mono text-gray-500 uppercase mt-0.5 leading-tight">{sublabel}</div>}
     </div>
   </div>
 );
