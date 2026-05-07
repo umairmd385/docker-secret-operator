@@ -1,0 +1,25 @@
+{
+  "name": "Docker Secret Operator",
+  "short_name": "DSO",
+  "description": "Zero-persistence secret injection for Docker containers. CNCF Sandbox project.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#03070c",
+  "theme_color": "#00d4aa",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/dso-logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["developer tools", "security", "productivity"]
+}

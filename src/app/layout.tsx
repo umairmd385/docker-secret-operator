@@ -23,6 +23,9 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dso.skycloudops.in"),
+  verification: {
+    google: "aca7dac2601cbebd",
+  },
   title: {
     default: "Docker Secret Operator (DSO) | CNCF Sandbox Project",
     template: "%s | DSO",
@@ -85,8 +88,8 @@ export const metadata: Metadata = {
       },
       {
         url: "/og-image.png",
-        width: 1200,
-        height: 630,
+        width: 1024,
+        height: 1024,
         alt: "Docker Secret Operator - Secret Management for Docker",
         type: "image/png",
       },
