@@ -108,7 +108,7 @@ export const Hero = () => {
                 Quick Start
                 <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button href="/docs" variant="secondary" size="lg" className="h-14 px-10 text-lg border-white/5 bg-white/5 hover:bg-white/10">
+              <Button href="/docs/index.html" variant="secondary" size="lg" className="h-14 px-10 text-lg border-white/5 bg-white/5 hover:bg-white/10">
                 Documentation
               </Button>
             </div>

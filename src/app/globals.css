@@ -4,6 +4,7 @@
   --background: #0d1117;
   --foreground: #e2e8f0;
   --surface: #161b22;
+  --surface2: #0a0d12;
   --surface-hover: #1c2128;
   --accent: #00e6c0;
   --accent-dim: rgba(0, 230, 192, 0.1);
@@ -15,6 +16,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface2: var(--surface2);
   --color-surface-hover: var(--surface-hover);
   --color-accent: var(--accent);
   --color-accent-dim: var(--accent-dim);
@@ -43,12 +45,6 @@ html {
 
 /* Prose utility — apply to section body text for consistent max-width + line-height */
 .prose-block {
-  max-width: 42rem;   /* ~672px, equivalent to Tailwind max-w-2xl */
-  line-height: 1.75;
-}
-
-/* Prose utility — apply to section body text for consistent max-width + line-height */
-.prose-block {
-  max-width: 42rem;   /* ~672px, equivalent to Tailwind max-w-2xl */
+  max-width: 42rem;
   line-height: 1.75;
 }

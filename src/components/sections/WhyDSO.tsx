@@ -85,14 +85,13 @@ export const WhyDSO = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.4 }}
-                  className={row.highlight ? "bg-accent/[0.07] relative border-y border-accent/20 shadow-[inset_0_0_20px_rgba(0,230,192,0.05)]" : "hover:bg-surface/50 transition-colors"}
+                  className={row.highlight ? "bg-accent/[0.07] border-y border-accent/20 shadow-[inset_0_0_20px_rgba(0,230,192,0.05)]" : "hover:bg-surface/50 transition-colors"}
                 >
-                  {row.highlight && (
-                    <td className="absolute left-0 top-0 bottom-0 w-1 bg-accent"></td>
-                  )}
-                  <td className={`p-3 sm:p-6 font-bold text-xs sm:text-sm text-foreground flex items-center gap-2 sm:gap-3 ${row.highlight ? 'text-accent' : ''}`}>
-                    {row.icon}
-                    {row.method}
+                  <td className={`p-3 sm:p-6 font-bold text-xs sm:text-sm text-foreground ${row.highlight ? 'text-accent border-l-2 border-accent' : ''}`}>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      {row.icon}
+                      {row.method}
+                    </div>
                   </td>
                   <td className={`p-3 sm:p-6 font-mono text-xs sm:text-sm ${row.securityColor} ${row.highlight ? 'font-bold' : ''}`}>
                     {row.security}

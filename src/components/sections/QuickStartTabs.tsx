@@ -29,20 +29,18 @@ export const QuickStartTabs = () => {
             Get Started in Under 2 Minutes
           </h2>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8">
             <button
               onClick={() => setActiveMode("local")}
-              className={`px-3 sm:px-6 py-2 rounded-full border transition-all text-xs sm:text-sm whitespace-nowrap ${activeMode === "local" ? "bg-accent border-accent text-white shadow-lg shadow-accent/20" : "border-border text-gray-400 hover:border-gray-500"}`}
+              className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 rounded-full border text-sm transition-all ${activeMode === "local" ? "bg-accent border-accent text-white shadow-lg shadow-accent/20" : "border-border text-gray-400 hover:border-gray-500"}`}
             >
-              <span className="hidden sm:inline">Local Mode (Native Vault)</span>
-              <span className="sm:hidden">Local</span>
+              Local Mode (Native Vault)
             </button>
             <button
               onClick={() => setActiveMode("cloud")}
-              className={`px-3 sm:px-6 py-2 rounded-full border transition-all text-xs sm:text-sm whitespace-nowrap ${activeMode === "cloud" ? "bg-accent border-accent text-white shadow-lg shadow-accent/20" : "border-border text-gray-400 hover:border-gray-500"}`}
+              className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 rounded-full border text-sm transition-all ${activeMode === "cloud" ? "bg-accent border-accent text-white shadow-lg shadow-accent/20" : "border-border text-gray-400 hover:border-gray-500"}`}
             >
-              <span className="hidden sm:inline">Cloud Mode (AWS/Azure/Vault)</span>
-              <span className="sm:hidden">Cloud</span>
+              Cloud Mode (AWS/Azure/Vault)
             </button>
           </div>
         </motion.div>

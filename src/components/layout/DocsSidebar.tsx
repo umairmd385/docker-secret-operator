@@ -7,6 +7,12 @@ import clsx from "clsx";
 
 const docsSections = [
   {
+    title: "Getting Started",
+    items: [
+      { label: "Documentation Home", href: "/docs/index.html" },
+    ],
+  },
+  {
     title: "CLI Reference",
     items: [
       { label: "CLI Overview", href: "/docs/cli" },
@@ -21,7 +27,11 @@ const docsSections = [
   },
 ];
 
-export const DocsSidebar: React.FC = () => {
+interface DocsSidebarProps {
+  onNavigate?: () => void;
+}
+
+export const DocsSidebar: React.FC<DocsSidebarProps> = ({ onNavigate }) => {
   const pathname = usePathname();
 
   return (
@@ -36,6 +46,7 @@ export const DocsSidebar: React.FC = () => {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={onNavigate}
                   className={clsx(
                     "block px-3 py-2 text-sm rounded-lg transition-colors",
                     pathname === item.href

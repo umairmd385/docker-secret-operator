@@ -61,7 +61,7 @@ export const Architecture = () => {
               Development
             </h3>
 
-            <div className="flex flex-col items-center justify-between gap-4 overflow-x-auto">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
               <FlowItem icon={Cpu} label="DSO CLI" sublabel="docker dso" />
               <Arrow />
               <FlowItem icon={Shield} label="Local Vault" sublabel="~/.dso/vault.enc" />
@@ -78,11 +78,11 @@ export const Architecture = () => {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="p-8 rounded-3xl bg-surface/20 border border-border/40 relative overflow-hidden group"
+            className="p-4 sm:p-6 lg:p-8 rounded-2xl lg:rounded-3xl bg-surface/20 border border-border/40 relative overflow-hidden group"
           >
-             <div className="absolute top-0 right-0 p-4 text-[10px] font-mono text-blue-400 uppercase tracking-widest opacity-50">Cloud Mode</div>
-            <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
-              <Server className="w-5 h-5 text-blue-400" />
+             <div className="absolute top-0 right-0 p-2 sm:p-4 text-[9px] sm:text-[10px] font-mono text-blue-400 uppercase tracking-widest opacity-50">Cloud Mode</div>
+            <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-8 flex items-center gap-2">
+              <Server className="w-4 sm:w-5 h-4 sm:h-5 text-blue-400 shrink-0" />
               Production
             </h3>
             

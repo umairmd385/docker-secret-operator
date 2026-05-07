@@ -45,7 +45,7 @@ export const Navbar = () => {
           <div className="flex gap-6 text-sm font-medium text-gray-300">
             <a href="#features" className="hover:text-white transition-colors">Features</a>
             <a href="#architecture" className="hover:text-white transition-colors">Architecture</a>
-            <a href="/docs/cli" className="hover:text-white transition-colors">Docs</a>
+            <a href="/docs/index.html" className="hover:text-white transition-colors">Docs</a>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline" size="sm" href="https://github.com/docker-secret-operator/dso" target="_blank" aria-label="View DSO on GitHub">
@@ -78,7 +78,7 @@ export const Navbar = () => {
             <div className="p-6 flex flex-col gap-3">
               <a href="#features" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Features</a>
               <a href="#architecture" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Architecture</a>
-              <a href="/docs/cli" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Docs</a>
+              <a href="/docs/index.html" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Docs</a>
               <div className="pt-2 px-3 pb-3">
                 <Button variant="outline" className="w-full justify-center" href="https://github.com/docker-secret-operator/dso">
                   <GithubIcon className="w-4 h-4 mr-2" /> GitHub
