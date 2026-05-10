@@ -20,6 +20,11 @@ export const ProblemSolution = () => {
   return (
     <section className="py-12 sm:py-20 bg-background relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Section heading for SEO and structure */}
+        <h2 className="text-xl sm:text-2xl font-bold mb-8 sm:mb-12 text-center text-foreground">
+          Why Traditional Secret Management Falls Short
+        </h2>
+
         <div className="grid md:grid-cols-2 gap-6 sm:gap-12 items-center">
 
           {/* Pain Points */}

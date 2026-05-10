@@ -1,0 +1,49 @@
+<svg viewBox="0 0 360 100" xmlns="http://www.w3.org/2000/svg" width="360" height="100">
+  <defs>
+    <linearGradient id="dropGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1976D2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Container Icon -->
+  <g transform="translate(15, 20)">
+    <g fill="none" stroke="#1976D2" stroke-width="2.2" stroke-linecap="round">
+      <path d="M 12 0 L 0 0 L 0 12" />
+      <path d="M 52 0 L 64 0 L 64 12" />
+      <path d="M 64 52 L 64 64 L 52 64" />
+      <path d="M 0 52 L 0 64 L 12 64" />
+    </g>
+
+    <ellipse cx="32" cy="24" rx="6.5" ry="9.5" fill="url(#dropGradient)" filter="url(#shadow)" />
+    <path d="M 32 34 Q 28 42 32 48 Q 36 42 32 34" fill="#1976D2" />
+
+    <g stroke="#F44336" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="4" y1="32" x2="24" y2="32" />
+      <polyline points="29 27 24 32 29 37" />
+    </g>
+
+    <g stroke="#F44336" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="60" y1="32" x2="40" y2="32" />
+      <polyline points="35 27 40 32 35 37" />
+    </g>
+
+    <g stroke="#4CAF50" stroke-width="1.8" fill="none" stroke-linecap="round">
+      <line x1="32" y1="52" x2="32" y2="60" />
+      <polyline points="27 55 32 60 37 55" />
+    </g>
+  </g>
+
+  <!-- Text -->
+  <g transform="translate(110, 30)">
+    <text x="0" y="0" font-family="Roboto, sans-serif" font-size="32" font-weight="700" fill="#1976D2">
+      Docker Secret Operator
+    </text>
+    <text x="0" y="22" font-family="Roboto, sans-serif" font-size="10" font-weight="400" fill="#666666" letter-spacing="0.3">
+      Runtime Secret Injection for Containers
+    </text>
+  </g>
+</svg>

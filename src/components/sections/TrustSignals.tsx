@@ -15,6 +15,11 @@ export const TrustSignals = () => {
   return (
     <section className="py-12 sm:py-16 md:py-20 border-y border-border bg-surface/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Section heading for SEO */}
+        <h2 className="text-xl sm:text-2xl font-bold mb-8 sm:mb-12 text-center text-foreground">
+          Enterprise-Grade Security Features
+        </h2>
+
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-4">
           {signals.map((s, i) => (
             <motion.div

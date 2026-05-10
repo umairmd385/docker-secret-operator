@@ -1,0 +1,40 @@
+# dso.yaml - Local Mode Configuration
+#
+# Verified Example: Local Mode (Development)
+# Status: Fully Verified
+# Version: DSO v3.2+
+#
+# This configuration uses DSO's Local Mode—no cloud provider required.
+# Perfect for development, testing, and air-gapped environments.
+
+# NOTE: No 'provider' field specified—Local Mode is the default
+# Secrets are stored encrypted in ~/.dso/vault.enc
+
+secrets:
+  # Secret 1: Database Password
+  # Created with: docker dso secret set DB_PASSWORD "value"
+  - name: DB_PASSWORD
+    inject: env
+    # No rotation for this example (rotation: false is default)
+    # For development, secrets can be updated manually and redeployed
+
+  # Secret 2: Database User
+  # Created with: docker dso secret set DB_USER "value"
+  - name: DB_USER
+    inject: env
+
+  # Secret 3: API Key
+  # Created with: docker dso secret set API_KEY "value"
+  - name: API_KEY
+    inject: env
+
+# Optional: Configure polling behavior (for reference)
+# In Local Mode, polling checks the local vault.enc file for changes
+# agent:
+#   watch:
+#     polling_interval: 2m  # Check vault every 2 minutes
+
+# For production, copy this structure but add:
+# - provider: aws (or azure, vault, huawei)
+# - config: with provider-specific settings
+# - reload_strategy: with rotation strategy

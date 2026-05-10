@@ -1,7 +1,7 @@
-export const metadata = {
-  title: "CLI: System - DSO",
-  description: "Manage system state and plugins for Cloud Mode",
-};
+import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
+import { PAGE_METADATA } from "@/lib/seo/metadata";
+
+export const metadata = generatePageMetadata(PAGE_METADATA["/docs/cli/system"], "/docs/cli/system");
 
 export default function CLISystemPage() {
   return (

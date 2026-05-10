@@ -1,0 +1,41 @@
+<svg viewBox="0 0 280 120" xmlns="http://www.w3.org/2000/svg" width="280" height="120">
+  <!-- Dark Mode Version (for dark backgrounds) -->
+  <defs>
+    <linearGradient id="dropGradientDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#64B5F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E88E5;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glowEffect" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#00BCD4" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Dark Mode Symbol Group -->
+  <g transform="translate(15, 15)">
+    <!-- Container Frame (light blue) -->
+    <g fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.9">
+      <path d="M 18 2 L 2 2 L 2 18" />
+      <path d="M 62 2 L 78 2 L 78 18" />
+      <path d="M 78 62 L 78 78 L 62 78" />
+      <path d="M 2 62 L 2 78 L 18 78" />
+    </g>
+
+    <!-- Drop shape (light blue) -->
+    <g filter="url(#glowEffect)">
+      <ellipse cx="40" cy="28" rx="9" ry="13" fill="url(#dropGradientDark)" />
+      <path d="M 40 41 Q 36 50 40 58 Q 44 50 40 41" fill="#64B5F6" />
+    </g>
+
+    <!-- Arrow (white/light) -->
+    <g stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="40" y1="62" x2="40" y2="72" />
+      <polyline points="35 67 40 72 45 67" />
+    </g>
+  </g>
+
+  <!-- Dark Mode Text -->
+  <g transform="translate(105, 32)">
+    <text x="0" y="0" font-family="Inter, Roboto, system-ui, sans-serif" font-size="32" font-weight="700" fill="#FFFFFF" letter-spacing="-0.5">DSO</text>
+    <text x="0" y="25" font-family="Inter, Roboto, system-ui, sans-serif" font-size="12" font-weight="600" fill="#B0BEC5" letter-spacing="0.8">DOCKER SECRET OPERATOR</text>
+  </g>
+</svg>

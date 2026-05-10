@@ -1,17 +1,22 @@
+import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
+import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { TrustStrip } from "@/components/sections/TrustStrip";
 import { TrustSignals } from "@/components/sections/TrustSignals";
 import { ProblemSolution } from "@/components/sections/ProblemSolution";
-import { IntegrationsMarquee } from "@/components/sections/IntegrationsMarquee";
 import { WhyDSO } from "@/components/sections/WhyDSO";
 import { ModeDecision } from "@/components/sections/ModeDecision";
 import { ComposeExample } from "@/components/sections/ComposeExample";
 import { Architecture } from "@/components/sections/Architecture";
 import { FeaturesBento } from "@/components/sections/FeaturesBento";
 import { QuickStartTabs } from "@/components/sections/QuickStartTabs";
+import { FeaturedIntegrations } from "@/components/sections/FeaturedIntegrations";
+import { TrustVerification } from "@/components/sections/TrustVerification";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+
+export const metadata = generatePageMetadata(PAGE_METADATA["/"], "/");
 
 export default function Home() {
   return (
@@ -30,6 +35,8 @@ export default function Home() {
           <TrustSignals />
           <ProblemSolution />
           <WhyDSO />
+          <FeaturedIntegrations />
+          <TrustVerification />
           <ModeDecision />
           <ComposeExample />
           <Architecture />

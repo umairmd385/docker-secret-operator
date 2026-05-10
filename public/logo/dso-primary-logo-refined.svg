@@ -1,0 +1,52 @@
+<svg viewBox="0 0 280 120" xmlns="http://www.w3.org/2000/svg" width="280" height="120">
+  <!-- Define primary colors and effects -->
+  <defs>
+    <linearGradient id="dropGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1976D2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:1" />
+    </linearGradient>
+    <filter id="subtleShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Logo Symbol Group -->
+  <g transform="translate(15, 15)">
+    <!-- Simplified Container Frame (Docker-inspired) -->
+    <g fill="none" stroke="#1976D2" stroke-width="2" stroke-linecap="round">
+      <!-- Top-left corner bracket -->
+      <path d="M 18 2 L 2 2 L 2 18" />
+      <!-- Top-right corner bracket -->
+      <path d="M 62 2 L 78 2 L 78 18" />
+      <!-- Bottom-right corner bracket -->
+      <path d="M 78 62 L 78 78 L 62 78" />
+      <!-- Bottom-left corner bracket -->
+      <path d="M 2 62 L 2 78 L 18 78" />
+    </g>
+
+    <!-- Centered Secret Drop (Core Symbol) -->
+    <g filter="url(#subtleShadow)">
+      <!-- Drop shape - simplified, stronger -->
+      <ellipse cx="40" cy="28" rx="9" ry="13" fill="url(#dropGradient)" />
+      <!-- Injection tail - clean flow -->
+      <path d="M 40 41 Q 36 50 40 58 Q 44 50 40 41" fill="#1976D2" />
+    </g>
+
+    <!-- Primary Downward Injection Arrow (Single, clear flow) -->
+    <g stroke="#1976D2" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Vertical arrow shaft -->
+      <line x1="40" y1="62" x2="40" y2="72" />
+      <!-- Arrow head -->
+      <polyline points="35 67 40 72 45 67" />
+    </g>
+  </g>
+
+  <!-- Text Lockup - Refined Typography -->
+  <g transform="translate(105, 32)">
+    <!-- DSO Wordmark - Bold, confident -->
+    <text x="0" y="0" font-family="Inter, Roboto, system-ui, sans-serif" font-size="32" font-weight="700" fill="#1976D2" letter-spacing="-0.5">DSO</text>
+
+    <!-- Subtitle - Engineered spacing, improved weight -->
+    <text x="0" y="25" font-family="Inter, Roboto, system-ui, sans-serif" font-size="12" font-weight="600" fill="#666666" letter-spacing="0.8">DOCKER SECRET OPERATOR</text>
+  </g>
+</svg>

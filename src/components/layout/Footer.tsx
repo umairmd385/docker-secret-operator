@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Logo } from "@/components/ui/Logo";
+import { DSOLogoIcon } from "@/components/branding/DSOLogo";
 import { GithubIcon } from "@/components/ui/Icons";
 import { MessageSquare, ExternalLink, ShieldCheck, Loader2, Check, AlertCircle } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { ROUTES } from "@/lib/links";
 
 const LinkedInIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -14,16 +15,22 @@ const LinkedInIcon = ({ className }: { className?: string }) => (
 
 const links = {
   product: [
-    { label: "Features", href: "#features" },
-    { label: "Architecture", href: "#architecture" },
-    { label: "Security Model", href: "/docs/guide/security.html" },
-    { label: "Cloud Modes", href: "/docs/guide/providers/aws.html" },
+    { label: "Features", href: ROUTES.anchors.features },
+    { label: "Integrations", href: "/integrations" },
+    { label: "Comparisons", href: "/comparisons" },
+    { label: "Architecture", href: ROUTES.anchors.architecture },
   ],
   resources: [
-    { label: "Documentation", href: "/docs/index.html" },
-    { label: "CLI Reference", href: "/docs/guide/cli.html" },
-    { label: "Quick Start", href: "/#quick-start" },
-    { label: "Examples", href: "https://github.com/docker-secret-operator/dso/tree/main/examples" },
+    { label: "Documentation", href: ROUTES.docs.root },
+    { label: "Examples", href: "/examples" },
+    { label: "Quick Start", href: ROUTES.anchors.quickStart },
+    { label: "FAQ", href: "/faq" },
+  ],
+  security: [
+    { label: "Security Model", href: ROUTES.docs.guide.security },
+    { label: "Cloud Providers", href: ROUTES.docs.guide.providers.aws },
+    { label: "Privacy Policy", href: ROUTES.docs.guide.privacy },
+    { label: "Report Vulnerability", href: "/security" },
   ],
 };
 
@@ -42,10 +49,10 @@ export const Footer = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 md:gap-12 lg:gap-8 mb-16 sm:mb-24 lg:mb-32">
 
         {/* Brand column */}
-        <div className="lg:col-span-4 space-y-8">
+        <div className="lg:col-span-3 space-y-8">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-              <Logo className="w-6 h-6" />
+              <DSOLogoIcon size="sm" darkMode={true} />
             </div>
             <span className="text-2xl font-bold text-white tracking-tighter">DSO</span>
           </div>
@@ -55,13 +62,13 @@ export const Footer = () => {
           </p>
 
           <div className="pt-4 flex items-center gap-6">
-            <a href="https://github.com/docker-secret-operator/dso" className="text-gray-500 hover:text-white transition-colors" title="GitHub">
+            <a href={ROUTES.external.github} className="text-gray-500 hover:text-white transition-colors" title="GitHub">
               <GithubIcon className="w-6 h-6" />
             </a>
-            <a href="https://www.linkedin.com/in/mdumair250801/" className="text-gray-500 hover:text-[#0A66C2] transition-colors" title="LinkedIn">
+            <a href={ROUTES.external.linkedin} className="text-gray-500 hover:text-[#0A66C2] transition-colors" title="LinkedIn">
               <LinkedInIcon className="w-6 h-6" />
             </a>
-            <a href="https://discord.gg/skycloudops" className="text-gray-500 hover:text-[#5865F2] transition-colors" title="Discord">
+            <a href={ROUTES.external.discord} className="text-gray-500 hover:text-[#5865F2] transition-colors" title="Discord">
               <MessageSquare className="w-6 h-6" />
             </a>
           </div>
@@ -107,8 +114,23 @@ export const Footer = () => {
           </ul>
         </div>
 
+        {/* Security links */}
+        <div className="lg:col-span-2">
+          <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-8">Security</h4>
+          <ul className="space-y-4">
+            {links.security.map((link) => (
+              <li key={link.label}>
+                <a href={link.href} className="text-gray-500 hover:text-accent transition-all duration-200 flex items-center group">
+                  <span className="w-0 group-hover:w-3 overflow-hidden transition-all duration-200 text-accent">→</span>
+                  <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         {/* Newsletter */}
-        <div className="lg:col-span-4 bg-gradient-to-br from-white/5 to-white/[0.01] border border-accent/10 rounded-2xl lg:rounded-3xl p-6 sm:p-8 group hover:border-accent/30 hover:from-white/10 transition-all duration-300 shadow-lg shadow-accent/5">
+        <div className="lg:col-span-3 bg-gradient-to-br from-white/5 to-white/[0.01] border border-accent/10 rounded-2xl lg:rounded-3xl p-6 sm:p-8 group hover:border-accent/30 hover:from-white/10 transition-all duration-300 shadow-lg shadow-accent/5">
           <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-6">Stay Updated</h4>
           <p className="text-sm text-gray-400 mb-6 leading-relaxed">
             Get updates on DSO v3.2 features, security advisories, and architecture deep-dives.
@@ -199,10 +221,10 @@ export const Footer = () => {
         </div>
 
         <div className="flex items-center gap-6 text-xs">
-          <a href="/docs/guide/security.html" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
+          <a href={ROUTES.docs.guide.security} className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
             Security <ExternalLink className="w-3 h-3" />
           </a>
-          <a href="/docs/guide/privacy.html" className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
+          <a href={ROUTES.docs.guide.privacy} className="text-gray-500 hover:text-accent transition-colors inline-flex items-center gap-1.5">
             Privacy <ExternalLink className="w-3 h-3" />
           </a>
         </div>

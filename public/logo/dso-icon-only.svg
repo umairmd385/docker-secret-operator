@@ -1,0 +1,41 @@
+<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+  <defs>
+    <linearGradient id="dropGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1976D2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Container -->
+  <g fill="none" stroke="#1976D2" stroke-width="2.5" stroke-linecap="round">
+    <path d="M 15 5 L 5 5 L 5 15" />
+    <path d="M 65 5 L 75 5 L 75 15" />
+    <path d="M 75 65 L 75 75 L 65 75" />
+    <path d="M 5 65 L 5 75 L 15 75" />
+  </g>
+
+  <!-- Drop -->
+  <ellipse cx="40" cy="25" rx="7" ry="10" fill="url(#dropGradient)" filter="url(#shadow)" />
+  <path d="M 40 35 Q 36 43 40 50 Q 44 43 40 35" fill="#1976D2" filter="url(#shadow)" />
+
+  <!-- Left arrow -->
+  <g stroke="#F44336" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="8" y1="40" x2="28" y2="40" />
+    <polyline points="33 35 28 40 33 45" />
+  </g>
+
+  <!-- Right arrow -->
+  <g stroke="#F44336" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="72" y1="40" x2="52" y2="40" />
+    <polyline points="47 35 52 40 47 45" />
+  </g>
+
+  <!-- Down flow -->
+  <g stroke="#4CAF50" stroke-width="2" fill="none" stroke-linecap="round">
+    <line x1="40" y1="55" x2="40" y2="65" />
+    <polyline points="35 60 40 65 45 60" />
+  </g>
+</svg>

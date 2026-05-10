@@ -1,7 +1,9 @@
-export const metadata = {
-  title: "CLI: Init - DSO",
-  description: "Initialize an encrypted local vault for DSO Local Mode",
-};
+import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
+import { PAGE_METADATA } from "@/lib/seo/metadata";
+import { RelatedContent } from "@/components/RelatedContent";
+import { getRelatedCliCommands } from "@/lib/links";
+
+export const metadata = generatePageMetadata(PAGE_METADATA["/docs/cli/init"], "/docs/cli/init");
 
 export default function CLIInitPage() {
   return (
@@ -78,21 +80,10 @@ export default function CLIInitPage() {
         </p>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-bold">Related Commands</h2>
-        <ul className="space-y-2">
-          <li>
-            <a href="/docs/cli/secret" className="text-accent hover:underline">
-              → CLI: Secret - Manage vault secrets
-            </a>
-          </li>
-          <li>
-            <a href="/docs/cli/up" className="text-accent hover:underline">
-              → CLI: Up - Deploy with local vault
-            </a>
-          </li>
-        </ul>
-      </section>
+      <RelatedContent
+        title="Related Commands"
+        items={getRelatedCliCommands("init")}
+      />
     </div>
   );
 }

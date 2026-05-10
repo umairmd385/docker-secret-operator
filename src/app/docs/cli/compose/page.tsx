@@ -1,7 +1,7 @@
-export const metadata = {
-  title: "CLI: Compose - DSO",
-  description: "Secret-injecting wrapper for Docker Compose subcommands",
-};
+import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
+import { PAGE_METADATA } from "@/lib/seo/metadata";
+
+export const metadata = generatePageMetadata(PAGE_METADATA["/docs/cli/compose"], "/docs/cli/compose");
 
 export default function CLIComposePage() {
   return (

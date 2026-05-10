@@ -1,7 +1,7 @@
-export const metadata = {
-  title: "CLI: Management & Diagnostics - DSO",
-  description: "Management and diagnostic commands for monitoring and troubleshooting",
-};
+import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
+import { PAGE_METADATA } from "@/lib/seo/metadata";
+
+export const metadata = generatePageMetadata(PAGE_METADATA["/docs/cli/management"], "/docs/cli/management");
 
 export default function CLIManagementPage() {
   return (

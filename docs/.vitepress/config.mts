@@ -6,10 +6,10 @@ export default withMermaid(
     title: "DSO",
     description: "Native secrets for Docker — without Kubernetes",
     base: '/docs/',
-    head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+    head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
     ignoreDeadLinks: true,
     themeConfig: {
-      logo: '/assets/images/logo-transparent.png',  // Ensure this has transparent background
+      logo: '/logo/dso-primary-logo.svg',  // Consistent with landing page
       nav: [
         { text: 'Guide', link: '/guide/what-is-dso' },
         { text: 'Concepts', link: '/guide/concepts' },

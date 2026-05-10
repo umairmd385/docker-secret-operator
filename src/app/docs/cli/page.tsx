@@ -1,7 +1,7 @@
-export const metadata = {
-  title: "CLI Reference - DSO",
-  description: "Complete Docker Secret Operator CLI command reference",
-};
+import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
+import { PAGE_METADATA } from "@/lib/seo/metadata";
+
+export const metadata = generatePageMetadata(PAGE_METADATA["/docs/cli"], "/docs/cli");
 
 export default function CLIOverviewPage() {
   return (

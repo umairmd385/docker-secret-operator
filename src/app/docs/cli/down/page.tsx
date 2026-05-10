@@ -1,7 +1,7 @@
-export const metadata = {
-  title: "CLI: Down - DSO",
-  description: "Stop and remove containers with security hardening",
-};
+import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
+import { PAGE_METADATA } from "@/lib/seo/metadata";
+
+export const metadata = generatePageMetadata(PAGE_METADATA["/docs/cli/down"], "/docs/cli/down");
 
 export default function CLIDownPage() {
   return (

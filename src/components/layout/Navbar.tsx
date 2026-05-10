@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { Menu, X } from "lucide-react";
-import { Logo } from "@/components/ui/Logo";
+import { DSOLogoIcon } from "@/components/branding/DSOLogo";
 import { GithubIcon } from "@/components/ui/Icons";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
+import { ROUTES } from "@/lib/links";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -24,18 +26,18 @@ export const Navbar = () => {
         scrolled ? "bg-background/80 backdrop-blur-md border-b border-border shadow-sm py-3" : "bg-transparent py-5"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2 group">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+        <a href="#" className="flex items-center gap-2 group flex-shrink-0">
           <div className="relative">
             <div className="w-8 h-8 flex items-center justify-center relative z-10 transition-transform hover:scale-110">
-              <Logo className="w-8 h-8" />
+              <DSOLogoIcon size="sm" />
             </div>
             <div className="absolute inset-0 bg-accent/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          <span className="text-lg font-bold font-sans text-foreground hidden sm:block tracking-tight">
+          <span className="text-base sm:text-lg font-bold font-sans text-foreground hidden sm:block tracking-tight">
             Docker Secret Operator
           </span>
-          <span className="text-lg font-bold font-sans text-foreground sm:hidden tracking-tight">
+          <span className="text-base sm:text-lg font-bold font-sans text-foreground sm:hidden tracking-tight">
             DSO
           </span>
         </a>
@@ -43,12 +45,16 @@ export const Navbar = () => {
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
           <div className="flex gap-6 text-sm font-medium text-gray-300">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#architecture" className="hover:text-white transition-colors">Architecture</a>
-            <a href="/docs/index.html" className="hover:text-white transition-colors">Docs</a>
+            <a href={ROUTES.anchors.features} className="hover:text-white transition-colors">Features</a>
+            <a href="/integrations" className="hover:text-white transition-colors">Integrations</a>
+            <a href="/examples" className="hover:text-white transition-colors">Examples</a>
+            <a href="/comparisons" className="hover:text-white transition-colors">Comparisons</a>
+            <a href={ROUTES.anchors.architecture} className="hover:text-white transition-colors">Architecture</a>
+            <a href={ROUTES.docs.root} className="hover:text-white transition-colors">Docs</a>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" href="https://github.com/docker-secret-operator/dso" target="_blank" aria-label="View DSO on GitHub">
+            <ThemeToggle />
+            <Button variant="outline" size="sm" href={ROUTES.external.github} target="_blank" aria-label="View DSO on GitHub">
               <GithubIcon className="w-4 h-4 mr-2" aria-hidden="true" />
               GitHub
             </Button>
@@ -76,11 +82,14 @@ export const Navbar = () => {
             className="md:hidden absolute top-full left-0 w-full bg-surface/95 backdrop-blur-lg border-b border-border shadow-xl overflow-hidden"
           >
             <div className="p-6 flex flex-col gap-3">
-              <a href="#features" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Features</a>
-              <a href="#architecture" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Architecture</a>
-              <a href="/docs/index.html" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Docs</a>
+              <a href={ROUTES.anchors.features} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Features</a>
+              <a href="/integrations" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Integrations</a>
+              <a href="/examples" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Examples</a>
+              <a href="/comparisons" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Comparisons</a>
+              <a href={ROUTES.anchors.architecture} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Architecture</a>
+              <a href={ROUTES.docs.root} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Docs</a>
               <div className="pt-2 px-3 pb-3">
-                <Button variant="outline" className="w-full justify-center" href="https://github.com/docker-secret-operator/dso">
+                <Button variant="outline" className="w-full justify-center" href={ROUTES.external.github}>
                   <GithubIcon className="w-4 h-4 mr-2" /> GitHub
                 </Button>
               </div>

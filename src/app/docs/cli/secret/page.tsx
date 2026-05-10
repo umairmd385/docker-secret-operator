@@ -1,7 +1,7 @@
-export const metadata = {
-  title: "CLI: Secret - DSO",
-  description: "Manage secrets within the local vault",
-};
+import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
+import { PAGE_METADATA } from "@/lib/seo/metadata";
+
+export const metadata = generatePageMetadata(PAGE_METADATA["/docs/cli/secret"], "/docs/cli/secret");
 
 export default function CLISecretPage() {
   return (

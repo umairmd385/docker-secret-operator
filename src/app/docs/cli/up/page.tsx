@@ -1,7 +1,7 @@
-export const metadata = {
-  title: "CLI: Up - DSO",
-  description: "Deploy Docker Compose stacks with automatic secret injection",
-};
+import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
+import { PAGE_METADATA } from "@/lib/seo/metadata";
+
+export const metadata = generatePageMetadata(PAGE_METADATA["/docs/cli/up"], "/docs/cli/up");
 
 export default function CLIUpPage() {
   return (

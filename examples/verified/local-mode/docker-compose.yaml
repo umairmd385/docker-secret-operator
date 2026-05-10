@@ -1,0 +1,130 @@
+version: "3.9"
+
+# docker-compose.yaml - Local Mode Example Stack
+#
+# Verified Example: Local Mode (Development)
+# Status: Fully Verified
+# Version: DSO v3.2+
+#
+# This stack demonstrates:
+# - Secret injection from local vault into environment variables
+# - Zero-persistence (secrets not in docker inspect, logs, or image)
+# - Application receiving secrets as environment variables
+# - Database service using the same secret for password
+
+services:
+  # Application service - receives secrets as environment variables
+  app:
+    image: python:3.11-slim
+
+    # Use dso:// prefix to reference secrets from local vault
+    # DSO will replace these with actual secret values at container start
+    environment:
+      - DB_PASSWORD=dso://DB_PASSWORD
+      - DB_USER=dso://DB_USER
+      - API_KEY=dso://API_KEY
+      - APP_ENV=development
+      - DATABASE_URL=postgresql://dso://DB_USER:dso://DB_PASSWORD@postgres:5432/myapp
+
+    # Simple command to demonstrate secrets are in environment
+    command: >
+      /bin/bash -c "
+      echo '=== Secrets Injected ===';
+      echo \$DB_PASSWORD;
+      echo \$DB_USER;
+      echo \$API_KEY;
+      echo '=== Waiting for database ===';
+      while ! pg_isready -h postgres -U \$DB_USER >/dev/null 2>&1; do
+        sleep 1;
+      done;
+      echo '✓ Database ready';
+      exec sleep infinity
+      "
+
+    # Depends on postgres service starting first
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    # Optional healthcheck
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os; assert os.environ.get('DB_PASSWORD')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+    # Network configuration
+    networks:
+      - default
+
+    # For debugging: keep container running
+    stdin_open: true
+    tty: true
+
+  # PostgreSQL database service
+  # Also receives secrets via dso:// references
+  postgres:
+    image: postgres:15-alpine
+
+    # Use same secrets as app service
+    environment:
+      POSTGRES_PASSWORD: dso://DB_PASSWORD
+      POSTGRES_USER: dso://DB_USER
+      POSTGRES_DB: myapp
+      POSTGRES_INITDB_ARGS: "-U dso://DB_USER"
+
+    # Volume for data persistence (separate from secrets)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    # Healthcheck ensures database is ready
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+    # Network configuration
+    networks:
+      - default
+
+# Named volumes - for application data (NOT for secrets)
+volumes:
+  postgres_data:
+    driver: local
+
+# Network configuration
+networks:
+  default:
+    driver: bridge
+
+# Important Notes:
+#
+# 1. SECRET INJECTION:
+#    - dso:// references are ONLY replaced at container start
+#    - DSO reads from local vault and injects values
+#    - Secrets never appear in dso.yaml or docker-compose.yaml
+#
+# 2. ZERO-PERSISTENCE:
+#    - Secrets are in-memory only (except encrypted in ~/.dso/vault.enc)
+#    - Not visible in: docker inspect, docker logs, docker history
+#    - Not written to: .env files, disk, image layers
+#
+# 3. ENVIRONMENT VARIABLES:
+#    - Secrets are available as environment variables inside containers
+#    - Application reads them normally: os.environ.get('DB_PASSWORD')
+#    - Works with any application expecting env vars
+#
+# 4. ROTATION:
+#    - Update secret: docker dso secret set DB_PASSWORD "newvalue"
+#    - Redeploy stack: docker dso down && docker dso up -d
+#    - No seamless rotation for Local Mode (restart-based)
+#    - For seamless rotation, use cloud providers (AWS/Azure/Vault)
+#
+# 5. SECURITY:
+#    - Secrets encrypted with AES-256-GCM in ~/.dso/vault.enc
+#    - Master key derived from your machine (not stored as plaintext)
+#    - Only readable by your user account (chmod 600)
+#    - Safe for development; use cloud providers for production

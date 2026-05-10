@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { getAltTextForProvider } from "@/lib/images";
 
 const partners = [
   { name: "Docker", logo: "https://cdn.simpleicons.org/docker/ffffff" },
@@ -20,10 +21,12 @@ export const TrustStrip = () => {
       <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-white/10 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        {/* Section heading for SEO (visually styled as subtitle) */}
+        <h2 className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.3em] sm:tracking-[0.4em] text-gray-500 font-bold mb-3 sm:mb-4 text-center">
+          Native Secret Integration
+        </h2>
+
         <div className="flex flex-col items-center mb-8 sm:mb-12">
-          <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.3em] sm:tracking-[0.4em] text-gray-500 font-bold mb-3 sm:mb-4">
-            Native Secret Integration
-          </p>
           <div className="h-px w-10 sm:w-12 bg-accent/50" />
         </div>
 
@@ -39,7 +42,7 @@ export const TrustStrip = () => {
                 <div className="w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center rounded-lg sm:rounded-xl bg-white/10 border border-white/20 group/item hover:border-accent/50 transition-colors shadow-lg shrink-0">
                    <img
                      src={p.logo}
-                     alt={p.name}
+                     alt={getAltTextForProvider(p.name)}
                      className="w-4 sm:w-5 h-4 sm:h-5 object-contain opacity-80 group-hover:opacity-100 transition-opacity"
                    />
                 </div>

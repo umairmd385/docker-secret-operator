@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
 import "@/styles/mobile.css";
 
@@ -106,9 +107,9 @@ export const metadata: Metadata = {
     site: "@skycloudops",
   },
   icons: {
-    icon: "/favicon.png",
-    apple: "/favicon.png",
-    shortcut: "/favicon.png",
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
+    shortcut: "/favicon.svg",
   },
   manifest: "/manifest.json",
   appleWebApp: {
@@ -307,7 +308,9 @@ export default function RootLayout({
         ))}
       </head>
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground selection:bg-accent-dim selection:text-accent">
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
         <Analytics />
         <SpeedInsights />
       </body>
