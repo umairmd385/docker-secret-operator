@@ -27,6 +27,38 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // ✅ SEO: Prevent indexing of .html versions of pages
+  // This solves the "Duplicate without user-selected canonical" issue
+  redirects: async () => [
+    {
+      source: "/docs/:path*.html",
+      destination: "/docs/:path*",
+      permanent: true, // 301 redirect for SEO
+    },
+  ],
+
+  // ✅ Headers to prevent indexing of static HTML files
+  headers: async () => [
+    {
+      source: "/docs/:path*.html",
+      headers: [
+        {
+          key: "X-Robots-Tag",
+          value: "noindex, nofollow",
+        },
+      ],
+    },
+    {
+      source: "/public/:path*.html",
+      headers: [
+        {
+          key: "X-Robots-Tag",
+          value: "noindex, nofollow",
+        },
+      ],
+    },
+  ],
 };
 
 export default nextConfig;
