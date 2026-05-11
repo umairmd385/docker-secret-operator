@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Documentation",
@@ -19,53 +18,53 @@ export default function DocsPage() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Link
+          <a
             href="/docs/guide/what-is-dso"
             className="p-6 border border-border rounded-lg hover:bg-muted transition-colors"
           >
             <h2 className="text-xl font-semibold mb-2">Introduction</h2>
             <p className="text-muted-foreground">Learn what DSO is and its core security pillars</p>
-          </Link>
+          </a>
 
-          <Link
+          <a
             href="/docs/guide/getting-started"
             className="p-6 border border-border rounded-lg hover:bg-muted transition-colors"
           >
             <h2 className="text-xl font-semibold mb-2">Getting Started</h2>
             <p className="text-muted-foreground">Quick start guide for DSO installation and setup</p>
-          </Link>
+          </a>
 
-          <Link
+          <a
             href="/docs/guide/installation"
             className="p-6 border border-border rounded-lg hover:bg-muted transition-colors"
           >
             <h2 className="text-xl font-semibold mb-2">Installation</h2>
             <p className="text-muted-foreground">Complete installation instructions for all platforms</p>
-          </Link>
+          </a>
 
-          <Link
+          <a
             href="/docs/guide/cli"
             className="p-6 border border-border rounded-lg hover:bg-muted transition-colors"
           >
             <h2 className="text-xl font-semibold mb-2">CLI Reference</h2>
             <p className="text-muted-foreground">Comprehensive CLI command reference and examples</p>
-          </Link>
+          </a>
 
-          <Link
+          <a
             href="/docs/guide/providers/aws"
             className="p-6 border border-border rounded-lg hover:bg-muted transition-colors"
           >
             <h2 className="text-xl font-semibold mb-2">Providers</h2>
             <p className="text-muted-foreground">AWS, Azure, Vault, Huawei, and Local mode documentation</p>
-          </Link>
+          </a>
 
-          <Link
+          <a
             href="/docs/guide/security"
             className="p-6 border border-border rounded-lg hover:bg-muted transition-colors"
           >
             <h2 className="text-xl font-semibold mb-2">Security</h2>
             <p className="text-muted-foreground">Security architecture and best practices</p>
-          </Link>
+          </a>
         </div>
       </div>
     </div>
