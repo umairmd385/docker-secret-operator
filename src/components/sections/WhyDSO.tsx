@@ -47,37 +47,42 @@ export const WhyDSO = () => {
   ];
 
   return (
-    <section id="why" className="py-12 sm:py-20 md:py-24 bg-surface2/30 border-t border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <section id="why" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-background via-blue-500/3 to-background border-t border-b border-border/30 overflow-hidden">
+      {/* Telemetry blue atmospheric depth */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 right-0 w-[600px] h-[400px] bg-gradient-to-l from-blue-500/5 to-transparent rounded-full blur-[100px] opacity-50" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.35 }}
-          className="text-center max-w-2xl mx-auto mb-12 sm:mb-16"
+          className="text-center max-w-3xl mx-auto mb-16 sm:mb-20"
         >
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-2">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-4 sm:mb-6">
             Why Not .env or Docker Secrets?
           </h2>
-          <p className="text-xs sm:text-sm font-mono text-accent/70 tracking-wide mb-4">
-            Securing the entire secret lifecycle.
+          <p className="text-xs sm:text-sm font-mono text-accent/70 tracking-wide mb-6">
+            ◆ THE SECURITY COMPARISON ◆
           </p>
-          <p className="text-gray-400 text-sm sm:text-base lg:text-lg">
+          <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
             Traditional approaches either leak secrets via disk or require complex infrastructure. DSO provides a unified, secure workflow for both local development and production.
           </p>
         </motion.div>
 
-        <div className="overflow-x-auto rounded-2xl border border-border/50 bg-[#0a0f16] shadow-xl">
+        <div className="overflow-x-auto rounded-2xl border border-blue-500/20 bg-gradient-to-b from-blue-500/5 to-[#0a0f16] shadow-2xl shadow-blue-500/10">
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
-              <tr className="bg-surface border-b border-border/50 text-[10px] sm:text-[11px] uppercase tracking-widest text-gray-500">
+              <tr className="bg-gradient-to-r from-surface to-blue-500/5 border-b border-blue-500/20 text-[10px] sm:text-[11px] uppercase tracking-widest text-gray-400">
                 <th className="px-3 sm:px-6 py-3 sm:py-4 font-bold">Approach</th>
                 <th className="px-3 sm:px-6 py-3 sm:py-4 font-bold">Security Posture</th>
                 <th className="px-3 sm:px-6 py-3 sm:py-4 font-bold">Persistence</th>
                 <th className="px-3 sm:px-6 py-3 sm:py-4 font-bold">Dynamic Rotation</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border/30">
+            <tbody className="divide-y divide-blue-500/10">
               {comparisons.map((row, i) => (
                 <motion.tr 
                   key={i}
@@ -85,7 +90,7 @@ export const WhyDSO = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.4 }}
-                  className={row.highlight ? "bg-accent/[0.07] border-y border-accent/20 shadow-[inset_0_0_20px_rgba(0,230,192,0.05)]" : "hover:bg-surface/50 transition-colors"}
+                  className={row.highlight ? "bg-gradient-to-r from-accent/12 via-emerald-500/8 to-accent/5 border-y border-accent/30 shadow-[inset_0_0_30px_rgba(0,229,194,0.08)] hover:shadow-[inset_0_0_40px_rgba(0,229,194,0.12)] transition-all" : "hover:bg-blue-500/5 transition-colors"}
                 >
                   <td className={`p-3 sm:p-6 font-bold text-xs sm:text-sm text-foreground ${row.highlight ? 'text-accent border-l-2 border-accent' : ''}`}>
                     <div className="flex items-center gap-2 sm:gap-3">

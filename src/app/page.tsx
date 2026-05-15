@@ -3,17 +3,12 @@ import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
+import { SecretRotationFailures } from "@/components/sections/SecretRotationFailures";
 import { TrustStrip } from "@/components/sections/TrustStrip";
-import { TrustSignals } from "@/components/sections/TrustSignals";
-import { ProblemSolution } from "@/components/sections/ProblemSolution";
-import { WhyDSO } from "@/components/sections/WhyDSO";
-import { ModeDecision } from "@/components/sections/ModeDecision";
-import { ComposeExample } from "@/components/sections/ComposeExample";
-import { Architecture } from "@/components/sections/Architecture";
-import { FeaturesBento } from "@/components/sections/FeaturesBento";
+import { ProductionWorkflow } from "@/components/sections/ProductionWorkflow";
 import { QuickStartTabs } from "@/components/sections/QuickStartTabs";
 import { FeaturedIntegrations } from "@/components/sections/FeaturedIntegrations";
-import { TrustVerification } from "@/components/sections/TrustVerification";
+import { WhyDSO } from "@/components/sections/WhyDSO";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
 export const metadata = generatePageMetadata(PAGE_METADATA["/"], "/");
@@ -26,25 +21,16 @@ export default function Home() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-accent/10 via-background to-transparent opacity-30" />
       </div>
 
-      <div className="relative z-10 flex flex-col w-full">
+      <div className="relative z-10 flex flex-col w-full space-y-0">
         <Navbar />
         <Hero />
+        <SecretRotationFailures />
         <TrustStrip />
-        
-        <div className="flex flex-col">
-          <TrustSignals />
-          <ProblemSolution />
-          <WhyDSO />
-          <FeaturedIntegrations />
-          <TrustVerification />
-          <ModeDecision />
-          <ComposeExample />
-          <Architecture />
-          <FeaturesBento />
-          <QuickStartTabs />
-          <FinalCTA />
-        </div>
-        
+        <WhyDSO />
+        <ProductionWorkflow />
+        <FeaturedIntegrations />
+        <QuickStartTabs />
+        <FinalCTA />
         <Footer />
       </div>
     </main>

@@ -62,31 +62,41 @@ export function FeaturedIntegrations() {
   ];
 
   return (
-    <section className="py-16 sm:py-20 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">
-            Popular Integrations
+    <section className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-background to-blue-500/3 border-t border-b border-blue-500/15 overflow-hidden">
+      {/* Blue telemetry glow for integrations context */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-gradient-to-r from-blue-500/6 to-transparent rounded-full blur-[100px] opacity-40" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="text-center mb-16 sm:mb-20">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-foreground">
+            Enterprise-Ready Integrations
           </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            DSO works with your favorite cloud providers and self-hosted solutions.
-            All integrations are verified and production-ready.
+          <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Works seamlessly with your existing infrastructure. All integrations are verified, production-tested, and maintained.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+        <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16">
           {featuredProviders.map((provider) => (
             <ProviderCard key={provider.slug} {...provider} />
           ))}
         </div>
 
-        <div className="mt-12 text-center">
-          <a
-            href="/integrations"
-            className="inline-block px-8 py-3 bg-accent hover:bg-accent/90 text-background font-bold rounded-lg transition-colors"
-          >
-            View All Integrations
-          </a>
+        <div className="mt-12 sm:mt-16 p-8 sm:p-12 rounded-2xl border border-blue-500/25 bg-gradient-to-r from-blue-500/8 via-accent/5 to-transparent shadow-lg shadow-blue-500/5 hover:shadow-blue-500/10 transition-all">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Need a different provider?</h3>
+              <p className="text-gray-400">Check out our complete integration guide for all supported providers.</p>
+            </div>
+            <a
+              href="/integrations"
+              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-accent to-emerald-500 hover:from-accent hover:to-emerald-500 text-background font-semibold rounded-lg transition-all whitespace-nowrap shadow-lg shadow-accent/20 hover:shadow-accent/30"
+            >
+              View All →
+            </a>
+          </div>
         </div>
       </div>
     </section>

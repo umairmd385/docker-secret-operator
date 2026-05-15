@@ -17,17 +17,25 @@ export const QuickStartTabs = () => {
   const [activeMode, setActiveMode] = useState<Mode>("local");
 
   return (
-    <section id="quick-start" className="py-12 sm:py-20 bg-surface2/30 border-t border-border">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+    <section id="quick-start" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-background via-blue-500/2 to-background border-t border-b border-blue-500/15 overflow-hidden">
+      {/* Blue telemetry atmosphere for quick start context */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] bg-gradient-to-l from-blue-500/5 via-transparent to-transparent rounded-full blur-[100px] opacity-40" />
+      </div>
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-10 sm:mb-16"
+          className="text-center mb-16 sm:mb-20"
         >
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-4 sm:mb-6">
             Get Started in Under 2 Minutes
           </h2>
+          <p className="text-xs sm:text-sm font-mono text-accent/70 tracking-wide mb-6">
+            ◆ QUICK START ◆
+          </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8">
             <button
@@ -45,9 +53,9 @@ export const QuickStartTabs = () => {
           </div>
         </motion.div>
 
-        <div className="space-y-8 sm:space-y-12">
+        <div className="space-y-10 sm:space-y-14">
           {/* Step 1: Install */}
-          <div className="flex flex-col md:flex-row gap-4 sm:gap-8 items-start">
+          <div className="flex flex-col md:flex-row gap-6 sm:gap-10 items-start">
             <div className="w-12 h-12 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent font-bold shrink-0 shadow-sm mt-1 text-lg">
               1
             </div>
@@ -77,7 +85,7 @@ export const QuickStartTabs = () => {
           </div>
 
           {/* Step 2: Initialize */}
-          <div className="flex flex-col md:flex-row gap-8 items-start">
+          <div className="flex flex-col md:flex-row gap-6 sm:gap-10 items-start">
             <div className="w-12 h-12 rounded-2xl bg-surface border border-border flex items-center justify-center text-gray-300 font-bold shrink-0 mt-1 text-lg">
               2
             </div>
@@ -98,7 +106,7 @@ export const QuickStartTabs = () => {
           </div>
 
           {/* Step 3: Deploy */}
-          <div className="flex flex-col md:flex-row gap-8 items-start">
+          <div className="flex flex-col md:flex-row gap-6 sm:gap-10 items-start">
             <div className="w-12 h-12 rounded-2xl bg-surface border border-border flex items-center justify-center text-gray-300 font-bold shrink-0 mt-1 text-lg">
               3
             </div>

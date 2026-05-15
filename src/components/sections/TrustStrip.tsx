@@ -15,10 +15,10 @@ const partners = [
 
 export const TrustStrip = () => {
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-background relative border-y border-white/5 overflow-hidden">
-      {/* Background Accents */}
-      <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-white/10 to-transparent" />
-      <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+    <section className="relative py-12 sm:py-16 md:py-20 bg-gradient-to-r from-background via-blue-500/2 to-background border-y border-blue-500/15 overflow-hidden">
+      {/* Blue telemetry vertical accents */}
+      <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-500/15 to-transparent opacity-60" />
+      <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-500/15 to-transparent opacity-60" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Section heading for SEO (visually styled as subtitle) */}
@@ -31,7 +31,7 @@ export const TrustStrip = () => {
         </div>
 
         <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-accent/20 via-blue-500/20 to-purple-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -inset-1 bg-gradient-to-r from-accent/15 via-blue-500/20 to-emerald-500/15 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="relative flex flex-wrap justify-center items-center gap-x-6 sm:gap-x-12 lg:gap-x-16 gap-y-6 sm:gap-y-8 p-4 sm:p-6 lg:p-10 rounded-2xl lg:rounded-3xl bg-white/[0.02] border border-white/10 backdrop-blur-sm">
             {partners.map((p) => (
               <motion.div
