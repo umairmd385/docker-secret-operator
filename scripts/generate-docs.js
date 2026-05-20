@@ -141,8 +141,10 @@ async function generateDocs() {
   const outputDir = path.resolve(__dirname, OUTPUT_DIR);
 
   if (!fs.existsSync(dsoDocs)) {
-    console.error(`❌ Error: ${dsoDocs} not found`);
-    process.exit(1);
+    console.warn(`⚠️  Source docs directory not found: ${dsoDocs}`);
+    console.warn('⚠️  Skipping doc generation — using pre-committed pages.');
+    console.warn('⚠️  This is expected in CI/Vercel environments without the sibling dso/ repo.');
+    process.exit(0);
   }
 
   // Create output directory if it doesn't exist
