@@ -1,7 +1,7 @@
 import React from "react";
 import { ProviderCard } from "@/components/branding/ProviderCard";
 
-export function FeaturedIntegrations() {
+export function Providers() {
   const featuredProviders = [
     {
       name: "AWS Secrets Manager",
@@ -71,7 +71,7 @@ export function FeaturedIntegrations() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-16 sm:mb-20">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-foreground">
-            Enterprise-Ready Integrations
+            Works With Your Providers
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Works seamlessly with your existing infrastructure. All integrations are verified, production-tested, and maintained.

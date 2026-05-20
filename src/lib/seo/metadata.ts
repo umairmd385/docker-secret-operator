@@ -21,8 +21,8 @@ export const SITE_CONFIG = {
   twitterCreator: "@skycloudops",
   author: "Docker Secret Operator Community",
   ogImage: "/og-image.png",
-  ogImageWidth: 1024,
-  ogImageHeight: 1024,
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
 } as const;
 
 export const METADATA_LIMITS = {
@@ -97,6 +97,122 @@ export const PAGE_METADATA: Record<string, PageMetadataConfig> = {
     twitterCard: "summary_large_image",
     twitterTitle: "Docker Secret Operator | Secret Management for Docker",
     twitterDescription: "Zero-persistence secret injection for Docker containers. CNCF Sandbox project.",
+  },
+
+  // TOP-LEVEL PAGES
+  "/comparisons": {
+    title: "DSO vs Secret Management Tools | Comparisons",
+    description: "Compare Docker Secret Operator with Vault, Doppler, Infisical, Docker Secrets, Sealed Secrets, and manual scripts. Feature-by-feature comparison for choosing the right secret management tool.",
+    keywords: [
+      "docker secret operator comparison",
+      "dso vs vault",
+      "secret management comparison",
+      "doppler alternative",
+      "infisical alternative",
+    ],
+    ogTitle: "Docker Secret Operator vs Other Tools",
+    ogDescription: "Side-by-side comparison of DSO vs Vault, Doppler, Infisical, and more.",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/integrations": {
+    title: "Provider Integrations | Docker Secret Operator",
+    description: "Docker Secret Operator integration guides for AWS Secrets Manager, Azure Key Vault, HashiCorp Vault, Huawei Cloud KMS, and Local Mode. Complete setup instructions for all supported secret providers.",
+    keywords: [
+      "dso integrations",
+      "docker secret operator providers",
+      "aws secrets manager integration",
+      "azure key vault docker",
+      "hashicorp vault docker",
+    ],
+    ogTitle: "DSO Provider Integrations",
+    ogDescription: "Complete integration guides for AWS, Azure, Vault, Huawei, and Local Mode.",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/examples": {
+    title: "Examples & Use Cases | Docker Secret Operator",
+    description: "Real-world Docker Secret Operator examples and use cases. Sample configurations for web applications, databases, microservices, and multi-environment deployments with automatic secret rotation.",
+    keywords: [
+      "dso examples",
+      "docker secret operator use cases",
+      "secret injection example",
+      "docker compose secret example",
+      "zero downtime rotation example",
+    ],
+    ogTitle: "DSO Examples & Use Cases",
+    ogDescription: "Real-world configurations and patterns for Docker Secret Operator deployments.",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/faq": {
+    title: "FAQ | Docker Secret Operator",
+    description: "Frequently asked questions about Docker Secret Operator. Learn what DSO is, how it compares to Vault, which providers are supported, how to install it, and how zero-persistence secret management works.",
+    keywords: [
+      "docker secret operator faq",
+      "dso questions",
+      "how does dso work",
+      "secret operator install",
+      "zero persistence secrets faq",
+    ],
+    ogTitle: "Docker Secret Operator — Frequently Asked Questions",
+    ogDescription: "Answers to common questions about DSO installation, features, and providers.",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  // GUIDE PAGES (static)
+  "/docs/guide/what-is-dso": {
+    title: "What is Docker Secret Operator (DSO)? | Overview & Features",
+    description: "Docker Secret Operator (DSO) is an open-source, CNCF Sandbox runtime secret injection daemon for Docker and Docker Compose. Zero-persistence secrets, automatic rotation, and crash recovery — no Kubernetes required.",
+    keywords: ["what is docker secret operator", "dso overview", "docker secret injection", "runtime secret injection"],
+    ogTitle: "What is Docker Secret Operator (DSO)?",
+    ogDescription: "Runtime secret injection and automatic rotation for Docker. CNCF Sandbox project.",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/docs/guide/quick-start": {
+    title: "Quick Start Guide — Docker Secret Operator in 5 Minutes",
+    description: "Get Docker Secret Operator running in 5 minutes. Step-by-step guide for Local Mode (development) and Agent Mode (production). Automatic secret injection with zero downtime.",
+    keywords: ["dso quick start", "docker secret operator setup", "secret injection quick guide", "docker dso 5 minutes"],
+    ogTitle: "DSO Quick Start — 5 Minute Setup",
+    ogDescription: "Get Docker Secret Operator running in 5 minutes with Local or Agent Mode.",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/docs/guide/security": {
+    title: "Security Model & Threat Analysis | Docker Secret Operator",
+    description: "Docker Secret Operator security guarantees, threat model, and best practices. Zero-persistence secrets, AES-256 encryption, TLS 1.2+, audit logging, and compliance with PCI-DSS, HIPAA, SOC 2.",
+    keywords: ["dso security", "docker secret operator security", "zero persistence secrets", "secret encryption docker", "pci-dss hipaa soc2 secrets"],
+    ogTitle: "DSO Security Model & Threat Analysis",
+    ogDescription: "Zero-persistence secrets, AES-256 encryption, TLS 1.2+, full audit trail.",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/docs/guide/troubleshooting": {
+    title: "Troubleshooting Guide | Docker Secret Operator",
+    description: "Diagnose and fix common Docker Secret Operator issues. Solutions for agent startup failures, rotation timeouts, health check errors, permission denied errors, and provider connection failures.",
+    keywords: ["dso troubleshooting", "docker secret operator debug", "rotation not working", "dso agent won't start"],
+    ogTitle: "DSO Troubleshooting Guide",
+    ogDescription: "Step-by-step solutions for DSO agent startup, rotation failures, and health checks.",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/docs/guide/production-readiness": {
+    title: "Production Readiness Checklist | Docker Secret Operator",
+    description: "Complete production readiness checklist for Docker Secret Operator. Infrastructure requirements, security configuration, monitoring setup, compliance (PCI-DSS, HIPAA, SOC 2), and performance considerations.",
+    keywords: ["dso production readiness", "docker secret operator production", "production deployment checklist", "pci-dss compliance docker"],
+    ogTitle: "DSO Production Readiness Guide",
+    ogDescription: "Complete production checklist: infrastructure, security, monitoring, compliance.",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
   },
 
   // DOCUMENTATION PAGES
@@ -238,6 +354,182 @@ export const PAGE_METADATA: Record<string, PageMetadataConfig> = {
     ],
     ogTitle: "DSO System Setup & Management",
     ogDescription: "System-level tools for DSO configuration and Cloud Mode agent management",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  // GUIDE PAGES
+  "/docs/guide/best-practices": {
+    title: "Best Practices | DSO Documentation",
+    description: "Production best practices for Docker Secret Operator. Configuration recommendations, monitoring setup, IAM role usage, and operational safety guidelines.",
+    keywords: [
+      "dso best practices",
+      "secret rotation best practices",
+      "production setup",
+      "dso monitoring",
+      "iam roles docker",
+    ],
+    ogTitle: "Docker Secret Operator Best Practices",
+    ogDescription: "Production best practices for reliable and secure DSO deployments",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/docs/guide/compliance": {
+    title: "Compliance & Security Controls | DSO Documentation",
+    description: "Docker Secret Operator compliance mappings for SOC 2, ISO 27001, and PCI-DSS. Understand how DSO satisfies regulatory requirements.",
+    keywords: [
+      "dso compliance",
+      "soc 2 secrets",
+      "iso 27001 compliance",
+      "pci-dss secrets",
+      "regulatory requirements",
+    ],
+    ogTitle: "DSO Compliance & Security Controls",
+    ogDescription: "SOC 2, ISO 27001, and PCI-DSS compliance mappings for Docker Secret Operator",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/docs/guide/observability": {
+    title: "Observability | DSO Documentation",
+    description: "Monitor and observe Docker Secret Operator with Prometheus metrics and structured JSON logging. Integration guide for Grafana, Datadog, and ELK.",
+    keywords: [
+      "dso monitoring",
+      "prometheus metrics",
+      "observability docker",
+      "audit logging",
+      "structured logging",
+    ],
+    ogTitle: "Docker Secret Operator Observability",
+    ogDescription: "Prometheus metrics and structured logging for DSO operational visibility",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  // PROVIDER PAGES
+  "/docs/guide/providers/aws": {
+    title: "AWS Secrets Manager Integration | DSO",
+    description: "Integrate Docker Secret Operator with AWS Secrets Manager. Complete setup guide using IAM roles, Instance Profiles, and CloudTrail auditing.",
+    keywords: [
+      "dso aws",
+      "aws secrets manager docker",
+      "ec2 instance profile",
+      "iam role secrets",
+      "aws integration",
+    ],
+    ogTitle: "DSO + AWS Secrets Manager",
+    ogDescription: "Complete AWS Secrets Manager integration guide for Docker Secret Operator",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/docs/guide/providers/azure": {
+    title: "Azure Key Vault Integration | DSO",
+    description: "Integrate Docker Secret Operator with Azure Key Vault. Setup guide with Managed Identity, RBAC, and compliance configuration.",
+    keywords: [
+      "dso azure",
+      "azure key vault docker",
+      "managed identity",
+      "rbac secrets",
+      "azure integration",
+    ],
+    ogTitle: "DSO + Azure Key Vault",
+    ogDescription: "Complete Azure Key Vault integration guide for Docker Secret Operator",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/docs/guide/providers/vault": {
+    title: "HashiCorp Vault Integration | DSO",
+    description: "Integrate Docker Secret Operator with HashiCorp Vault. Setup guide for AppRole authentication, dynamic secrets, and self-hosted deployments.",
+    keywords: [
+      "dso vault",
+      "hashicorp vault docker",
+      "approle authentication",
+      "dynamic secrets",
+      "self-hosted vault",
+    ],
+    ogTitle: "DSO + HashiCorp Vault",
+    ogDescription: "Complete HashiCorp Vault integration guide for Docker Secret Operator",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/docs/guide/providers/huawei": {
+    title: "Huawei Cloud KMS Integration | DSO",
+    description: "Integrate Docker Secret Operator with Huawei Cloud KMS. Setup guide with service accounts and encryption key management.",
+    keywords: [
+      "dso huawei",
+      "huawei kms docker",
+      "huawei secrets",
+      "cloud kms",
+      "huawei integration",
+    ],
+    ogTitle: "DSO + Huawei Cloud KMS",
+    ogDescription: "Complete Huawei Cloud KMS integration guide for Docker Secret Operator",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/docs/guide/providers/local": {
+    title: "Local Mode & Encrypted Vault | DSO",
+    description: "Docker Secret Operator Local Mode with AES-256-GCM encrypted vault. Perfect for development, testing, and non-root deployments.",
+    keywords: [
+      "dso local mode",
+      "encrypted vault",
+      "aes-256 encryption",
+      "dev environment",
+      "non-root secrets",
+    ],
+    ogTitle: "DSO Local Mode",
+    ogDescription: "AES-256-GCM encrypted vault for development and isolated deployments",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  // COMPARISON PAGES
+  "/comparisons/doppler": {
+    title: "DSO vs Doppler | Feature Comparison",
+    description: "Detailed comparison between Docker Secret Operator and Doppler. See architecture, deployment, pricing, and when to choose each platform.",
+    keywords: [
+      "dso vs doppler",
+      "doppler alternative",
+      "secret management comparison",
+      "docker secrets",
+    ],
+    ogTitle: "Docker Secret Operator vs Doppler",
+    ogDescription: "Complete feature comparison: Docker Secret Operator vs Doppler",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/comparisons/infisical": {
+    title: "DSO vs Infisical | Feature Comparison",
+    description: "Detailed comparison between Docker Secret Operator and Infisical. See architecture, deployment, pricing, and when to choose each platform.",
+    keywords: [
+      "dso vs infisical",
+      "infisical alternative",
+      "secret management comparison",
+      "docker secrets",
+    ],
+    ogTitle: "Docker Secret Operator vs Infisical",
+    ogDescription: "Complete feature comparison: Docker Secret Operator vs Infisical",
+    ogImage: "/og-image.png",
+    twitterCard: "summary",
+  },
+
+  "/comparisons/manual-scripts": {
+    title: "DSO vs Manual Scripts | Why Automate Secret Rotation",
+    description: "Why Docker Secret Operator is better than manual secret rotation scripts. Risks of manual automation, compliance gaps, and operational burden.",
+    keywords: [
+      "secret rotation automation",
+      "manual rotation risks",
+      "automated secret rotation",
+      "why automate secrets",
+    ],
+    ogTitle: "DSO vs Manual Scripts",
+    ogDescription: "Why automated secret rotation is critical vs manual scripts",
     ogImage: "/og-image.png",
     twitterCard: "summary",
   },

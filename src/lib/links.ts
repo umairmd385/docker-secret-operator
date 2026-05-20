@@ -17,6 +17,9 @@ export const ROUTES = {
     dockerSecrets: "/comparisons/docker-secrets",
     externalSecrets: "/comparisons/external-secrets",
     sealedSecrets: "/comparisons/sealed-secrets",
+    doppler: "/comparisons/doppler",
+    infisical: "/comparisons/infisical",
+    manualScripts: "/comparisons/manual-scripts",
   },
 
   // Docs
@@ -28,6 +31,9 @@ export const ROUTES = {
       security: "/docs/guide/security",
       privacy: "/docs/guide/privacy",
       installation: "/docs/guide/installation",
+      bestPractices: "/docs/guide/best-practices",
+      compliance: "/docs/guide/compliance",
+      observability: "/docs/guide/observability",
       providers: {
         root: "/docs/guide/providers",
         aws: "/docs/guide/providers/aws",

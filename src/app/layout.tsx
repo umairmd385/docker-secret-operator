@@ -1,26 +1,9 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
 import "@/styles/mobile.css";
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-  preload: true,
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-  preload: false, // non-critical — only used inside code blocks
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dso.skycloudops.in"),
@@ -89,9 +72,9 @@ export const metadata: Metadata = {
       },
       {
         url: "/og-image.png",
-        width: 1024,
-        height: 1024,
-        alt: "Docker Secret Operator - Secret Management for Docker",
+        width: 1200,
+        height: 630,
+        alt: "Docker Secret Operator — Zero-Persistence Secret Injection for Docker",
         type: "image/png",
       },
     ],
@@ -296,7 +279,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} h-full antialiased dark`}
+      className="h-full antialiased dark"
     >
       <head>
         {jsonLd.map((schema, idx) => (

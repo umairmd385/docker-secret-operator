@@ -4,9 +4,10 @@
   "private": true,
   "license": "Apache-2.0",
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/generate-docs.js && next dev",
+    "generate-docs": "node scripts/generate-docs.js",
     "build:docs": "vitepress build docs --outDir public/docs",
-    "build": "npm run build:docs && next build",
+    "build": "npm run generate-docs && next build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -16,11 +17,12 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
+    "marked": "^18.0.4",
     "next": "16.2.3",
     "nodemailer": "^6.9.13",
-    "redis": "^4.6.12",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "redis": "^4.6.12",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {

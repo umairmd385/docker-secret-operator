@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { HardDrive, Server, Shield, Cpu, ChevronRight } from "lucide-react";
+import { ComponentArchitecture } from "@/components/diagrams/ComponentArchitecture";
 
 const FlowItem = ({ icon: Icon, label, sublabel }: { icon: any, label: string, sublabel?: string }) => (
   <div className="flex-shrink-0 flex flex-col items-center gap-2 w-20 sm:w-24">
@@ -99,6 +100,11 @@ export const Architecture = () => {
               Enterprise-grade rotation. Managed identity support. Multi-cloud plugins.
             </p>
           </motion.div>
+        </div>
+
+        {/* Agent Architecture Diagram */}
+        <div className="mt-20 sm:mt-32">
+          <ComponentArchitecture variant="detailed" />
         </div>
       </div>
     </section>

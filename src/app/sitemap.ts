@@ -51,19 +51,49 @@ function discoverPages(
   return pages;
 }
 
+/**
+ * Discover auto-generated markdown doc routes from the docs directory
+ */
+function discoverMarkdownDocRoutes(): string[] {
+  const docsDir = path.join(process.cwd(), "src/app/docs/guide");
+  const routes: string[] = [];
+
+  try {
+    const entries = fs.readdirSync(docsDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        routes.push(`/docs/guide/${entry.name}`);
+      }
+    }
+  } catch {
+    // docs/guide may not exist in all environments
+  }
+
+  return routes;
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const appDir = path.join(process.cwd(), "src/app");
 
-  // Discover all pages from docs and other routes
+  // Discover all pages from static routes
   const discoveredPages = discoverPages(appDir);
 
-  // Remove duplicates and sort
-  const uniquePages = Array.from(
-    new Map(discoveredPages.map((p) => [p.url, p])).values()
-  ).sort((a, b) => a.url.localeCompare(b.url));
+  // Also discover auto-generated markdown doc routes
+  const markdownRoutes = discoverMarkdownDocRoutes();
 
-  // Build sitemap entries
+  // Combine and deduplicate
+  const allUrls = new Map<string, string>();
+  for (const page of discoveredPages) {
+    allUrls.set(page.url, page.url);
+  }
+  for (const route of markdownRoutes) {
+    allUrls.set(route, route);
+  }
+
+  const uniqueUrls = Array.from(allUrls.values()).sort();
+
+  // Build sitemap entries — homepage first
   const entries: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
@@ -73,38 +103,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Add discovered pages with intelligent priority
-  for (const page of uniquePages) {
+  for (const url of uniqueUrls) {
     // Skip homepage (already added above)
-    if (page.url === "/") continue;
+    if (url === "/") continue;
 
-    // Determine priority based on path depth and type
+    // Determine priority and changeFrequency based on route type
     let priority = 0.5;
     let changeFrequency: "weekly" | "monthly" | "yearly" = "monthly";
 
-    if (page.url === "/docs") {
+    if (url === "/docs") {
       priority = 0.9;
       changeFrequency = "weekly";
-    } else if (page.url.startsWith("/docs/cli")) {
+    } else if (url === "/docs/guide/getting-started" || url === "/docs/guide/quick-start" || url === "/docs/guide/what-is-dso") {
+      priority = 0.85;
+      changeFrequency = "monthly";
+    } else if (url.startsWith("/docs/cli")) {
       priority = 0.8;
       changeFrequency = "monthly";
-    } else if (page.url.startsWith("/docs")) {
+    } else if (url.startsWith("/docs/guide")) {
+      priority = 0.75;
+      changeFrequency = "monthly";
+    } else if (url.startsWith("/comparisons") || url.startsWith("/integrations")) {
       priority = 0.7;
       changeFrequency = "monthly";
-    } else if (
-      page.url.startsWith("/comparisons") ||
-      page.url.startsWith("/integrations") ||
-      page.url.startsWith("/use-cases")
-    ) {
-      priority = 0.7;
-      changeFrequency = "monthly";
-    } else if (page.url.startsWith("/guides") || page.url.startsWith("/faqs")) {
-      priority = 0.6;
+    } else if (url === "/examples" || url === "/faq") {
+      priority = 0.65;
       changeFrequency = "monthly";
     }
 
     entries.push({
-      url: `${BASE_URL}${page.url}`,
+      url: `${BASE_URL}${url}`,
       lastModified: now,
       changeFrequency,
       priority,

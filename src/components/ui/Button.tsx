@@ -28,22 +28,18 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       lg: "px-8 py-3.5 text-base",
     };
 
-    const combinedProps = {
-      className: cn(baseStyles, variants[variant], sizes[size], className),
-      ref,
-      ...props
-    };
+    const classNameComputed = cn(baseStyles, variants[variant], sizes[size], className);
 
     if (href) {
       return (
-        <a href={href} className={combinedProps.className} {...(props as any)}>
+        <a href={href} className={classNameComputed} target={props.target} rel={props.rel} {...(props as any)}>
           {children}
         </a>
       );
     }
 
     return (
-      <button {...combinedProps}>
+      <button ref={ref} className={classNameComputed} {...props}>
         {children}
       </button>
     );

@@ -28,23 +28,8 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // ✅ SEO: Rewrite static HTML docs to clean URLs (no .html extension)
-  // This prevents duplicate indexing and serves docs transparently
-  rewrites: async () => ({
-    beforeFiles: [
-      // Map /docs/guide/* routes to /docs/guide/*.html static files
-      {
-        source: "/docs/guide/:path*",
-        destination: "/docs/guide/:path*.html",
-      },
-      // Map /docs/cli/* routes to /docs/cli/*.html static files
-      {
-        source: "/docs/cli/:path*",
-        destination: "/docs/cli/:path*.html",
-      },
-    ],
-    fallback: [],
-  }),
+  // ✅ Rewrites now handled by Next.js app router
+  // Previously mapped to static HTML files, now using dynamic page generation
 
   // ✅ SEO: Redirect any explicit .html requests to clean URLs
   redirects: async () => [

@@ -8,7 +8,57 @@
 export type ComparisonTool =
   | "vault"
   | "docker-secrets"
-  | "sealed-secrets";
+  | "sealed-secrets"
+  | "manual-scripts"
+  | "doppler"
+  | "infisical";
+
+// Simplified comparison interface for newer comparisons
+export interface ComparisonSection {
+  category: string;
+  dso: string;
+  alternative: string;
+}
+
+export interface Comparison {
+  id: string;
+  title: string;
+  alternative: string;
+  problem: string;
+  sections: ComparisonSection[];
+  downtime: {
+    dso: string;
+    alternative: string;
+  };
+  recovery: {
+    dso: string;
+    alternative: string;
+  };
+  healthChecks: {
+    dso: string;
+    alternative: string;
+  };
+  dockerSupport: {
+    dso: string;
+    alternative: string;
+  };
+  kubernetesRequired: {
+    dso: boolean;
+    alternative: boolean;
+  };
+  operationalBurden: {
+    dso: string;
+    alternative: string;
+  };
+  useCases: {
+    dso: string[];
+    alternative: string[];
+  };
+  recommendations: {
+    whenDso: string;
+    whenAlternative: string;
+  };
+}
 
 export interface ComparisonFeature {
   feature: string;
@@ -47,7 +97,7 @@ export interface ComparisonContent {
  * Comparison pages content database
  * Each entry generates a unique page with SEO metadata
  */
-export const COMPARISONS: Record<ComparisonTool, ComparisonContent> = {
+export const COMPARISONS: Record<string, ComparisonContent | Comparison> = {
   vault: {
     slug: "vault",
     title: "Docker Secret Operator vs HashiCorp Vault",
@@ -396,17 +446,281 @@ Both have merits. Sealed Secrets is pure GitOps. DSO is more secure and simpler.
   },
 };
 
+// New simplified comparisons
+export const NEW_COMPARISONS: Record<string, Comparison> = {
+  "manual-scripts": {
+    id: "manual-scripts",
+    title: "DSO vs Manual Scripts",
+    alternative: "Manual Shell Scripts + Cron",
+    problem: "Manual secret rotation scripts require operator intervention, lack health checks, and cause downtime during failures.",
+    sections: [
+      {
+        category: "Rotation Method",
+        dso: "Automatic detection of secret changes → new container spawned → health checks → atomic swap",
+        alternative: "Cron job → shell script → manual validation → container restart (or custom logic)",
+      },
+      {
+        category: "Downtime on Rotation",
+        dso: "0 seconds (blue-green swap, atomic)",
+        alternative: "5-10 minutes (rolling restart, potential connection drops)",
+      },
+      {
+        category: "Health Validation",
+        dso: "Mandatory health checks before traffic switch. Failed rotation triggers automatic rollback.",
+        alternative: "Optional (depends on script implementation, usually absent)",
+      },
+      {
+        category: "Failure Recovery",
+        dso: "Automatic: Agent detects in-flight rotation state on restart, auto-rollback older than 5 minutes, orphaned containers cleaned up",
+        alternative: "Manual: Operator must SSH, inspect state, manually restart or rollback",
+      },
+      {
+        category: "Compliance & Audit",
+        dso: "Structured JSON audit logs (SOC 2, ISO 27001, PCI-DSS ready), immutable logging required",
+        alternative: "Custom log parsing, no standardization, compliance gaps common",
+      },
+      {
+        category: "Operational Complexity",
+        dso: "Setup: 3 commands. Rotation: automatic. Failure response: automatic.",
+        alternative: "Setup: custom script development. Rotation: monitor cron. Failure response: manual debug",
+      },
+    ],
+    downtime: {
+      dso: "0 seconds (atomic blue-green swap)",
+      alternative: "5-10 minutes per rotation (rolling restarts, request drains)",
+    },
+    recovery: {
+      dso: "Automatic: checkpoint saved, agent detects incomplete rotation on restart, auto-rollback if > 5 minutes old",
+      alternative: "Manual: on-call engineer wakes up, SSHes in, diagnoses, restarts manually",
+    },
+    healthChecks: {
+      dso: "Mandatory before swap. New container must pass health checks or entire rotation aborts.",
+      alternative: "Usually none. Script just restarts container and hopes it comes up.",
+    },
+    dockerSupport: {
+      dso: "Native: works directly with Docker Engine. No integration needed.",
+      alternative: "Possible but requires custom script logic for docker inspect, restart, wait loops",
+    },
+    kubernetesRequired: {
+      dso: false,
+      alternative: false,
+    },
+    operationalBurden: {
+      dso: "Low: install DSO, write dso.yaml, done. Rotations happen automatically.",
+      alternative: "High: write scripts, debug cron, monitor for failures, respond to alerts, manual rollbacks",
+    },
+    useCases: {
+      dso: [
+        "Production Docker environments requiring zero downtime",
+        "Compliance-sensitive workloads (SOC 2, PCI-DSS, ISO 27001)",
+        "Teams without Kubernetes",
+        "Automated secret rotation without operator intervention",
+        "Health-check validated deployments",
+      ],
+      alternative: [
+        "Development/test environments only",
+        "Low-criticality services where downtime is acceptable",
+        "Organizations with dedicated on-call rotation (manual approach)",
+      ],
+    },
+    recommendations: {
+      whenDso: "Production workloads, compliance requirements, zero-downtime needs, or teams avoiding on-call escalations",
+      whenAlternative: "Rare. Manual scripts should not be used for production secrets.",
+    },
+  },
+
+  doppler: {
+    id: "doppler",
+    title: "DSO vs Doppler",
+    alternative: "Doppler (SaaS)",
+    problem: "Doppler is a SaaS platform for secrets management but does not provide automatic container rotation.",
+    sections: [
+      {
+        category: "Architecture",
+        dso: "Docker-native agent, self-hosted, runs on Docker Engine directly",
+        alternative: "SaaS platform, SDK-based injection, no rotation automation",
+      },
+      {
+        category: "Secret Rotation",
+        dso: "Automatic detection + blue-green swap (0 downtime)",
+        alternative: "Secret synced to vault, app must restart to pick up (app-dependent downtime)",
+      },
+      {
+        category: "Downtime Model",
+        dso: "0 seconds (atomic swap)",
+        alternative: "App-dependent (typically 30s-5m depending on startup time)",
+      },
+      {
+        category: "Health Checks",
+        dso: "Built-in: new container must pass health check before swap",
+        alternative: "Not provided. App must implement readiness probes.",
+      },
+      {
+        category: "Docker Support",
+        dso: "Native: works directly with Docker, no SDK required",
+        alternative: "Requires language-specific SDK installation",
+      },
+      {
+        category: "Kubernetes",
+        dso: "Works but not designed for K8s (use HashiCorp Vault for K8s instead)",
+        alternative: "Works with K8s, also supports other platforms",
+      },
+      {
+        category: "Pricing",
+        dso: "Free, open-source (Apache 2.0)",
+        alternative: "$25-500/month depending on team size and feature tier",
+      },
+      {
+        category: "Compliance",
+        dso: "SOC 2, ISO 27001, PCI-DSS mappings provided",
+        alternative: "SOC 2 Type II certified (third-party audit)",
+      },
+    ],
+    downtime: {
+      dso: "0 seconds",
+      alternative: "App-dependent (typically 30s-5m)",
+    },
+    recovery: {
+      dso: "Automatic checkpoint + state recovery on agent restart",
+      alternative: "App must handle secret reload gracefully",
+    },
+    healthChecks: {
+      dso: "Mandatory built-in health checks before swap",
+      alternative: "Not provided, app must implement",
+    },
+    dockerSupport: {
+      dso: "Native Docker, no SDK",
+      alternative: "Requires Doppler SDK per language",
+    },
+    kubernetesRequired: {
+      dso: false,
+      alternative: false,
+    },
+    operationalBurden: {
+      dso: "Low: self-hosted, no managed service costs, automatic rotation",
+      alternative: "Low: managed SaaS, but requires app integration and custom rotation logic",
+    },
+    useCases: {
+      dso: [
+        "Teams preferring self-hosted solutions",
+        "Docker-only deployments",
+        "Zero-downtime secret rotation requirement",
+        "Cost-sensitive projects",
+      ],
+      alternative: [
+        "Teams wanting managed secrets service",
+        "Multi-language environments requiring unified secrets dashboard",
+        "Organizations with existing Doppler investment",
+      ],
+    },
+    recommendations: {
+      whenDso: "Self-hosted preference, Docker-native, zero-downtime rotation, or cost concerns",
+      whenAlternative: "Managed SaaS preference, multi-platform environments, or centralized secrets dashboard",
+    },
+  },
+
+  infisical: {
+    id: "infisical",
+    title: "DSO vs Infisical",
+    alternative: "Infisical",
+    problem: "Infisical provides secrets management platform but does not provide automatic zero-downtime container rotation.",
+    sections: [
+      {
+        category: "Architecture",
+        dso: "Docker-native agent, self-hosted only",
+        alternative: "SaaS or self-hosted, SDK-based polling",
+      },
+      {
+        category: "Rotation Mechanism",
+        dso: "Automatic detection of secret changes → new container spawn → health check → atomic swap",
+        alternative: "App polls for changes (push available via webhooks), app must restart to apply",
+      },
+      {
+        category: "Downtime",
+        dso: "0 seconds (atomic swap)",
+        alternative: "App-dependent (typically 30s-5m, depends on restart time)",
+      },
+      {
+        category: "Health Checks",
+        dso: "Mandatory before swap",
+        alternative: "Not provided by platform",
+      },
+      {
+        category: "Docker Support",
+        dso: "Native, no SDK required",
+        alternative: "Requires language-specific SDK or webhook implementation",
+      },
+      {
+        category: "Self-Hosting",
+        dso: "Docker-based deployment",
+        alternative: "Docker-based deployment (community edition available)",
+      },
+      {
+        category: "Kubernetes",
+        dso: "Works but not optimized for K8s",
+        alternative: "Works with K8s, also supports other platforms",
+      },
+      {
+        category: "Pricing",
+        dso: "Free (Apache 2.0 open-source)",
+        alternative: "Free tier + paid plans ($10-99/month)",
+      },
+    ],
+    downtime: {
+      dso: "0 seconds",
+      alternative: "App-dependent (typically 30s-5m)",
+    },
+    recovery: {
+      dso: "Automatic: agent checkpoints state, recovers from crash without intervention",
+      alternative: "App-dependent, Infisical platform remains available",
+    },
+    healthChecks: {
+      dso: "Mandatory built-in before container swap",
+      alternative: "Not provided, app must implement",
+    },
+    dockerSupport: {
+      dso: "Native Docker, no SDK",
+      alternative: "Requires SDK or webhook implementation",
+    },
+    kubernetesRequired: {
+      dso: false,
+      alternative: false,
+    },
+    operationalBurden: {
+      dso: "Low: automatic rotation, DSO handles orchestration",
+      alternative: "Medium: platform provided, but app must handle reload logic",
+    },
+    useCases: {
+      dso: [
+        "Zero-downtime secret rotation critical",
+        "Docker-only deployments",
+        "Teams wanting fully automated rotation",
+        "Cost-sensitive projects",
+      ],
+      alternative: [
+        "Multi-platform secrets management needed",
+        "Centralized secrets dashboard important",
+        "Organizations wanting managed platform",
+      ],
+    },
+    recommendations: {
+      whenDso: "Zero-downtime rotation, Docker-native, automatic orchestration, or cost concerns",
+      whenAlternative: "Multi-platform support needed, centralized dashboard, or managed platform preference",
+    },
+  },
+};
+
 /**
  * Get comparison by slug
  */
-export function getComparison(slug: string): ComparisonContent | null {
-  return COMPARISONS[slug as ComparisonTool] || null;
+export function getComparison(slug: string): ComparisonContent | Comparison | null {
+  return (COMPARISONS[slug as ComparisonTool] || NEW_COMPARISONS[slug]) || null;
 }
 
 /**
  * Get all comparisons
  */
-export function getAllComparisons(): ComparisonContent[] {
+export function getAllComparisons(): (ComparisonContent | Comparison)[] {
   return Object.values(COMPARISONS);
 }
 

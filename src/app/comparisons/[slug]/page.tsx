@@ -16,14 +16,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const comparison = getComparison(slug);
 
-  if (!comparison) {
+  if (!comparison || !('slug' in comparison)) {
     return {
       title: "Comparison Not Found",
       description: "The comparison page you're looking for doesn't exist.",
     };
   }
 
-  const meta = getComparisonMetadata(comparison);
+  const meta = getComparisonMetadata(comparison as any);
 
   return generatePageMetadata(
     {
@@ -46,29 +46,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  */
 export async function generateStaticParams() {
   const comparisons = getAllComparisons();
-  return comparisons.map((comp) => ({
-    slug: comp.slug,
-  }));
+  return comparisons
+    .filter((comp) => 'slug' in comp)
+    .map((comp) => ({
+      slug: (comp as any).slug,
+    }));
 }
 
 export default async function ComparisonPageRoute({ params }: Props) {
   const { slug } = await params;
   const comparison = getComparison(slug);
 
-  if (!comparison) {
+  if (!comparison || !('slug' in comparison)) {
     notFound();
   }
 
+  const typedComparison = comparison as any;
+
   // Get related comparisons (exclude current)
-  const relatedComparisons = comparison.relatedPages
+  const relatedComparisons = typedComparison.relatedPages
     ? getAllComparisons()
-        .filter((c) => comparison.relatedPages?.includes(c.slug))
+        .filter((c) => 'slug' in c && typedComparison.relatedPages?.includes((c as any).slug))
         .map((c) => ({
-          label: c.title,
-          href: `/comparisons/${c.slug}`,
-          description: `Compare ${c.competitor.name} with DSO`,
+          label: (c as any).title,
+          href: `/comparisons/${(c as any).slug}`,
+          description: `Compare ${(c as any).competitor.name} with DSO`,
         }))
     : [];
 
-  return <ComparisonPage comparison={comparison} related={relatedComparisons} />;
+  return <ComparisonPage comparison={typedComparison} related={relatedComparisons} />;
 }
