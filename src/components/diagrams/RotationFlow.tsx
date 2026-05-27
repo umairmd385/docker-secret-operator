@@ -114,7 +114,7 @@ export const RotationFlow = ({
             Zero-Downtime Rotation
           </h3>
           <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto">
-            5 steps completed in seconds. No connections dropped.
+            Automated detection, health validation, and atomic swap. No traffic interruption.
           </p>
         </motion.div>
 
@@ -155,7 +155,7 @@ export const RotationFlow = ({
             viewport={{ once: true }}
             className="text-center text-sm text-gray-500 mt-2"
           >
-            ⏱️ Total time: ~5 seconds
+            ⏱️ Fully automated with health validation (default 30s timeout)
           </motion.div>
         )}
       </div>
@@ -173,7 +173,7 @@ export const RotationFlow = ({
             Zero-Downtime Rotation
           </h3>
           <p className="text-gray-400 text-xs sm:text-sm">
-            5 steps in ~5 seconds
+            Automated detection, health validation, atomic swap
           </p>
         </motion.div>
 

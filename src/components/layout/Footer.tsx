@@ -15,22 +15,27 @@ const LinkedInIcon = ({ className }: { className?: string }) => (
 
 const links = {
   product: [
-    { label: "Features", href: ROUTES.anchors.features },
-    { label: "Integrations", href: "/integrations" },
-    { label: "Comparisons", href: "/comparisons" },
-    { label: "Architecture", href: ROUTES.anchors.architecture },
-  ],
-  resources: [
-    { label: "Documentation", href: ROUTES.docs.root },
-    { label: "Examples", href: "/examples" },
-    { label: "Quick Start", href: ROUTES.anchors.quickStart },
+    { label: "Architecture", href: "/architecture" },
+    { label: "Capabilities", href: "/capabilities" },
+    { label: "Deployments", href: "/deployments" },
     { label: "FAQ", href: "/faq" },
   ],
-  security: [
-    { label: "Security Model", href: ROUTES.docs.guide.security },
-    { label: "Cloud Providers", href: ROUTES.docs.guide.providers.aws },
-    { label: "Privacy Policy", href: ROUTES.docs.guide.privacy },
-    { label: "Report Vulnerability", href: "/security" },
+  resources: [
+    { label: "Documentation", href: "/docs" },
+    { label: "GitHub", href: ROUTES.external.github },
+    { label: "Discussions", href: "https://github.com/docker-secret-operator/dso/discussions" },
+    { label: "Issues", href: "https://github.com/docker-secret-operator/dso/issues" },
+  ],
+  community: [
+    { label: "Open Source", href: ROUTES.external.github },
+    { label: "CNCF Sandbox", href: "https://www.cncf.io/sandbox/" },
+    { label: "Releases", href: "https://github.com/docker-secret-operator/dso/releases" },
+    { label: "Roadmap", href: "https://github.com/docker-secret-operator/dso/issues?q=is%3Aissue+is%3Aopen+label%3Aroadmap" },
+  ],
+  legal: [
+    { label: "License", href: "https://github.com/docker-secret-operator/dso/blob/main/LICENSE" },
+    { label: "Privacy", href: ROUTES.docs.guide.privacy },
+    { label: "Terms", href: "/terms" },
   ],
 };
 
@@ -46,7 +51,8 @@ export const Footer = () => {
     <div className="absolute -top-24 -right-24 w-[600px] h-[600px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none opacity-50" />
 
     <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 md:gap-12 lg:gap-8 mb-16 sm:mb-24 lg:mb-32">
+      {/* Links Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 md:gap-12 lg:gap-8 mb-12 sm:mb-16">
 
         {/* Brand column */}
         <div className="lg:col-span-3 space-y-8">
@@ -76,16 +82,16 @@ export const Footer = () => {
           <div className="pt-8 border-t border-white/5 flex flex-col gap-4">
             <div className="flex items-center gap-3 text-xs font-mono text-gray-500 uppercase tracking-widest">
               <ShieldCheck className="w-4 h-4 text-accent" />
-              Production Validated
+              Open Source
             </div>
             <p className="text-xs text-gray-600 leading-relaxed max-w-xs">
-              Securing 100k+ container secrets across enterprise clusters.
+              CNCF Sandbox project. Apache 2.0 licensed. Community-driven secret rotation for Docker.
             </p>
           </div>
         </div>
 
         {/* Product links */}
-        <div className="lg:col-span-2 lg:ml-auto">
+        <div className="lg:col-span-2">
           <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-8">Product</h4>
           <ul className="space-y-4">
             {links.product.map((link) => (
@@ -114,11 +120,11 @@ export const Footer = () => {
           </ul>
         </div>
 
-        {/* Security links */}
+        {/* Community links */}
         <div className="lg:col-span-2">
-          <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-8">Security</h4>
+          <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-8">Community</h4>
           <ul className="space-y-4">
-            {links.security.map((link) => (
+            {links.community.map((link) => (
               <li key={link.label}>
                 <a href={link.href} className="text-gray-500 hover:text-accent transition-all duration-200 flex items-center group">
                   <span className="w-0 group-hover:w-3 overflow-hidden transition-all duration-200 text-accent">→</span>
@@ -129,11 +135,30 @@ export const Footer = () => {
           </ul>
         </div>
 
+        {/* Legal links */}
+        <div className="lg:col-span-2">
+          <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-8">Legal</h4>
+          <ul className="space-y-4">
+            {links.legal.map((link) => (
+              <li key={link.label}>
+                <a href={link.href} className="text-gray-500 hover:text-accent transition-all duration-200 flex items-center group">
+                  <span className="w-0 group-hover:w-3 overflow-hidden transition-all duration-200 text-accent">→</span>
+                  <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Newsletter Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 sm:mb-24 lg:mb-32">
+
         {/* Newsletter */}
-        <div className="lg:col-span-3 bg-gradient-to-br from-white/5 to-white/[0.01] border border-accent/10 rounded-2xl lg:rounded-3xl p-6 sm:p-8 group hover:border-accent/30 hover:from-white/10 transition-all duration-300 shadow-lg shadow-accent/5">
-          <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-6">Stay Updated</h4>
+        <div className="bg-gradient-to-br from-white/5 to-white/[0.01] border border-accent/10 rounded-2xl lg:rounded-3xl p-6 sm:p-8 group hover:border-accent/30 hover:from-white/10 transition-all duration-300 shadow-lg shadow-accent/5">
+          <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-6">Get DSO Updates</h4>
           <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-            Get updates on DSO v3.2 features, security advisories, and architecture deep-dives.
+            Receive release updates, documentation changes, provider integrations, security guidance, and community announcements.
           </p>
 
           <form
@@ -175,7 +200,7 @@ export const Footer = () => {
             <input
               name="email"
               type="email"
-              placeholder="your.email@company.com"
+              placeholder="you@example.com"
               required
               className="w-full h-12 rounded-xl bg-white/[0.03] border border-white/10 px-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent/50 focus:bg-white/5 transition-all"
             />
@@ -213,11 +238,13 @@ export const Footer = () => {
       {/* Bottom bar */}
       <div className="mt-12 sm:mt-16 pt-8 sm:pt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 text-xs text-gray-500 uppercase tracking-wider">
-          <span>© {new Date().getFullYear()} Docker Secret Operator</span>
+          <span>Open Source</span>
           <span className="hidden md:block w-1 h-1 rounded-full bg-gray-700" />
-          <span>Apache 2.0 Licensed • Open Source</span>
+          <span>Docker Native</span>
           <span className="hidden md:block w-1 h-1 rounded-full bg-gray-700" />
           <span className="text-accent/60">CNCF Sandbox</span>
+          <span className="hidden md:block w-1 h-1 rounded-full bg-gray-700" />
+          <span>5 Providers</span>
         </div>
 
         <div className="flex items-center gap-6 text-xs">

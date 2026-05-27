@@ -2,14 +2,14 @@ import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
 import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { FAQ } from "@/components/sections/FAQ";
+import { VerifiedCapabilities } from "@/components/sections/VerifiedCapabilities";
 
 export const metadata = generatePageMetadata(
-  { ...PAGE_METADATA["/"], title: "FAQ | Docker Secret Operator" },
-  "/faq"
+  { ...PAGE_METADATA["/"], title: "Capabilities | Docker Secret Operator" },
+  "/capabilities"
 );
 
-export default function FAQPage() {
+export default function CapabilitiesPage() {
   return (
     <main className="flex-1 flex flex-col relative bg-background overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -18,7 +18,7 @@ export default function FAQPage() {
 
       <div className="relative z-10 flex flex-col w-full space-y-0">
         <Navbar />
-        <FAQ />
+        <VerifiedCapabilities />
         <Footer />
       </div>
     </main>

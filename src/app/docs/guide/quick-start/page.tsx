@@ -113,12 +113,14 @@ The agent now watches for secret changes and rotates containers automatically.
 | Step | Action | Duration |
 |------|--------|----------|
 | 1 | Agent detects secret change in provider | ~1s |
-| 2 | Creates new container with updated secret | ~2s |
-| 3 | Validates health check passes | ~2s |
-| 4 | Atomically swaps old and new containers | ~0.2s |
+| 2 | Creates new container with updated secret | ~1s |
+| 3 | Validates health check passes | ~30s (configurable, default timeout) |
+| 4 | Atomically swaps old and new containers | ~1s |
 | 5 | Removes old container after grace period | ~1s |
 
-> **Total: ~5 seconds of zero-downtime rotation**
+> **Total: ~30-35 seconds of zero-downtime rotation** (default health check timeout 30s)
+>
+> Health check timeout is configurable via \`health_check_timeout\` in \`dso.yaml\`
 
 ---
 

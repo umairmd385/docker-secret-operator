@@ -7,9 +7,9 @@ import { useState } from "react";
 
 export const QuickStart = () => {
   const commands = [
-    "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | sudo bash",
-    "docker dso init && docker dso secret set DB_PASSWORD your-secret",
-    "docker compose up -d",
+    "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | bash",
+    'docker dso init && docker dso secret set DB_PASSWORD "your-prod-password"',
+    "docker dso up -f docker-compose.yml",
   ];
 
   const [copied, setCopied] = useState<number | null>(null);
@@ -21,7 +21,7 @@ export const QuickStart = () => {
   };
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-t border-gray-800">
+    <section id="quick-start" className="relative py-20 sm:py-32 bg-background border-t border-gray-800">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -29,11 +29,12 @@ export const QuickStart = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
+          <p className="text-accent text-sm font-semibold uppercase tracking-wide mb-2">Local Development</p>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Get started in 2 minutes
+            Get Started Locally
           </h2>
           <p className="text-gray-400 text-lg">
-            Copy, paste, done. Three commands.
+            Use Docker Compose with local secrets. Three commands to see rotation in action.
           </p>
         </motion.div>
 
@@ -76,9 +77,9 @@ export const QuickStart = () => {
 
               {/* Description */}
               <p className="text-xs text-gray-500 mt-2 ml-12">
-                {idx === 0 && "Install the DSO Docker plugin"}
-                {idx === 1 && "Initialize your local vault and set your first secret"}
-                {idx === 2 && "Start your Docker stack. DSO handles secret rotation."}
+                {idx === 0 && "Install DSO CLI (add 'sudo' if not in docker group)"}
+                {idx === 1 && "Create local encrypted vault and add a secret"}
+                {idx === 2 && "Start containers. DSO injects secrets from docker-compose.yml labels"}
               </p>
             </motion.div>
           ))}

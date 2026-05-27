@@ -9,6 +9,14 @@ export const ROUTES = {
   // Root
   home: "/",
 
+  // Landing Pages
+  landingPages: {
+    architecture: "/architecture",
+    deployments: "/deployments",
+    capabilities: "/capabilities",
+    faq: "/faq",
+  },
+
   // Comparisons
   comparisons: {
     root: "/comparisons",

@@ -111,11 +111,15 @@ docker dso bootstrap local
 **Success output:**
 \`\`\`
 ✓ DSO local environment initialized
-✓ Configuration: ~/.dso/config.yaml
+✓ Configuration: ~/.dso/dso.yaml
 ✓ Next steps:
-  - Review config: docker dso config show
-  - Deploy: docker compose up
+  - Initialize vault: docker dso init
+  - Store secrets: docker dso secret set myapp/db_password
+  - Deploy: docker dso up -d
+  - Verify: docker dso doctor
 \`\`\`
+
+**Note:** \`docker dso setup --mode local\` is recommended for most users as it handles initialization in one step. Use \`bootstrap\` only if you need manual control.
 
 ### Agent Bootstrap (Production)
 \`\`\`bash

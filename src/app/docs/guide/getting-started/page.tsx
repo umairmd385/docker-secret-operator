@@ -95,14 +95,18 @@ Or just run \`docker dso setup\` and choose **Local** when prompted.
 ╚════════════════════════════════════════════════════╝
 
 📚 What's next:
-  1. Start the local vault:
-     docker dso up
 
-  2. View vault status:
+  1. Initialize the local vault:
+     docker dso init
+
+  2. Store secrets:
+     docker dso secret set <name>
+
+  3. Deploy your services:
+     docker dso up -d
+
+  4. Check status:
      docker dso status
-
-  3. Configure secrets:
-     docker dso secret set <name> <value>
 \`\`\`
 
 ### Step 2b — Initialize the Vault

@@ -86,6 +86,24 @@ export const docsStructure = {
         ]
       },
       {
+        "title": "DSO Local Mode Complete Guide",
+        "href": "/docs/guide/LOCAL_MODE_GUIDE",
+        "description": "Documentation for DSO Local Mode Complete Guide",
+        "keywords": [
+          "LOCAL_MODE_GUIDE",
+          "DSO Local Mode Complete Guide"
+        ]
+      },
+      {
+        "title": "Local Mode Documentation Index",
+        "href": "/docs/guide/LOCAL_MODE_INDEX",
+        "description": "Documentation for Local Mode Documentation Index",
+        "keywords": [
+          "LOCAL_MODE_INDEX",
+          "Local Mode Documentation Index"
+        ]
+      },
+      {
         "title": "DSO Operational Limitations & Design Assumptions",
         "href": "/docs/guide/OPERATIONAL_LIMITATIONS",
         "description": "Documentation for DSO Operational Limitations & Design Assumptions",
@@ -183,6 +201,18 @@ export function getAllDocPages() {
       href: "/docs/guide/CONFIG_REFERENCE",
       description: "Documentation for DSO Configuration Reference",
       keywords: ["CONFIG_REFERENCE","DSO Configuration Reference"],
+    },
+    {
+      title: "DSO Local Mode Complete Guide",
+      href: "/docs/guide/LOCAL_MODE_GUIDE",
+      description: "Documentation for DSO Local Mode Complete Guide",
+      keywords: ["LOCAL_MODE_GUIDE","DSO Local Mode Complete Guide"],
+    },
+    {
+      title: "Local Mode Documentation Index",
+      href: "/docs/guide/LOCAL_MODE_INDEX",
+      description: "Documentation for Local Mode Documentation Index",
+      keywords: ["LOCAL_MODE_INDEX","Local Mode Documentation Index"],
     },
     {
       title: "DSO Operational Limitations & Design Assumptions",

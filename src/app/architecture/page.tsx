@@ -2,14 +2,16 @@ import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
 import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { FAQ } from "@/components/sections/FAQ";
+import { RotationLifecycle } from "@/components/sections/RotationLifecycle";
+import { RealWorldImpact } from "@/components/sections/RealWorldImpact";
+import { SecurityArchitecture } from "@/components/sections/SecurityArchitecture";
 
 export const metadata = generatePageMetadata(
-  { ...PAGE_METADATA["/"], title: "FAQ | Docker Secret Operator" },
-  "/faq"
+  { ...PAGE_METADATA["/"], title: "Architecture | Docker Secret Operator" },
+  "/architecture"
 );
 
-export default function FAQPage() {
+export default function ArchitecturePage() {
   return (
     <main className="flex-1 flex flex-col relative bg-background overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -18,7 +20,9 @@ export default function FAQPage() {
 
       <div className="relative z-10 flex flex-col w-full space-y-0">
         <Navbar />
-        <FAQ />
+        <RotationLifecycle />
+        <RealWorldImpact />
+        <SecurityArchitecture />
         <Footer />
       </div>
     </main>
