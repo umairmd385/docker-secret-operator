@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
+  // Explicitly set Turbopack root to resolve module lookup issues
+  turbopack: {
+    root: path.resolve(__dirname),
+  },
+
   images: {
     unoptimized: false, // ✅ Enable Next.js Image optimization
 

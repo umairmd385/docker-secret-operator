@@ -3,12 +3,21 @@ import { createClient } from '@supabase/supabase-js';
 /**
  * Newsletter database operations
  * Uses Supabase Postgres for subscriber and campaign management
+ *
+ * This module uses the service role key for admin/internal operations.
+ * It's called only from API routes in a server context.
  */
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+function getServiceRoleClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) {
+    throw new Error('Missing Supabase credentials: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
+  }
+
+  return createClient(url, serviceKey);
+}
 
 export interface NewsletterSubscriber {
   id: string;
@@ -50,6 +59,7 @@ export interface NewsletterLog {
  */
 export async function addSubscriber(email: string, source: string = 'website'): Promise<NewsletterSubscriber | null> {
   try {
+    const supabase = getServiceRoleClient();
     const { data, error } = await supabase
       .from('newsletter_subscribers')
       .upsert(
@@ -80,6 +90,7 @@ export async function addSubscriber(email: string, source: string = 'website'): 
  */
 export async function getSubscriberByEmail(email: string): Promise<NewsletterSubscriber | null> {
   try {
+    const supabase = getServiceRoleClient();
     const { data, error } = await supabase
       .from('newsletter_subscribers')
       .select('*')
@@ -107,6 +118,7 @@ export async function getSubscriberByEmail(email: string): Promise<NewsletterSub
  */
 export async function confirmSubscriber(email: string): Promise<NewsletterSubscriber | null> {
   try {
+    const supabase = getServiceRoleClient();
     const { data, error } = await supabase
       .from('newsletter_subscribers')
       .update({
@@ -136,6 +148,7 @@ export async function confirmSubscriber(email: string): Promise<NewsletterSubscr
  */
 export async function unsubscribeEmail(email: string): Promise<NewsletterSubscriber | null> {
   try {
+    const supabase = getServiceRoleClient();
     const { data, error } = await supabase
       .from('newsletter_subscribers')
       .update({
@@ -164,6 +177,7 @@ export async function unsubscribeEmail(email: string): Promise<NewsletterSubscri
  */
 export async function getActiveSubscribersCount(): Promise<number> {
   try {
+    const supabase = getServiceRoleClient();
     const { count, error } = await supabase
       .from('newsletter_subscribers')
       .select('*', { count: 'exact', head: true })
@@ -186,6 +200,7 @@ export async function getActiveSubscribersCount(): Promise<number> {
  */
 export async function getPendingSubscribersCount(): Promise<number> {
   try {
+    const supabase = getServiceRoleClient();
     const { count, error } = await supabase
       .from('newsletter_subscribers')
       .select('*', { count: 'exact', head: true })
@@ -213,6 +228,7 @@ export async function createCampaign(
   campaign_type: string = 'update'
 ): Promise<NewsletterCampaign | null> {
   try {
+    const supabase = getServiceRoleClient();
     const { data, error } = await supabase
       .from('newsletter_campaigns')
       .insert({
@@ -241,6 +257,7 @@ export async function createCampaign(
  */
 export async function getCampaignById(id: string): Promise<NewsletterCampaign | null> {
   try {
+    const supabase = getServiceRoleClient();
     const { data, error } = await supabase
       .from('newsletter_campaigns')
       .select('*')
@@ -264,6 +281,7 @@ export async function getCampaignById(id: string): Promise<NewsletterCampaign | 
  */
 export async function getActiveSubscribers(): Promise<NewsletterSubscriber[]> {
   try {
+    const supabase = getServiceRoleClient();
     const { data, error } = await supabase
       .from('newsletter_subscribers')
       .select('*')
@@ -292,6 +310,7 @@ export async function logNewsletterSend(
   status: string = 'sent'
 ): Promise<NewsletterLog | null> {
   try {
+    const supabase = getServiceRoleClient();
     const { data, error } = await supabase
       .from('newsletter_logs')
       .insert({

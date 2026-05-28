@@ -1,6 +1,4 @@
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import nodemailer from 'nodemailer';
 
 export interface EmailOptions {
   to: string;
@@ -9,23 +7,45 @@ export interface EmailOptions {
 }
 
 /**
- * Send email via Resend
+ * Get Gmail transporter (lazy initialization)
+ */
+function getGmailTransporter() {
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_PASS;
+
+  if (!gmailUser || !gmailPass) {
+    throw new Error('Missing Gmail credentials: GMAIL_USER or GMAIL_PASS');
+  }
+
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: gmailUser,
+      pass: gmailPass,
+    },
+  });
+}
+
+/**
+ * Send email via Gmail SMTP
  */
 async function sendEmail(options: EmailOptions): Promise<boolean> {
   try {
-    const result = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'noreply@dso.skycloudops.in',
+    const transporter = getGmailTransporter();
+
+    const result = await transporter.sendMail({
+      from: process.env.GMAIL_USER,
       to: options.to,
       subject: options.subject,
       html: options.html,
     });
 
-    if (result.error) {
-      console.error('Email send error:', result.error);
+    if (!result.messageId) {
+      console.error('Email send failed: no message ID returned');
       return false;
     }
 
-    return !!result.data?.id;
+    return true;
   } catch (error) {
     console.error('Failed to send email:', error);
     return false;
