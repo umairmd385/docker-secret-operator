@@ -301,6 +301,30 @@ export async function getActiveSubscribers(): Promise<NewsletterSubscriber[]> {
 }
 
 /**
+ * Get all subscribers (Admin only)
+ */
+export async function getAllSubscribers(): Promise<NewsletterSubscriber[]> {
+  try {
+    const supabase = getServiceRoleClient();
+    const { data, error } = await supabase
+      .from('newsletter_subscribers')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error getting all subscribers:', error);
+      return [];
+    }
+
+    return data as NewsletterSubscriber[];
+  } catch (error) {
+    console.error('Error getting all subscribers:', error);
+    return [];
+  }
+}
+
+
+/**
  * Log newsletter send
  */
 export async function logNewsletterSend(

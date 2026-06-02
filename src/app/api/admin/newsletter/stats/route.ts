@@ -8,9 +8,11 @@ import { createClient } from '@supabase/supabase-js';
  */
 export async function GET(request: NextRequest) {
   try {
-    // Simple env-based protection - in production, use proper authentication
+    // Simple env-based protection - check both server and client env vars for compatibility
     const adminKey = request.headers.get('x-admin-key');
-    if (adminKey !== process.env.ADMIN_API_KEY) {
+    const validKeys = [process.env.ADMIN_API_KEY, process.env.NEXT_PUBLIC_ADMIN_PASSWORD].filter(Boolean);
+    
+    if (!adminKey || !validKeys.includes(adminKey)) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
