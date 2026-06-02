@@ -382,3 +382,48 @@ export async function logNewsletterSend(
     return null;
   }
 }
+/**
+ * Update subscriber status (e.g. block)
+ */
+export async function updateSubscriberStatus(id: string, status: 'active' | 'pending' | 'unsubscribed' | 'blocked' | 'bounced'): Promise<boolean> {
+  try {
+    const supabase = getServiceRoleClient();
+    const { error } = await supabase
+      .from('newsletter_subscribers')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error updating subscriber status:', error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error updating subscriber status:', error);
+    return false;
+  }
+}
+
+/**
+ * Delete subscriber permanently
+ */
+export async function deleteSubscriber(id: string): Promise<boolean> {
+  try {
+    const supabase = getServiceRoleClient();
+    const { error } = await supabase
+      .from('newsletter_subscribers')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting subscriber:', error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error deleting subscriber:', error);
+    return false;
+  }
+}

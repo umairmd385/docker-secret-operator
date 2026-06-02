@@ -30,17 +30,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { title, subject, content } = await request.json();
+    const { title, subject, content, action } = await request.json();
 
     if (!title || !subject || !content) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
+
+    const isDraft = action === 'draft';
 
     // 1. Create the campaign in the database
     const campaign = await createCampaign(title, subject, { html: content }, 'update');
     
     if (!campaign) {
       return NextResponse.json({ error: 'Failed to create campaign record' }, { status: 500 });
+    }
+    
+    if (isDraft) {
+      return NextResponse.json({ 
+        message: 'Campaign saved as draft!',
+        campaign 
+      });
     }
 
     // 2. Fetch all active subscribers

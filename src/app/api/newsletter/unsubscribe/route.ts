@@ -53,8 +53,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Redirect to home or unsubscribe success page
-    return NextResponse.redirect(new URL('/?unsubscribed=true', request.url));
+    // Redirect to unsubscribed status page
+    const unsubUrl = new URL('/newsletter/unsubscribed', request.url);
+    return NextResponse.redirect(unsubUrl);
   } catch (error) {
     console.error('Newsletter unsubscribe error:', error);
     return NextResponse.json(

@@ -12,8 +12,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.43.0",
     "@supabase/ssr": "^0.4.0",
+    "@supabase/supabase-js": "^2.43.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^1.1.0",
     "clsx": "^2.1.1",
@@ -24,6 +24,7 @@
     "nodemailer": "^6.9.13",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-quill": "^2.0.0",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {

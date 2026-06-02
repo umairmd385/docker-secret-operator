@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     await sendWelcomeEmail(email);
 
     // Redirect to success page or return success response
-    return NextResponse.redirect(new URL('/?confirmed=true', request.url));
+    return NextResponse.redirect(new URL('/newsletter/success', request.url));
   } catch (error) {
     console.error('Newsletter confirm error:', error);
     return NextResponse.json(

@@ -5,8 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, Mail, Clock, XCircle, Download, Send, History, 
   Plus, LogOut, ShieldCheck, Search, CheckCircle2, X,
-  LayoutDashboard, Settings, Activity, ArrowRight
+  LayoutDashboard, Settings, Activity, ArrowRight, Save, Trash2, Ban, MoreVertical
 } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 // ... (types and interfaces remain identical)
 interface SubscriberStats {
@@ -64,7 +68,7 @@ export default function NewsletterAdminPage() {
         setStats(data);
         setAuthenticated(true);
         sessionStorage.setItem('admin-key', key);
-        
+
         const subRes = await fetch('/api/admin/newsletter/subscribers', { headers: { 'x-admin-key': key } });
         if (subRes.ok) {
           const subData = await subRes.json();
@@ -125,22 +129,62 @@ export default function NewsletterAdminPage() {
     } catch { setTestEmailStatus('error'); }
   };
 
-  const handleSendCampaign = async (e: React.FormEvent) => {
+  const handleCampaignAction = async (e: React.FormEvent, action: 'send' | 'draft') => {
     e.preventDefault();
+    if (!campaignTitle || !campaignSubject || !campaignContent) return;
+    
     setCampaignStatus('sending');
     try {
       const res = await fetch('/api/admin/newsletter/campaigns', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-key': sessionStorage.getItem('admin-key') || '' },
-        body: JSON.stringify({ title: campaignTitle, subject: campaignSubject, content: campaignContent })
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': sessionStorage.getItem('admin-key') || '',
+        },
+        body: JSON.stringify({
+          title: campaignTitle,
+          subject: campaignSubject,
+          content: campaignContent,
+          action
+        }),
       });
+
       if (res.ok) {
         setCampaignStatus('success');
-        setTimeout(() => { setActiveModal('none'); setCampaignStatus('idle'); setCampaignTitle(''); setCampaignSubject(''); setCampaignContent(''); }, 3000);
+        setTimeout(() => {
+          setActiveModal('none');
+          setCampaignStatus('idle');
+          setCampaignTitle('');
+          setCampaignSubject('');
+          setCampaignContent('');
+          fetchCampaignHistory(); 
+        }, 2000);
       } else {
         setCampaignStatus('error');
       }
-    } catch { setCampaignStatus('error'); }
+    } catch (err) {
+      setCampaignStatus('error');
+    }
+  };
+
+  const handleUpdateSubscriber = async (id: string, status: string) => {
+    const key = sessionStorage.getItem('admin-key');
+    await fetch('/api/admin/newsletter/subscribers', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': key || '' },
+      body: JSON.stringify({ id, status })
+    });
+    verifyTokenAndFetchData(key || '');
+  };
+
+  const handleDeleteSubscriber = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this subscriber?')) return;
+    const key = sessionStorage.getItem('admin-key');
+    await fetch(`/api/admin/newsletter/subscribers?id=${id}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-key': key || '' }
+    });
+    verifyTokenAndFetchData(key || '');
   };
 
   const fetchCampaignHistory = async () => {
@@ -169,6 +213,7 @@ export default function NewsletterAdminPage() {
       case 'draft':
         return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20"><Clock className="w-3.5 h-3.5" /> {status}</span>;
       case 'unsubscribed':
+      case 'blocked':
       case 'failed':
         return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20"><XCircle className="w-3.5 h-3.5" /> {status}</span>;
       default:
@@ -193,27 +238,26 @@ export default function NewsletterAdminPage() {
   if (!authenticated) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A] px-4 relative overflow-hidden">
-        {/* Animated Background */}
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-40">
-          <motion.div 
+          <motion.div
             animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
             className="absolute w-[600px] h-[600px] bg-accent/20 rounded-full blur-[120px]"
           />
-          <motion.div 
+          <motion.div
             animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             className="absolute w-[400px] h-[400px] bg-purple-500/20 rounded-full blur-[100px] translate-x-1/4 -translate-y-1/4"
           />
         </div>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md p-8 bg-black/40 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl relative z-10"
         >
           <div className="flex flex-col items-center mb-8">
-            <motion.div 
+            <motion.div
               initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", bounce: 0.5, delay: 0.2 }}
               className="w-16 h-16 bg-gradient-to-br from-accent/20 to-purple-500/20 border border-white/10 rounded-2xl flex items-center justify-center mb-6 shadow-lg"
             >
@@ -222,7 +266,7 @@ export default function NewsletterAdminPage() {
             <h1 className="text-3xl font-bold text-white tracking-tight">DSO Admin</h1>
             <p className="text-sm text-gray-400 mt-2 text-center">Secure access to newsletter orchestration.</p>
           </div>
-          
+
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
               <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Access Token</label>
@@ -240,7 +284,7 @@ export default function NewsletterAdminPage() {
                 </button>
               </div>
             </div>
-            
+
             <AnimatePresence>
               {authError && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-sm text-red-400 text-center">
@@ -248,7 +292,7 @@ export default function NewsletterAdminPage() {
                 </motion.div>
               )}
             </AnimatePresence>
-            
+
             <button
               type="submit" disabled={loading || !password}
               className="w-full py-4 bg-white text-black hover:bg-gray-200 font-bold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
@@ -265,19 +309,18 @@ export default function NewsletterAdminPage() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex flex-col md:flex-row font-sans selection:bg-accent/30 selection:text-white text-white">
-      
-      {/* Sidebar */}
+
       <div className="w-full md:w-64 bg-black/50 border-r border-white/10 p-6 flex flex-col hidden md:flex">
         <div className="flex items-center gap-3 mb-12">
           <div className="w-10 h-10 bg-gradient-to-br from-accent to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-accent/20">
             <Mail className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="font-bold text-lg leading-tight tracking-tight">DSO CRM</h2>
+            <h2 className="font-bold text-lg leading-tight tracking-tight">DSO</h2>
             <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Admin Portal</p>
           </div>
         </div>
-        
+
         <nav className="space-y-2 flex-1">
           <button onClick={() => setActiveTab('dashboard')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'dashboard' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
             <LayoutDashboard className="w-5 h-5" /> Overview
@@ -289,16 +332,15 @@ export default function NewsletterAdminPage() {
             <History className="w-5 h-5" /> Campaigns
           </button>
         </nav>
-        
+
         <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-rose-400 transition-colors mt-auto font-medium">
           <LogOut className="w-5 h-5" /> Sign Out
         </button>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 h-screen overflow-y-auto bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]">
         <div className="max-w-6xl mx-auto p-6 md:p-10 space-y-10">
-          
+
           <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
@@ -306,7 +348,7 @@ export default function NewsletterAdminPage() {
               </h1>
               <p className="text-gray-400 text-sm">Monitor your community growth and orchestrate campaigns.</p>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <button onClick={() => setActiveModal('test-email')} className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-medium transition-colors flex items-center gap-2">
                 <Send className="w-4 h-4 text-gray-400" /> Test
@@ -345,16 +387,16 @@ export default function NewsletterAdminPage() {
                 </div>
                 <h2 className="text-xl font-semibold">Directory</h2>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <div className="relative w-full sm:w-64">
                   <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
-                  <input 
+                  <input
                     type="text" placeholder="Search emails..." value={search} onChange={(e) => setSearch(e.target.value)}
                     className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
                   />
                 </div>
-                
+
                 <div className="flex bg-white/5 border border-white/10 rounded-xl p-1 w-full sm:w-auto">
                   {['all', 'active', 'pending', 'unsubscribed'].map((f) => (
                     <button
@@ -365,13 +407,13 @@ export default function NewsletterAdminPage() {
                     </button>
                   ))}
                 </div>
-                
+
                 <button onClick={handleExportCSV} className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-gray-400 hover:text-white transition-colors group" title="Export CSV">
                   <Download className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
                 </button>
               </div>
             </div>
-            
+
             <div className="overflow-x-auto">
               {filteredSubscribers.length === 0 ? (
                 <div className="p-20 text-center flex flex-col items-center justify-center">
@@ -389,11 +431,12 @@ export default function NewsletterAdminPage() {
                       <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Status</th>
                       <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Source</th>
                       <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-right">Joined</th>
+                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {filteredSubscribers.map((sub, i) => (
-                      <motion.tr 
+                      <motion.tr
                         initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(i * 0.05, 0.5) }}
                         key={sub.id} className="hover:bg-white/[0.02] transition-colors group"
                       >
@@ -410,6 +453,16 @@ export default function NewsletterAdminPage() {
                           <span className="px-2.5 py-1 bg-white/5 border border-white/10 rounded-md text-xs text-gray-400 tracking-wide">{sub.source}</span>
                         </td>
                         <td className="px-6 py-4 text-gray-500 text-right tabular-nums">{formatDate(sub.created_at)}</td>
+                        <td className="px-6 py-4 text-sm text-right flex justify-end gap-2">
+                          {sub.status === 'active' && (
+                            <button onClick={() => handleUpdateSubscriber(sub.id, 'blocked')} className="text-gray-500 hover:text-orange-400 p-1 bg-white/5 rounded" title="Block Subscriber">
+                              <Ban className="w-4 h-4" />
+                            </button>
+                          )}
+                          <button onClick={() => handleDeleteSubscriber(sub.id)} className="text-gray-500 hover:text-red-500 p-1 bg-white/5 rounded" title="Delete Subscriber">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
                       </motion.tr>
                     ))}
                   </tbody>
@@ -420,19 +473,17 @@ export default function NewsletterAdminPage() {
         </div>
       </div>
 
-      {/* Premium Modals */}
       <AnimatePresence>
         {activeModal !== 'none' && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setActiveModal('none')} className="absolute inset-0 bg-black/80 backdrop-blur-md" />
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="bg-[#111] border border-white/10 rounded-3xl w-full max-w-xl shadow-2xl relative z-10 overflow-hidden flex flex-col max-h-[90vh]"
             >
-              {/* Modal Header Effect */}
               <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-50"></div>
-              
+
               <button onClick={() => setActiveModal('none')} className="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors z-20 bg-black/50 p-1.5 rounded-full backdrop-blur-md">
                 <X className="w-5 h-5" />
               </button>
@@ -449,8 +500,8 @@ export default function NewsletterAdminPage() {
                       <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Target Address</label>
                       <input type="email" required value={testEmail} onChange={(e) => setTestEmail(e.target.value)} placeholder="hello@skycloudops.in" className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-accent transition-colors" />
                     </div>
-                    {testEmailStatus === 'success' && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-sm flex items-center gap-2"><CheckCircle2 className="w-4 h-4"/> Trajectory confirmed. Email sent.</div>}
-                    {testEmailStatus === 'error' && <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-sm flex items-center gap-2"><XCircle className="w-4 h-4"/> System failure. Check logs.</div>}
+                    {testEmailStatus === 'success' && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-sm flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Trajectory confirmed. Email sent.</div>}
+                    {testEmailStatus === 'error' && <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-sm flex items-center gap-2"><XCircle className="w-4 h-4" /> System failure. Check logs.</div>}
                     <div className="pt-2 flex justify-end gap-3">
                       <button type="button" onClick={() => setActiveModal('none')} className="px-5 py-2.5 text-sm font-semibold text-gray-400 hover:text-white transition-colors">Abort</button>
                       <button type="submit" disabled={testEmailStatus === 'sending'} className="px-6 py-2.5 bg-white hover:bg-gray-200 text-black rounded-xl font-bold transition-all disabled:opacity-50 flex items-center gap-2">
@@ -468,27 +519,30 @@ export default function NewsletterAdminPage() {
                   </div>
                   <h2 className="text-2xl font-bold text-white mb-2">Orchestrate Campaign</h2>
                   <p className="text-gray-400 mb-8 leading-relaxed">Broadcast a message to your entire active subscriber base. This action cannot be undone.</p>
-                  <form onSubmit={handleSendCampaign} className="space-y-5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Internal Designation</label>
-                        <input type="text" required value={campaignTitle} onChange={(e) => setCampaignTitle(e.target.value)} placeholder="e.g. v2.0 Release" className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors" />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Inbox Subject Line</label>
-                        <input type="text" required value={campaignSubject} onChange={(e) => setCampaignSubject(e.target.value)} placeholder="Big news for DSO..." className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors" />
+                  <form className="space-y-4">
+                    <div className="space-y-1">
+                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Internal Title</label>
+                      <input type="text" required value={campaignTitle} onChange={(e) => setCampaignTitle(e.target.value)} placeholder="v1.2 Release Announcement" className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Subject Line</label>
+                      <input type="text" required value={campaignSubject} onChange={(e) => setCampaignSubject(e.target.value)} placeholder="Big updates to Docker Secret Operator" className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Payload (Rich Text)</label>
+                      <div className="bg-white text-black rounded-xl overflow-hidden">
+                        <ReactQuill theme="snow" value={campaignContent} onChange={setCampaignContent} className="h-48" />
                       </div>
                     </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Payload (HTML/Text)</label>
-                      <textarea required value={campaignContent} onChange={(e) => setCampaignContent(e.target.value)} placeholder="Write your message here..." className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors h-40 font-mono text-sm resize-none custom-scrollbar" />
-                    </div>
-                    {campaignStatus === 'success' && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-sm flex items-center gap-2"><CheckCircle2 className="w-4 h-4"/> Blast initiated successfully.</div>}
-                    {campaignStatus === 'error' && <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-sm flex items-center gap-2"><XCircle className="w-4 h-4"/> Blast failed to launch.</div>}
-                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-6">
+                    {campaignStatus === 'success' && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-sm flex items-center gap-2 mt-4"><CheckCircle2 className="w-4 h-4" /> Operation completed successfully.</div>}
+                    {campaignStatus === 'error' && <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-sm flex items-center gap-2 mt-4"><XCircle className="w-4 h-4" /> Operation failed.</div>}
+                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-10">
                       <button type="button" onClick={() => setActiveModal('none')} className="px-5 py-2.5 text-sm font-semibold text-gray-400 hover:text-white transition-colors">Abort</button>
-                      <button type="submit" disabled={campaignStatus === 'sending'} className="px-6 py-2.5 bg-gradient-to-r from-purple-500 to-accent text-white rounded-xl font-bold transition-all disabled:opacity-50 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] flex items-center gap-2">
-                        {campaignStatus === 'sending' ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : 'Execute Blast'}
+                      <button type="button" onClick={(e) => handleCampaignAction(e, 'draft')} disabled={campaignStatus === 'sending'} className="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition-all disabled:opacity-50 flex items-center gap-2">
+                        <Save className="w-4 h-4" /> Save Draft
+                      </button>
+                      <button type="button" onClick={(e) => handleCampaignAction(e, 'send')} disabled={campaignStatus === 'sending'} className="px-6 py-2.5 bg-gradient-to-r from-purple-500 to-accent text-white rounded-xl font-bold transition-all disabled:opacity-50 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] flex items-center gap-2">
+                        <Send className="w-4 h-4" /> Execute Blast
                       </button>
                     </div>
                   </form>
