@@ -277,6 +277,30 @@ export async function getCampaignById(id: string): Promise<NewsletterCampaign | 
 }
 
 /**
+ * Get all campaigns (Admin only)
+ */
+export async function getAllCampaigns(): Promise<NewsletterCampaign[]> {
+  try {
+    const supabase = getServiceRoleClient();
+    const { data, error } = await supabase
+      .from('newsletter_campaigns')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error getting campaigns:', error);
+      return [];
+    }
+
+    return data as NewsletterCampaign[];
+  } catch (error) {
+    console.error('Error getting campaigns:', error);
+    return [];
+  }
+}
+
+
+/**
  * Get all active subscribers for sending
  */
 export async function getActiveSubscribers(): Promise<NewsletterSubscriber[]> {

@@ -29,7 +29,7 @@ function getGmailTransporter() {
 /**
  * Send email via Resend or Gmail
  */
-async function sendEmail(options: EmailOptions): Promise<boolean> {
+export async function sendEmail(options: EmailOptions): Promise<boolean> {
   try {
     // If Resend API key is available, use Resend API
     if (process.env.RESEND_API_KEY) {
