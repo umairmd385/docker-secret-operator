@@ -61,7 +61,7 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
     const transporter = getGmailTransporter();
 
     const result = await transporter.sendMail({
-      from: `"Docker Secret Operator" <${process.env.GMAIL_USER}>`,
+      from: `"DSO" <${process.env.GMAIL_USER}>`,
       to: options.to,
       subject: options.subject,
       html: options.html,

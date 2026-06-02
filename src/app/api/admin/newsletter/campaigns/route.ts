@@ -87,11 +87,11 @@ export async function POST(request: NextRequest) {
         .eq('id', campaign.id);
     };
 
-    // Execute asynchronously
-    sendEmails().catch(console.error);
+    // Execute synchronously so Vercel doesn't kill the function early
+    await sendEmails();
 
     return NextResponse.json({ 
-      message: `Campaign created and is being sent to ${subscribers.length} subscribers!`,
+      message: `Campaign created and sent to ${subscribers.length} subscribers!`,
       campaign 
     });
 
