@@ -45,10 +45,7 @@ export async function GET(request: NextRequest) {
     await sendWelcomeEmail(email);
 
     // Redirect to success page or return success response
-    return NextResponse.json(
-      { message: 'Email confirmed successfully! Check your inbox for the welcome email.' },
-      { status: 200 }
-    );
+    return NextResponse.redirect(new URL('/?confirmed=true', request.url));
   } catch (error) {
     console.error('Newsletter confirm error:', error);
     return NextResponse.json(
