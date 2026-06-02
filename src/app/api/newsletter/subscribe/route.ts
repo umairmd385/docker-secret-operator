@@ -16,7 +16,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email } = await request.json();
+    let email: string;
+    try {
+      const body = await request.json();
+      email = body.email;
+    } catch (e) {
+      return NextResponse.json(
+        { error: 'Invalid JSON body' },
+        { status: 400 }
+      );
+    }
 
     // Validate email
     if (!email || typeof email !== 'string') {

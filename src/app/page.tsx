@@ -7,7 +7,7 @@ import { CLIIdentity } from "@/components/sections/CLIIdentity";
 import { SolutionVisual } from "@/components/sections/SolutionVisual";
 import { Comparison } from "@/components/sections/Comparison";
 import { VerifiedCapabilities } from "@/components/sections/VerifiedCapabilities";
-import { OSSTrust } from "@/components/sections/OSSTraust";
+import { OSSTrust } from "@/components/sections/OSSTrust";
 import { QuickStart } from "@/components/sections/GetStarted";
 import { TrustAndCTA } from "@/components/sections/TrustAndCTA";
 

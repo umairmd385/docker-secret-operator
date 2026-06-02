@@ -27,10 +27,36 @@ function getGmailTransporter() {
 }
 
 /**
- * Send email via Gmail SMTP
+ * Send email via Resend or Gmail
  */
 async function sendEmail(options: EmailOptions): Promise<boolean> {
   try {
+    // If Resend API key is available, use Resend API
+    if (process.env.RESEND_API_KEY) {
+      const from = process.env.RESEND_FROM_EMAIL || 'noreply@skycloudops.in';
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from,
+          to: options.to,
+          subject: options.subject,
+          html: options.html,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Resend API error:', errorText);
+        return false;
+      }
+      return true;
+    }
+
+    // Fallback to Gmail
     const transporter = getGmailTransporter();
 
     const result = await transporter.sendMail({

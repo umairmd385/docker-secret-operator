@@ -1,0 +1,48 @@
+# Docker Secret Operator (DSO)
+
+> Event-driven, zero-persistence secret injection for Docker containers.
+
+Docker Secret Operator (DSO) is an open-source, CNCF Sandbox runtime secret injection daemon designed for standalone Docker environments. It enables zero-downtime secret rotation and injection without ever writing secrets to disk.
+
+## Core Value Proposition
+- **Zero-Persistence**: Secrets are injected directly into container memory. They are never written to disk, `.env` files, or Docker layers.
+- **Zero-Downtime Rotation**: When a secret changes in the provider, DSO detects the change, spawns a new container, validates its health, and swaps traffic atomically.
+- **Automatic Rollback**: If a newly rotated container fails health checks, DSO instantly rolls back to the previous healthy container.
+- **No Kubernetes Required**: Native Docker integration. Provides Kubernetes-level secret orchestration for standalone Docker and Docker Compose environments.
+
+## Supported Providers
+- AWS Secrets Manager
+- Azure Key Vault
+- HashiCorp Vault
+- Huawei Cloud KMS
+- Local Encrypted Vault (AES-256-GCM)
+
+## How it Compares
+Unlike standard `.env` files or native Docker Secrets, DSO supports:
+1. Zero-downtime rotation
+2. Automatic health validation
+3. Crash recovery & rollback
+4. Real-time provider synchronization
+
+## Important Links
+- **Documentation**: https://dso.skycloudops.in/docs
+- **CLI Reference**: https://dso.skycloudops.in/docs/cli
+- **GitHub Repository**: https://github.com/docker-secret-operator/dso
+
+## Installation
+```bash
+curl -fsSL https://dso.skycloudops.in/install.sh | sudo bash
+docker dso init
+```
+
+## Quick Start
+```bash
+# 1. Initialize local vault
+docker dso init
+
+# 2. Set a secret
+docker dso secret set DB_PASSWORD "my-super-secret"
+
+# 3. Start containers with secrets injected
+docker dso up -f docker-compose.yml
+```

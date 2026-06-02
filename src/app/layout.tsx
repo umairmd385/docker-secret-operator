@@ -289,6 +289,7 @@ export default function RootLayout({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
           />
         ))}
+        <link rel="alternate" type="text/markdown" href="/llms.txt" title="DSO LLM Documentation" />
       </head>
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground selection:bg-accent-dim selection:text-accent">
         <ThemeProvider>
