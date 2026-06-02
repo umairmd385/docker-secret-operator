@@ -385,23 +385,14 @@ export async function sendWelcomeEmail(email: string): Promise<boolean> {
 }
 
 /**
- * Send newsletter campaign
+ * Generate a beautifully formatted HTML email template with DSO branding
  */
-export async function sendNewsletterCampaign(
-  email: string,
-  subject: string,
-  htmlContent: string,
-  unsubscribeEmail: string
-): Promise<boolean> {
-  const footer = `
-    <hr style="border: none; border-top: 1px solid #eee; margin: 40px 0; 20px;">
-    <p style="font-size: 12px; color: #999; text-align: center;">
-      <a href="https://dso.skycloudops.in/api/newsletter/unsubscribe?email=${encodeURIComponent(unsubscribeEmail)}" style="color: #0ea5e9; text-decoration: none;">Unsubscribe</a> |
-      <a href="https://dso.skycloudops.in" style="color: #0ea5e9; text-decoration: none;">Visit Website</a>
-    </p>
-  `;
+export function buildNewsletterTemplate(htmlContent: string, unsubscribeEmail: string): string {
+  const unsubscribeUrl = unsubscribeEmail 
+    ? `https://dso.skycloudops.in/api/newsletter/unsubscribe?email=${encodeURIComponent(unsubscribeEmail)}`
+    : 'https://dso.skycloudops.in';
 
-  const html = `
+  return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -413,41 +404,122 @@ export async function sendNewsletterCampaign(
       line-height: 1.6;
       color: #333;
       background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
     }
     .container {
       max-width: 600px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 0;
       background-color: #ffffff;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      overflow: hidden;
     }
-    h1, h2, h3 {
-      color: #1a1a1a;
+    .header {
+      text-align: center;
+      padding: 24px 20px;
+      background-color: #f8fafc;
+      border-bottom: 1px solid #eee;
     }
-    a {
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0ea5e9;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+    .content {
+      padding: 32px 32px 16px 32px;
+    }
+    .content h1, .content h2, .content h3 {
+      color: #0f172a;
+      margin-top: 0;
+    }
+    .content a {
       color: #0ea5e9;
       text-decoration: none;
     }
-    a:hover {
+    .content a:hover {
       text-decoration: underline;
     }
-    code {
-      background-color: #f5f5f5;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: 'Monaco', 'Courier New', monospace;
+    .content p {
+      margin-bottom: 16px;
+      color: #334155;
+    }
+    .content ul, .content ol {
+      color: #334155;
+    }
+    .trust-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 20px 0;
+      font-size: 12px;
+      color: #64748b;
+      background-color: #f8fafc;
+      border-top: 1px solid #eee;
+    }
+    .footer {
+      padding: 24px;
+      background-color: #f8fafc;
+      font-size: 12px;
+      color: #94a3b8;
+      text-align: center;
+      border-top: 1px dashed #e2e8f0;
+    }
+    .footer-link {
+      color: #0ea5e9;
+      text-decoration: none;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    ${htmlContent}
-    ${footer}
+    <div class="header">
+      <h2 class="logo">DSO</h2>
+    </div>
+
+    <div class="content">
+      ${htmlContent}
+    </div>
+
+    <div class="trust-row">
+      <span style="display:inline-block; margin: 0 5px;">Open Source</span>
+      <span style="display:inline-block; margin: 0 5px;">•</span>
+      <span style="display:inline-block; margin: 0 5px;">Docker Native</span>
+      <span style="display:inline-block; margin: 0 5px;">•</span>
+      <span style="display:inline-block; margin: 0 5px;">CNCF Sandbox</span>
+    </div>
+
+    <div class="footer">
+      <p style="margin: 0 0 10px 0;">
+        <a href="${unsubscribeUrl}" class="footer-link">Unsubscribe</a>
+        <span style="margin: 0 10px;">|</span>
+        <a href="https://dso.skycloudops.in" class="footer-link">Visit Website</a>
+      </p>
+      <p style="margin: 0;">
+        Docker Secret Operator<br>
+        CNCF Sandbox Project • Apache 2.0 Licensed
+      </p>
+    </div>
   </div>
 </body>
 </html>
   `;
+}
+
+/**
+ * Send newsletter campaign
+ */
+export async function sendNewsletterCampaign(
+  email: string,
+  subject: string,
+  htmlContent: string,
+  unsubscribeEmail: string
+): Promise<boolean> {
+  const html = buildNewsletterTemplate(htmlContent, unsubscribeEmail);
 
   return sendEmail({
     to: email,
