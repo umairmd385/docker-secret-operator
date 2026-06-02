@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, Mail, Clock, XCircle, Download, Send, History, 
   Plus, LogOut, ShieldCheck, Search, CheckCircle2, X,
-  LayoutDashboard, Settings, Activity, ArrowRight, Save, Trash2, Ban, MoreVertical
+  LayoutDashboard, Settings, Activity, ArrowRight, Save, Trash2, Ban, MoreVertical,
+  Wand2, SquareSquare, PanelTop, Type
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
@@ -192,6 +193,34 @@ export default function NewsletterAdminPage() {
       setPreviewHtml('<div style="color:red; padding:20px;">Error loading preview</div>');
     }
     setLoadingPreview(false);
+  };
+
+  const handleInjectBlock = (html: string) => {
+    setCampaignContent((prev) => prev + html);
+  };
+
+  const handleLoadBlueprint = () => {
+    const blueprint = `
+      <div style="background-color: #111; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h2 style="margin-top: 0; margin-bottom: 5px; color: white;">TechOps Examples</h2>
+        <p style="margin: 0; color: #ccc; font-size: 14px;">Hey — It's Admin 👋<br>Welcome to another technical edition.</p>
+      </div>
+      <div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; border: 1px solid #eee; margin-bottom: 20px; font-size: 13px; color: #555;">
+        <strong>Every Tuesday</strong> — You'll receive a free edition with a byte-size use case, remote job opportunities, top news, tools, and articles.
+      </div>
+      <h3 style="color: #ff4500; margin-bottom: 10px; font-size: 16px;">IN TODAY'S EDITION</h3>
+      <ul style="margin-bottom: 30px;">
+        <li>Use Case: How Kubernetes Applies Resource Quotas</li>
+        <li>Remote Jobs: OXIO is hiring</li>
+        <li>Resources: AI Powered event driven Amazon EKS</li>
+      </ul>
+      <h3 style="color: #ff4500; margin-bottom: 10px; font-size: 16px;">TOOL OF THE DAY</h3>
+      <p><strong>kubetail</strong> - Real time logging dashboard for Kubernetes.</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="#" style="background-color: #111; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Try it Out →</a>
+      </div>
+    `;
+    setCampaignContent(blueprint);
   };
 
   const handleUpdateSubscriber = async (id: string, status: string) => {
@@ -568,9 +597,17 @@ export default function NewsletterAdminPage() {
                         <input type="text" required value={campaignSubject} onChange={(e) => setCampaignSubject(e.target.value)} placeholder="Big updates to Docker Secret Operator" className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors" />
                       </div>
                       <div className="space-y-1">
-                        <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Payload (Rich Text)</label>
+                        <div className="flex justify-between items-center mb-2">
+                          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Payload (Rich Text)</label>
+                          <div className="flex gap-2">
+                            <button type="button" onClick={handleLoadBlueprint} className="px-2 py-1 bg-gradient-to-r from-orange-500/20 to-red-500/20 hover:from-orange-500/30 hover:to-red-500/30 border border-orange-500/30 rounded text-[10px] text-orange-400 font-bold uppercase tracking-wider flex items-center gap-1 transition-all"><Wand2 className="w-3 h-3" /> TechOps Blueprint</button>
+                            <button type="button" onClick={() => handleInjectBlock('<div style="background-color: #111; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;"><h2 style="margin-top: 0; margin-bottom: 5px; color: white;">Header Title</h2><p style="margin: 0; color: #ccc; font-size: 14px;">Subtitle text here.</p></div>')} className="px-2 py-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-[10px] text-gray-300 flex items-center gap-1 transition-colors"><PanelTop className="w-3 h-3" /> Dark Box</button>
+                            <button type="button" onClick={() => handleInjectBlock('<div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; border: 1px solid #eee; margin-bottom: 20px; font-size: 13px; color: #555;"><strong>Info:</strong> Add your schedule or context here.</div>')} className="px-2 py-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-[10px] text-gray-300 flex items-center gap-1 transition-colors"><SquareSquare className="w-3 h-3" /> Info Box</button>
+                            <button type="button" onClick={() => handleInjectBlock('<div style="text-align: center; margin: 30px 0;"><a href="#" style="background-color: #111; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Try it Out →</a></div>')} className="px-2 py-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-[10px] text-gray-300 flex items-center gap-1 transition-colors"><Type className="w-3 h-3" /> CTA Button</button>
+                          </div>
+                        </div>
                         <div className="bg-white text-black rounded-xl overflow-hidden">
-                          <ReactQuill theme="snow" value={campaignContent} onChange={setCampaignContent} className="h-48" />
+                          <ReactQuill theme="snow" value={campaignContent} onChange={setCampaignContent} className="h-64" />
                         </div>
                       </div>
                       {campaignStatus === 'success' && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-sm flex items-center gap-2 mt-4"><CheckCircle2 className="w-4 h-4" /> Operation completed successfully.</div>}
