@@ -33,7 +33,8 @@ async function sendEmail(options: EmailOptions): Promise<boolean> {
   try {
     // If Resend API key is available, use Resend API
     if (process.env.RESEND_API_KEY) {
-      const from = process.env.RESEND_FROM_EMAIL || 'noreply@skycloudops.in';
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@skycloudops.in';
+      const from = `"Docker Secret Operator" <${fromEmail}>`;
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -60,7 +61,7 @@ async function sendEmail(options: EmailOptions): Promise<boolean> {
     const transporter = getGmailTransporter();
 
     const result = await transporter.sendMail({
-      from: process.env.GMAIL_USER,
+      from: `"Docker Secret Operator" <${process.env.GMAIL_USER}>`,
       to: options.to,
       subject: options.subject,
       html: options.html,
