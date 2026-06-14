@@ -22,9 +22,10 @@ const DocLinkComponent = ({ icon, title, description, href, external = false, in
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      className="group p-6 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/50 hover:bg-gray-900/50 transition-all flex flex-col"
+      transition={{ delay: index * 0.08, duration: 0.3 }}
+      className="group p-6 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/50 hover:bg-gray-900/50 transition-all flex flex-col cursor-pointer"
     >
       <div className="flex items-start gap-3 mb-3">
         <div className="w-10 h-10 rounded-lg bg-accent/10 border border-accent/30 group-hover:border-accent/50 group-hover:bg-accent/20 transition-all flex items-center justify-center flex-shrink-0">

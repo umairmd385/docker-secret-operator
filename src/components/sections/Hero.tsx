@@ -7,7 +7,7 @@ import { ChevronRight, CheckCircle2, Eye, Package, HeartPulse, RefreshCw, Trash2
 import { ROUTES } from "@/lib/links";
 
 const ProviderIcon = ({ icon: Icon, label }: { icon: any; label: string }) => (
-  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-accent/30 transition-colors">
+  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-accent/50 hover:bg-gray-900/60 transition-all duration-200">
     <Icon className="w-4 h-4 text-accent" />
     <span className="text-sm text-gray-300">{label}</span>
   </div>
@@ -25,7 +25,7 @@ const RotationFlowStep = ({
   <motion.div
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.4 }}
+    transition={{ delay, duration: 0.3 }}
     className="flex items-center gap-3"
   >
     <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-accent/10 border border-accent/30 flex items-center justify-center">
@@ -50,7 +50,7 @@ export const Hero = () => {
     <section className="relative py-16 sm:py-24 lg:py-32 bg-background border-b border-gray-800 overflow-hidden">
       {/* Subtle background accent */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 -right-40 w-80 h-80 bg-accent/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 -right-40 w-80 h-80 bg-accent/3 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
@@ -105,7 +105,7 @@ export const Hero = () => {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 pt-6">
               <motion.div
                 whileHover={{ x: 4 }}
                 transition={{ duration: 0.2 }}
@@ -132,7 +132,7 @@ export const Hero = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="flex flex-wrap gap-2 pt-2"
+              className="flex flex-wrap gap-2 pt-4"
             >
               <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-900/50 border border-gray-700 text-xs text-gray-400 font-medium">
                 Rolling Updates
