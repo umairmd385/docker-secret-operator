@@ -190,6 +190,36 @@ export const DeploymentPaths = () => {
       ],
     },
     {
+      id: "agent-huawei",
+      title: "Huawei Cloud KMS",
+      icon: <Cloud className="w-5 h-5" />,
+      category: "prod",
+      description: "Production setup using Huawei Cloud Key Management Service.",
+      providers: ["Huawei Cloud KMS"],
+      steps: [
+        {
+          step: 1,
+          command: "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | sudo bash",
+          explanation: "Install DSO system-wide (requires sudo)",
+        },
+        {
+          step: 2,
+          command: "sudo docker dso system bootstrap --provider huawei --region cn-east-2",
+          explanation: "Bootstrap agent with Huawei provider. Uses IAM credentials from environment.",
+        },
+        {
+          step: 3,
+          command: "sudo systemctl enable dso-agent && sudo systemctl start dso-agent",
+          explanation: "Start agent as systemd service. Will run on every boot.",
+        },
+        {
+          step: 4,
+          command: "curl http://localhost:8081/health",
+          explanation: 'Verify agent is running and connected to Huawei Cloud. Expect {"status":"ok","provider":"huawei"}',
+        },
+      ],
+    },
+    {
       id: "agent-local",
       title: "Production Local Mode",
       icon: <RotateCcw className="w-5 h-5" />,

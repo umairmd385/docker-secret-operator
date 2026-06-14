@@ -74,7 +74,7 @@ export const Hero = () => {
                 CNCF Sandbox
               </span>
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/30 text-xs font-mono text-accent uppercase tracking-widest">
-                4+ Providers
+                5+ Providers
               </span>
             </div>
 

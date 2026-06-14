@@ -50,6 +50,14 @@ export const PathChooser = () => {
       cta: "Configure Vault",
     },
     {
+      id: "huawei",
+      title: "Huawei Cloud",
+      description: "Use Huawei Cloud KMS with native authentication.",
+      icon: <Cloud className="w-6 h-6" />,
+      category: "prod",
+      cta: "Configure Huawei",
+    },
+    {
       id: "offline",
       title: "Offline Mode",
       description: "Production with local encrypted vault. No cloud.",

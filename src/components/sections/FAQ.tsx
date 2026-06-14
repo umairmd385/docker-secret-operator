@@ -81,6 +81,18 @@ export const FAQ = () => {
       answer:
         "Secrets are streamed to container tmpfs (memory-based filesystem) via Docker API. They are not persisted to disk. On container stop, memory is released. Vault itself is encrypted at rest.",
     },
+    {
+      category: "Limitations",
+      question: "What's the maximum size for a secret?",
+      answer:
+        "DSO enforces a 1MB maximum per secret. This covers API keys, database passwords, certificates, and virtually all real-world use cases. For larger credentials, split into multiple secrets.",
+    },
+    {
+      category: "Recovery",
+      question: "What happens if DSO crashes during rotation?",
+      answer:
+        "DSO tracks rotation state in checkpoints on disk. When the agent restarts, it evaluates the last checkpoint: if rotation completed successfully, it marks as done; if incomplete, it resumes from the last safe step; if it failed, it rolls back. Result: no orphaned containers, no stale secrets, state always consistent.",
+    },
   ];
 
   return (
