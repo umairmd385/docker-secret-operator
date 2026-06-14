@@ -45,7 +45,7 @@ export const QuickStart = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
+              transition={{ delay: idx * 0.08, duration: 0.3 }}
               className="group relative"
             >
               <div className="flex items-start gap-4 p-4 rounded-xl border border-gray-700 bg-gray-900/50 hover:bg-gray-900/80 transition-colors">
@@ -64,8 +64,9 @@ export const QuickStart = () => {
                 {/* Copy Button */}
                 <button
                   onClick={() => copyToClipboard(cmd, idx)}
-                  className="flex-shrink-0 p-2 rounded-lg hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100"
+                  className="flex-shrink-0 p-2 rounded-lg hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent"
                   title="Copy to clipboard"
+                  aria-label="Copy command to clipboard"
                 >
                   {copied === idx ? (
                     <Check className="w-5 h-5 text-green-400" />

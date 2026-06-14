@@ -15,25 +15,25 @@ const FAQCard = ({ question, answer, isOpen, onClick, index }: FAQItem & { isOpe
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ delay: index * 0.05 }}
+    transition={{ delay: index * 0.04, duration: 0.3 }}
     className="border border-gray-800 rounded-lg bg-gray-900/30 hover:border-accent/30 transition-colors"
   >
     <button
       onClick={onClick}
-      className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-900/50 transition-colors"
+      className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-900/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-inset"
     >
       <h3 className="font-semibold text-foreground text-sm sm:text-base">{question}</h3>
       <ChevronDown
-        className={`w-5 h-5 text-accent flex-shrink-0 transition-transform duration-300 ${
+        className={`w-5 h-5 text-accent flex-shrink-0 transition-transform duration-200 ${
           isOpen ? "rotate-180" : ""
         }`}
       />
     </button>
 
     <motion.div
-      initial={{ height: 0, opacity: 0 }}
-      animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
-      transition={{ duration: 0.3 }}
+      initial={{ maxHeight: 0, opacity: 0 }}
+      animate={{ maxHeight: isOpen ? 500 : 0, opacity: isOpen ? 1 : 0 }}
+      transition={{ duration: 0.25 }}
       className="overflow-hidden border-t border-gray-800"
     >
       <p className="px-6 py-4 text-sm text-gray-400 leading-relaxed">{answer}</p>

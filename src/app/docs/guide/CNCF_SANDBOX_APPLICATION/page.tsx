@@ -14,7 +14,7 @@ The project ships as a native Docker CLI plugin (\`docker dso up\`) and is writt
 **Repository:** https://github.com/docker-secret-operator/dso  
 **License:** Apache-2.0  
 **Language:** Go  
-**Current version:** v3.5.0  
+**Current version:** latest  
 
 ## Problem Statement
 
