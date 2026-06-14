@@ -44,14 +44,14 @@ curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scr
 **User-level** (recommended for development):
 \`\`\`bash
 mkdir -p ~/.docker/cli-plugins
-curl -Lo ~/.docker/cli-plugins/docker-dso https://github.com/docker-secret-operator/dso/releases/download/v1.0.0/dso-linux-amd64
+curl -Lo ~/.docker/cli-plugins/docker-dso https://github.com/docker-secret-operator/dso/releases/latest/download/dso-linux-amd64
 chmod +x ~/.docker/cli-plugins/docker-dso
 \`\`\`
 
 **System-wide** (for production):
 \`\`\`bash
 sudo mkdir -p /usr/local/lib/docker/cli-plugins
-sudo curl -Lo /usr/local/lib/docker/cli-plugins/docker-dso https://github.com/docker-secret-operator/dso/releases/download/v1.0.0/dso-linux-amd64
+sudo curl -Lo /usr/local/lib/docker/cli-plugins/docker-dso https://github.com/docker-secret-operator/dso/releases/latest/download/dso-linux-amd64
 sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-dso
 \`\`\`
 

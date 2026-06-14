@@ -22,8 +22,8 @@ const GuaranteeCard = ({ icon, title, description, index }: GuaranteeItem & { in
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ delay: index * 0.08 }}
-    className="p-4 rounded-lg border border-accent/20 bg-accent/5"
+    transition={{ delay: index * 0.05, duration: 0.3 }}
+    className="p-4 rounded-lg border border-accent/20 bg-accent/5 hover:border-accent/40 hover:bg-accent/10 transition-colors focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer"
   >
     <div className="flex items-start gap-3">
       <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/30 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -40,9 +40,9 @@ const GuaranteeCard = ({ icon, title, description, index }: GuaranteeItem & { in
 export const VerifiedCapabilities = () => {
   const guarantees: GuaranteeItem[] = [
     {
-      icon: <Lock className="w-4 h-4" />,
-      title: "Zero Disk Persistence",
-      description: "Secrets never written to host filesystem. No plaintext traces on disk.",
+      icon: <Zap className="w-4 h-4" />,
+      title: "Zero Downtime",
+      description: "Traffic swaps safely. No connections dropped. Atomic container rename.",
     },
     {
       icon: <HeartPulse className="w-4 h-4" />,
@@ -53,16 +53,6 @@ export const VerifiedCapabilities = () => {
       icon: <RotateCcw className="w-4 h-4" />,
       title: "Automatic Rollback",
       description: "If health check fails, restore previous container instantly. Zero downtime.",
-    },
-    {
-      icon: <Zap className="w-4 h-4" />,
-      title: "Zero Downtime",
-      description: "Traffic swaps safely. No connections dropped. Atomic container rename.",
-    },
-    {
-      icon: <Shield className="w-4 h-4" />,
-      title: "Atomic Swap",
-      description: "Old container renamed to backup, new becomes active. No partial states.",
     },
     {
       icon: <AlertCircle className="w-4 h-4" />,
@@ -80,7 +70,6 @@ export const VerifiedCapabilities = () => {
         { title: "Zero-Downtime Rotation", description: "Atomic container swap. No connection drops." },
         { title: "Health Validation", description: "Configurable health checks before traffic switch." },
         { title: "Automatic Rollback", description: "Failed rotation restores previous container instantly." },
-        { title: "Multi-Container Support", description: "Rotate multiple containers in parallel." },
       ],
     },
     {
@@ -89,7 +78,6 @@ export const VerifiedCapabilities = () => {
       description: "Protection mechanisms",
       features: [
         { title: "Zero Disk Persistence", description: "Secrets never touch filesystem. Memory-only flow." },
-        { title: "Atomic Injection", description: "TAR streamed to tmpfs. All-or-nothing guarantee." },
         { title: "Instant Cleanup", description: "Old container secrets purged immediately on rotation." },
         { title: "Encryption at Rest", description: "Local vault encrypted. Supports provider encryption." },
       ],
@@ -102,8 +90,6 @@ export const VerifiedCapabilities = () => {
         { title: "AWS Secrets Manager", description: "IAM Instance Profile auth. No credentials needed." },
         { title: "Azure Key Vault", description: "Managed Identity auth. Enterprise-ready." },
         { title: "HashiCorp Vault", description: "AppRole or token auth. Self-hosted or Cloud." },
-        { title: "Huawei Cloud KMS", description: "Native Huawei Cloud auth. Enterprise support." },
-        { title: "Local Encrypted Vault", description: "Zero-dependency option for development/offline." },
       ],
     },
   ];
@@ -136,7 +122,7 @@ export const VerifiedCapabilities = () => {
           >
             Operational Guarantees
           </motion.h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-4">
             {guarantees.map((guarantee, index) => (
               <GuaranteeCard key={guarantee.title} {...guarantee} index={index} />
             ))}
@@ -182,8 +168,8 @@ export const VerifiedCapabilities = () => {
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: groupIdx * 0.15 + featureIdx * 0.08 }}
-                      className="p-3 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/20 transition-colors"
+                      transition={{ delay: groupIdx * 0.08 + featureIdx * 0.04, duration: 0.3 }}
+                      className="p-3 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/30 hover:bg-gray-900/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer"
                     >
                       <h4 className="font-medium text-foreground text-sm mb-1">{feature.title}</h4>
                       <p className="text-xs text-gray-400">{feature.description}</p>

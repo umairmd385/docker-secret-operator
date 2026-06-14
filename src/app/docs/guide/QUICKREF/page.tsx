@@ -32,7 +32,7 @@ docker dso setup --mode agent --provider aws    # Cloud/AWS, no prompts
 docker dso setup --auto-detect          # Auto-detect cloud from instance metadata
 docker dso setup --mode agent --provider aws --enable-nonroot  # Also add user to dso group
 
-# ── Lower-level alternative (if you need more control) ───────────────────
+# ── Advanced: Lower-level alternative (if you need manual control) ──────
 docker dso bootstrap local              # Init local dirs (no root required)
 sudo docker dso bootstrap agent         # Init systemd service (requires root)
 
