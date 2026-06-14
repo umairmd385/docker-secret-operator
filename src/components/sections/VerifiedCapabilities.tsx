@@ -67,7 +67,7 @@ export const VerifiedCapabilities = () => {
     {
       icon: <AlertCircle className="w-4 h-4" />,
       title: "Crash Recovery",
-      description: "Agent restart from clean state. In-memory cache persists until container stops.",
+      description: "DSO tracks rotation checkpoints. On restart, incomplete rotations resume from checkpoint.",
     },
   ];
 
@@ -102,6 +102,7 @@ export const VerifiedCapabilities = () => {
         { title: "AWS Secrets Manager", description: "IAM Instance Profile auth. No credentials needed." },
         { title: "Azure Key Vault", description: "Managed Identity auth. Enterprise-ready." },
         { title: "HashiCorp Vault", description: "AppRole or token auth. Self-hosted or Cloud." },
+        { title: "Huawei Cloud KMS", description: "Native Huawei Cloud auth. Enterprise support." },
         { title: "Local Encrypted Vault", description: "Zero-dependency option for development/offline." },
       ],
     },
@@ -121,7 +122,7 @@ export const VerifiedCapabilities = () => {
             Verified Capabilities
           </h2>
           <p className="text-base sm:text-lg text-gray-400">
-            Operational guarantees backed by implementation. All features verified in CLI source code.
+            Operational guarantees backed by implementation. Every capability shown is verified in CLI source code.
           </p>
         </motion.div>
 
@@ -203,9 +204,9 @@ export const VerifiedCapabilities = () => {
         >
           <Code className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-semibold text-foreground mb-1">No Marketing Claims</p>
+            <p className="text-sm font-semibold text-foreground mb-1">Verified Implementation</p>
             <p className="text-xs text-gray-400">
-              Every feature listed above is verified in the DSO CLI source code. No vaporware. No unimplemented features. Everything shown is production-ready and tested.
+              Every capability shown here is production-ready and verified in the DSO CLI source code. For the complete feature list and advanced options, see the <a href="/docs/cli" className="text-accent hover:underline">CLI documentation</a>.
             </p>
           </div>
         </motion.div>
