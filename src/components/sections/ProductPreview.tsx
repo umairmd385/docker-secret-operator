@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { BarChart3, Zap, Eye, Terminal } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const ProductPreview = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -22,12 +23,10 @@ export const ProductPreview = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Real product. Real visibility.
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">Real product. Real visibility.</H2>
+          <PLead className="text-gray-400">
             Everything you need to manage rotations. Dashboard and CLI.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Tabs */}

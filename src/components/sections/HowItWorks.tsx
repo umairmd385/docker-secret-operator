@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Eye, Lock, Check, Zap, Trash2, Shield } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const HowItWorks = () => {
   const stages = [
@@ -59,12 +60,10 @@ export const HowItWorks = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            The elegance is in the simplicity.
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">The elegance is in the simplicity.</H2>
+          <PLead className="text-gray-400">
             Five steps. One outcome: traffic never stops.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Flow diagram - horizontal on desktop, vertical on mobile */}
