@@ -17,12 +17,16 @@ export const TerminalDemo = () => {
   }, [activeStep]);
 
   const steps = [
-    { type: "input", text: "$ dso rotate database-password" },
-    { type: "output", text: "✓ Fetching secret from provider..." },
-    { type: "output", text: "✓ Spawning new container with updated password" },
-    { type: "output", text: "✓ Health checks passed (2.1s)" },
-    { type: "output", text: "✓ Atomic swap completed" },
-    { type: "output", text: "✓ Old container stopped\n\n🎉 Complete in 2.3s. Zero downtime." },
+    { type: "input", text: "$ dso rotate postgres-password" },
+    { type: "output", text: "Detecting secret change..." },
+    { type: "output", text: "✓ Secret fetched from provider" },
+    { type: "output", text: "✓ Checkpoint created on disk" },
+    { type: "output", text: "✓ Creating new container with updated credentials" },
+    { type: "output", text: "✓ Waiting for application health checks (2.1s)" },
+    { type: "output", text: "✓ Verifying database connections are working" },
+    { type: "output", text: "✓ Atomic swap complete — traffic rerouted" },
+    { type: "output", text: "✓ Old container stopped and removed" },
+    { type: "output", text: "✓ Checkpoint cleaned up\n\n✅ Rotation completed in 2.3 seconds\n✅ Zero downtime — no requests failed\n✅ No manual intervention required" },
   ];
 
   const copyCommand = () => {
