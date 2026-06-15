@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { AlertCircle, Clock, Users, Zap } from "lucide-react";
+import { H2, PLead, P, PSmall } from "@/components/ui/Typography";
 
 export const ProblemSection = () => {
   const steps = [
@@ -42,12 +43,10 @@ export const ProblemSection = () => {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-            Secret rotation shouldn't bring production down.
-          </h2>
-          <p className="text-lg sm:text-xl text-gray-400 leading-relaxed">
+          <H2 className="mb-6">Secret rotation shouldn't bring production down.</H2>
+          <PLead className="text-gray-400">
             Yet today, most teams face a choice: rotate secrets and accept downtime, or skip rotation and accept risk.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Timeline */}
@@ -65,7 +64,7 @@ export const ProblemSection = () => {
               >
                 {/* Timeline connector */}
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 flex-shrink-0">
                     {step.icon}
                   </div>
                   {idx < steps.length - 1 && (
@@ -80,9 +79,7 @@ export const ProblemSection = () => {
                       <h3 className="font-semibold text-foreground text-lg mb-2">
                         {step.title}
                       </h3>
-                      <p className="text-gray-400 text-sm leading-relaxed">
-                        {step.description}
-                      </p>
+                      <PSmall className="text-gray-400">{step.description}</PSmall>
                     </div>
                     <div className="text-xs font-mono text-red-400 flex-shrink-0">
                       {step.time}
@@ -101,12 +98,12 @@ export const ProblemSection = () => {
             transition={{ delay: 0.4 }}
             className="mt-12 p-8 rounded-lg border border-red-500/20 bg-red-500/5"
           >
-            <p className="text-gray-300 text-lg leading-relaxed">
+            <P className="text-gray-300">
               <span className="font-semibold text-foreground">The result:</span> Downtime. Failed requests. Customer impact. Engineer burnout.
-            </p>
-            <p className="text-gray-400 text-sm mt-3">
+            </P>
+            <PSmall className="text-gray-400 mt-3">
               Most teams solve this by skipping rotation altogether. That's worse—secrets stay the same for months.
-            </p>
+            </PSmall>
           </motion.div>
         </div>
       </div>

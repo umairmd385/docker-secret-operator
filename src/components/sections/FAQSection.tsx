@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { H2, PLead, P, PSmall } from "@/components/ui/Typography";
 
 export const FAQSection = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -80,12 +81,10 @@ export const FAQSection = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Questions answered.
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">Questions answered.</H2>
+          <PLead className="text-gray-400">
             Everything you need to know about DSO.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* FAQ Accordion */}
@@ -145,9 +144,9 @@ export const FAQSection = () => {
           transition={{ delay: 0.6 }}
           className="mt-16 text-center p-8 rounded-lg border border-gray-800 bg-gray-900/30"
         >
-          <p className="text-gray-400 mb-4">
+          <PSmall className="text-gray-400 mb-4">
             Didn't find your answer?
-          </p>
+          </PSmall>
           <a
             href="https://github.com/docker-secret-operator/dso/discussions"
             target="_blank"

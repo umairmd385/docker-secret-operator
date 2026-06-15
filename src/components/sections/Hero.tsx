@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { ChevronRight, CheckCircle2, Eye, Package, HeartPulse, RefreshCw, Trash2, Lock, Cloud, Key, HardDrive } from "lucide-react";
 import { ROUTES } from "@/lib/links";
+import { H1, PLead, P, PSmall } from "@/components/ui/Typography";
 
 const ProviderIcon = ({ icon: Icon, label }: { icon: any; label: string }) => (
   <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-accent/50 hover:bg-gray-900/60 transition-all duration-200">
@@ -80,28 +81,28 @@ export const Hero = () => {
 
             {/* Headline */}
             <div>
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-foreground leading-tight">
+              <H1 className="leading-tight">
                 Rotate Secrets
                 <br />
-                <span className="text-accent text-4xl sm:text-5xl lg:text-6xl">Without Downtime</span>
-              </h1>
-              <p className="text-base sm:text-lg text-gray-400 mt-4 font-medium">
+                <span className="text-accent">Without Downtime</span>
+              </H1>
+              <PSmall className="text-gray-400 mt-4 font-medium">
                 For Docker teams running production workloads
-              </p>
+              </PSmall>
             </div>
 
             {/* Subheading - The Pain Point */}
             <div className="space-y-3">
-              <p className="text-lg text-gray-300 font-medium">
+              <P className="text-gray-300 font-medium">
                 Secret rotation today means manual scripts, container restarts, and downtime risk.
-              </p>
-              <p className="text-base text-gray-400 leading-relaxed">
+              </P>
+              <P className="text-gray-400">
                 DSO eliminates that. Detect secret changes automatically. Launch health-checked containers. Validate readiness before swap.
                 <br />
                 Traffic switches safely. Rollback instantly on failure.
                 <br />
                 <span className="text-gray-300 font-medium">No manual intervention. No restart overhead. No downtime.</span>
-              </p>
+              </P>
             </div>
 
             {/* CTA Buttons */}
