@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Check, Copy } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const TerminalDemo = () => {
   const [copied, setCopied] = useState(false);
@@ -45,12 +46,10 @@ export const TerminalDemo = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Watch it work.
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">Watch it work.</H2>
+          <PLead className="text-gray-400">
             Rotation from detection to completion. Zero downtime. One command.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Terminal */}
@@ -155,9 +154,9 @@ export const TerminalDemo = () => {
           transition={{ delay: 0.8 }}
           className="mt-16 text-center"
         >
-          <p className="text-lg text-gray-300 font-medium mb-2">
+          <PLead className="text-gray-300 font-medium mb-2">
             2.3 seconds. Zero downtime.
-          </p>
+          </PLead>
           <p className="text-gray-500">
             No manual restarts. No monitoring dashboards. Just works.
           </p>
