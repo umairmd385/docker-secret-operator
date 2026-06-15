@@ -13,12 +13,40 @@ export const FAQSection = () => {
       a: "No. DSO renames containers at the Docker daemon level. Traffic switches instantly. Old container stops only after the new one is fully healthy.",
     },
     {
-      q: "Does DSO support my secret provider?",
-      a: "DSO supports Vault, AWS Secrets Manager, Azure Key Vault, Huawei Cloud KMS, and local encrypted vault. New providers can be added.",
+      q: "What happens if health checks fail?",
+      a: "The new container is marked unhealthy. Old container stays active. New container is cleaned up. No swap occurs. No downtime. DSO retries on next rotation.",
     },
     {
-      q: "What happens if rotation fails?",
-      a: "Automatic rollback. Health checks validate the new container before swap. If anything fails, the old container stays active and new one is cleaned up.",
+      q: "What if DSO crashes during rotation?",
+      a: "Checkpoint-based recovery. On restart, DSO reads the checkpoint and either completes the rotation, resumes it, or rolls back safely. State is always consistent.",
+    },
+    {
+      q: "What if the secret provider is unavailable?",
+      a: "DSO retries according to configured backoff policy. If unavailable for too long, it keeps the old secret active and alerts. No service interruption.",
+    },
+    {
+      q: "Can I use DSO during deployments?",
+      a: "Yes. DSO works alongside your deployment process. If both are changing containers, DSO detects the new containers and validates them. Coordinated rotation is safe.",
+    },
+    {
+      q: "How much CPU and memory overhead?",
+      a: "Minimal. DSO agent uses <50MB RAM at idle, <5% CPU during rotation. Perfect for resource-constrained environments.",
+    },
+    {
+      q: "How are rotations monitored?",
+      a: "Via CLI (dso status, dso logs) or webhook integrations. DSO can send rotation events to your monitoring system. Full audit trail available.",
+    },
+    {
+      q: "Does DSO support my secret provider?",
+      a: "DSO supports Vault, AWS Secrets Manager, Azure Key Vault, Huawei Cloud KMS, and local encrypted vault. New providers can be contributed.",
+    },
+    {
+      q: "Why use DSO instead of Vault?",
+      a: "Vault is more powerful but requires infrastructure and operational expertise. DSO is lightweight, Docker-native, and requires zero configuration. Choose DSO for simplicity.",
+    },
+    {
+      q: "Why use DSO instead of Infisical?",
+      a: "Infisical is broader (secret management + UI). DSO is narrower (rotation-focused). Choose DSO if you want zero-downtime rotation without overhead.",
     },
     {
       q: "Can I use it in production?",
