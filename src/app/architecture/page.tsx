@@ -2,14 +2,19 @@ import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
 import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { RotationLifecycle } from "@/components/sections/RotationLifecycle";
-import { RealWorldImpact } from "@/components/sections/RealWorldImpact";
-import { SecurityArchitecture } from "@/components/sections/SecurityArchitecture";
+import { ArchitectureOverview } from "@/components/sections/ArchitectureOverview";
 import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
-import { SecretFlowStory } from "@/components/sections/SecretFlowStory";
+import { FailureScenarios } from "@/components/sections/FailureScenarios";
+import { SystemBoundaries } from "@/components/sections/SystemBoundaries";
+import { OperationalPhilosophy } from "@/components/sections/OperationalPhilosophy";
 
 export const metadata = generatePageMetadata(
-  { ...PAGE_METADATA["/"], title: "Architecture | Docker Secret Operator" },
+  {
+    ...PAGE_METADATA["/"],
+    title: "Architecture | Docker Secret Operator",
+    description:
+      "Deep technical dive into DSO architecture. Component responsibilities, failure modes, recovery mechanisms, and design principles.",
+  },
   "/architecture"
 );
 
@@ -22,11 +27,22 @@ export default function ArchitecturePage() {
 
       <div className="relative z-10 flex flex-col w-full space-y-0">
         <Navbar />
-        <RotationLifecycle />
+
+        {/* 1. System Overview - High-level architecture */}
+        <ArchitectureOverview />
+
+        {/* 2. Rotation Lifecycle - Request flow with detailed steps */}
         <CrashRecoveryStory />
-        <SecretFlowStory />
-        <RealWorldImpact />
-        <SecurityArchitecture />
+
+        {/* 3. Failure Handling - Real scenarios and recovery */}
+        <FailureScenarios />
+
+        {/* 4. System Boundaries - What DSO manages and doesn't */}
+        <SystemBoundaries />
+
+        {/* 5. Operational Philosophy - Engineering principles */}
+        <OperationalPhilosophy />
+
         <Footer />
       </div>
     </main>
