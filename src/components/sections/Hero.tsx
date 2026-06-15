@@ -111,19 +111,19 @@ export const Hero = () => {
                 transition={{ duration: 0.2 }}
               >
                 <Button
-                  href="/docs"
+                  href={ROUTES.landingPages.deploy}
                   className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-accent text-background font-semibold rounded-lg hover:bg-accent/90 transition-colors text-base"
                 >
-                  Install DSO
+                  Deploy DSO
                   <ChevronRight className="w-5 h-5" />
                 </Button>
               </motion.div>
               <Button
-                href="#architecture"
+                href={ROUTES.docs.root}
                 variant="outline"
                 className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4"
               >
-                How It Works
+                Documentation
               </Button>
             </div>
 

@@ -4,6 +4,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { ProblemSection } from "@/components/sections/ProblemSection";
+import { TargetAudience } from "@/components/sections/TargetAudience";
 import { TerminalDemo } from "@/components/sections/TerminalDemo";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
@@ -32,6 +33,9 @@ export default function Home() {
 
         {/* 2. The Problem - Recognition (users see their pain) */}
         <ProblemSection />
+
+        {/* 2.5. Target Audience - Clarity on fit */}
+        <TargetAudience />
 
         {/* 3. Interactive Terminal Demo - Excitement peak */}
         <TerminalDemo />
