@@ -2,53 +2,41 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Tag, Calendar, BarChart3 } from "lucide-react";
+import { Tag, Calendar, Zap } from "lucide-react";
 
 export const ReleaseTimeline = () => {
   const releases = [
     {
-      version: "v3.2.0",
-      date: "2025-12-15",
-      type: "Major",
+      version: "v3.5.20",
+      date: "2026-06-03",
       changes: [
-        "Multi-secret atomic transactions",
-        "Advanced health check configuration",
-        "Improved checkpoint recovery"
-      ],
-      stats: { downloads: 15200, contributors: 8 }
+        "Bug fixes and stability improvements",
+        "Enhanced error handling"
+      ]
     },
     {
-      version: "v3.1.5",
-      date: "2025-11-20",
-      type: "Patch",
+      version: "v3.5.17",
+      date: "2026-05-20",
       changes: [
-        "Fixed provider timeout handling",
-        "Improved logging clarity",
-        "Performance optimization for large secrets"
-      ],
-      stats: { downloads: 12800, contributors: 5 }
+        "Performance optimizations",
+        "Improved logging"
+      ]
     },
     {
-      version: "v3.1.0",
-      date: "2025-10-10",
-      type: "Minor",
+      version: "v3.5.16",
+      date: "2026-05-19",
       changes: [
-        "Added Azure Key Vault support",
-        "Enhanced CLI output formatting",
-        "Simplified configuration schema"
-      ],
-      stats: { downloads: 18500, contributors: 12 }
+        "Provider integration fixes",
+        "Health check improvements"
+      ]
     },
     {
-      version: "v3.0.0",
-      date: "2025-08-01",
-      type: "Major",
+      version: "v3.5.0",
+      date: "2026-05-14",
       changes: [
-        "Complete rewrite for production stability",
-        "Checkpoint-based recovery system",
-        "Native Docker Compose integration"
-      ],
-      stats: { downloads: 24300, contributors: 15 }
+        "Major feature enhancements",
+        "API improvements"
+      ]
     },
   ];
 
@@ -65,7 +53,7 @@ export const ReleaseTimeline = () => {
             Release History
           </h2>
           <p className="text-lg text-gray-400">
-            Active development with continuous improvements. Every release validated and production-tested.
+            29 releases since project launch (April 2026). Consistent development and improvement.
           </p>
         </motion.div>
 
@@ -80,49 +68,27 @@ export const ReleaseTimeline = () => {
               className="group"
             >
               <div className="p-6 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/30 hover:bg-gray-900/50 transition-all duration-300">
-                <div className="flex items-start justify-between gap-6 flex-wrap">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="flex items-center gap-2">
-                        <Tag className="w-5 h-5 text-accent" />
-                        <span className="font-mono font-bold text-accent text-lg">{release.version}</span>
-                      </div>
-                      <span className={`text-xs font-bold px-2 py-1 rounded-full ${
-                        release.type === 'Major' ? 'bg-accent/20 text-accent' :
-                        release.type === 'Minor' ? 'bg-blue-500/20 text-blue-400' :
-                        'bg-gray-700/30 text-gray-300'
-                      }`}>
-                        {release.type}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-400 flex items-center gap-2 mb-4">
-                      <Calendar className="w-4 h-4" />
-                      {new Date(release.date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </p>
-                    <ul className="space-y-2 mb-4">
-                      {release.changes.map((change, cidx) => (
-                        <li key={cidx} className="text-sm text-gray-300 flex gap-2">
-                          <span className="text-accent flex-shrink-0">•</span>
-                          <span>{change}</span>
-                        </li>
-                      ))}
-                    </ul>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Tag className="w-5 h-5 text-accent" />
+                    <span className="font-mono font-bold text-accent text-lg">{release.version}</span>
                   </div>
-
-                  <div className="flex gap-6 sm:flex-col text-right sm:text-left">
-                    <div className="min-w-max">
-                      <p className="text-xs text-gray-400 mb-1">Downloads</p>
-                      <p className="text-lg font-bold text-accent font-mono">{(release.stats.downloads / 1000).toFixed(1)}k</p>
-                    </div>
-                    <div className="min-w-max">
-                      <p className="text-xs text-gray-400 mb-1">Contributors</p>
-                      <p className="text-lg font-bold text-blue-400 font-mono">{release.stats.contributors}</p>
-                    </div>
-                  </div>
+                  <p className="text-sm text-gray-400 flex items-center gap-2 mb-4">
+                    <Calendar className="w-4 h-4" />
+                    {new Date(release.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                  <ul className="space-y-2">
+                    {release.changes.map((change, cidx) => (
+                      <li key={cidx} className="text-sm text-gray-300 flex gap-2">
+                        <span className="text-accent flex-shrink-0">•</span>
+                        <span>{change}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </motion.div>
@@ -136,11 +102,11 @@ export const ReleaseTimeline = () => {
           className="p-6 rounded-lg border border-accent/20 bg-accent/5"
         >
           <div className="flex items-start gap-3">
-            <BarChart3 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+            <Zap className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-foreground mb-2">Release Cadence</h3>
+              <h3 className="font-semibold text-foreground mb-2">Active Development</h3>
               <p className="text-sm text-gray-400">
-                New releases every 6-8 weeks. Patch releases as needed for critical fixes. All releases undergo security review and production validation before release.
+                Frequent releases show rapid iteration and responsiveness to issues. Latest releases tracked on <a href="https://github.com/docker-secret-operator/dso/releases" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">GitHub releases page</a>.
               </p>
             </div>
           </div>

@@ -2,58 +2,33 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { TrendingUp, GitPullRequest, MessageSquare, Users, Clock, Code } from "lucide-react";
+import { Star, Users, Zap, Calendar } from "lucide-react";
 
 export const ProjectActivity = () => {
   const metrics = [
     {
-      icon: TrendingUp,
+      icon: Star,
       label: "GitHub Stars",
-      value: "4.2k",
-      trend: "+850 this year",
-      description: "Growing community and adoption"
+      value: "12",
+      description: "Early-stage project with steady growth"
     },
     {
       icon: Users,
-      label: "Active Contributors",
-      value: "20+",
-      trend: "3+ new this quarter",
-      description: "From diverse backgrounds and companies"
+      label: "Core Contributors",
+      value: "2",
+      description: "Focused team driving development"
     },
     {
-      icon: GitPullRequest,
-      label: "Pull Requests",
-      value: "150+",
-      trend: "Reviewed within 48 hours",
-      description: "All contributions reviewed thoroughly"
+      icon: Zap,
+      label: "Releases",
+      value: "29",
+      description: "Consistent release cadence since April 2026"
     },
     {
-      icon: MessageSquare,
-      label: "Discussions",
-      value: "200+",
-      trend: "Avg response time: 24h",
-      description: "Active community conversations"
-    },
-  ];
-
-  const activityIndicators = [
-    {
-      icon: Code,
-      title: "Code Quality",
-      items: [
-        "100% test coverage on critical paths",
-        "Automated security scanning on every PR",
-        "Type-safe throughout (100% TypeScript)",
-      ]
-    },
-    {
-      icon: Clock,
-      title: "Development Pace",
-      items: [
-        "Release every 6-8 weeks",
-        "Patch releases as needed",
-        "Scheduled maintenance windows documented",
-      ]
+      icon: Calendar,
+      label: "Active Since",
+      value: "Apr 2026",
+      description: "New project, rapidly maturing"
     },
   ];
 
@@ -67,10 +42,10 @@ export const ProjectActivity = () => {
           className="max-w-3xl"
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Project Activity
+            Project Status
           </h2>
           <p className="text-lg text-gray-400">
-            Real metrics showing active development and healthy community.
+            Real, verifiable metrics from our GitHub repository. No invented statistics.
           </p>
         </motion.div>
 
@@ -96,44 +71,9 @@ export const ProjectActivity = () => {
                 <p className="text-3xl font-bold text-accent mb-2">
                   {metric.value}
                 </p>
-                <p className="text-xs text-accent/70 font-mono mb-3">
-                  {metric.trend}
-                </p>
                 <p className="text-sm text-gray-400">
                   {metric.description}
                 </p>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Activity Indicators */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {activityIndicators.map((section, idx) => {
-            const Icon = section.icon;
-            return (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="p-6 rounded-lg border border-gray-800 bg-gray-900/30"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <Icon className="w-5 h-5 text-accent" />
-                  <h3 className="font-semibold text-foreground text-lg">
-                    {section.title}
-                  </h3>
-                </div>
-                <ul className="space-y-3">
-                  {section.items.map((item, itemIdx) => (
-                    <li key={itemIdx} className="text-gray-300 text-sm flex gap-3">
-                      <span className="text-accent font-bold flex-shrink-0">✓</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
               </motion.div>
             );
           })}
@@ -144,11 +84,14 @@ export const ProjectActivity = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="p-8 rounded-lg border border-accent/20 bg-accent/5"
+          className="p-8 rounded-lg border border-accent/20 bg-accent/5 space-y-4"
         >
-          <h3 className="font-semibold text-foreground text-lg mb-3">Why These Metrics Matter</h3>
+          <h3 className="font-semibold text-foreground text-lg">About DSO</h3>
           <p className="text-gray-300 leading-relaxed">
-            We show real, verifiable numbers. No invented statistics. These metrics reflect genuine community engagement, active development, and a healthy project. Every stat above can be verified on <a href="https://github.com/docker-secret-operator/dso" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">our GitHub repository</a>. We believe trust is built through transparency and accountability, not marketing claims.
+            DSO is a focused, well-maintained open source project. We're a small core team with a clear mission: zero-persistence secret injection for Docker. We prioritize code quality, security, and reliability over vanity metrics.
+          </p>
+          <p className="text-gray-300 leading-relaxed">
+            Our rapid release cycle (29 releases in ~2 months) shows active development and responsiveness to issues. Every number on this page can be verified on <a href="https://github.com/docker-secret-operator/dso" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">our GitHub repository</a>.
           </p>
         </motion.div>
       </div>
