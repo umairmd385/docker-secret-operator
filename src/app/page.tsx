@@ -8,6 +8,9 @@ import { TerminalDemo } from "@/components/sections/TerminalDemo";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
 import { ProductPreview } from "@/components/sections/ProductPreview";
+import { WhyDSO } from "@/components/sections/WhyDSO";
+import { InstallationSimple } from "@/components/sections/InstallationSimple";
+import { FAQSection } from "@/components/sections/FAQSection";
 import { OSSTrust } from "@/components/sections/OSSTrust";
 import { TrustAndCTA } from "@/components/sections/TrustAndCTA";
 
@@ -42,10 +45,19 @@ export default function Home() {
         {/* 6. Product Preview - Dashboard & CLI */}
         <ProductPreview />
 
-        {/* 7. Social Proof - Trust signals */}
+        {/* 7. Comparison - Why DSO */}
+        <WhyDSO />
+
+        {/* 8. Installation - Simple path selection */}
+        <InstallationSimple />
+
+        {/* 9. FAQ - Common questions */}
+        <FAQSection />
+
+        {/* 10. Social Proof - Trust signals */}
         <OSSTrust />
 
-        {/* 8. Final CTA */}
+        {/* 11. Final CTA */}
         <TrustAndCTA />
 
         <Footer />
