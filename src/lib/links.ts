@@ -11,23 +11,10 @@ export const ROUTES = {
 
   // Landing Pages
   landingPages: {
+    product: "/product",
     architecture: "/architecture",
-    deployments: "/deployments",
-    capabilities: "/capabilities",
-    faq: "/faq",
-  },
-
-  // Comparisons
-  comparisons: {
-    root: "/comparisons",
-    vault: "/comparisons/vault",
-    kubernetesSecrets: "/comparisons/kubernetes-secrets",
-    dockerSecrets: "/comparisons/docker-secrets",
-    externalSecrets: "/comparisons/external-secrets",
-    sealedSecrets: "/comparisons/sealed-secrets",
-    doppler: "/comparisons/doppler",
-    infisical: "/comparisons/infisical",
-    manualScripts: "/comparisons/manual-scripts",
+    deploy: "/deploy",
+    community: "/community",
   },
 
   // Docs
