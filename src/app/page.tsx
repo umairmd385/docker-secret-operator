@@ -3,15 +3,12 @@ import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
-import { SolutionVisual } from "@/components/sections/SolutionVisual";
-import { VerifiedCapabilities } from "@/components/sections/VerifiedCapabilities";
-import { RotationStory } from "@/components/sections/RotationStory";
+import { ProblemSection } from "@/components/sections/ProblemSection";
+import { TerminalDemo } from "@/components/sections/TerminalDemo";
+import { HowItWorks } from "@/components/sections/HowItWorks";
 import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
-import { SecretFlowStory } from "@/components/sections/SecretFlowStory";
-import { SecurityArchitecture } from "@/components/sections/SecurityArchitecture";
+import { ProductPreview } from "@/components/sections/ProductPreview";
 import { OSSTrust } from "@/components/sections/OSSTrust";
-import { QuickStart } from "@/components/sections/GetStarted";
-import { DeploymentPaths } from "@/components/sections/DeploymentPaths";
 import { TrustAndCTA } from "@/components/sections/TrustAndCTA";
 
 export const metadata = generatePageMetadata(PAGE_METADATA["/"], "/");
@@ -26,17 +23,31 @@ export default function Home() {
 
       <div className="relative z-10 flex flex-col w-full space-y-0">
         <Navbar />
+
+        {/* 1. Hero - Elevated */}
         <Hero />
-        <SolutionVisual />
-        <RotationStory />
+
+        {/* 2. The Problem - Story-driven */}
+        <ProblemSection />
+
+        {/* 3. Interactive Terminal Demo */}
+        <TerminalDemo />
+
+        {/* 4. How It Works - One elegant flow */}
+        <HowItWorks />
+
+        {/* 5. Crash Recovery - Hero feature elevated */}
         <CrashRecoveryStory />
-        <SecretFlowStory />
-        <SecurityArchitecture />
-        <VerifiedCapabilities />
-        <QuickStart />
-        <DeploymentPaths />
+
+        {/* 6. Product Preview - Dashboard & CLI */}
+        <ProductPreview />
+
+        {/* 7. Social Proof - Trust signals */}
         <OSSTrust />
+
+        {/* 8. Final CTA */}
         <TrustAndCTA />
+
         <Footer />
       </div>
     </main>
