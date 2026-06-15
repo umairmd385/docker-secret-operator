@@ -60,7 +60,7 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="space-y-6"
+            className="space-y-6 max-w-2xl"
           >
             {/* Badge Row */}
             <div className="flex flex-wrap gap-2">
@@ -93,14 +93,14 @@ export const Hero = () => {
             {/* Subheading - The Pain Point */}
             <div className="space-y-3">
               <p className="text-lg text-gray-300 font-medium">
-                Zero-downtime secret rotation for Docker workloads.
+                Secret rotation today means manual scripts, container restarts, and downtime risk.
               </p>
               <p className="text-base text-gray-400 leading-relaxed">
-                Detect secret changes. Launch healthy containers. Validate readiness.
+                DSO eliminates that. Detect secret changes automatically. Launch health-checked containers. Validate readiness before swap.
                 <br />
-                Swap traffic safely. Rollback automatically on failure.
+                Traffic switches safely. Rollback instantly on failure.
                 <br />
-                <span className="text-gray-300 font-medium">No manual steps. No restart scripts. No traffic loss.</span>
+                <span className="text-gray-300 font-medium">No manual intervention. No restart overhead. No downtime.</span>
               </p>
             </div>
 
@@ -112,7 +112,7 @@ export const Hero = () => {
               >
                 <Button
                   href="/docs"
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-background font-semibold rounded-lg hover:bg-accent/90 transition-colors text-base"
+                  className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-accent text-background font-semibold rounded-lg hover:bg-accent/90 transition-colors text-base"
                 >
                   Install DSO
                   <ChevronRight className="w-5 h-5" />
@@ -121,9 +121,9 @@ export const Hero = () => {
               <Button
                 href="#architecture"
                 variant="outline"
-                className="inline-flex items-center gap-2 px-8 py-4"
+                className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4"
               >
-                See Architecture
+                How It Works
               </Button>
             </div>
 

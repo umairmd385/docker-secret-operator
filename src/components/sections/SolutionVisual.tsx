@@ -50,10 +50,10 @@ export const SolutionVisual = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-3">
-            Why DSO Exists
+            Why DSO is Different
           </h2>
           <p className="text-gray-400 text-sm">
-            Manual secret rotation vs. automated rotation
+            DSO is the only tool that rotates Docker secrets without downtime.
           </p>
         </motion.div>
 

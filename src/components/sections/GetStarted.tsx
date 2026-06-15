@@ -29,12 +29,12 @@ export const QuickStart = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <p className="text-accent text-sm font-semibold uppercase tracking-wide mb-2">Local Development</p>
+          <p className="text-accent text-sm font-semibold uppercase tracking-wide mb-2">Try It Now</p>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Get Started Locally
+            Run Your First Rotation
           </h2>
           <p className="text-gray-400 text-lg">
-            Use Docker Compose with local secrets. Three commands to see rotation in action.
+            Start locally with Docker Compose. Three commands to see zero-downtime rotation in action, no cloud account needed.
           </p>
         </motion.div>
 
@@ -64,7 +64,7 @@ export const QuickStart = () => {
                 {/* Copy Button */}
                 <button
                   onClick={() => copyToClipboard(cmd, idx)}
-                  className="flex-shrink-0 p-2 rounded-lg hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent"
+                  className="flex-shrink-0 p-2 rounded-lg hover:bg-gray-800 transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent"
                   title="Copy to clipboard"
                   aria-label="Copy command to clipboard"
                 >

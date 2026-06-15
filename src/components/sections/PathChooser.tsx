@@ -80,10 +80,10 @@ export const PathChooser = () => {
           className="text-center max-w-3xl mx-auto"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Choose Your Path
+            Deploy When You're Ready
           </h2>
           <p className="text-base sm:text-lg text-gray-400">
-            Select your deployment environment and provider.
+            Start locally with Docker Compose. Scale to production with AWS, Azure, Vault, or Huawei Cloud. Or run completely offline.
           </p>
         </motion.div>
 
@@ -98,10 +98,10 @@ export const PathChooser = () => {
               viewport={{ once: true }}
               transition={{ delay: idx * 0.05 }}
               whileHover={{ y: -4 }}
-              className={`text-left p-4 rounded-lg border-2 transition-all ${
+              className={`text-left p-4 rounded-lg border transition-all ${
                 selectedPath === path.id
-                  ? "border-accent bg-accent/10"
-                  : "border-gray-800 bg-gray-900/30 hover:border-accent/50"
+                  ? "border-accent/40 bg-accent/10"
+                  : "border-gray-800 bg-gray-900/20 hover:border-accent/30 hover:bg-gray-900/40"
               }`}
             >
               <div className="flex items-start gap-3 mb-2">
