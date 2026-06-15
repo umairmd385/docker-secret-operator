@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../../src";
 @source "../../docs";
+@import "../styles/design-system.css";
 
 :root {
   /* Legacy variables */
