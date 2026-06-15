@@ -21,22 +21,26 @@ interface DeploymentPath {
 const PathCard = ({ path, isSelected, onClick }: { path: DeploymentPath; isSelected: boolean; onClick: () => void }) => (
   <motion.button
     onClick={onClick}
-    whileHover={{ y: -4 }}
-    className={`text-left p-4 sm:p-6 rounded-lg border-2 transition-all ${
+    whileHover={{ y: -6, transition: { duration: 0.2 } }}
+    className={`text-left p-5 sm:p-6 rounded-lg border-2 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent ${
       isSelected
-        ? "border-accent bg-accent/10"
-        : "border-gray-800 bg-gray-900/30 hover:border-accent/50"
+        ? "border-accent bg-accent/10 shadow-lg"
+        : "border-gray-800 bg-gray-900/30 hover:border-accent/50 hover:bg-gray-900/50 hover:shadow-md"
     }`}
+    aria-pressed={isSelected}
+    aria-label={`${path.title} deployment option`}
   >
-    <div className="flex items-start gap-3 mb-2">
-      <div className="text-accent mt-0.5">{path.icon}</div>
-      <h3 className="font-semibold text-foreground text-sm sm:text-base">{path.title}</h3>
+    <div className="flex items-start gap-3 mb-3">
+      <div className={`mt-1 transition-all duration-300 ${isSelected ? "text-accent scale-110" : "text-gray-400 group-hover:text-accent"}`} aria-hidden="true">
+        {path.icon}
+      </div>
+      <h3 className="font-semibold text-foreground text-sm sm:text-base leading-snug">{path.title}</h3>
     </div>
-    <p className="text-xs sm:text-sm text-gray-400">{path.description}</p>
+    <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">{path.description}</p>
     {path.providers && path.providers.length > 0 && (
-      <div className="flex flex-wrap gap-1 mt-3">
+      <div className="flex flex-wrap gap-2 mt-4">
         {path.providers.map((provider) => (
-          <span key={provider} className="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">
+          <span key={provider} className="text-[10px] px-2.5 py-1.5 rounded border border-accent/30 bg-accent/10 text-accent font-medium transition-all duration-300 hover:border-accent/50 hover:bg-accent/20">
             {provider}
           </span>
         ))}

@@ -23,15 +23,18 @@ const GuaranteeCard = ({ icon, title, description, index }: GuaranteeItem & { in
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ delay: index * 0.05, duration: 0.3 }}
-    className="p-4 rounded-lg border border-accent/20 bg-accent/5 hover:border-accent/40 hover:bg-accent/10 transition-colors focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer"
+    whileHover={{ y: -6, transition: { duration: 0.2 } }}
+    className="p-5 rounded-lg border border-accent/30 bg-accent/5 transition-all duration-300 hover:border-accent/50 hover:bg-accent/10 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer"
+    role="article"
+    aria-label={title}
   >
     <div className="flex items-start gap-3">
-      <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-        <div className="text-accent text-sm">{icon}</div>
+      <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/30 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-300 hover:scale-110 hover:border-accent/50">
+        <div className="text-accent text-sm" aria-hidden="true">{icon}</div>
       </div>
       <div>
-        <h4 className="font-semibold text-foreground text-sm mb-1">{title}</h4>
-        <p className="text-xs text-gray-400">{description}</p>
+        <h4 className="font-semibold text-foreground text-sm mb-2 leading-snug">{title}</h4>
+        <p className="text-xs text-gray-400 leading-relaxed">{description}</p>
       </div>
     </div>
   </motion.div>

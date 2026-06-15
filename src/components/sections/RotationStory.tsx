@@ -39,25 +39,28 @@ const StepNode = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05, duration: 0.3 }}
-      className={`relative p-4 rounded-lg border transition-all ${bgColor} ${
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
+      className={`relative p-5 rounded-lg border transition-all duration-300 ${bgColor} hover:shadow-md ${
         isActive ? "ring-2 ring-accent/50" : ""
       }`}
+      role="listitem"
+      aria-label={`Step ${index + 1}: ${label}`}
     >
       {/* Step Number */}
-      <div className="flex items-start gap-3 mb-2">
-        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center flex-col text-xs font-bold text-accent">
+      <div className="flex items-start gap-3 mb-3">
+        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center flex-col text-xs font-bold text-accent transition-all duration-300 hover:scale-110">
           {index + 1}
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="font-semibold text-foreground text-sm">{label}</h4>
-            <Icon className={`w-4 h-4 ${iconColor}`} />
+            <h4 className="font-semibold text-foreground text-sm leading-snug">{label}</h4>
+            <Icon className={`w-4 h-4 ${iconColor} flex-shrink-0`} aria-hidden="true" />
           </div>
         </div>
       </div>
 
       {/* Description */}
-      <p className="text-xs text-gray-400 ml-9">{description}</p>
+      <p className="text-xs text-gray-400 ml-9 leading-relaxed">{description}</p>
     </motion.div>
   );
 };
@@ -252,15 +255,20 @@ export const RotationStory = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-2xl mx-auto p-6 rounded-lg border border-accent/20 bg-accent/5 space-y-3"
+          whileHover={{ y: -4, transition: { duration: 0.2 } }}
+          className="max-w-2xl mx-auto p-6 rounded-lg border border-accent/30 bg-accent/5 space-y-3 transition-all duration-300 hover:bg-accent/10 hover:border-accent/50 hover:shadow-lg"
+          role="complementary"
+          aria-label="Key insight about atomic swap mechanism"
         >
           <div className="flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+            <div className="p-1.5 rounded-full bg-accent/20 flex-shrink-0 mt-0.5">
+              <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true" />
+            </div>
             <div>
-              <h4 className="font-semibold text-foreground text-sm mb-1">
+              <h4 className="font-semibold text-foreground text-sm mb-2">
                 The Atomic Swap
               </h4>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-400 leading-relaxed">
                 DSO renames containers at the Docker daemon level. Traffic switches instantly.
                 Old container stops only after new one is fully healthy. Zero dropped connections.
               </p>
