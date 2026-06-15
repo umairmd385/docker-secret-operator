@@ -30,16 +30,19 @@ const RecoveryStep = ({
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ delay: index * 0.06, duration: 0.3 }}
-    className="space-y-2"
+    whileHover={{ x: 4, transition: { duration: 0.2 } }}
+    className="space-y-3 transition-all duration-300"
+    role="listitem"
+    aria-label={`Step ${index + 1}: ${label}`}
   >
-    <div className="flex items-start gap-3">
-      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent/10 border border-accent/30 flex items-center justify-center">
-        <div className="text-accent text-sm">{icon}</div>
+    <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-900/20 transition-colors duration-300">
+      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent/10 border border-accent/30 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-accent/50">
+        <div className="text-accent text-sm" aria-hidden="true">{icon}</div>
       </div>
       <div className="flex-1">
-        <h4 className="font-semibold text-foreground text-sm">{label}</h4>
-        <p className="text-xs text-gray-400 mt-1">{description}</p>
-        <p className="text-[11px] text-gray-500 mt-2 pl-3 border-l border-accent/30">
+        <h4 className="font-semibold text-foreground text-sm leading-snug">{label}</h4>
+        <p className="text-xs text-gray-400 mt-1 leading-relaxed">{description}</p>
+        <p className="text-[11px] text-gray-500 mt-2 pl-3 border-l-2 border-accent/30 leading-relaxed">
           {detail}
         </p>
       </div>
@@ -52,7 +55,8 @@ const RecoveryStep = ({
         whileInView={{ scaleY: 1 }}
         viewport={{ once: true }}
         transition={{ delay: (index + 1) * 0.06, duration: 0.3 }}
-        className="h-6 ml-4 border-l border-accent/20 origin-top"
+        className="h-6 ml-4 border-l-2 border-accent/20 origin-top transition-colors duration-300"
+        aria-hidden="true"
       />
     )}
   </motion.div>
@@ -140,15 +144,20 @@ export const CrashRecoveryStory = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-2xl mx-auto p-6 rounded-lg border border-green-500/20 bg-green-500/5"
+          whileHover={{ y: -4, transition: { duration: 0.2 } }}
+          className="max-w-2xl mx-auto p-6 rounded-lg border border-green-500/30 bg-green-500/5 space-y-3 transition-all duration-300 hover:bg-green-500/10 hover:border-green-500/50 hover:shadow-lg"
+          role="complementary"
+          aria-label="Checkpoint-based recovery guarantee"
         >
           <div className="flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+            <div className="p-1.5 rounded-full bg-green-500/20 flex-shrink-0 mt-0.5">
+              <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" aria-hidden="true" />
+            </div>
             <div>
-              <h4 className="font-semibold text-foreground text-sm mb-1">
+              <h4 className="font-semibold text-foreground text-sm mb-2">
                 Checkpoint-Based Recovery
               </h4>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-400 leading-relaxed">
                 Checkpoints on disk track rotation state. On restart, DSO evaluates
                 the last checkpoint and either completes the rotation, resumes it, or
                 rolls back safely. No manual intervention. No orphaned containers. State
@@ -165,20 +174,30 @@ export const CrashRecoveryStory = () => {
           viewport={{ once: true }}
           className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto"
         >
-          <div className="p-4 rounded-lg border border-gray-800 bg-gray-900/30 space-y-2">
+          <motion.div
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className="p-6 rounded-lg border border-gray-800 bg-gray-900/30 space-y-3 transition-all duration-300 hover:bg-gray-900/50 hover:shadow-md"
+            role="article"
+            aria-label="Without checkpoints scenario"
+          >
             <h4 className="font-semibold text-foreground text-sm">Without Checkpoints</h4>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-400 leading-relaxed">
               Lost state after crash. Operator must manually detect orphaned
               containers and stale secrets. Risk of inconsistency.
             </p>
-          </div>
-          <div className="p-4 rounded-lg border border-accent/20 bg-accent/5 space-y-2">
+          </motion.div>
+          <motion.div
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className="p-6 rounded-lg border border-accent/30 bg-accent/5 space-y-3 transition-all duration-300 hover:bg-accent/10 hover:border-accent/50 hover:shadow-md"
+            role="article"
+            aria-label="With DSO checkpoints scenario"
+          >
             <h4 className="font-semibold text-foreground text-sm">With DSO Checkpoints</h4>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-400 leading-relaxed">
               State persists. DSO auto-recovers. Zero manual intervention.
               Guaranteed consistent state.
             </p>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
