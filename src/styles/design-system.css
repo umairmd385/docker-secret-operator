@@ -1,0 +1,357 @@
+/**
+ * DSO Design System CSS
+ * Inspired by Linear, Vercel, Supabase, Stripe
+ * Focus: Consistency, clarity, intentionality
+ */
+
+:root {
+  /* Spacing scale (4px base) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 2.5rem;
+  --space-3xl: 3rem;
+  --space-4xl: 4rem;
+
+  /* Radius (consistent) */
+  --radius-none: 0px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Shadows (minimal, clean) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  /* Transitions (minimal motion) */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index scale */
+  --z-hide: -1;
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal: 40;
+  --z-popover: 50;
+  --z-tooltip: 60;
+}
+
+/* ============================================================
+   TYPOGRAPHY - Linear-inspired hierarchy
+   ============================================================ */
+
+.text-display-lg {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-display-md {
+  font-size: 3rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-heading-lg {
+  font-size: 2rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.text-heading-md {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.text-heading-sm {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.text-body-lg {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.text-body-md {
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.text-body-sm {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.text-caption {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* ============================================================
+   COMPONENTS - Standardized
+   ============================================================ */
+
+/* Cards - Unified styling */
+.card {
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.card-default {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(22, 27, 34, 0.3);
+}
+
+.card-default:hover {
+  border-color: rgba(0, 230, 192, 0.3);
+  background: rgba(22, 27, 34, 0.5);
+}
+
+.card-interactive {
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(22, 27, 34, 0.3);
+}
+
+.card-interactive:hover {
+  border-color: rgba(0, 230, 192, 0.4);
+  background: rgba(22, 27, 34, 0.5);
+}
+
+/* Buttons - Ensure consistent focus states */
+.btn {
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn:focus-visible {
+  outline: 2px solid rgba(0, 230, 192, 0.6);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: #00e6c0;
+  color: #0d1117;
+}
+
+.btn-primary:hover {
+  background: #00d4ae;
+}
+
+.btn-secondary {
+  background: rgba(22, 27, 34, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+.btn-secondary:hover {
+  background: rgba(22, 27, 34, 0.8);
+  border-color: rgba(0, 230, 192, 0.3);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #9ca3af;
+}
+
+.btn-ghost:hover {
+  color: #00e6c0;
+  background: rgba(0, 230, 192, 0.08);
+}
+
+/* Code blocks */
+.code-block {
+  background: rgba(10, 13, 18, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.code-block code {
+  background: transparent;
+  color: #e2e8f0;
+  padding: 0;
+  border: none;
+}
+
+/* Inputs */
+.input {
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(22, 27, 34, 0.3);
+  color: #e2e8f0;
+  padding: 0.75rem 1rem;
+  transition: all var(--transition-base);
+  font-size: 1rem;
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgba(0, 230, 192, 0.5);
+  background: rgba(22, 27, 34, 0.5);
+  box-shadow: 0 0 0 2px rgba(0, 230, 192, 0.1);
+}
+
+/* ============================================================
+   LAYOUT - Consistent spacing and widths
+   ============================================================ */
+
+.container-sm {
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-md {
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-lg {
+  max-width: 64rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-xl {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Section spacing */
+.section-spacing-sm {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.section-spacing-md {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 640px) {
+  .section-spacing-sm {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .section-spacing-md {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+/* ============================================================
+   ACCESSIBILITY - WCAG AA compliance
+   ============================================================ */
+
+/* Focus visible states */
+:focus-visible {
+  outline: 2px solid rgba(0, 230, 192, 0.6);
+  outline-offset: 2px;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #00e6c0;
+  color: #0d1117;
+  padding: 8px;
+  text-decoration: none;
+  z-index: var(--z-tooltip);
+}
+
+.skip-to-main:focus {
+  top: 0;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   UTILITIES - Common patterns
+   ============================================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Subtle animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-base) ease-in;
+}
