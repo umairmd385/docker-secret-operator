@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Copy, Check, ChevronRight } from "lucide-react";
 import { Code, Lock, Cloud, RotateCcw } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const InstallationSimple = () => {
   const [copied, setCopied] = useState<string | null>(null);
@@ -80,10 +81,8 @@ export const InstallationSimple = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Installation made simple.
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">Installation made simple.</H2>
+          <PLead className="text-gray-400">
             Start with Docker Compose. Scale to production.
           </p>
         </motion.div>

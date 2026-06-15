@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, ArrowRight } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const TrustAndCTA = () => {
   const capabilities = [
@@ -57,10 +58,8 @@ export const TrustAndCTA = () => {
           transition={{ delay: 0.3 }}
           className="rounded-2xl border border-gray-800 bg-gray-900/30 p-12 sm:p-16 text-center"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Ready to automate secret rotation?
-          </h2>
-          <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+          <H2 className="mb-4">Ready to automate secret rotation?</H2>
+          <PLead className="text-gray-400 mb-8 max-w-2xl mx-auto">
             Install DSO and deploy your first automated rotation in minutes.
           </p>
 

@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { GitBranch, Lock, Cloud, Code, Users } from "lucide-react";
+import { H2, H4, PLead } from "@/components/ui/Typography";
 
 interface TrustItem {
   icon: React.ReactNode;
