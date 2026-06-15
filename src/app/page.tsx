@@ -3,12 +3,15 @@ import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
-import { CLIIdentity } from "@/components/sections/CLIIdentity";
 import { SolutionVisual } from "@/components/sections/SolutionVisual";
-import { Comparison } from "@/components/sections/Comparison";
 import { VerifiedCapabilities } from "@/components/sections/VerifiedCapabilities";
+import { RotationStory } from "@/components/sections/RotationStory";
+import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
+import { SecretFlowStory } from "@/components/sections/SecretFlowStory";
+import { SecurityArchitecture } from "@/components/sections/SecurityArchitecture";
 import { OSSTrust } from "@/components/sections/OSSTrust";
 import { QuickStart } from "@/components/sections/GetStarted";
+import { DeploymentPaths } from "@/components/sections/DeploymentPaths";
 import { TrustAndCTA } from "@/components/sections/TrustAndCTA";
 
 export const metadata = generatePageMetadata(PAGE_METADATA["/"], "/");
@@ -24,11 +27,14 @@ export default function Home() {
       <div className="relative z-10 flex flex-col w-full space-y-0">
         <Navbar />
         <Hero />
-        <CLIIdentity />
         <SolutionVisual />
-        <Comparison />
+        <RotationStory />
+        <CrashRecoveryStory />
+        <SecretFlowStory />
+        <SecurityArchitecture />
         <VerifiedCapabilities />
         <QuickStart />
+        <DeploymentPaths />
         <OSSTrust />
         <TrustAndCTA />
         <Footer />

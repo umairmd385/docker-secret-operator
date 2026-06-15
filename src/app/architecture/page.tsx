@@ -5,6 +5,8 @@ import { Footer } from "@/components/layout/Footer";
 import { RotationLifecycle } from "@/components/sections/RotationLifecycle";
 import { RealWorldImpact } from "@/components/sections/RealWorldImpact";
 import { SecurityArchitecture } from "@/components/sections/SecurityArchitecture";
+import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
+import { SecretFlowStory } from "@/components/sections/SecretFlowStory";
 
 export const metadata = generatePageMetadata(
   { ...PAGE_METADATA["/"], title: "Architecture | Docker Secret Operator" },
@@ -21,6 +23,8 @@ export default function ArchitecturePage() {
       <div className="relative z-10 flex flex-col w-full space-y-0">
         <Navbar />
         <RotationLifecycle />
+        <CrashRecoveryStory />
+        <SecretFlowStory />
         <RealWorldImpact />
         <SecurityArchitecture />
         <Footer />

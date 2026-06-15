@@ -262,12 +262,12 @@ export const DeploymentPaths = () => {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto"
         >
-          <p className="text-accent text-sm font-semibold uppercase tracking-wide mb-2">Production Deployment</p>
+          <p className="text-accent text-sm font-semibold uppercase tracking-wide mb-2">Getting Started</p>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Deploy to Production
+            Step-by-Step Setup
           </h2>
           <p className="text-base sm:text-lg text-gray-400">
-            Choose your provider and follow step-by-step setup. AWS, Azure, HashiCorp Vault, or offline mode.
+            Choose your deployment method. We'll walk you through configuration for Docker Compose, AWS, Azure, HashiCorp Vault, Huawei Cloud, or offline mode.
           </p>
         </motion.div>
 

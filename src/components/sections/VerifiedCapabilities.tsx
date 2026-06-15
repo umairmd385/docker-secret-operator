@@ -41,55 +41,45 @@ export const VerifiedCapabilities = () => {
   const guarantees: GuaranteeItem[] = [
     {
       icon: <Zap className="w-4 h-4" />,
-      title: "Zero Downtime",
-      description: "Traffic swaps safely. No connections dropped. Atomic container rename.",
+      title: "Atomic Swap",
+      description: "Rename containers at the Docker daemon level. Traffic switches instantly. No dropped connections.",
     },
     {
       icon: <HeartPulse className="w-4 h-4" />,
       title: "Health Validation",
-      description: "New container must pass health checks before traffic swap. Configurable timeout.",
+      description: "New container must pass health checks before traffic moves. Configurable timeout.",
     },
     {
       icon: <RotateCcw className="w-4 h-4" />,
-      title: "Automatic Rollback",
-      description: "If health check fails, restore previous container instantly. Zero downtime.",
+      title: "Instant Recovery",
+      description: "If health check fails, restore previous container immediately. Old container never stops until new one is healthy.",
     },
     {
       icon: <AlertCircle className="w-4 h-4" />,
       title: "Crash Recovery",
-      description: "DSO tracks rotation checkpoints. On restart, incomplete rotations resume from checkpoint.",
+      description: "Checkpoints on disk track rotation state. On restart, DSO resumes, completes, or rolls back safely.",
     },
   ];
 
   const featureGroups: FeatureGroup[] = [
     {
-      icon: <Zap className="w-6 h-6" />,
-      title: "Runtime",
-      description: "Operational capabilities",
-      features: [
-        { title: "Zero-Downtime Rotation", description: "Atomic container swap. No connection drops." },
-        { title: "Health Validation", description: "Configurable health checks before traffic switch." },
-        { title: "Automatic Rollback", description: "Failed rotation restores previous container instantly." },
-      ],
-    },
-    {
       icon: <Lock className="w-6 h-6" />,
       title: "Security",
-      description: "Protection mechanisms",
+      description: "Memory-only secrets",
       features: [
-        { title: "Zero Disk Persistence", description: "Secrets never touch filesystem. Memory-only flow." },
-        { title: "Instant Cleanup", description: "Old container secrets purged immediately on rotation." },
-        { title: "Encryption at Rest", description: "Local vault encrypted. Supports provider encryption." },
+        { title: "Zero Disk Persistence", description: "Secrets exist only in memory during rotation. Never on disk." },
+        { title: "Instant Cleanup", description: "Old container stops. Secrets purged from memory immediately." },
+        { title: "Encryption at Rest", description: "Encrypted vault. Local and provider encryption supported." },
       ],
     },
     {
       icon: <Cloud className="w-6 h-6" />,
       title: "Providers",
-      description: "Verified integrations",
+      description: "Major cloud platforms",
       features: [
-        { title: "AWS Secrets Manager", description: "IAM Instance Profile auth. No credentials needed." },
+        { title: "AWS Secrets Manager", description: "IAM Instance Profile auth. No credentials to manage." },
         { title: "Azure Key Vault", description: "Managed Identity auth. Enterprise-ready." },
-        { title: "HashiCorp Vault", description: "AppRole or token auth. Self-hosted or Cloud." },
+        { title: "HashiCorp Vault", description: "AppRole or token auth. Self-hosted or managed." },
       ],
     },
   ];
@@ -105,10 +95,10 @@ export const VerifiedCapabilities = () => {
           className="text-center max-w-3xl mx-auto"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Verified Capabilities
+            How DSO Solves the Rotation Problem
           </h2>
           <p className="text-base sm:text-lg text-gray-400">
-            Operational guarantees backed by implementation. Every capability shown is verified in CLI source code.
+            Four operational guarantees that eliminate downtime, prevent manual intervention, and ensure reliability. Every capability is verified in source code.
           </p>
         </motion.div>
 
