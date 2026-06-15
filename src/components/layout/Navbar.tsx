@@ -45,10 +45,10 @@ export const Navbar = () => {
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
           <div className="flex gap-6 text-sm font-medium text-gray-300">
+            <a href={ROUTES.landingPages.product} className="hover:text-white transition-colors">Product</a>
             <a href={ROUTES.landingPages.architecture} className="hover:text-white transition-colors">Architecture</a>
-            <a href={ROUTES.landingPages.deployments} className="hover:text-white transition-colors">Deployments</a>
-            <a href={ROUTES.landingPages.capabilities} className="hover:text-white transition-colors">Capabilities</a>
-            <a href={ROUTES.landingPages.faq} className="hover:text-white transition-colors">FAQ</a>
+            <a href={ROUTES.landingPages.deploy} className="hover:text-white transition-colors">Deploy</a>
+            <a href={ROUTES.landingPages.community} className="hover:text-white transition-colors">Community</a>
             <a href={ROUTES.docs.root} className="hover:text-white transition-colors">Docs</a>
           </div>
           <div className="flex items-center gap-3">
@@ -81,10 +81,10 @@ export const Navbar = () => {
             className="md:hidden absolute top-full left-0 w-full bg-surface/95 backdrop-blur-lg border-b border-border shadow-xl overflow-hidden"
           >
             <div className="p-6 flex flex-col gap-3">
+              <a href={ROUTES.landingPages.product} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Product</a>
               <a href={ROUTES.landingPages.architecture} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Architecture</a>
-              <a href={ROUTES.landingPages.deployments} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Deployments</a>
-              <a href={ROUTES.landingPages.capabilities} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Capabilities</a>
-              <a href={ROUTES.landingPages.faq} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">FAQ</a>
+              <a href={ROUTES.landingPages.deploy} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Deploy</a>
+              <a href={ROUTES.landingPages.community} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Community</a>
               <a href={ROUTES.docs.root} onClick={() => setMobileOpen(false)} className="text-sm font-medium text-gray-300 hover:text-white p-3 hover:bg-white/5 rounded-lg transition-colors">Docs</a>
               <div className="pt-2 px-3 pb-3">
                 <Button variant="outline" className="w-full justify-center" href={ROUTES.external.github}>
