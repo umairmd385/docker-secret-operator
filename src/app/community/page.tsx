@@ -2,6 +2,10 @@ import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
 import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { ProjectActivity } from "@/components/sections/ProjectActivity";
+import { ReleaseTimeline } from "@/components/sections/ReleaseTimeline";
+import { MaintainerPhilosophy } from "@/components/sections/MaintainerPhilosophy";
+import { EcosystemConnections } from "@/components/sections/EcosystemConnections";
 import { Code, MessageSquare, GitBranch, Package, Users, Heart } from "lucide-react";
 
 export const metadata = generatePageMetadata(
@@ -35,6 +39,9 @@ export default function CommunityPage() {
             </p>
           </div>
         </section>
+
+        {/* Project Activity - Real metrics */}
+        <ProjectActivity />
 
         {/* GitHub & Project */}
         <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
@@ -116,6 +123,9 @@ export default function CommunityPage() {
           </div>
         </section>
 
+        {/* Release Timeline */}
+        <ReleaseTimeline />
+
         {/* Roadmap */}
         <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
@@ -183,6 +193,12 @@ export default function CommunityPage() {
             </div>
           </div>
         </section>
+
+        {/* Maintainer Philosophy */}
+        <MaintainerPhilosophy />
+
+        {/* Ecosystem Connections */}
+        <EcosystemConnections />
 
         {/* Contributing */}
         <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
