@@ -2,29 +2,29 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Heart, Users, Shield, Zap } from "lucide-react";
+import { Shield, Code, Users, Target } from "lucide-react";
 
 export const MaintainerPhilosophy = () => {
   const philosophies = [
     {
-      icon: Heart,
-      title: "Reliability First",
-      description: "Production stability matters more than feature velocity. We prioritize correctness and safety over speed."
+      icon: Target,
+      title: "Focused Scope",
+      description: "Do one thing well. DSO solves zero-persistence secret injection for Docker. We stay focused on that mission."
     },
     {
-      icon: Users,
-      title: "Community Driven",
-      description: "Major decisions happen in the open. Roadmap is public. We listen to users and implement based on real problems."
+      icon: Code,
+      title: "Code Quality",
+      description: "Small team means every line matters. We prioritize readability, testability, and maintainability."
     },
     {
       icon: Shield,
-      title: "Security by Default",
-      description: "Every release includes a security review. No shortcuts on cryptography or permission handling."
+      title: "Security First",
+      description: "Secrets are sensitive. We treat security as a core feature, not an afterthought."
     },
     {
-      icon: Zap,
-      title: "Operational Clarity",
-      description: "Code is for humans first. Clear error messages. Transparent failure modes. Observable behavior."
+      icon: Users,
+      title: "Direct Feedback",
+      description: "Our users directly influence development. We listen to real-world use cases and pain points."
     },
   ];
 
@@ -38,10 +38,10 @@ export const MaintainerPhilosophy = () => {
           className="max-w-3xl"
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Maintainer Philosophy
+            How We Build
           </h2>
           <p className="text-lg text-gray-400">
-            How we approach development, review, and maintenance.
+            Principles guiding our development and maintenance.
           </p>
         </motion.div>
 
@@ -65,7 +65,7 @@ export const MaintainerPhilosophy = () => {
                     {item.title}
                   </h3>
                 </div>
-                <p className="text-gray-400 leading-relaxed">
+                <p className="text-gray-400 leading-relaxed text-sm">
                   {item.description}
                 </p>
               </motion.div>
@@ -79,9 +79,9 @@ export const MaintainerPhilosophy = () => {
           viewport={{ once: true }}
           className="p-6 rounded-lg border border-accent/20 bg-accent/5"
         >
-          <h3 className="font-semibold text-foreground text-lg mb-3">Core Principle</h3>
-          <p className="text-gray-300">
-            We believe that infrastructure software must be boring in all the right ways — highly reliable, transparent in behavior, and forgiving of operational mistakes. We optimize for the person operating DSO at 2 AM during an incident, not for the marketer writing launch copy.
+          <h3 className="font-semibold text-foreground text-lg mb-3">Small Team, Big Impact</h3>
+          <p className="text-gray-300 text-sm">
+            DSO is maintained by a small, focused team. This means we can move quickly, make thoughtful decisions, and stay true to our mission. We're not building a platform for everyone — we're building the best zero-persistence secret injection tool for Docker.
           </p>
         </motion.div>
       </div>
