@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { H2, P, PLead } from "@/components/ui/Typography";
 import {
   RefreshCw,
   Zap,
@@ -118,12 +119,10 @@ export const CrashRecoveryStory = () => {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Crash Recovery
-          </h2>
-          <p className="text-base sm:text-lg text-gray-400">
+          <H2 className="mb-4">Crash Recovery</H2>
+          <PLead className="text-gray-400">
             Even failure is handled. DSO survives crashes and recovers consistently.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Recovery flow */}

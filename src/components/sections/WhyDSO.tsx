@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, AlertCircle } from "lucide-react";
+import { H2, H4, PLead } from "@/components/ui/Typography";
 
 export const WhyDSO = () => {
   const comparisons = [
@@ -74,12 +75,10 @@ export const WhyDSO = () => {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Why DSO Over Alternatives?
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">Why DSO Over Alternatives?</H2>
+          <PLead className="text-gray-400">
             Honest tradeoffs. DSO is lightweight rotation. Choose based on your needs.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Comparison Matrix */}
@@ -149,7 +148,7 @@ export const WhyDSO = () => {
           >
             <div className="flex items-center gap-3 mb-6">
               <CheckCircle2 className="w-6 h-6 text-green-400 flex-shrink-0" />
-              <h3 className="text-lg font-bold text-foreground">DSO Excels At:</h3>
+              <H4>DSO Excels At:</H4>
             </div>
             <ul className="space-y-3 text-sm text-gray-300">
               <li className="flex gap-3">
@@ -185,7 +184,7 @@ export const WhyDSO = () => {
           >
             <div className="flex items-center gap-3 mb-6">
               <AlertCircle className="w-6 h-6 text-gray-400 flex-shrink-0" />
-              <h3 className="text-lg font-bold text-foreground">Choose Alternatives If:</h3>
+              <H4>Choose Alternatives If:</H4>
             </div>
             <ul className="space-y-3 text-sm text-gray-400">
               <li className="flex gap-3">
