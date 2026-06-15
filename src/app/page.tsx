@@ -8,6 +8,7 @@ import { TargetAudience } from "@/components/sections/TargetAudience";
 import { TerminalDemo } from "@/components/sections/TerminalDemo";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
+import { FailureScenarios } from "@/components/sections/FailureScenarios";
 import { ProductPreview } from "@/components/sections/ProductPreview";
 import { WhyDSO } from "@/components/sections/WhyDSO";
 import { InstallationSimple } from "@/components/sections/InstallationSimple";
@@ -42,6 +43,9 @@ export default function Home() {
 
         {/* 4. Crash Recovery - Trust (why it's safe) - MOVED UP */}
         <CrashRecoveryStory />
+
+        {/* 4.5. Failure Scenarios - Proof of robustness */}
+        <FailureScenarios />
 
         {/* 5. How It Works - Understanding (after trust is built) */}
         <HowItWorks />
