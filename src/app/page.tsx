@@ -27,37 +27,37 @@ export default function Home() {
       <div className="relative z-10 flex flex-col w-full space-y-0">
         <Navbar />
 
-        {/* 1. Hero - Elevated */}
+        {/* 1. Hero - Curiosity spark */}
         <Hero />
 
-        {/* 2. The Problem - Story-driven */}
+        {/* 2. The Problem - Recognition (users see their pain) */}
         <ProblemSection />
 
-        {/* 3. Interactive Terminal Demo */}
+        {/* 3. Interactive Terminal Demo - Excitement peak */}
         <TerminalDemo />
 
-        {/* 4. How It Works - One elegant flow */}
-        <HowItWorks />
-
-        {/* 5. Crash Recovery - Hero feature elevated */}
+        {/* 4. Crash Recovery - Trust (why it's safe) - MOVED UP */}
         <CrashRecoveryStory />
 
-        {/* 6. Product Preview - Dashboard & CLI */}
+        {/* 5. How It Works - Understanding (after trust is built) */}
+        <HowItWorks />
+
+        {/* 6. Product Preview - Confidence (they can see it works) */}
         <ProductPreview />
 
-        {/* 7. Comparison - Why DSO */}
+        {/* 7. Why DSO - Outcomes-focused comparison */}
         <WhyDSO />
 
-        {/* 8. Installation - Simple path selection */}
-        <InstallationSimple />
-
-        {/* 9. FAQ - Common questions */}
+        {/* 8. FAQ - Clarity (handle remaining objections) */}
         <FAQSection />
 
-        {/* 10. Social Proof - Trust signals */}
+        {/* 9. Social Proof - Trust signals before action */}
         <OSSTrust />
 
-        {/* 11. Final CTA */}
+        {/* 10. Installation - Clear path to action */}
+        <InstallationSimple />
+
+        {/* 11. Final CTA - Confidence push */}
         <TrustAndCTA />
 
         <Footer />
