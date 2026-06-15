@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, XCircle } from "lucide-react";
+import { H2, H4, PLead, P, PSmall } from "@/components/ui/Typography";
 
 export const TargetAudience = () => {
   const forDSO = [
@@ -33,12 +34,10 @@ export const TargetAudience = () => {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Is DSO Right for You?
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">Is DSO Right for You?</H2>
+          <PLead className="text-gray-400">
             DSO is purpose-built for Docker teams. Clarity on fit prevents disappointment.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Two Column Layout */}
@@ -53,7 +52,7 @@ export const TargetAudience = () => {
           >
             <div className="flex items-center gap-3 mb-6">
               <CheckCircle2 className="w-6 h-6 text-green-400 flex-shrink-0" />
-              <h3 className="text-xl font-bold text-foreground">DSO is for:</h3>
+              <H4>DSO is for:</H4>
             </div>
 
             <ul className="space-y-3">
@@ -85,7 +84,7 @@ export const TargetAudience = () => {
           >
             <div className="flex items-center gap-3 mb-6">
               <XCircle className="w-6 h-6 text-gray-500 flex-shrink-0" />
-              <h3 className="text-xl font-bold text-foreground">DSO is NOT for:</h3>
+              <H4>DSO is NOT for:</H4>
             </div>
 
             <ul className="space-y-3">
@@ -115,9 +114,9 @@ export const TargetAudience = () => {
           viewport={{ once: true }}
           className="max-w-3xl mx-auto p-6 rounded-lg border border-accent/20 bg-accent/5 text-center"
         >
-          <p className="text-gray-300">
+          <P className="text-gray-300">
             <span className="font-semibold text-foreground">If you're unsure:</span> Try DSO on a non-critical service first. The documentation and community can help determine if it's the right fit.
-          </p>
+          </P>
         </motion.div>
       </div>
     </section>
