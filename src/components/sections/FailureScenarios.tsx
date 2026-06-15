@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, CheckCircle2, ChevronRight } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const FailureScenarios = () => {
   const [activeScenario, setActiveScenario] = useState<number | null>(0);
@@ -82,13 +83,11 @@ export const FailureScenarios = () => {
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <AlertTriangle className="w-6 h-6 text-yellow-500" />
-            <h2 className="text-4xl sm:text-5xl font-bold text-foreground">
-              What Happens When Things Break
-            </h2>
+            <H2>What Happens When Things Break</H2>
           </div>
-          <p className="text-lg text-gray-400">
+          <PLead className="text-gray-400">
             Failures are expected. DSO is designed to handle them gracefully.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Scenario Selector */}
