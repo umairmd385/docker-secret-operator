@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, ArrowRight } from "lucide-react";
+import { H2 } from "@/components/ui/Typography";
 
 export const TrustAndCTA = () => {
   const capabilities = [
@@ -25,7 +26,7 @@ export const TrustAndCTA = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-t border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-t border-border">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Capability Cards */}
         <div className="grid md:grid-cols-2 gap-6 mb-20">
@@ -36,13 +37,13 @@ export const TrustAndCTA = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="p-6 rounded-xl border border-gray-800 bg-gray-900/30"
+              className="p-6 rounded-xl border border-border bg-surface/30"
             >
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-semibold text-foreground mb-1">{cap.title}</h3>
-                  <p className="text-sm text-gray-400">{cap.desc}</p>
+                  <p className="text-sm text-secondary">{cap.desc}</p>
                 </div>
               </div>
             </motion.div>
@@ -55,12 +56,10 @@ export const TrustAndCTA = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="rounded-2xl border border-gray-800 bg-gray-900/30 p-12 sm:p-16 text-center"
+          className="rounded-2xl border border-border bg-surface/30 p-12 sm:p-16 text-center"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Ready to automate secret rotation?
-          </h2>
-          <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+          <H2 className="mb-4">Ready to automate secret rotation?</H2>
+          <p className="text-secondary text-lg mb-8 max-w-2xl mx-auto">
             Install DSO and deploy your first automated rotation in minutes.
           </p>
 
@@ -74,7 +73,7 @@ export const TrustAndCTA = () => {
             </a>
             <a
               href="/docs"
-              className="inline-flex items-center gap-2 px-8 py-4 border border-gray-700 hover:border-accent/50 bg-gray-900/30 hover:bg-gray-900/50 text-foreground font-semibold rounded-lg transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 border border-border-soft hover:border-accent/50 bg-surface/30 hover:bg-surface/50 text-foreground font-semibold rounded-lg transition-all"
             >
               Read Documentation
             </a>

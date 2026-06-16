@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Copy, Check, ChevronRight } from "lucide-react";
 import { Code, Lock, Cloud, RotateCcw } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const InstallationSimple = () => {
   const [copied, setCopied] = useState<string | null>(null);
@@ -71,7 +72,7 @@ export const InstallationSimple = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
@@ -80,12 +81,10 @@ export const InstallationSimple = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Installation made simple.
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">Installation made simple.</H2>
+          <PLead className="text-tertiary">
             Start with Docker Compose. Scale to production.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Installation paths grid */}
@@ -102,17 +101,17 @@ export const InstallationSimple = () => {
               className={`text-left p-5 rounded-lg border-2 transition-all duration-300 group ${
                 expandedPath === path.id
                   ? "border-accent bg-accent/10"
-                  : "border-gray-800 bg-gray-900/30 hover:border-accent/50"
+                  : "border-border bg-surface/30 hover:border-accent/50"
               }`}
             >
-              <div className={`text-accent mb-3 transition-colors ${expandedPath === path.id ? "text-accent" : "text-gray-500 group-hover:text-accent"}`}>
+              <div className={`text-accent mb-3 transition-colors ${expandedPath === path.id ? "text-accent" : "text-tertiary group-hover:text-accent"}`}>
                 {path.icon}
               </div>
               <h3 className="font-semibold text-foreground text-sm mb-1">
                 {path.title}
               </h3>
-              <p className="text-xs text-gray-500">{path.subtitle}</p>
-              <ChevronRight className={`w-4 h-4 text-gray-500 mt-3 transition-transform ${expandedPath === path.id ? "rotate-90" : ""}`} />
+              <p className="text-xs text-tertiary">{path.subtitle}</p>
+              <ChevronRight className={`w-4 h-4 text-tertiary mt-3 transition-transform ${expandedPath === path.id ? "rotate-90" : ""}`} />
             </motion.button>
           ))}
         </div>
@@ -122,7 +121,7 @@ export const InstallationSimple = () => {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-2xl mx-auto mb-12 p-8 rounded-lg border border-gray-800 bg-gray-900/50"
+            className="max-w-2xl mx-auto mb-12 p-8 rounded-lg border border-border bg-surface/50"
           >
             {paths.find((p) => p.id === expandedPath) && (
               <>
@@ -132,8 +131,8 @@ export const InstallationSimple = () => {
 
                 {/* Command */}
                 <div className="mb-8">
-                  <p className="text-sm text-gray-400 mb-3">First command:</p>
-                  <div className="flex items-center gap-2 bg-gray-950 border border-gray-800 rounded p-4">
+                  <p className="text-sm text-secondary mb-3">First command:</p>
+                  <div className="flex items-center gap-2 bg-surface2 border border-border rounded p-4">
                     <code className="flex-1 text-sm font-mono text-accent break-all">
                       {paths.find((p) => p.id === expandedPath)?.command}
                     </code>
@@ -144,12 +143,12 @@ export const InstallationSimple = () => {
                           expandedPath
                         )
                       }
-                      className="p-2 hover:bg-gray-800 rounded transition-colors"
+                      className="p-2 hover:bg-surface transition-colors"
                     >
                       {copied === expandedPath ? (
                         <Check className="w-4 h-4 text-green-400" />
                       ) : (
-                        <Copy className="w-4 h-4 text-gray-500" />
+                        <Copy className="w-4 h-4 text-tertiary" />
                       )}
                     </button>
                   </div>
@@ -157,12 +156,12 @@ export const InstallationSimple = () => {
 
                 {/* Steps */}
                 <div>
-                  <p className="text-sm text-gray-400 mb-3">Setup steps:</p>
+                  <p className="text-sm text-secondary mb-3">Setup steps:</p>
                   <ol className="space-y-2">
                     {paths
                       .find((p) => p.id === expandedPath)
                       ?.steps.map((step, i) => (
-                        <li key={i} className="flex items-center gap-3 text-sm text-gray-300">
+                        <li key={i} className="flex items-center gap-3 text-sm text-foreground-alt">
                           <span className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent flex-shrink-0">
                             {i + 1}
                           </span>

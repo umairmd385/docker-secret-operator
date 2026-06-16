@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { GitBranch, Lock, Cloud, Code, Users } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 interface TrustItem {
   icon: React.ReactNode;
@@ -24,7 +25,7 @@ const TrustCardComponent = ({ icon, title, description, index }: TrustItem & { i
       </div>
     </div>
     <h3 className="font-semibold text-foreground text-lg mb-2">{title}</h3>
-    <p className="text-sm text-gray-400">{description}</p>
+    <p className="text-sm text-secondary">{description}</p>
   </motion.div>
 );
 
@@ -58,7 +59,7 @@ export const OSSTrust = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
         {/* Header */}
         <motion.div
@@ -67,12 +68,10 @@ export const OSSTrust = () => {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Built on Trust
-          </h2>
-          <p className="text-base sm:text-lg text-gray-400">
+          <H2 className="mb-4">Built on Trust</H2>
+          <PLead className="text-tertiary">
             DSO is open source, Docker native, CNCF incubating, and community-driven. Transparency at every level.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Trust Grid */}
