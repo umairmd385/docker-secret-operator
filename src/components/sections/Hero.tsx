@@ -48,7 +48,7 @@ export const Hero = () => {
   ];
 
   return (
-    <section className="relative py-16 sm:py-24 lg:py-32 bg-background border-b border-gray-800 overflow-hidden">
+    <section className="relative py-16 sm:py-24 lg:py-32 bg-background border-b border-border overflow-hidden">
       {/* Subtle background accent */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 -right-40 w-80 h-80 bg-accent/3 rounded-full blur-3xl" />
