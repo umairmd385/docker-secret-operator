@@ -166,38 +166,6 @@ export const CrashRecoveryStory = () => {
           </div>
         </motion.div>
 
-        {/* Why this matters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto"
-        >
-          <motion.div
-            whileHover={{ y: -4, transition: { duration: 0.2 } }}
-            className="p-6 rounded-lg border border-border bg-surface/30 space-y-3 transition-all duration-300 hover:bg-surface/50 hover:shadow-md"
-            role="article"
-            aria-label="Without checkpoints scenario"
-          >
-            <h4 className="font-semibold text-foreground text-sm">Without Checkpoints</h4>
-            <p className="text-xs text-secondary leading-relaxed">
-              Lost state after crash. Operator must manually detect orphaned
-              containers and stale secrets. Risk of inconsistency.
-            </p>
-          </motion.div>
-          <motion.div
-            whileHover={{ y: -4, transition: { duration: 0.2 } }}
-            className="p-6 rounded-lg border border-accent/30 bg-accent/5 space-y-3 transition-all duration-300 hover:bg-accent/10 hover:border-accent/50 hover:shadow-md"
-            role="article"
-            aria-label="With DSO checkpoints scenario"
-          >
-            <h4 className="font-semibold text-foreground text-sm">With DSO Checkpoints</h4>
-            <p className="text-xs text-secondary leading-relaxed">
-              State persists. DSO auto-recovers. Zero manual intervention.
-              Guaranteed consistent state.
-            </p>
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   );

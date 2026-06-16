@@ -91,16 +91,13 @@ export const Hero = () => {
               </PSmall>
             </div>
 
-            {/* Subheading - The Pain Point */}
+            {/* Subheading - The Hook */}
             <div className="space-y-3">
               <P className="text-gray-300 font-medium">
                 Secret rotation today means manual scripts, container restarts, and downtime risk.
               </P>
               <P className="text-gray-400">
-                DSO eliminates that. Detect secret changes automatically. Launch health-checked containers. Validate readiness before swap.
-                <br />
-                Traffic switches safely. Rollback instantly on failure.
-                <br />
+                DSO eliminates that.{" "}
                 <span className="text-gray-300 font-medium">No manual intervention. No restart overhead. No downtime.</span>
               </P>
             </div>

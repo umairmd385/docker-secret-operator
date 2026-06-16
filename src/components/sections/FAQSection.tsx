@@ -10,26 +10,6 @@ export const FAQSection = () => {
 
   const faqs = [
     {
-      q: "Will containers restart?",
-      a: "No. DSO renames containers at the Docker daemon level. Traffic switches instantly. Old container stops only after the new one is fully healthy.",
-    },
-    {
-      q: "What happens if health checks fail?",
-      a: "The new container is marked unhealthy. Old container stays active. New container is cleaned up. No swap occurs. No downtime. DSO retries on next rotation.",
-    },
-    {
-      q: "What if DSO crashes during rotation?",
-      a: "Checkpoint-based recovery. On restart, DSO reads the checkpoint and either completes the rotation, resumes it, or rolls back safely. State is always consistent.",
-    },
-    {
-      q: "What if the secret provider is unavailable?",
-      a: "DSO retries according to configured backoff policy. If unavailable for too long, it keeps the old secret active and alerts. No service interruption.",
-    },
-    {
-      q: "Can I use DSO during deployments?",
-      a: "Yes. DSO works alongside your deployment process. If both are changing containers, DSO detects the new containers and validates them. Coordinated rotation is safe.",
-    },
-    {
       q: "How much CPU and memory overhead?",
       a: "Minimal. DSO agent uses <50MB RAM at idle, <5% CPU during rotation. Perfect for resource-constrained environments.",
     },
@@ -42,32 +22,16 @@ export const FAQSection = () => {
       a: "DSO supports Vault, AWS Secrets Manager, Azure Key Vault, Huawei Cloud KMS, and local encrypted vault. New providers can be contributed.",
     },
     {
-      q: "Why use DSO instead of Vault?",
-      a: "Vault is more powerful but requires infrastructure and operational expertise. DSO is lightweight, Docker-native, and requires zero configuration. Choose DSO for simplicity.",
-    },
-    {
-      q: "Why use DSO instead of Infisical?",
-      a: "Infisical is broader (secret management + UI). DSO is narrower (rotation-focused). Choose DSO if you want zero-downtime rotation without overhead.",
-    },
-    {
-      q: "Can I use it in production?",
-      a: "Yes. DSO is production-grade. It survives crashes, maintains checkpoints, and has zero-downtime guarantees. Used in production by multiple teams.",
-    },
-    {
-      q: "Do I need a cloud account?",
-      a: "No. DSO works with Docker Compose locally and has a production local mode for environments without cloud dependencies.",
-    },
-    {
-      q: "What's the recovery guarantee?",
-      a: "Checkpoint-based recovery. If DSO crashes mid-rotation, it resumes, completes, or rolls back safely on restart. State is always consistent.",
-    },
-    {
-      q: "How fast is rotation?",
-      a: "Typically 1.5-3 seconds from detection to completion. Varies by health check configuration and provider latency.",
+      q: "Can I use DSO during deployments?",
+      a: "Yes. DSO works alongside your deployment process. If both are changing containers, DSO detects the new containers and validates them. Coordinated rotation is safe.",
     },
     {
       q: "Is it open source?",
       a: "Yes. Apache 2.0 licensed. CNCF Sandbox project. Fully auditable code on GitHub.",
+    },
+    {
+      q: "Can I use it in production?",
+      a: "Yes. DSO is production-grade. It survives crashes, maintains checkpoints, and has zero-downtime guarantees.",
     },
   ];
 

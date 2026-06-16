@@ -2,54 +2,13 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { H2 } from "@/components/ui/Typography";
 
 export const TrustAndCTA = () => {
-  const capabilities = [
-    {
-      title: "Automatic Rotation",
-      desc: "Detects secret changes and rotates containers without manual intervention.",
-    },
-    {
-      title: "Health-Checked Updates",
-      desc: "New containers pass health checks before traffic switches. Failed rotations roll back.",
-    },
-    {
-      title: "Recovery Built In",
-      desc: "Crashes don't cause incidents. DSO resumes from checkpoint on restart.",
-    },
-    {
-      title: "Docker Native",
-      desc: "Works with Docker Engine directly. No Kubernetes required.",
-    },
-  ];
-
   return (
     <section className="relative py-20 sm:py-32 bg-background border-t border-border">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        {/* Capability Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-20">
-          {capabilities.map((cap, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="p-6 rounded-xl border border-border bg-surface/30"
-            >
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">{cap.title}</h3>
-                  <p className="text-sm text-secondary">{cap.desc}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
         {/* Final CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

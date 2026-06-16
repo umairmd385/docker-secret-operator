@@ -2,8 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, AlertCircle } from "lucide-react";
-import { H2, H4, PLead } from "@/components/ui/Typography";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const WhyDSO = () => {
   const comparisons = [
@@ -136,80 +135,6 @@ export const WhyDSO = () => {
             </tbody>
           </table>
         </motion.div>
-
-        {/* Key Takeaways */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* DSO Strengths */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="p-8 rounded-lg border border-green-500/30 bg-green-500/5"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <CheckCircle2 className="w-6 h-6 text-green-400 flex-shrink-0" />
-              <H4>DSO Excels At:</H4>
-            </div>
-            <ul className="space-y-3 text-sm text-foreground-alt">
-              <li className="flex gap-3">
-                <span className="text-green-400 flex-shrink-0">✓</span>
-                Fast setup (minutes, not hours)
-              </li>
-              <li className="flex gap-3">
-                <span className="text-green-400 flex-shrink-0">✓</span>
-                Zero operational overhead
-              </li>
-              <li className="flex gap-3">
-                <span className="text-green-400 flex-shrink-0">✓</span>
-                Guaranteed zero downtime
-              </li>
-              <li className="flex gap-3">
-                <span className="text-green-400 flex-shrink-0">✓</span>
-                Automatic failure recovery
-              </li>
-              <li className="flex gap-3">
-                <span className="text-green-400 flex-shrink-0">✓</span>
-                Docker-native workflows
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* When to Choose Alternatives */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="p-8 rounded-lg border border-border-soft bg-surface/30"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <AlertCircle className="w-6 h-6 text-tertiary flex-shrink-0" />
-              <H4>Choose Alternatives If:</H4>
-            </div>
-            <ul className="space-y-3 text-sm text-secondary">
-              <li className="flex gap-3">
-                <span className="text-tertiary flex-shrink-0">→</span>
-                You need enterprise audit logging (use Vault)
-              </li>
-              <li className="flex gap-3">
-                <span className="text-tertiary flex-shrink-0">→</span>
-                You run Kubernetes (different problem domain)
-              </li>
-              <li className="flex gap-3">
-                <span className="text-tertiary flex-shrink-0">→</span>
-                You need team collaboration UI (use Infisical)
-              </li>
-              <li className="flex gap-3">
-                <span className="text-tertiary flex-shrink-0">→</span>
-                You manage 100+ different secrets (use Vault/Infisical)
-              </li>
-              <li className="flex gap-3">
-                <span className="text-tertiary flex-shrink-0">→</span>
-                You want managed cloud (use Infisical)
-              </li>
-            </ul>
-          </motion.div>
-        </div>
 
         {/* Honest Recommendation */}
         <motion.div

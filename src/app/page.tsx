@@ -6,14 +6,12 @@ import { Hero } from "@/components/sections/Hero";
 import { ProblemSection } from "@/components/sections/ProblemSection";
 import { TargetAudience } from "@/components/sections/TargetAudience";
 import { TerminalDemo } from "@/components/sections/TerminalDemo";
-import { HowItWorks } from "@/components/sections/HowItWorks";
 import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
 import { FailureScenarios } from "@/components/sections/FailureScenarios";
 import { ProductPreview } from "@/components/sections/ProductPreview";
 import { WhyDSO } from "@/components/sections/WhyDSO";
 import { InstallationSimple } from "@/components/sections/InstallationSimple";
 import { FAQSection } from "@/components/sections/FAQSection";
-import { OSSTrust } from "@/components/sections/OSSTrust";
 import { TrustAndCTA } from "@/components/sections/TrustAndCTA";
 
 export const metadata = generatePageMetadata(PAGE_METADATA["/"], "/");
@@ -41,31 +39,28 @@ export default function Home() {
         {/* 3. Interactive Terminal Demo - Excitement peak */}
         <TerminalDemo />
 
-        {/* 4. Crash Recovery - Trust (why it's safe) - MOVED UP */}
+        {/* 4. Crash Recovery - Trust (why it's safe) */}
         <CrashRecoveryStory />
 
-        {/* 4.5. Failure Scenarios - Proof of robustness */}
+        {/* 5. Failure Scenarios - Proof of robustness */}
         <FailureScenarios />
-
-        {/* 5. How It Works - Understanding (after trust is built) */}
-        <HowItWorks />
 
         {/* 6. Product Preview - Confidence (they can see it works) */}
         <ProductPreview />
 
-        {/* 7. Why DSO - Outcomes-focused comparison */}
+        {/* 7. Comparison Table - Why DSO over alternatives */}
         <WhyDSO />
 
-        {/* 8. FAQ - Clarity (handle remaining objections) */}
+        {/* 8. Target Audience - moved after comparison */}
+        <TargetAudience />
+
+        {/* 9. FAQ - 6 questions only */}
         <FAQSection />
 
-        {/* 9. Social Proof - Trust signals before action */}
-        <OSSTrust />
-
-        {/* 10. Installation - Clear path to action */}
+        {/* 10. Installation */}
         <InstallationSimple />
 
-        {/* 11. Final CTA - Confidence push */}
+        {/* 11. Final CTA */}
         <TrustAndCTA />
 
         <Footer />
