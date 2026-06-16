@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Copy, Check, Terminal } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const DocsQuickStart = () => {
   const [copiedStep, setCopiedStep] = useState<number | null>(null);
@@ -65,7 +66,7 @@ services:
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         {/* Header */}
         <motion.div
@@ -77,12 +78,10 @@ services:
           <div className="inline-block mb-4 px-3 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent text-xs font-mono font-bold">
             START HERE
           </div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Get Running in 5 Minutes
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">Get Running in 5 Minutes</H2>
+          <PLead className="text-secondary">
             Six steps from installation to your first rotation. Docker Compose users can be productive immediately.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Steps */}
@@ -103,30 +102,30 @@ services:
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground text-lg">{step.title}</h3>
-                  <p className="text-sm text-gray-400 mt-1">{step.description}</p>
+                  <p className="text-sm text-secondary mt-1">{step.description}</p>
                 </div>
               </div>
 
               {/* Command Box */}
               <div className="ml-12 mb-6">
-                <div className="relative bg-gray-950 border border-gray-800 rounded-lg overflow-hidden">
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-900 border-b border-gray-800">
-                    <Terminal className="w-4 h-4 text-gray-500" />
-                    <span className="text-xs text-gray-500 font-mono">bash</span>
+                <div className="relative bg-surface2 border border-border rounded-lg overflow-hidden">
+                  <div className="flex items-center gap-2 px-4 py-3 bg-surface border-b border-border">
+                    <Terminal className="w-4 h-4 text-tertiary" />
+                    <span className="text-xs text-tertiary font-mono">bash</span>
                   </div>
                   <div className="p-4">
-                    <code className="text-sm font-mono text-gray-300 whitespace-pre-wrap break-words">
+                    <code className="text-sm font-mono text-foreground-alt whitespace-pre-wrap break-words">
                       {step.command}
                     </code>
                   </div>
                   <button
                     onClick={() => copyToClipboard(step.command, idx)}
-                    className="absolute top-3 right-3 p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700 transition-colors"
+                    className="absolute top-3 right-3 p-2 rounded-lg bg-surface/50 hover:bg-surface transition-colors"
                   >
                     {copiedStep === idx ? (
                       <Check className="w-4 h-4 text-green-400" />
                     ) : (
-                      <Copy className="w-4 h-4 text-gray-400" />
+                      <Copy className="w-4 h-4 text-tertiary" />
                     )}
                   </button>
                 </div>

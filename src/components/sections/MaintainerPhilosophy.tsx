@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Shield, Code, Users, Target } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const MaintainerPhilosophy = () => {
   const philosophies = [
@@ -29,7 +30,7 @@ export const MaintainerPhilosophy = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -37,12 +38,10 @@ export const MaintainerPhilosophy = () => {
           viewport={{ once: true }}
           className="max-w-3xl"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            How We Build
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">How We Build</H2>
+          <PLead className="text-secondary">
             Principles guiding our development and maintenance.
-          </p>
+          </PLead>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -55,7 +54,7 @@ export const MaintainerPhilosophy = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="p-6 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/30 hover:bg-gray-900/50 transition-all duration-300"
+                className="p-6 rounded-lg border border-border bg-surface/30 hover:border-accent/30 hover:bg-surface/50 transition-all duration-300"
               >
                 <div className="flex items-start gap-4 mb-4">
                   <div className="p-3 rounded-lg bg-accent/10 border border-accent/30 flex-shrink-0">
@@ -65,7 +64,7 @@ export const MaintainerPhilosophy = () => {
                     {item.title}
                   </h3>
                 </div>
-                <p className="text-gray-400 leading-relaxed text-sm">
+                <p className="text-secondary leading-relaxed text-sm">
                   {item.description}
                 </p>
               </motion.div>

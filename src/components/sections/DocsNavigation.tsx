@@ -25,7 +25,7 @@ const DocLinkComponent = ({ icon, title, description, href, external = false, in
       whileHover={{ y: -4 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.08, duration: 0.3 }}
-      className="group p-6 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/50 hover:bg-gray-900/50 transition-all flex flex-col cursor-pointer"
+      className="group p-6 rounded-lg border border-border bg-surface/30 hover:border-accent/50 hover:bg-surface/50 transition-all flex flex-col cursor-pointer"
     >
       <div className="flex items-start gap-3 mb-3">
         <div className="w-10 h-10 rounded-lg bg-accent/10 border border-accent/30 group-hover:border-accent/50 group-hover:bg-accent/20 transition-all flex items-center justify-center flex-shrink-0">
@@ -34,11 +34,11 @@ const DocLinkComponent = ({ icon, title, description, href, external = false, in
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h3 className="font-semibold text-foreground text-base">{title}</h3>
-            {external && <ExternalLink className="w-3.5 h-3.5 text-gray-500 group-hover:text-accent transition-colors flex-shrink-0" />}
+            {external && <ExternalLink className="w-3.5 h-3.5 text-tertiary group-hover:text-accent transition-colors flex-shrink-0" />}
           </div>
         </div>
       </div>
-      <p className="text-xs text-gray-400">{description}</p>
+      <p className="text-xs text-secondary">{description}</p>
     </motion.a>
   );
 };

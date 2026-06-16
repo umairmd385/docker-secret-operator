@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, GitBranch, Lock, CheckCircle2, Zap, AlertCircle } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const ArchitectureOverview = () => {
   const layers = [
@@ -45,7 +46,7 @@ export const ArchitectureOverview = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-16">
         {/* Header */}
         <motion.div
@@ -54,12 +55,10 @@ export const ArchitectureOverview = () => {
           viewport={{ once: true }}
           className="max-w-3xl"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            System Architecture
-          </h2>
-          <p className="text-lg text-gray-400 leading-relaxed">
+          <H2 className="mb-4">System Architecture</H2>
+          <PLead className="text-secondary">
             DSO is a layered system designed for reliability and safety. Each layer has a specific responsibility. Failures are handled gracefully at every stage.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* System Layers */}
@@ -76,7 +75,7 @@ export const ArchitectureOverview = () => {
                 className="space-y-2"
               >
                 {/* Layer Card */}
-                <div className="p-6 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/30 transition-all duration-300">
+                <div className="p-6 rounded-lg border border-border bg-surface/30 hover:border-accent/30 transition-all duration-300">
                   <div className="flex items-start gap-4">
                     <div className="p-2 rounded-lg bg-accent/10 border border-accent/30 flex-shrink-0 mt-1">
                       <Icon className="w-5 h-5 text-accent" />
@@ -85,7 +84,7 @@ export const ArchitectureOverview = () => {
                       <h3 className="font-semibold text-foreground text-lg mb-1">
                         {layer.name}
                       </h3>
-                      <p className="text-gray-400 text-sm mb-3">{layer.description}</p>
+                      <p className="text-secondary text-sm mb-3">{layer.description}</p>
                       <div className="flex flex-wrap gap-2">
                         {layer.details.map((detail, dIdx) => (
                           <span
@@ -125,7 +124,7 @@ export const ArchitectureOverview = () => {
           className="max-w-3xl p-8 rounded-lg border border-accent/20 bg-accent/5 space-y-4"
         >
           <h3 className="font-semibold text-foreground text-lg">Architectural Principles</h3>
-          <ul className="space-y-3 text-gray-300 text-sm">
+          <ul className="space-y-3 text-foreground-alt text-sm">
             <li className="flex gap-3">
               <span className="text-accent font-bold flex-shrink-0">→</span>
               <span>

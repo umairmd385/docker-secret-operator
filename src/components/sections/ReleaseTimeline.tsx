@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Tag, Calendar, Zap } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const ReleaseTimeline = () => {
   const releases = [
@@ -41,7 +42,7 @@ export const ReleaseTimeline = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -49,12 +50,10 @@ export const ReleaseTimeline = () => {
           viewport={{ once: true }}
           className="max-w-3xl"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Release History
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">Release History</H2>
+          <PLead className="text-secondary">
             29 releases since project launch (April 2026). Consistent development and improvement.
-          </p>
+          </PLead>
         </motion.div>
 
         <div className="space-y-6">
@@ -67,7 +66,7 @@ export const ReleaseTimeline = () => {
               transition={{ delay: idx * 0.1 }}
               className="group"
             >
-              <div className="p-6 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/30 hover:bg-gray-900/50 transition-all duration-300">
+              <div className="p-6 rounded-lg border border-border bg-surface/30 hover:border-accent/30 hover:bg-surface/50 transition-all duration-300">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-3">
                     <Tag className="w-5 h-5 text-accent" />

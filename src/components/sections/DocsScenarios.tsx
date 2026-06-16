@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Database, Key, FileText, AlertCircle } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const DocsScenarios = () => {
   const scenarios = [
@@ -33,7 +34,7 @@ export const DocsScenarios = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         {/* Header */}
         <motion.div
@@ -42,12 +43,10 @@ export const DocsScenarios = () => {
           viewport={{ once: true }}
           className="max-w-3xl"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Common Scenarios
-          </h2>
-          <p className="text-lg text-gray-400">
+          <H2 className="mb-4">Common Scenarios</H2>
+          <PLead className="text-secondary">
             Jump to what you need. Each scenario guides you to the right documentation.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Scenarios Grid */}
@@ -61,7 +60,7 @@ export const DocsScenarios = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="p-6 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/30 hover:bg-gray-900/50 transition-all"
+                className="p-6 rounded-lg border border-border bg-surface/30 hover:border-accent/30 hover:bg-surface/50 transition-all"
               >
                 <div className="flex items-start gap-4 mb-4">
                   <div className="p-3 rounded-lg bg-accent/10 border border-accent/30 flex-shrink-0">
@@ -71,14 +70,14 @@ export const DocsScenarios = () => {
                     <h3 className="font-semibold text-foreground text-lg">
                       {scenario.title}
                     </h3>
-                    <p className="text-sm text-gray-400 mt-1">
+                    <p className="text-sm text-secondary mt-1">
                       {scenario.description}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start gap-2 pt-4 border-t border-gray-800">
+                <div className="flex items-start gap-2 pt-4 border-t border-border">
                   <span className="text-accent font-bold flex-shrink-0 mt-0.5">→</span>
-                  <p className="text-xs text-gray-400">{scenario.next}</p>
+                  <p className="text-xs text-secondary">{scenario.next}</p>
                 </div>
               </motion.div>
             );

@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, XCircle } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const SystemBoundaries = () => {
   const manages = [
@@ -68,7 +69,7 @@ export const SystemBoundaries = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         {/* Header */}
         <motion.div
@@ -77,12 +78,10 @@ export const SystemBoundaries = () => {
           viewport={{ once: true }}
           className="max-w-3xl"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            System Boundaries
-          </h2>
-          <p className="text-lg text-gray-400 leading-relaxed">
+          <H2 className="mb-4">System Boundaries</H2>
+          <PLead className="text-secondary">
             DSO has clear boundaries. Understanding what it manages—and what it doesn't—prevents misalignment.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Two Column Layout */}
@@ -111,7 +110,7 @@ export const SystemBoundaries = () => {
                   <h4 className="font-semibold text-foreground text-sm mb-1">
                     {item.item}
                   </h4>
-                  <p className="text-xs text-gray-400 leading-relaxed">
+                  <p className="text-xs text-secondary leading-relaxed">
                     {item.explanation}
                   </p>
                 </motion.div>
@@ -128,7 +127,7 @@ export const SystemBoundaries = () => {
             className="space-y-4"
           >
             <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
-              <XCircle className="w-6 h-6 text-gray-500" />
+              <XCircle className="w-6 h-6 text-tertiary" />
               DSO Does NOT Manage
             </h3>
             <div className="space-y-3">
@@ -139,12 +138,12 @@ export const SystemBoundaries = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.05 }}
-                  className="p-4 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-gray-700 transition-colors"
+                  className="p-4 rounded-lg border border-border bg-surface/30 hover:border-border-soft transition-colors"
                 >
                   <h4 className="font-semibold text-foreground text-sm mb-1">
                     {item.item}
                   </h4>
-                  <p className="text-xs text-gray-400 leading-relaxed">
+                  <p className="text-xs text-secondary leading-relaxed">
                     {item.explanation}
                   </p>
                 </motion.div>

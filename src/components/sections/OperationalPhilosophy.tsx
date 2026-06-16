@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle, Shield, Zap, RotateCcw } from "lucide-react";
+import { H2, PLead } from "@/components/ui/Typography";
 
 export const OperationalPhilosophy = () => {
   const principles = [
@@ -37,7 +38,7 @@ export const OperationalPhilosophy = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         {/* Header */}
         <motion.div
@@ -46,12 +47,10 @@ export const OperationalPhilosophy = () => {
           viewport={{ once: true }}
           className="max-w-3xl"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Operational Philosophy
-          </h2>
-          <p className="text-lg text-gray-400 leading-relaxed">
+          <H2 className="mb-4">Operational Philosophy</H2>
+          <PLead className="text-secondary">
             DSO's engineering principles shape every decision. Understanding them clarifies why it works the way it does.
-          </p>
+          </PLead>
         </motion.div>
 
         {/* Principles Grid */}
@@ -80,10 +79,10 @@ export const OperationalPhilosophy = () => {
                     <h3 className="font-bold text-foreground text-lg mb-2">
                       {principle.title}
                     </h3>
-                    <p className="text-sm text-gray-300 mb-3 leading-relaxed">
+                    <p className="text-sm text-foreground-alt mb-3 leading-relaxed">
                       {principle.description}
                     </p>
-                    <p className="text-xs text-gray-400 leading-relaxed">
+                    <p className="text-xs text-secondary leading-relaxed">
                       {principle.detail}
                     </p>
                   </div>
@@ -98,23 +97,23 @@ export const OperationalPhilosophy = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-3xl p-8 rounded-lg border border-gray-800 bg-gray-900/30 space-y-4"
+          className="max-w-3xl p-8 rounded-lg border border-border bg-surface/30 space-y-4"
         >
           <h3 className="font-semibold text-foreground text-lg">Example: Health Check Failure</h3>
           <div className="space-y-3 text-sm">
             <div className="flex gap-4">
               <span className="text-accent font-bold flex-shrink-0 w-20">Philosophy:</span>
-              <span className="text-gray-300">Safety over speed</span>
+              <span className="text-foreground-alt">Safety over speed</span>
             </div>
             <div className="flex gap-4">
               <span className="text-accent font-bold flex-shrink-0 w-20">Implementation:</span>
-              <span className="text-gray-300">
+              <span className="text-foreground-alt">
                 New container fails health checks → rotation is rejected → old container stays active → no downtime
               </span>
             </div>
             <div className="flex gap-4">
               <span className="text-accent font-bold flex-shrink-0 w-20">Outcome:</span>
-              <span className="text-gray-300">
+              <span className="text-foreground-alt">
                 The system chooses consistency (keep old state) over convenience (force new state)
               </span>
             </div>
