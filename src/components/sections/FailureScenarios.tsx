@@ -72,7 +72,7 @@ export const FailureScenarios = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         {/* Header */}
         <motion.div
@@ -85,7 +85,7 @@ export const FailureScenarios = () => {
             <AlertTriangle className="w-6 h-6 text-yellow-500" />
             <H2>What Happens When Things Break</H2>
           </div>
-          <PLead className="text-gray-400">
+          <PLead className="text-tertiary">
             Failures are expected. DSO is designed to handle them gracefully.
           </PLead>
         </motion.div>
@@ -100,7 +100,7 @@ export const FailureScenarios = () => {
               className={`p-4 rounded-lg border-2 transition-all duration-300 text-left ${
                 activeScenario === idx
                   ? "border-yellow-500/50 bg-yellow-500/10"
-                  : "border-gray-800 bg-gray-900/30 hover:border-gray-700"
+                  : "border-border bg-surface/30 hover:border-border-soft"
               }`}
             >
               <h3 className="font-semibold text-foreground text-sm leading-tight">
@@ -124,7 +124,7 @@ export const FailureScenarios = () => {
               {/* Problem */}
               <div className="p-6 rounded-lg border border-red-500/20 bg-red-500/5">
                 <h3 className="font-semibold text-foreground mb-2">The Problem</h3>
-                <p className="text-gray-400">
+                <p className="text-secondary">
                   {scenarios[activeScenario].problem}
                 </p>
               </div>
@@ -139,12 +139,12 @@ export const FailureScenarios = () => {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.05 }}
-                      className="flex gap-4 p-4 rounded-lg border border-gray-800 bg-gray-900/30"
+                      className="flex gap-4 p-4 rounded-lg border border-border bg-surface/30"
                     >
                       <span className="text-accent font-bold flex-shrink-0 mt-0.5">
                         {idx + 1}.
                       </span>
-                      <p className="text-gray-300 text-sm leading-relaxed">{step}</p>
+                      <p className="text-foreground-alt text-sm leading-relaxed">{step}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -155,7 +155,7 @@ export const FailureScenarios = () => {
                 <CheckCircle2 className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-semibold text-foreground mb-1">Outcome</h3>
-                  <p className="text-gray-300">
+                  <p className="text-foreground-alt">
                     {scenarios[activeScenario].outcome}
                   </p>
                 </div>
@@ -171,7 +171,7 @@ export const FailureScenarios = () => {
           viewport={{ once: true }}
           className="max-w-3xl mx-auto p-8 rounded-lg border border-accent/20 bg-accent/5 text-center"
         >
-          <p className="text-gray-300 leading-relaxed">
+          <p className="text-foreground-alt leading-relaxed">
             <span className="font-semibold text-foreground">Core principle:</span> DSO assumes failures will happen. Every scenario is handled with automatic recovery and zero downtime guarantees. No manual intervention required.
           </p>
         </motion.div>

@@ -66,7 +66,7 @@ export const WhyDSO = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
         {/* Header */}
         <motion.div
@@ -76,7 +76,7 @@ export const WhyDSO = () => {
           className="text-center max-w-3xl mx-auto"
         >
           <H2 className="mb-4">Why DSO Over Alternatives?</H2>
-          <PLead className="text-gray-400">
+          <PLead className="text-tertiary">
             Honest tradeoffs. DSO is lightweight rotation. Choose based on your needs.
           </PLead>
         </motion.div>
@@ -86,24 +86,24 @@ export const WhyDSO = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="overflow-x-auto rounded-lg border border-gray-800"
+          className="overflow-x-auto rounded-lg border border-border"
         >
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-800 bg-gray-900/50">
+              <tr className="border-b border-border bg-surface/50">
                 <th className="text-left py-4 px-6 font-semibold text-foreground">
                   Outcome
                 </th>
                 <th className="text-left py-4 px-6 font-semibold text-accent">
                   DSO
                 </th>
-                <th className="text-left py-4 px-6 font-semibold text-gray-400">
+                <th className="text-left py-4 px-6 font-semibold text-secondary">
                   Manual Scripts
                 </th>
-                <th className="text-left py-4 px-6 font-semibold text-gray-400">
+                <th className="text-left py-4 px-6 font-semibold text-secondary">
                   Vault
                 </th>
-                <th className="text-left py-4 px-6 font-semibold text-gray-400">
+                <th className="text-left py-4 px-6 font-semibold text-secondary">
                   Infisical
                 </th>
               </tr>
@@ -112,8 +112,8 @@ export const WhyDSO = () => {
               {comparisons.map((row, idx) => (
                 <tr
                   key={idx}
-                  className={`border-b border-gray-800 ${
-                    idx % 2 === 0 ? "bg-gray-900/20" : ""
+                  className={`border-b border-border ${
+                    idx % 2 === 0 ? "bg-surface/20" : ""
                   }`}
                 >
                   <td className="py-4 px-6 font-semibold text-foreground text-sm">
@@ -122,13 +122,13 @@ export const WhyDSO = () => {
                   <td className="py-4 px-6 text-accent text-sm font-medium">
                     {row.dso}
                   </td>
-                  <td className="py-4 px-6 text-gray-400 text-sm">
+                  <td className="py-4 px-6 text-secondary text-sm">
                     {row.manual}
                   </td>
-                  <td className="py-4 px-6 text-gray-400 text-sm">
+                  <td className="py-4 px-6 text-secondary text-sm">
                     {row.vault}
                   </td>
-                  <td className="py-4 px-6 text-gray-400 text-sm">
+                  <td className="py-4 px-6 text-secondary text-sm">
                     {row.infisical}
                   </td>
                 </tr>
@@ -150,7 +150,7 @@ export const WhyDSO = () => {
               <CheckCircle2 className="w-6 h-6 text-green-400 flex-shrink-0" />
               <H4>DSO Excels At:</H4>
             </div>
-            <ul className="space-y-3 text-sm text-gray-300">
+            <ul className="space-y-3 text-sm text-foreground-alt">
               <li className="flex gap-3">
                 <span className="text-green-400 flex-shrink-0">✓</span>
                 Fast setup (minutes, not hours)
@@ -180,31 +180,31 @@ export const WhyDSO = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="p-8 rounded-lg border border-gray-700 bg-gray-900/30"
+            className="p-8 rounded-lg border border-border-soft bg-surface/30"
           >
             <div className="flex items-center gap-3 mb-6">
-              <AlertCircle className="w-6 h-6 text-gray-400 flex-shrink-0" />
+              <AlertCircle className="w-6 h-6 text-tertiary flex-shrink-0" />
               <H4>Choose Alternatives If:</H4>
             </div>
-            <ul className="space-y-3 text-sm text-gray-400">
+            <ul className="space-y-3 text-sm text-secondary">
               <li className="flex gap-3">
-                <span className="text-gray-600 flex-shrink-0">→</span>
+                <span className="text-tertiary flex-shrink-0">→</span>
                 You need enterprise audit logging (use Vault)
               </li>
               <li className="flex gap-3">
-                <span className="text-gray-600 flex-shrink-0">→</span>
+                <span className="text-tertiary flex-shrink-0">→</span>
                 You run Kubernetes (different problem domain)
               </li>
               <li className="flex gap-3">
-                <span className="text-gray-600 flex-shrink-0">→</span>
+                <span className="text-tertiary flex-shrink-0">→</span>
                 You need team collaboration UI (use Infisical)
               </li>
               <li className="flex gap-3">
-                <span className="text-gray-600 flex-shrink-0">→</span>
+                <span className="text-tertiary flex-shrink-0">→</span>
                 You manage 100+ different secrets (use Vault/Infisical)
               </li>
               <li className="flex gap-3">
-                <span className="text-gray-600 flex-shrink-0">→</span>
+                <span className="text-tertiary flex-shrink-0">→</span>
                 You want managed cloud (use Infisical)
               </li>
             </ul>
@@ -218,7 +218,7 @@ export const WhyDSO = () => {
           viewport={{ once: true }}
           className="max-w-3xl mx-auto p-8 rounded-lg border border-accent/20 bg-accent/5"
         >
-          <p className="text-gray-300 leading-relaxed">
+          <p className="text-foreground-alt leading-relaxed">
             <span className="font-semibold text-foreground">Bottom line:</span> DSO is the simplest solution for Docker Compose teams that want automated zero-downtime secret rotation without operational overhead. It's not a secret manager replacement—it's a rotation tool that integrates with your existing secret management. If you're running Kubernetes, using Vault with rotation policies, or need team-based secret management, those solutions are better fits.
           </p>
         </motion.div>

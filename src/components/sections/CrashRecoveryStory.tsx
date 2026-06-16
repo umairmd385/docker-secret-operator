@@ -36,14 +36,14 @@ const RecoveryStep = ({
     role="listitem"
     aria-label={`Step ${index + 1}: ${label}`}
   >
-    <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-900/20 transition-colors duration-300">
+    <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-surface/20 transition-colors duration-300">
       <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent/10 border border-accent/30 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-accent/50">
         <div className="text-accent text-sm" aria-hidden="true">{icon}</div>
       </div>
       <div className="flex-1">
         <h4 className="font-semibold text-foreground text-sm leading-snug">{label}</h4>
-        <p className="text-xs text-gray-400 mt-1 leading-relaxed">{description}</p>
-        <p className="text-[11px] text-gray-500 mt-2 pl-3 border-l-2 border-accent/30 leading-relaxed">
+        <p className="text-xs text-secondary mt-1 leading-relaxed">{description}</p>
+        <p className="text-[11px] text-tertiary mt-2 pl-3 border-l-2 border-accent/30 leading-relaxed">
           {detail}
         </p>
       </div>
@@ -110,7 +110,7 @@ export const CrashRecoveryStory = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
         {/* Header */}
         <motion.div
@@ -120,7 +120,7 @@ export const CrashRecoveryStory = () => {
           className="text-center max-w-3xl mx-auto"
         >
           <H2 className="mb-4">Crash Recovery</H2>
-          <PLead className="text-gray-400">
+          <PLead className="text-tertiary">
             Even failure is handled. DSO survives crashes and recovers consistently.
           </PLead>
         </motion.div>
@@ -156,7 +156,7 @@ export const CrashRecoveryStory = () => {
               <h4 className="font-semibold text-foreground text-sm mb-2">
                 Checkpoint-Based Recovery
               </h4>
-              <p className="text-xs text-gray-400 leading-relaxed">
+              <p className="text-xs text-secondary leading-relaxed">
                 Checkpoints on disk track rotation state. On restart, DSO evaluates
                 the last checkpoint and either completes the rotation, resumes it, or
                 rolls back safely. No manual intervention. No orphaned containers. State
@@ -175,12 +175,12 @@ export const CrashRecoveryStory = () => {
         >
           <motion.div
             whileHover={{ y: -4, transition: { duration: 0.2 } }}
-            className="p-6 rounded-lg border border-gray-800 bg-gray-900/30 space-y-3 transition-all duration-300 hover:bg-gray-900/50 hover:shadow-md"
+            className="p-6 rounded-lg border border-border bg-surface/30 space-y-3 transition-all duration-300 hover:bg-surface/50 hover:shadow-md"
             role="article"
             aria-label="Without checkpoints scenario"
           >
             <h4 className="font-semibold text-foreground text-sm">Without Checkpoints</h4>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-secondary leading-relaxed">
               Lost state after crash. Operator must manually detect orphaned
               containers and stale secrets. Risk of inconsistency.
             </p>
@@ -192,7 +192,7 @@ export const CrashRecoveryStory = () => {
             aria-label="With DSO checkpoints scenario"
           >
             <h4 className="font-semibold text-foreground text-sm">With DSO Checkpoints</h4>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-secondary leading-relaxed">
               State persists. DSO auto-recovers. Zero manual intervention.
               Guaranteed consistent state.
             </p>
