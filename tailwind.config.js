@@ -23,6 +23,13 @@ module.exports = {
         accent: 'var(--accent)',
         'accent-dim': 'var(--accent-dim)',
         'accent-border': 'var(--accent-border)',
+        // Design system colors
+        foreground: 'var(--text-foreground)',
+        'foreground-alt': 'var(--text-foreground-alt)',
+        primary: 'var(--text-primary)',
+        secondary: 'var(--text-secondary)',
+        tertiary: 'var(--text-tertiary)',
+        disabled: 'var(--text-disabled)',
       }
     },
   },

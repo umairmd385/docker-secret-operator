@@ -51,7 +51,7 @@ export const HowItWorks = () => {
   };
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
@@ -61,7 +61,7 @@ export const HowItWorks = () => {
           className="text-center max-w-2xl mx-auto mb-16"
         >
           <H2 className="mb-4">The elegance is in the simplicity.</H2>
-          <PLead className="text-gray-400">
+          <PLead className="text-tertiary">
             Five steps. One outcome: traffic never stops.
           </PLead>
         </motion.div>
@@ -85,7 +85,7 @@ export const HowItWorks = () => {
               >
                 {/* Stage circle */}
                 <motion.div
-                  className={`w-20 h-20 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-700 flex items-center justify-center mb-6 transition-all duration-300 hover:border-accent/50 ${colorClasses[stage.color as keyof typeof colorClasses]}`}
+                  className={`w-20 h-20 rounded-full bg-gradient-to-br from-surface to-surface2 border-2 border-border-soft flex items-center justify-center mb-6 transition-all duration-300 hover:border-accent/50 ${colorClasses[stage.color as keyof typeof colorClasses]}`}
                   whileHover={{ scale: 1.1 }}
                 >
                   <div className="text-2xl font-bold">{stage.number}</div>
@@ -100,7 +100,7 @@ export const HowItWorks = () => {
                 <h3 className="font-semibold text-foreground text-lg mb-2">
                   {stage.title}
                 </h3>
-                <p className="text-sm text-gray-400 leading-relaxed">
+                <p className="text-sm text-tertiary leading-relaxed">
                   {stage.description}
                 </p>
 
@@ -127,7 +127,7 @@ export const HowItWorks = () => {
               <h4 className="font-semibold text-foreground mb-2">
                 The atomic swap guarantee
               </h4>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-tertiary">
                 Old container stays running until new one is fully healthy. If anything fails, automatic rollback. Traffic never stops.
               </p>
             </div>

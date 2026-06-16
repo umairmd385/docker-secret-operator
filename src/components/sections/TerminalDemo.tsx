@@ -37,7 +37,7 @@ export const TerminalDemo = () => {
   };
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
@@ -47,7 +47,7 @@ export const TerminalDemo = () => {
           className="text-center max-w-2xl mx-auto mb-16"
         >
           <H2 className="mb-4">Watch it work.</H2>
-          <PLead className="text-gray-400">
+          <PLead className="text-tertiary">
             Rotation from detection to completion. Zero downtime. One command.
           </PLead>
         </motion.div>
@@ -60,15 +60,15 @@ export const TerminalDemo = () => {
           transition={{ duration: 0.4 }}
           className="relative"
         >
-          <div className="bg-gray-950 rounded-lg border border-gray-800 overflow-hidden shadow-2xl">
+          <div className="bg-surface2 rounded-lg border border-border overflow-hidden shadow-2xl">
             {/* Terminal header */}
-            <div className="bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center gap-2">
+            <div className="bg-surface border-b border-border px-4 py-3 flex items-center gap-2">
               <div className="flex gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500" />
                 <div className="w-3 h-3 rounded-full bg-yellow-500" />
                 <div className="w-3 h-3 rounded-full bg-green-500" />
               </div>
-              <span className="text-xs text-gray-500 ml-4">terminal</span>
+              <span className="text-xs text-tertiary ml-4">terminal</span>
             </div>
 
             {/* Terminal content */}
@@ -83,9 +83,9 @@ export const TerminalDemo = () => {
                     className={`${
                       step.type === "input"
                         ? "text-accent"
-                        : step.text.includes("🎉")
+                        : step.text.includes("✅")
                         ? "text-green-400"
-                        : "text-gray-400"
+                        : "text-tertiary"
                     }`}
                   >
                     {step.type === "input" ? (
@@ -102,7 +102,7 @@ export const TerminalDemo = () => {
                   <motion.div
                     animate={{ opacity: [1, 0.5, 1] }}
                     transition={{ duration: 1, repeat: Infinity }}
-                    className="text-gray-500"
+                    className="text-secondary"
                   >
                     █
                   </motion.div>
@@ -119,19 +119,19 @@ export const TerminalDemo = () => {
             transition={{ delay: 0.6 }}
             className="mt-8 flex flex-col sm:flex-row gap-4 items-center justify-center"
           >
-            <div className="flex-1 max-w-md bg-gray-900/50 border border-gray-800 rounded-lg p-4 flex items-center gap-3 group hover:border-accent/50 transition-colors duration-300">
-              <code className="text-sm text-gray-400 flex-1 truncate font-mono">
+            <div className="flex-1 max-w-md bg-surface/50 border border-border-soft rounded-lg p-4 flex items-center gap-3 group hover:border-accent/50 transition-colors duration-300">
+              <code className="text-sm text-tertiary flex-1 truncate font-mono">
                 curl -fsSL https://dso.sh/install | bash
               </code>
               <button
                 onClick={copyCommand}
-                className="p-2 rounded hover:bg-gray-800 transition-colors duration-200"
+                className="p-2 rounded hover:bg-surface transition-colors duration-200"
                 title="Copy to clipboard"
               >
                 {copied ? (
                   <Check className="w-4 h-4 text-green-400" />
                 ) : (
-                  <Copy className="w-4 h-4 text-gray-500 group-hover:text-accent" />
+                  <Copy className="w-4 h-4 text-secondary group-hover:text-accent" />
                 )}
               </button>
             </div>
@@ -154,10 +154,10 @@ export const TerminalDemo = () => {
           transition={{ delay: 0.8 }}
           className="mt-16 text-center"
         >
-          <PLead className="text-gray-300 font-medium mb-2">
+          <PLead className="text-foreground font-medium mb-2">
             2.3 seconds. Zero downtime.
           </PLead>
-          <p className="text-gray-500">
+          <p className="text-secondary">
             No manual restarts. No monitoring dashboards. Just works.
           </p>
         </motion.div>

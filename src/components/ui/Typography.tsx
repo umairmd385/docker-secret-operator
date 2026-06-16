@@ -70,7 +70,7 @@ export const P = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTM
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={cn("text-base text-gray-300 leading-relaxed", className)}
+      className={cn("text-base text-foreground-alt leading-relaxed", className)}
       {...props}
     />
   )
@@ -81,7 +81,7 @@ export const PSmall = React.forwardRef<HTMLParagraphElement, React.HTMLAttribute
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={cn("text-sm text-gray-400 leading-relaxed", className)}
+      className={cn("text-sm text-tertiary leading-relaxed", className)}
       {...props}
     />
   )
@@ -92,7 +92,7 @@ export const PLead = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={cn("text-lg text-gray-300 leading-relaxed", className)}
+      className={cn("text-lg text-foreground-alt leading-relaxed", className)}
       {...props}
     />
   )
@@ -119,7 +119,7 @@ export const Code = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLEleme
     <code
       ref={ref}
       className={cn(
-        "font-mono text-sm bg-gray-800/50 px-2 py-1 rounded text-accent border border-gray-700",
+        "font-mono text-sm bg-surface2 px-2 py-1 rounded text-accent border border-border-soft",
         className
       )}
       {...props}
@@ -132,7 +132,7 @@ export const Muted = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTML
   ({ className, ...props }, ref) => (
     <span
       ref={ref}
-      className={cn("text-gray-400", className)}
+      className={cn("text-tertiary", className)}
       {...props}
     />
   )
