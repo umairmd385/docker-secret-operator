@@ -1,18 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { BarChart3, Zap, Eye, Terminal } from "lucide-react";
+import { Zap, Terminal } from "lucide-react";
 import { H2, PLead } from "@/components/ui/Typography";
 
 export const ProductPreview = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
-
-  const tabs = [
-    { id: "dashboard", label: "Rotation History", icon: <BarChart3 className="w-4 h-4" /> },
-    { id: "cli", label: "CLI Output", icon: <Terminal className="w-4 h-4" /> },
-  ];
-
   return (
     <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -23,119 +16,46 @@ export const ProductPreview = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <H2 className="mb-4">Real product. Real visibility.</H2>
+          <H2 className="mb-4">CLI-First Control</H2>
           <PLead className="text-tertiary">
-            Everything you need to manage rotations. Dashboard and CLI.
+            Full visibility and control from the command line. Simple, powerful, transparent.
           </PLead>
         </motion.div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-border">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-3 font-medium text-sm transition-colors duration-300 flex items-center gap-2 border-b-2 ${
-                activeTab === tab.id
-                  ? "text-accent border-b-2 border-accent"
-                  : "text-secondary border-b-2 border-transparent hover:text-foreground-alt"
-              }`}
-            >
-              {tab.icon}
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Dashboard View */}
-        {activeTab === "dashboard" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-surface2 rounded-lg border border-border p-6 mb-8"
-          >
-            {/* Mock dashboard */}
-            <div className="space-y-6">
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 mb-8 pb-8 border-b border-border">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent">128</div>
-                  <div className="text-sm text-secondary">Total Rotations</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-green-400">128</div>
-                  <div className="text-sm text-secondary">Successful</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-red-400">0</div>
-                  <div className="text-sm text-secondary">Failed</div>
-                </div>
-              </div>
-
-              {/* Recent rotations table */}
-              <div>
-                <h3 className="text-sm font-semibold text-foreground-alt mb-4">Recent Rotations</h3>
-                <div className="space-y-3">
-                  {[
-                    { secret: "database_password", status: "success", time: "2 minutes ago", duration: "2.1s" },
-                    { secret: "api_key", status: "success", time: "1 hour ago", duration: "1.8s" },
-                    { secret: "slack_token", status: "success", time: "3 hours ago", duration: "2.3s" },
-                  ].map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-3 rounded border border-border hover:border-border-soft transition-colors">
-                      <div className="flex-1 min-w-0">
-                        <div className="font-mono text-sm text-foreground-alt">{item.secret}</div>
-                        <div className="text-xs text-secondary mt-1">{item.time}</div>
-                      </div>
-                      <div className="flex items-center gap-4 flex-shrink-0">
-                        <span className="text-xs font-mono text-secondary">{item.duration}</span>
-                        <span className="w-2 h-2 rounded-full bg-green-400" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+        {/* CLI Output */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="bg-surface2 rounded-lg border border-border p-6 font-mono text-sm mb-16"
+        >
+          <div className="space-y-2 text-foreground-alt">
+            <div><span className="text-accent">$</span> dso status</div>
+            <div className="text-secondary">
+              Status: running
+              <br />
+              Provider: aws-secrets-manager
+              <br />
+              Uptime: 45 days
+              <br />
+              Last rotation: 2 minutes ago
             </div>
-          </motion.div>
-        )}
-
-        {/* CLI View */}
-        {activeTab === "cli" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-surface2 rounded-lg border border-border p-6 font-mono text-sm"
-          >
-            <div className="space-y-2 text-foreground-alt">
-              <div><span className="text-accent">$</span> dso status</div>
-              <div className="text-secondary">
-                Status: running
-                <br />
-                Provider: aws-secrets-manager
-                <br />
-                Uptime: 45 days
-                <br />
-                Last rotation: 2 minutes ago
-              </div>
-              <div className="mt-4"><span className="text-accent">$</span> dso logs --tail 5</div>
-              <div className="text-secondary mt-2">
-                <div>[INFO] Rotation initiated for: database_password</div>
-                <div>[INFO] Health checks: PASSED (2.1s)</div>
-                <div>[INFO] Atomic swap: COMPLETED</div>
-                <div>[INFO] Cleanup: COMPLETED</div>
-                <div className="text-green-400">[INFO] Success: database_password rotated</div>
-              </div>
+            <div className="mt-4"><span className="text-accent">$</span> dso logs --tail 5</div>
+            <div className="text-secondary mt-2">
+              <div>[INFO] Rotation initiated for: database_password</div>
+              <div>[INFO] Health checks: PASSED</div>
+              <div>[INFO] Atomic swap: COMPLETED</div>
+              <div>[INFO] Cleanup: COMPLETED</div>
+              <div className="text-green-400">[INFO] Success: database_password rotated</div>
             </div>
-          </motion.div>
-        )}
+          </div>
+        </motion.div>
 
         {/* Key features */}
-        <div className="grid sm:grid-cols-3 gap-6 mt-16">
+        <div className="grid sm:grid-cols-2 gap-6">
           {[
-            { icon: <Eye className="w-5 h-5" />, title: "Real-time Monitoring", description: "Track all rotations with detailed history" },
-            { icon: <Zap className="w-5 h-5" />, title: "CLI Control", description: "Full control from the command line" },
-            { icon: <Terminal className="w-5 h-5" />, title: "Logs & Alerts", description: "Complete audit trail and notifications" },
+            { icon: <Zap className="w-5 h-5" />, title: "CLI Control", description: "Full control from the command line. Simple and transparent." },
+            { icon: <Terminal className="w-5 h-5" />, title: "Real Logs", description: "Complete audit trail of every rotation. No fake metrics." },
           ].map((feature, idx) => (
             <motion.div
               key={idx}
