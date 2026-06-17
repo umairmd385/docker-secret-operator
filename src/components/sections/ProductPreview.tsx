@@ -18,7 +18,7 @@ export const ProductPreview = () => {
         >
           <H2 className="mb-4">CLI-First Control</H2>
           <PLead className="text-tertiary">
-            Full visibility and control from the command line. Simple, powerful, transparent.
+            Full visibility and control from the command line. Simple, clear, and transparent.
           </PLead>
         </motion.div>
 

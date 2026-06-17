@@ -111,6 +111,9 @@ export const InstallationSimple = () => {
                 {path.title}
               </h3>
               <p className="text-xs text-tertiary">{path.subtitle}</p>
+              {path.id === 'compose' && (
+                <p className="text-xs text-yellow-400/80 mt-2 font-medium">Local dev only</p>
+              )}
               <ChevronRight className={`w-4 h-4 text-tertiary mt-3 transition-transform ${expandedPath === path.id ? "rotate-90" : ""}`} />
             </motion.button>
           ))}
@@ -121,7 +124,7 @@ export const InstallationSimple = () => {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-2xl mx-auto mb-12 p-8 rounded-lg border border-border bg-surface/50"
+            className="max-w-2xl mx-auto mb-12 p-8 rounded-lg border border-border bg-surface/50 space-y-6"
           >
             {paths.find((p) => p.id === expandedPath) && (
               <>
@@ -170,6 +173,14 @@ export const InstallationSimple = () => {
                       ))}
                   </ol>
                 </div>
+
+                {/* Security note for compose path */}
+                {expandedPath === 'compose' && (
+                  <div className="p-4 rounded-lg border border-yellow-500/20 bg-yellow-500/5">
+                    <p className="text-sm text-yellow-200 mb-2 font-medium">⚠️ Local development only</p>
+                    <p className="text-xs text-yellow-100/80">For production deployments, use the Deploy page which provides secure installation options with checksum verification.</p>
+                  </div>
+                )}
               </>
             )}
           </motion.div>

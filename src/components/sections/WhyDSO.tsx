@@ -29,7 +29,7 @@ export const WhyDSO = () => {
     },
     {
       category: "Infrastructure Overhead",
-      dso: "<50MB RAM, <5% CPU",
+      dso: "Lightweight Docker agent",
       manual: "Script runner or cron job",
       vault: "Separate Vault server(s) required",
       infisical: "Cloud platform dependency",
@@ -43,7 +43,7 @@ export const WhyDSO = () => {
     },
     {
       category: "Learning Curve",
-      dso: "1 hour - just Docker knowledge",
+      dso: "Simple for Docker users",
       manual: "Varies - custom implementation",
       vault: "Days - complex ecosystem",
       infisical: "Hours - web UI based",

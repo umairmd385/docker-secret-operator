@@ -39,7 +39,7 @@ DSO acts as a lightweight bridge between Vault and containers, using Vault's dyn
 
   architecture: {
     overview: `
-DSO + HashiCorp Vault creates a powerful, enterprise-grade secret system:
+DSO + HashiCorp Vault enables automated secret rotation with Vault's robust backend:
 
 1. Authentication: DSO authenticates to Vault using AppRole, JWT, or TLS certificates
 2. Secret Retrieval: Fetches static OR dynamic secrets from Vault at runtime
