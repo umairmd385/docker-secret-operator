@@ -4,14 +4,13 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { ProblemSection } from "@/components/sections/ProblemSection";
-import { TargetAudience } from "@/components/sections/TargetAudience";
 import { TerminalDemo } from "@/components/sections/TerminalDemo";
-import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
-import { FailureScenarios } from "@/components/sections/FailureScenarios";
 import { ProductPreview } from "@/components/sections/ProductPreview";
+import { TargetAudience } from "@/components/sections/TargetAudience";
+import { FailureHandling } from "@/components/sections/FailureHandling";
 import { WhyDSO } from "@/components/sections/WhyDSO";
-import { InstallationSimple } from "@/components/sections/InstallationSimple";
 import { FAQSection } from "@/components/sections/FAQSection";
+import { InstallationSimple } from "@/components/sections/InstallationSimple";
 import { TrustAndCTA } from "@/components/sections/TrustAndCTA";
 
 export const metadata = generatePageMetadata(PAGE_METADATA["/"], "/");
@@ -27,40 +26,34 @@ export default function Home() {
       <div className="relative z-10 flex flex-col w-full space-y-0">
         <Navbar />
 
-        {/* 1. Hero - Curiosity spark */}
+        {/* 1. Hero - Value proposition */}
         <Hero />
 
-        {/* 2. The Problem - Recognition (users see their pain) */}
+        {/* 2. Problem - Pain and urgency (restored) */}
         <ProblemSection />
 
-        {/* 2.5. Target Audience - Clarity on fit */}
-        <TargetAudience />
-
-        {/* 3. Interactive Terminal Demo - Excitement peak */}
+        {/* 3. Terminal Demo - Immediate excitement & proof of speed */}
         <TerminalDemo />
 
-        {/* 4. Crash Recovery - Trust (why it's safe) */}
-        <CrashRecoveryStory />
-
-        {/* 5. Failure Scenarios - Proof of robustness */}
-        <FailureScenarios />
-
-        {/* 6. Product Preview - Confidence (they can see it works) */}
+        {/* 4. Product Preview - Build confidence in the product */}
         <ProductPreview />
+
+        {/* 5. Target Audience - Fit assessment (after product proof) */}
+        <TargetAudience />
+
+        {/* 6. Failure Handling - Discuss failures after building confidence */}
+        <FailureHandling />
 
         {/* 7. Comparison Table - Why DSO over alternatives */}
         <WhyDSO />
 
-        {/* 8. Target Audience - moved after comparison */}
-        <TargetAudience />
-
-        {/* 9. FAQ - 6 questions only */}
+        {/* 8. FAQ - Remaining objections */}
         <FAQSection />
 
-        {/* 10. Installation */}
+        {/* 9. Installation - Getting started */}
         <InstallationSimple />
 
-        {/* 11. Final CTA */}
+        {/* 10. Final CTA + Trust signals */}
         <TrustAndCTA />
 
         <Footer />
