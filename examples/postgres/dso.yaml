@@ -1,0 +1,77 @@
+# DSO Configuration for PostgreSQL Credential Rotation Example
+# This configuration demonstrates zero-downtime password rotation for PostgreSQL
+
+version: "1"
+
+# Provider configuration
+# For local development, use "local" mode
+# For production, change to "aws", "azure", or "vault"
+provider:
+  type: "local"
+  # Uncomment for AWS Secrets Manager:
+  # type: "aws"
+  # region: "us-east-1"
+  # Uncomment for Azure Key Vault:
+  # type: "azure"
+  # vault_url: "https://<vault-name>.vault.azure.net"
+  # Uncomment for HashiCorp Vault:
+  # type: "vault"
+  # address: "http://vault:8200"
+  # namespace: "secret"
+
+# Secret definitions
+# These tell DSO where to find secrets and how to rotate them
+secrets:
+  - name: "postgres/password"
+    description: "PostgreSQL database password"
+    # For local mode, the secret is stored in ~/.dso/vault.enc
+    # For AWS, this references the Secrets Manager secret ARN or name
+    # For Azure, this references the Key Vault secret name
+    # For Vault, this references the KV v2 path
+
+# Container rotation strategy
+# This tells DSO which containers to update when secrets change
+rotation:
+  strategy: "rolling"  # blue-green swap (zero-downtime)
+  containers:
+    - name: "postgres_db"
+      restart_policy: "swap"  # atomic container swap
+      health_check:
+        enabled: true
+        timeout: 30s
+        retries: 3
+      secrets:
+        - path: "/run/secrets/db_password"
+          name: "postgres/password"
+          mode: "0600"
+
+    - name: "app_server"
+      restart_policy: "swap"  # atomic container swap
+      health_check:
+        enabled: true
+        timeout: 30s
+        retries: 3
+        endpoint: "http://localhost:3000/health"
+      secrets:
+        - path: "/run/secrets/db_password"
+          name: "postgres/password"
+          mode: "0600"
+
+# Polling configuration
+# How often DSO checks for secret changes
+polling:
+  interval: "1m"  # Check for changes every minute
+  timeout: "30s"  # Provider timeout
+
+# Logging configuration
+logging:
+  level: "info"
+  # Set to "debug" for troubleshooting
+  # Secrets are never logged (automatic redaction)
+  redact_secrets: true
+
+# Monitoring (optional)
+# Uncomment for Prometheus metrics
+# monitoring:
+#   metrics_enabled: true
+#   metrics_port: 9090

@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_DB: appdb
+      POSTGRES_INITDB_ARGS: "-c ssl=on -c ssl_cert_file=/run/secrets/db_cert -c ssl_key_file=/run/secrets/db_key"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - dso-network
+    restart: unless-stopped
+
+  app:
+    image: node:18-alpine
+    container_name: app_server
+    working_dir: /app
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: appuser
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      DB_NAME: appdb
+      APP_PORT: 3000
+    volumes:
+      - ./app.js:/app/app.js
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - dso-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  dso-network:
+    driver: bridge
