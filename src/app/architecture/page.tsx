@@ -43,6 +43,61 @@ export default function ArchitecturePage() {
         {/* 5. Operational Philosophy - Engineering principles */}
         <OperationalPhilosophy />
 
+        {/* 6. What Next - Navigation to related resources */}
+        <section className="relative py-20 sm:py-32 bg-background">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
+            <div className="text-center max-w-3xl mx-auto">
+              <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+                What Next?
+              </h2>
+              <p className="text-lg text-secondary">
+                Understand how to operate DSO, recover from failures, and use it effectively.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+              {[
+                {
+                  title: "Operations Guide",
+                  description: "How to run DSO in production, monitor rotations, and handle issues.",
+                  href: "/docs/operational-guide",
+                },
+                {
+                  title: "Recovery Procedures",
+                  description: "Step-by-step procedures for handling failures and recovering state.",
+                  href: "/docs/recovery-procedures",
+                },
+                {
+                  title: "CLI Reference",
+                  description: "Command-line interface reference with all available commands and options.",
+                  href: "/docs/cli",
+                },
+                {
+                  title: "Deploy",
+                  description: "Installation instructions for Docker Compose, AWS, Azure, Vault, and local.",
+                  href: "/deploy",
+                },
+              ].map((resource, idx) => (
+                <a
+                  key={idx}
+                  href={resource.href}
+                  className="group p-6 rounded-lg border border-border bg-surface/30 hover:border-accent/30 hover:bg-surface/50 transition-all duration-300 flex flex-col gap-3"
+                >
+                  <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors">
+                    {resource.title}
+                  </h3>
+                  <p className="text-sm text-secondary flex-1">
+                    {resource.description}
+                  </p>
+                  <span className="text-accent font-medium text-sm">
+                    Explore →
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <Footer />
       </div>
     </main>
