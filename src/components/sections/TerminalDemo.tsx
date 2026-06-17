@@ -27,7 +27,7 @@ export const TerminalDemo = () => {
     { type: "output", text: "✓ Verifying database connections are working" },
     { type: "output", text: "✓ Atomic swap complete — traffic rerouted" },
     { type: "output", text: "✓ Old container stopped and removed" },
-    { type: "output", text: "✓ Checkpoint cleaned up\n\n✅ Rotation completed in 2.3 seconds\n✅ Zero downtime — no requests failed\n✅ No manual intervention required" },
+    { type: "output", text: "✓ Checkpoint cleaned up\n\n✅ Rotation completed successfully\n✅ Zero downtime — no requests failed\n✅ No manual intervention required" },
   ];
 
   const copyCommand = () => {
@@ -155,7 +155,7 @@ export const TerminalDemo = () => {
           className="mt-16 text-center"
         >
           <PLead className="text-foreground font-medium mb-2">
-            2.3 seconds. Zero downtime.
+            Seconds, not hours. Zero downtime.
           </PLead>
           <p className="text-secondary">
             No manual restarts. No monitoring dashboards. Just works.
