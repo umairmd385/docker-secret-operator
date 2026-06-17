@@ -17,7 +17,7 @@ export const DocsQuickStart = () => {
   const steps = [
     {
       title: "Install DSO",
-      command: "curl -fsSL https://dso.sh/install | bash",
+      command: "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | bash",
       description: "Get the DSO binary on your system",
     },
     {

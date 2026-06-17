@@ -22,7 +22,7 @@ export const InstallationSimple = () => {
       icon: <Code className="w-5 h-5" />,
       title: "Docker Compose",
       subtitle: "Local development",
-      command: "curl -fsSL https://dso.sh/install | bash",
+      command: "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | bash",
       steps: [
         "Install DSO CLI",
         "Initialize local vault",

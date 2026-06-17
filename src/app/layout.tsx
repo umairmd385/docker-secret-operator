@@ -261,7 +261,7 @@ export default function RootLayout({
           name: "How do I install Docker Secret Operator?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Install DSO with a single command: curl -fsSL https://dso.skycloudops.in/install.sh | sudo bash. Then run 'docker dso init' to initialize. Full documentation is available at https://dso.skycloudops.in/docs/guide/installation.",
+            text: "Install DSO with a single command: curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | bash. Then run 'docker dso init' to initialize. Full documentation is available at /docs/guide/getting-started.",
           },
         },
         {

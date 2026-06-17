@@ -31,7 +31,7 @@ export const TerminalDemo = () => {
   ];
 
   const copyCommand = () => {
-    navigator.clipboard.writeText("curl -fsSL https://dso.sh/install | bash");
+    navigator.clipboard.writeText("curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | bash");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -121,7 +121,7 @@ export const TerminalDemo = () => {
           >
             <div className="flex-1 max-w-md bg-surface/50 border border-border-soft rounded-lg p-4 flex items-center gap-3 group hover:border-accent/50 transition-colors duration-300">
               <code className="text-sm text-tertiary flex-1 truncate font-mono">
-                curl -fsSL https://dso.sh/install | bash
+                curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | bash
               </code>
               <button
                 onClick={copyCommand}
