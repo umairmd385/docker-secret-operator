@@ -38,7 +38,7 @@ export const EcosystemConnections = () => {
   ];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -49,7 +49,7 @@ export const EcosystemConnections = () => {
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
             Ecosystem & Integration
           </h2>
-          <p className="text-lg text-gray-400">
+          <p className="text-lg text-secondary">
             DSO integrates seamlessly with the tools you already use.
           </p>
         </motion.div>
@@ -78,14 +78,14 @@ export const EcosystemConnections = () => {
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block p-4 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/30 hover:bg-gray-900/50 transition-all duration-300 group cursor-pointer"
+                    className="block p-4 rounded-lg border border-border bg-gray-900/30 hover:border-accent/30 hover:bg-gray-900/50 transition-all duration-300 group cursor-pointer"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold text-foreground text-sm group-hover:text-accent transition-colors">
                           {item.name}
                         </h4>
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="text-xs text-secondary mt-1">
                           {item.description}
                         </p>
                       </div>

@@ -72,7 +72,7 @@ export const ReleaseTimeline = () => {
                     <Tag className="w-5 h-5 text-accent" />
                     <span className="font-mono font-bold text-accent text-lg">{release.version}</span>
                   </div>
-                  <p className="text-sm text-gray-400 flex items-center gap-2 mb-4">
+                  <p className="text-sm text-secondary flex items-center gap-2 mb-4">
                     <Calendar className="w-4 h-4" />
                     {new Date(release.date).toLocaleDateString('en-US', {
                       year: 'numeric',
@@ -104,7 +104,7 @@ export const ReleaseTimeline = () => {
             <Zap className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
             <div>
               <h3 className="font-semibold text-foreground mb-2">Active Development</h3>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-secondary">
                 Frequent releases show rapid iteration and responsiveness to issues. Latest releases tracked on <a href="https://github.com/docker-secret-operator/dso/releases" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">GitHub releases page</a>.
               </p>
             </div>

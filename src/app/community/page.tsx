@@ -29,13 +29,13 @@ export default function CommunityPage() {
         <Navbar />
 
         {/* Hero */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
             <h1 className="text-5xl sm:text-6xl font-bold text-foreground mb-6">
               Community
             </h1>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              DSO is open source. Built in the open. Decisions made transparently. Contributions welcome.
+            <p className="text-xl text-secondary max-w-2xl mx-auto">
+              Small team. Public development. Transparent decisions. We ship frequently and listen to feedback.
             </p>
           </div>
         </section>
@@ -44,24 +44,24 @@ export default function CommunityPage() {
         <ProjectActivity />
 
         {/* GitHub & Project */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
             <div className="text-center max-w-3xl mx-auto mb-12">
               <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
                 Open Source
               </h2>
-              <p className="text-lg text-gray-400">
-                Apache 2.0 licensed. CNCF Sandbox project. Fully auditable code.
+              <p className="text-lg text-secondary">
+                Apache 2.0 licensed. CNCF Sandbox project. Fully auditable source code.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
                   icon: <Code className="w-6 h-6" />,
-                  label: "GitHub Repository",
-                  value: "docker-secret-operator/dso",
-                  description: "Source code, issues, and pull requests",
+                  label: "GitHub",
+                  value: "Source Code",
+                  description: "Public repository with full history",
                   link: "https://github.com/docker-secret-operator/dso",
                 },
                 {
@@ -73,30 +73,16 @@ export default function CommunityPage() {
                 },
                 {
                   icon: <Heart className="w-6 h-6" />,
-                  label: "CNCF Status",
-                  value: "Sandbox Project",
+                  label: "CNCF",
+                  value: "Sandbox",
                   description: "Graduated to CNCF Sandbox",
                   link: "https://www.cncf.io/projects/",
                 },
                 {
-                  icon: <Users className="w-6 h-6" />,
-                  label: "Contributors",
-                  value: "20+",
-                  description: "From the community and core team",
-                  link: "https://github.com/docker-secret-operator/dso/graphs/contributors",
-                },
-                {
-                  icon: <GitBranch className="w-6 h-6" />,
-                  label: "Releases",
-                  value: "15+ Stable",
-                  description: "Continuous updates and improvements",
-                  link: "https://github.com/docker-secret-operator/dso/releases",
-                },
-                {
                   icon: <MessageSquare className="w-6 h-6" />,
                   label: "Discussions",
-                  value: "GitHub Discussions",
-                  description: "Questions, ideas, and announcements",
+                  value: "GitHub",
+                  description: "Ideas, questions, and feedback",
                   link: "https://github.com/docker-secret-operator/dso/discussions",
                 },
               ].map((item, idx) => (
@@ -105,7 +91,7 @@ export default function CommunityPage() {
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-6 rounded-lg border border-gray-800 bg-gray-900/30 hover:border-accent/50 hover:bg-gray-900/50 transition-all duration-300 group cursor-pointer"
+                  className="p-6 rounded-lg border border-border bg-surface/30 hover:border-accent/30 hover:bg-surface/50 transition-all duration-300 group cursor-pointer"
                 >
                   <div className="text-accent mb-3 group-hover:scale-110 transition-transform duration-300">
                     {item.icon}
@@ -116,7 +102,7 @@ export default function CommunityPage() {
                   <p className="text-lg font-bold text-accent mb-2">
                     {item.value}
                   </p>
-                  <p className="text-xs text-gray-400">{item.description}</p>
+                  <p className="text-xs text-secondary">{item.description}</p>
                 </a>
               ))}
             </div>
@@ -127,36 +113,34 @@ export default function CommunityPage() {
         <ReleaseTimeline />
 
         {/* Roadmap */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
             <div className="text-center max-w-3xl mx-auto">
               <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                Roadmap
+                What's Next
               </h2>
-              <p className="text-lg text-gray-400">
-                Planned features and upcoming work. Check GitHub Discussions for detailed proposals.
+              <p className="text-lg text-secondary">
+                Focused work on Docker secret rotation. Check GitHub Discussions for proposals and feedback.
               </p>
             </div>
 
             <div className="space-y-4">
               {[
                 {
-                  status: "In Progress",
+                  status: "Current Focus",
                   items: [
-                    "Kubernetes operator support",
-                    "Advanced health check configuration",
-                    "Multi-secret atomic transactions",
+                    "Provider reliability and stability improvements",
+                    "Performance optimizations for rapid rotation",
+                    "Enhanced observability and monitoring",
                   ],
-                  color: "accent",
                 },
                 {
-                  status: "Planned",
+                  status: "Under Consideration",
                   items: [
-                    "Web-based management dashboard",
-                    "Audit log streaming to external systems",
-                    "Secret versioning and rollback UI",
+                    "Additional secret providers (feedback welcomed)",
+                    "Expanded health check options",
+                    "Improved logging and debugging",
                   ],
-                  color: "gray",
                 },
               ].map((section, idx) => (
                 <div key={idx} className="border-l-4 border-accent/30 pl-6 py-4">
@@ -167,7 +151,7 @@ export default function CommunityPage() {
                     {section.items.map((item, itemIdx) => (
                       <li
                         key={itemIdx}
-                        className="text-gray-400 flex items-start gap-3"
+                        className="text-secondary flex items-start gap-3"
                       >
                         <span className="text-accent mt-1">•</span>
                         {item}
@@ -179,8 +163,8 @@ export default function CommunityPage() {
             </div>
 
             <div className="p-6 rounded-lg border border-accent/20 bg-accent/5 text-center">
-              <p className="text-gray-400 mb-4">
-                Have a feature request or idea? Discuss it with the community.
+              <p className="text-secondary mb-4">
+                Have a feature request? Open an issue or start a discussion on GitHub.
               </p>
               <a
                 href="https://github.com/docker-secret-operator/dso/discussions"
@@ -188,7 +172,7 @@ export default function CommunityPage() {
                 rel="noopener noreferrer"
                 className="inline-block px-6 py-2 bg-accent text-background font-semibold rounded-lg hover:bg-accent/90 transition-colors"
               >
-                Start a Discussion →
+                Discussions →
               </a>
             </div>
           </div>
@@ -200,61 +184,64 @@ export default function CommunityPage() {
         {/* Ecosystem Connections */}
         <EcosystemConnections />
 
-        {/* Contributing */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+        {/* How to Get Involved */}
+        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
             <div className="text-center max-w-3xl mx-auto">
               <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                Contributing
+                Get Involved
               </h2>
-              <p className="text-lg text-gray-400">
-                All contributions welcome. Code, documentation, bug reports, and ideas.
+              <p className="text-lg text-secondary">
+                Code, documentation, bug reports, discussions. All contributions welcome.
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
-              <div className="p-8 rounded-lg border border-gray-800 bg-gray-900/30">
+              <div className="p-8 rounded-lg border border-border bg-surface/30">
                 <h3 className="text-xl font-bold text-foreground mb-4">
-                  Get Started
+                  Contribute Code
                 </h3>
-                <ul className="space-y-3 text-gray-400">
+                <ol className="space-y-3 text-secondary">
                   <li className="flex gap-3">
-                    <span className="text-accent flex-shrink-0">1.</span>
-                    <span>Fork the repository on GitHub</span>
+                    <span className="text-accent flex-shrink-0 font-bold">1.</span>
+                    <span>Fork on GitHub</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="text-accent flex-shrink-0">2.</span>
-                    <span>Clone your fork and create a feature branch</span>
+                    <span className="text-accent flex-shrink-0 font-bold">2.</span>
+                    <span>Create a feature branch</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="text-accent flex-shrink-0">3.</span>
-                    <span>Make your changes and write tests</span>
+                    <span className="text-accent flex-shrink-0 font-bold">3.</span>
+                    <span>Make changes + write tests</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="text-accent flex-shrink-0">4.</span>
-                    <span>Submit a pull request with clear description</span>
+                    <span className="text-accent flex-shrink-0 font-bold">4.</span>
+                    <span>Submit pull request</span>
                   </li>
-                </ul>
+                </ol>
+                <div className="pt-6 border-t border-border/50 mt-6">
+                  <p className="text-sm text-tertiary">PRs reviewed promptly. Questions answered.</p>
+                </div>
               </div>
 
-              <div className="p-8 rounded-lg border border-gray-800 bg-gray-900/30">
+              <div className="p-8 rounded-lg border border-border bg-surface/30">
                 <h3 className="text-xl font-bold text-foreground mb-4">
-                  Ways to Contribute
+                  Other Ways to Help
                 </h3>
-                <ul className="space-y-3 text-gray-400">
-                  <li>• Code improvements and bug fixes</li>
-                  <li>• Documentation and examples</li>
-                  <li>• Testing on different platforms</li>
-                  <li>• Feature proposals and discussions</li>
-                  <li>• Performance improvements</li>
+                <ul className="space-y-3 text-secondary">
+                  <li>• Report bugs on GitHub Issues</li>
+                  <li>• Improve documentation and examples</li>
+                  <li>• Test on different platforms</li>
+                  <li>• Propose features in Discussions</li>
                   <li>• Security audits and feedback</li>
+                  <li>• Performance improvements</li>
                 </ul>
               </div>
             </div>
 
             <div className="p-6 rounded-lg border border-accent/20 bg-accent/5 text-center">
-              <p className="text-gray-400 mb-4">
-                Check CONTRIBUTING.md in the repository for detailed guidelines.
+              <p className="text-secondary mb-4">
+                See CONTRIBUTING.md for detailed guidelines and development setup.
               </p>
               <a
                 href="https://github.com/docker-secret-operator/dso/blob/main/CONTRIBUTING.md"
@@ -262,52 +249,100 @@ export default function CommunityPage() {
                 rel="noopener noreferrer"
                 className="inline-block px-6 py-2 bg-accent text-background font-semibold rounded-lg hover:bg-accent/90 transition-colors"
               >
-                View Contributing Guide →
+                Read Contributing Guide →
               </a>
             </div>
           </div>
         </section>
 
-        {/* Open Source Values */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
+        {/* What We Value */}
+        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
             <div className="text-center max-w-3xl mx-auto">
               <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                Our Values
+                How We Work
               </h2>
+              <p className="text-lg text-secondary">
+                Principles guiding our development and maintenance.
+              </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
               {[
                 {
-                  title: "Transparency",
+                  title: "Focused Scope",
                   description:
-                    "Decisions are made in the open. Roadmap is public. Discussions welcome.",
+                    "DSO solves zero-persistence secret injection for Docker. We stay focused on that mission, not trying to be everything.",
                 },
                 {
-                  title: "Simplicity",
+                  title: "Code Quality",
                   description:
-                    "Simple to understand, simple to operate. Not feature-heavy by default.",
+                    "Small team means every line matters. We prioritize readability, testability, and security.",
                 },
                 {
-                  title: "Reliability",
+                  title: "Fast Iteration",
                   description:
-                    "Production-ready from day one. Tested thoroughly. Documented clearly.",
+                    "29 releases in 2 months shows our responsiveness. We ship frequently and improve based on feedback.",
                 },
                 {
-                  title: "Security First",
+                  title: "Transparent Development",
                   description:
-                    "Security is not an afterthought. Code review focused on correctness.",
+                    "Roadmap is public. Decisions made in Issues and Discussions. You can see exactly what we're building.",
                 },
               ].map((value, idx) => (
-                <div key={idx} className="p-6 rounded-lg border border-gray-800">
+                <div key={idx} className="p-6 rounded-lg border border-border bg-surface/30">
                   <h3 className="text-lg font-bold text-foreground mb-2">
                     {value.title}
                   </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <p className="text-secondary text-sm leading-relaxed">
                     {value.description}
                   </p>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-12">
+            <div className="space-y-4">
+              <h2 className="text-4xl sm:text-5xl font-bold text-foreground">
+                What's Next?
+              </h2>
+              <p className="text-lg text-secondary max-w-2xl mx-auto">
+                Explore the codebase, open an issue, start a discussion, or read the roadmap.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-3xl mx-auto">
+              {[
+                {
+                  label: "GitHub",
+                  href: "https://github.com/docker-secret-operator/dso",
+                },
+                {
+                  label: "Issues",
+                  href: "https://github.com/docker-secret-operator/dso/issues",
+                },
+                {
+                  label: "Discussions",
+                  href: "https://github.com/docker-secret-operator/dso/discussions",
+                },
+                {
+                  label: "Roadmap",
+                  href: "https://github.com/docker-secret-operator/dso/projects",
+                },
+              ].map((link, idx) => (
+                <a
+                  key={idx}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 rounded-lg border border-accent/30 bg-accent/5 hover:bg-accent/10 transition-all duration-300 font-semibold text-accent hover:text-accent/80"
+                >
+                  {link.label} →
+                </a>
               ))}
             </div>
           </div>
