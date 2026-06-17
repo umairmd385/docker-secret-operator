@@ -45,7 +45,7 @@ export const ProblemSection = () => {
         >
           <H2 className="mb-6">Secret rotation shouldn't bring production down.</H2>
           <PLead className="text-gray-400">
-            Yet today, most teams face a choice: rotate secrets and accept downtime, or skip rotation and accept risk.
+            Yet today, teams choose: rotate and accept downtime, or skip rotation and accept risk.
           </PLead>
         </motion.div>
 
@@ -99,10 +99,10 @@ export const ProblemSection = () => {
             className="mt-12 p-8 rounded-lg border border-red-500/20 bg-red-500/5"
           >
             <P className="text-gray-300">
-              <span className="font-semibold text-foreground">The result:</span> Downtime. Failed requests. Customer impact. Engineer burnout.
+              <span className="font-semibold text-foreground">The result:</span> Downtime, failed requests, customer impact.
             </P>
             <PSmall className="text-gray-400 mt-3">
-              Most teams solve this by skipping rotation altogether. That's worse—secrets stay the same for months.
+              Teams often skip rotation to avoid this. That's worse—secrets stay unchanged for months.
             </PSmall>
           </motion.div>
         </div>

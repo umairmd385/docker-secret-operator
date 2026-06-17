@@ -6,10 +6,8 @@ import { Hero } from "@/components/sections/Hero";
 import { ProblemSection } from "@/components/sections/ProblemSection";
 import { TerminalDemo } from "@/components/sections/TerminalDemo";
 import { ProductPreview } from "@/components/sections/ProductPreview";
-import { TargetAudience } from "@/components/sections/TargetAudience";
-import { FailureHandling } from "@/components/sections/FailureHandling";
-import { WhyDSO } from "@/components/sections/WhyDSO";
-import { FAQSection } from "@/components/sections/FAQSection";
+import { WhyDSOExists } from "@/components/sections/WhyDSOExists";
+import { BuiltForFailures } from "@/components/sections/BuiltForFailures";
 import { InstallationSimple } from "@/components/sections/InstallationSimple";
 import { TrustAndCTA } from "@/components/sections/TrustAndCTA";
 
@@ -29,31 +27,25 @@ export default function Home() {
         {/* 1. Hero - Value proposition */}
         <Hero />
 
-        {/* 2. Problem - Pain and urgency (restored) */}
+        {/* 2. Problem - Context (tightened) */}
         <ProblemSection />
 
-        {/* 3. Terminal Demo - Immediate excitement & proof of speed */}
+        {/* 3. Terminal Demo - Proof of concept */}
         <TerminalDemo />
 
-        {/* 4. Product Preview - Build confidence in the product */}
+        {/* 4. Product Preview - How it works */}
         <ProductPreview />
 
-        {/* 5. Target Audience - Fit assessment (after product proof) */}
-        <TargetAudience />
+        {/* 5. Why DSO Exists - Philosophy (not comparison) */}
+        <WhyDSOExists />
 
-        {/* 6. Failure Handling - Discuss failures after building confidence */}
-        <FailureHandling />
+        {/* 6. Built for Failures - Safety promise + link to Architecture */}
+        <BuiltForFailures />
 
-        {/* 7. Comparison Table - Why DSO over alternatives */}
-        <WhyDSO />
-
-        {/* 8. FAQ - Remaining objections */}
-        <FAQSection />
-
-        {/* 9. Installation - Getting started */}
+        {/* 7. Installation - Options (simplified) */}
         <InstallationSimple />
 
-        {/* 10. Final CTA + Trust signals */}
+        {/* 8. Trust & CTA - Confidence + action */}
         <TrustAndCTA />
 
         <Footer />
