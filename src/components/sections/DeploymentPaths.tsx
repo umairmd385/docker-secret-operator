@@ -25,18 +25,18 @@ const PathCard = ({ path, isSelected, onClick }: { path: DeploymentPath; isSelec
     className={`text-left p-5 sm:p-6 rounded-lg border-2 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent ${
       isSelected
         ? "border-accent bg-accent/10 shadow-lg"
-        : "border-gray-800 bg-gray-900/30 hover:border-accent/50 hover:bg-gray-900/50 hover:shadow-md"
+        : "border-border bg-surface/30 hover:border-accent/50 hover:bg-surface/50 hover:shadow-md"
     }`}
     aria-pressed={isSelected}
     aria-label={`${path.title} deployment option`}
   >
     <div className="flex items-start gap-3 mb-3">
-      <div className={`mt-1 transition-all duration-300 ${isSelected ? "text-accent scale-110" : "text-gray-400 group-hover:text-accent"}`} aria-hidden="true">
+      <div className={`mt-1 transition-all duration-300 ${isSelected ? "text-accent scale-110" : "text-secondary group-hover:text-accent"}`} aria-hidden="true">
         {path.icon}
       </div>
       <h3 className="font-semibold text-foreground text-sm sm:text-base leading-snug">{path.title}</h3>
     </div>
-    <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">{path.description}</p>
+    <p className="text-xs sm:text-sm text-secondary leading-relaxed">{path.description}</p>
     {path.providers && path.providers.length > 0 && (
       <div className="flex flex-wrap gap-2 mt-4">
         {path.providers.map((provider) => (
@@ -61,10 +61,10 @@ const StepBlock = ({ step, index }: { step: DeploymentPath["steps"][0]; index: n
         <span className="text-accent text-xs font-bold">{step.step}</span>
       </div>
       <div className="flex-1 min-w-0">
-        <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-3 font-mono text-xs sm:text-sm text-gray-300 break-all">
+        <div className="bg-surface/50 border border-border rounded-lg p-3 font-mono text-xs sm:text-sm text-gray-300 break-all">
           {step.command}
         </div>
-        <p className="text-xs text-gray-400 mt-2">{step.explanation}</p>
+        <p className="text-xs text-secondary mt-2">{step.explanation}</p>
       </div>
     </div>
   </motion.div>
@@ -83,22 +83,17 @@ export const DeploymentPaths = () => {
       steps: [
         {
           step: 1,
-          command: "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | bash",
-          explanation: "Install DSO CLI",
-        },
-        {
-          step: 2,
-          command: "docker dso init",
+          command: "dso init",
           explanation: "Initialize local encrypted vault (~/.dso/vault.enc). Enter passphrase when prompted.",
         },
         {
-          step: 3,
-          command: 'docker dso secret set DB_PASSWORD "prod-password" && docker dso secret set API_KEY "sk-123456"',
+          step: 2,
+          command: 'dso secret set DB_PASSWORD "prod-password" && dso secret set API_KEY "sk-123456"',
           explanation: "Add your first secrets to the local vault",
         },
         {
-          step: 4,
-          command: "docker dso up -f docker-compose.yml",
+          step: 3,
+          command: "dso up -f docker-compose.yml",
           explanation: "Start containers. DSO injects secrets at runtime without restarting.",
         },
       ],
@@ -113,21 +108,16 @@ export const DeploymentPaths = () => {
       steps: [
         {
           step: 1,
-          command: "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | sudo bash",
-          explanation: "Install DSO system-wide (requires sudo)",
-        },
-        {
-          step: 2,
-          command: "sudo docker dso system bootstrap --provider aws --region us-east-1",
+          command: "sudo dso system bootstrap --provider aws --region us-east-1",
           explanation: "Bootstrap agent with AWS provider. Uses IAM Instance Profile (no credentials needed).",
         },
         {
-          step: 3,
+          step: 2,
           command: "sudo systemctl enable dso-agent && sudo systemctl start dso-agent",
           explanation: "Start agent as systemd service. Will run on every boot.",
         },
         {
-          step: 4,
+          step: 3,
           command: "curl http://localhost:8081/health",
           explanation: 'Verify agent is running and connected to AWS. Expect {"status":"ok","provider":"aws"}',
         },
@@ -143,21 +133,16 @@ export const DeploymentPaths = () => {
       steps: [
         {
           step: 1,
-          command: "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | sudo bash",
-          explanation: "Install DSO system-wide (requires sudo)",
-        },
-        {
-          step: 2,
-          command: "sudo docker dso system bootstrap --provider azure --vault-url https://my-vault.vault.azure.net",
+          command: "sudo dso system bootstrap --provider azure --vault-url https://my-vault.vault.azure.net",
           explanation: "Bootstrap agent with Azure provider. Uses Managed Identity (no credentials needed).",
         },
         {
-          step: 3,
+          step: 2,
           command: "sudo systemctl enable dso-agent && sudo systemctl start dso-agent",
           explanation: "Start agent as systemd service. Will run on every boot.",
         },
         {
-          step: 4,
+          step: 3,
           command: "curl http://localhost:8081/health",
           explanation: 'Verify agent is running and connected to Azure. Expect {"status":"ok","provider":"azure"}',
         },
@@ -173,21 +158,16 @@ export const DeploymentPaths = () => {
       steps: [
         {
           step: 1,
-          command: "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | sudo bash",
-          explanation: "Install DSO system-wide (requires sudo)",
-        },
-        {
-          step: 2,
-          command: "sudo docker dso system bootstrap --provider vault --address http://vault:8200",
+          command: "sudo dso system bootstrap --provider vault --address http://vault:8200",
           explanation: "Bootstrap agent with Vault provider. Supports AppRole or token auth.",
         },
         {
-          step: 3,
+          step: 2,
           command: "sudo systemctl enable dso-agent && sudo systemctl start dso-agent",
           explanation: "Start agent as systemd service. Will run on every boot.",
         },
         {
-          step: 4,
+          step: 3,
           command: "curl http://localhost:8081/health",
           explanation: 'Verify agent is running and connected to Vault. Expect {"status":"ok","provider":"vault"}',
         },
@@ -203,21 +183,16 @@ export const DeploymentPaths = () => {
       steps: [
         {
           step: 1,
-          command: "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | sudo bash",
-          explanation: "Install DSO system-wide (requires sudo)",
-        },
-        {
-          step: 2,
-          command: "sudo docker dso system bootstrap --provider huawei --region cn-east-2",
+          command: "sudo dso system bootstrap --provider huawei --region cn-east-2",
           explanation: "Bootstrap agent with Huawei provider. Uses IAM credentials from environment.",
         },
         {
-          step: 3,
+          step: 2,
           command: "sudo systemctl enable dso-agent && sudo systemctl start dso-agent",
           explanation: "Start agent as systemd service. Will run on every boot.",
         },
         {
-          step: 4,
+          step: 3,
           command: "curl http://localhost:8081/health",
           explanation: 'Verify agent is running and connected to Huawei Cloud. Expect {"status":"ok","provider":"huawei"}',
         },
@@ -232,21 +207,16 @@ export const DeploymentPaths = () => {
       steps: [
         {
           step: 1,
-          command: "curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | sudo bash",
-          explanation: "Install DSO system-wide (requires sudo)",
-        },
-        {
-          step: 2,
-          command: "sudo docker dso init --vault-path /etc/dso/vault.enc",
+          command: "sudo dso init --vault-path /etc/dso/vault.enc",
           explanation: "Initialize encrypted vault at system path. Only DSO process can decrypt.",
         },
         {
-          step: 3,
-          command: 'sudo docker dso secret set DB_PASSWORD "prod-secret" --vault /etc/dso/vault.enc',
+          step: 2,
+          command: 'sudo dso secret set DB_PASSWORD "prod-secret" --vault /etc/dso/vault.enc',
           explanation: "Add secrets to system vault",
         },
         {
-          step: 4,
+          step: 3,
           command: "sudo systemctl enable dso-agent && sudo systemctl start dso-agent",
           explanation: "Start agent. Will manage rotations and monitor secret changes.",
         },
@@ -257,7 +227,7 @@ export const DeploymentPaths = () => {
   const selected = paths.find((p) => p.id === selectedPath) || paths[0];
 
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-gray-800">
+    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12 sm:space-y-16">
         {/* Header */}
         <motion.div
@@ -270,7 +240,7 @@ export const DeploymentPaths = () => {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             Step-by-Step Setup
           </h2>
-          <p className="text-base sm:text-lg text-gray-400">
+          <p className="text-base sm:text-lg text-secondary">
             Choose your deployment method. We'll walk you through configuration for Docker Compose, AWS, Azure, HashiCorp Vault, Huawei Cloud, or offline mode.
           </p>
         </motion.div>
@@ -310,11 +280,11 @@ export const DeploymentPaths = () => {
                 <span className="text-xs px-2 py-1 rounded bg-green-500/20 text-green-400">Production</span>
               )}
             </div>
-            <p className="text-gray-400">{selected.description}</p>
+            <p className="text-secondary">{selected.description}</p>
           </div>
 
           {/* Steps */}
-          <div className="space-y-4 p-6 sm:p-8 rounded-xl border border-gray-800 bg-gray-900/30">
+          <div className="space-y-4 p-6 sm:p-8 rounded-xl border border-border bg-surface/30">
             <h4 className="font-semibold text-foreground text-sm">Setup Steps</h4>
             <div className="space-y-4">
               {selected.steps.map((step, idx) => (
@@ -328,7 +298,7 @@ export const DeploymentPaths = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="p-4 sm:p-5 rounded-lg border border-accent/20 bg-accent/5 text-sm text-gray-400 space-y-2"
+            className="p-4 sm:p-5 rounded-lg border border-accent/20 bg-accent/5 text-sm text-secondary space-y-2"
           >
             {selected.id === "local-compose" && (
               <>
@@ -380,7 +350,7 @@ export const DeploymentPaths = () => {
             <Award className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
             <div>
               <h4 className="font-semibold text-foreground mb-2">Start Local, Scale to Cloud</h4>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-secondary">
                 Develop with Docker Compose locally, then promote to Agent Mode with your chosen provider (AWS, Azure, Vault, or Local).
                 Same CLI workflow. Same guarantees. Different scale.
               </p>
