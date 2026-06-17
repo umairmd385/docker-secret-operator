@@ -11,7 +11,7 @@ export const FAQSection = () => {
   const faqs = [
     {
       q: "How much CPU and memory overhead?",
-      a: "Minimal. DSO agent uses <50MB RAM at idle, <5% CPU during rotation. Perfect for resource-constrained environments.",
+      a: "Minimal. DSO is a lightweight agent designed for Docker environments. Overhead depends on your environment; see documentation for details.",
     },
     {
       q: "How are rotations monitored?",
