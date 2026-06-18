@@ -4,10 +4,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ArchitectureOverview } from "@/components/sections/ArchitectureOverview";
 import { ArchitectureDiagram } from "@/components/sections/ArchitectureDiagram";
-import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
-import { FailureScenarios } from "@/components/sections/FailureScenarios";
-import { SystemBoundaries } from "@/components/sections/SystemBoundaries";
-import { OperationalPhilosophy } from "@/components/sections/OperationalPhilosophy";
+import { RequestLifecycle } from "@/components/sections/RequestLifecycle";
+import { SystemScope } from "@/components/sections/SystemScope";
 
 export const metadata = generatePageMetadata(
   {
@@ -35,19 +33,13 @@ export default function ArchitecturePage() {
         {/* 2. Architecture Diagram - Visual system flow */}
         <ArchitectureDiagram />
 
-        {/* 3. Rotation Lifecycle - Request flow with detailed steps */}
-        <CrashRecoveryStory />
+        {/* 3. Request Lifecycle - Core operation flow */}
+        <RequestLifecycle />
 
-        {/* 4. Failure Handling - Real scenarios and recovery */}
-        <FailureScenarios />
+        {/* 4. System Scope - What DSO manages and doesn't */}
+        <SystemScope />
 
-        {/* 5. System Boundaries - What DSO manages and doesn't */}
-        <SystemBoundaries />
-
-        {/* 6. Operational Philosophy - Engineering principles */}
-        <OperationalPhilosophy />
-
-        {/* 7. What Next - Navigation to related resources */}
+        {/* 5. What Next - Navigation to related resources */}
         <section className="relative py-20 sm:py-32 bg-background">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
             <div className="text-center max-w-3xl mx-auto">
