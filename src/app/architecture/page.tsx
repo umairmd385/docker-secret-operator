@@ -3,6 +3,7 @@ import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ArchitectureOverview } from "@/components/sections/ArchitectureOverview";
+import { ArchitectureDiagram } from "@/components/sections/ArchitectureDiagram";
 import { CrashRecoveryStory } from "@/components/sections/CrashRecoveryStory";
 import { FailureScenarios } from "@/components/sections/FailureScenarios";
 import { SystemBoundaries } from "@/components/sections/SystemBoundaries";
@@ -31,19 +32,22 @@ export default function ArchitecturePage() {
         {/* 1. System Overview - High-level architecture */}
         <ArchitectureOverview />
 
-        {/* 2. Rotation Lifecycle - Request flow with detailed steps */}
+        {/* 2. Architecture Diagram - Visual system flow */}
+        <ArchitectureDiagram />
+
+        {/* 3. Rotation Lifecycle - Request flow with detailed steps */}
         <CrashRecoveryStory />
 
-        {/* 3. Failure Handling - Real scenarios and recovery */}
+        {/* 4. Failure Handling - Real scenarios and recovery */}
         <FailureScenarios />
 
-        {/* 4. System Boundaries - What DSO manages and doesn't */}
+        {/* 5. System Boundaries - What DSO manages and doesn't */}
         <SystemBoundaries />
 
-        {/* 5. Operational Philosophy - Engineering principles */}
+        {/* 6. Operational Philosophy - Engineering principles */}
         <OperationalPhilosophy />
 
-        {/* 6. What Next - Navigation to related resources */}
+        {/* 7. What Next - Navigation to related resources */}
         <section className="relative py-20 sm:py-32 bg-background">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
             <div className="text-center max-w-3xl mx-auto">
