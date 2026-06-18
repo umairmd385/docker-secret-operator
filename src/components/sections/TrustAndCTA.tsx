@@ -9,8 +9,8 @@ export const TrustAndCTA = () => {
   const signals = [
     {
       icon: <Code className="w-5 h-5" />,
-      label: "31 releases",
-      description: "Active development & maintenance",
+      label: "3 major releases",
+      description: "Stable versions with ongoing development",
     },
     {
       icon: <Shield className="w-5 h-5" />,

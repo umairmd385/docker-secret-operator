@@ -46,24 +46,24 @@ export default function DeployPage() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
-                  title: "Health Check",
-                  description: "Verify DSO agent is running and connected to your provider.",
-                  href: "/docs/operations/health-checks",
+                  title: "Getting Started",
+                  description: "Quick start guide to deploy your first rotation.",
+                  href: "/docs/guide/getting-started",
                 },
                 {
                   title: "Operations Guide",
                   description: "Monitor rotations, configure notifications, and manage state.",
-                  href: "/docs/operations/guide",
+                  href: "/docs/guide/operational-guide",
                 },
                 {
                   title: "Recovery Procedures",
                   description: "Handle failures, recover from crashes, and restore state.",
-                  href: "/docs/recovery/procedures",
+                  href: "/docs/guide/RECOVERY_PROCEDURES",
                 },
                 {
                   title: "CLI Reference",
                   description: "Complete reference for all dso commands and options.",
-                  href: "/docs/cli/reference",
+                  href: "/docs/cli",
                 },
               ].map((item, idx) => (
                 <a

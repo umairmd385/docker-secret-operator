@@ -60,12 +60,12 @@ export default function ArchitecturePage() {
                 {
                   title: "Operations Guide",
                   description: "How to run DSO in production, monitor rotations, and handle issues.",
-                  href: "/docs/operational-guide",
+                  href: "/docs/guide/operational-guide",
                 },
                 {
                   title: "Recovery Procedures",
                   description: "Step-by-step procedures for handling failures and recovering state.",
-                  href: "/docs/recovery-procedures",
+                  href: "/docs/guide/RECOVERY_PROCEDURES",
                 },
                 {
                   title: "CLI Reference",

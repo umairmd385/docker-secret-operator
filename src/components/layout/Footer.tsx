@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { DSOLogoIcon } from "@/components/branding/DSOLogo";
+import { Logo } from "@/components/Logo";
 import { GithubIcon } from "@/components/ui/Icons";
 import { MessageSquare, ExternalLink, ShieldCheck, Loader2, Check, AlertCircle } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
@@ -58,7 +58,7 @@ export const Footer = () => {
         <div className="lg:col-span-3 space-y-8">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-              <DSOLogoIcon size="sm" darkMode={true} />
+              <Logo size={32} className="text-accent" />
             </div>
             <span className="text-2xl font-bold text-white tracking-tighter">DSO</span>
           </div>

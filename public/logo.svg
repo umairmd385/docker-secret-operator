@@ -1,0 +1,29 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rotating arrow (counterclockwise) -->
+  <circle
+    cx="12"
+    cy="12"
+    r="9"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+
+  <!-- Arrow head at top -->
+  <path
+    d="M 12 3 L 14 6 L 10 6 Z"
+    fill="currentColor"
+  />
+
+  <!-- Checkpoint marker at 12 o'clock -->
+  <rect
+    x="10.5"
+    y="1.5"
+    width="3"
+    height="3"
+    stroke="currentColor"
+    stroke-width="2"
+    fill="none"
+    rx="0.5"
+  />
+</svg>

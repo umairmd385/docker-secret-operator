@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { Menu, X } from "lucide-react";
-import { DSOLogoIcon } from "@/components/branding/DSOLogo";
+import { Logo } from "@/components/Logo";
 import { GithubIcon } from "@/components/ui/Icons";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
@@ -30,7 +30,7 @@ export const Navbar = () => {
         <a href={ROUTES.home} className="flex items-center gap-2 group flex-shrink-0">
           <div className="relative">
             <div className="w-8 h-8 flex items-center justify-center relative z-10 transition-transform hover:scale-110">
-              <DSOLogoIcon size="sm" />
+              <Logo size={32} className="text-accent" />
             </div>
             <div className="absolute inset-0 bg-accent/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>

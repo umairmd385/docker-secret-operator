@@ -1,5 +1,6 @@
 import React from "react";
-import { DSOLogo, DSOLogoIcon, ResponsiveDSOLogo } from "./DSOLogo";
+import { DSOLogo, ResponsiveDSOLogo } from "./DSOLogo";
+import { Logo } from "@/components/Logo";
 import { BRAND_COLORS } from "@/lib/branding/colors";
 
 export interface BrandHeaderProps {
@@ -85,7 +86,7 @@ export function BrandHeader({
       {showLogo && (
         <div className={`flex ${centered ? "justify-center" : ""} mb-4`}>
           {logoVariant === "icon" && (
-            <DSOLogoIcon size="lg" darkMode={darkMode} />
+            <Logo size={48} className="text-accent" />
           )}
           {logoVariant === "horizontal" && (
             <DSOLogo variant="horizontal" darkMode={darkMode} />
