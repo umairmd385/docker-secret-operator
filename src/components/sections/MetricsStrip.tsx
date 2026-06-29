@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 
 const METRICS = [
   { value: "Zero", label: "Downtime", teal: true },
-  { value: "Runtime", label: "Secret Injection", teal: false },
-  { value: "5+", label: "Secret Providers", teal: true },
-  { value: "Zero", label: "Disk Persistence", teal: false },
-  { value: "Auto", label: "Rotation", teal: true },
+  { value: "5", label: "Secret Providers", teal: false },
+  { value: "0 bytes", label: "Disk Writes", teal: true },
+  { value: "Auto", label: "Rotation", teal: false },
+  { value: "~50 MB", label: "Memory Footprint", teal: true },
 ];
 
 export const MetricsStrip = () => {

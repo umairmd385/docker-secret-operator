@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Terminal } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { ROUTES } from "@/lib/links";
 
 const TERMINAL_COMMANDS = [
@@ -23,7 +23,7 @@ const TERMINAL_COMMANDS = [
     ],
   },
   {
-    cmd: "docker dso rotate postgres-password",
+    cmd: "docker dso sync --secret postgres-password",
     output: [
       "  Fetching secret from provider...",
       "✓ Secret fetched",
@@ -33,11 +33,11 @@ const TERMINAL_COMMANDS = [
     ],
   },
   {
-    cmd: "docker dso inspect",
+    cmd: "docker dso status",
     output: [
       "  Status:        running",
       "  Provider:      aws-secrets-manager",
-      "  Last rotation: 2 seconds ago",
+      "  Last sync:     2 seconds ago",
       "  Uptime:        47 days",
     ],
   },
@@ -217,16 +217,14 @@ export const HeroNew = () => {
           className="text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
           style={{ color: "#94A3B8" }}
         >
-          DSO is an open-source runtime secret injection engine for Docker.
-          Rotate credentials automatically — no restarts, no manual scripts, no
-          downtime.
+          Open-source Docker plugin that rotates credentials automatically — no restarts, no manual scripts, no downtime.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.34 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6"
         >
           <a
             href={ROUTES.landingPages.deploy}
@@ -252,19 +250,22 @@ export const HeroNew = () => {
         </motion.div>
 
         <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="flex items-center justify-center gap-3 mb-12 font-mono text-xs"
+          style={{ color: "#94A3B8" }}
+        >
+          <span className="px-3 py-1.5 rounded-md" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | bash
+          </span>
+        </motion.div>
+
+        <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.46 }}
         >
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Terminal className="w-4 h-4" style={{ color: "#94A3B8" }} />
-            <span
-              className="text-xs font-mono uppercase tracking-widest"
-              style={{ color: "#94A3B8" }}
-            >
-              Live demo
-            </span>
-          </div>
           <AnimatedTerminal prefersReduced={prefersReduced} />
         </motion.div>
       </div>

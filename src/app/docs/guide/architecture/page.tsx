@@ -323,7 +323,61 @@ graph TD
 
 ---
 
-## 9. SRE Operational Metrics & Health Signals
+## 9. Setup Engine Pipeline
+
+\`docker dso setup\` is backed by a transactional setup engine in \`internal/setup/\`. It runs as a sequential, event-emitting pipeline with a clear separation of responsibilities across eight stages.
+
+\`\`\`mermaid
+graph LR
+    D[Detect] --> V[Validate] --> P[Plan] --> Pr[Preview] --> A[Apply]
+    A -->|success| Done[Done]
+    A -->|failure| R[Rollback]
+    R --> Fail[Failed]
+
+    style D fill:#e3f2fd,stroke:#1e88e5,color:#000
+    style V fill:#e3f2fd,stroke:#1e88e5,color:#000
+    style P fill:#e3f2fd,stroke:#1e88e5,color:#000
+    style Pr fill:#e3f2fd,stroke:#1e88e5,color:#000
+    style A fill:#e8f5e9,stroke:#43a047,color:#000
+    style R fill:#ffebee,stroke:#e53935,color:#000
+    style Done fill:#e8f5e9,stroke:#43a047,color:#000
+    style Fail fill:#ffebee,stroke:#e53935,color:#000
+\`\`\`
+
+### Stage Responsibilities
+
+| Stage | Package | Responsibility |
+|-------|---------|---------------|
+| **Detect** | \`internal/setup\` | Reads Docker socket, OS user, cloud provider metadata. Produces an immutable \`Environment\`. Never fails on missing optional data — absence is a fact. |
+| **Validate** | \`internal/setup\` | Checks whether the detected environment can support the requested mode. Produces a frozen \`ValidationResult\`. Never re-reads the environment. |
+| **Plan** | \`internal/setup\` | Generates an immutable \`InstallPlan\` from the environment and validation result. Declares file, directory, permission, service, and group operations. Never touches the OS. |
+| **Preview** | \`internal/setup\` | Renders the plan to terminal or JSON. No side effects. |
+| **Apply** | \`internal/setup\` | Executes the plan transactionally. Each operation is tracked in a \`Transaction\` with before/after snapshots for rollback. |
+| **Rollback** | \`internal/setup\` | Triggered automatically on apply failure. Replays operations in reverse, restoring previous state from snapshots. |
+| **Doctor** | \`internal/setup\` | Post-install diagnostic engine. Runs 17+ named checks across Docker, config, permissions, runtime, service, and provider categories. Produces a structured \`DoctorResult\`. |
+| **Repair** | \`internal/setup\` | Consumes a \`DoctorResult\` and generates a \`RepairPlan\`. Executes safe actions automatically; prompts for confirmation on moderate or destructive actions. Runs Doctor again after repair to verify. |
+
+### Design Principles
+
+- **The engine never prints.** All output is emitted as typed \`Event\`s via a synchronous \`Emitter\`. The CLI subscribes and renders.
+- **Each stage consumes only the previous stage's output.** Plan never inspects \`Environment\` directly; Doctor never re-discovers the environment.
+- **All OS interactions are injectable.** Every executor struct holds function fields (\`mkdir\`, \`writeFile\`, \`chmod\`, \`exec\`) that are wired to real OS calls in production and replaced by no-ops in tests.
+- **Panic-safe event delivery.** A panicking CLI listener cannot crash the engine; \`Emitter.Emit\` recovers from listener panics.
+
+### Doctor Check Categories
+
+| Category | Check IDs | What is verified |
+|----------|-----------|-----------------|
+| Docker | DSO-DOCTOR-001–003 | Binary exists, daemon reachable, socket permissions |
+| Configuration | DSO-DOCTOR-006–009 | Config file exists, is valid YAML, has correct permissions |
+| Provider | DSO-DOCTOR-010–011 | Provider recognized, credentials present |
+| Runtime | DSO-DOCTOR-012–013 | Runtime directory exists, no stale lock files |
+| Service | DSO-DOCTOR-014–017 | Systemd available, unit file present, service enabled and active |
+| Permissions | DSO-DOCTOR-004–005 | Socket and config file ownership and mode |
+
+---
+
+## 10. SRE Operational Metrics & Health Signals
 
 To monitor DSO health in production environments, track the following operational parameters using Prometheus or \`docker dso status\`:
 

@@ -111,8 +111,7 @@ export const HowDSOWorks = () => {
             How DSO works
           </h2>
           <p className="text-lg max-w-xl mx-auto" style={{ color: "#94A3B8" }}>
-            An event-driven engine sits between your secret provider and Docker
-            containers — rotating credentials without touching production traffic.
+            An event-driven engine between your secret provider and containers — credentials rotate without touching traffic.
           </p>
         </motion.div>
 

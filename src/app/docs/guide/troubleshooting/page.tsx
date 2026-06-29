@@ -249,7 +249,7 @@ sudo dso diagnose > /tmp/dso-diag.txt
 
 - Review full logs: \`sudo journalctl -u dso-agent --all\`
 - Check [GitHub Issues](https://github.com/docker-secret-operator/dso/issues)
-- Join [Discord](https://discord.gg/skycloudops) for community support
+- Join [Discord](https://discord.gg/MqgFaVA6b) for community support
 `;
 
 export default function TroubleshootingPage() {

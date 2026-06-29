@@ -2,33 +2,38 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { HardDrive, Clock, Trash2, Lock, UserCheck } from "lucide-react";
+import { HardDrive, Clock, Trash2, Lock, UserCheck, ShieldCheck } from "lucide-react";
 
 const GUARANTEES = [
   {
     icon: HardDrive,
-    title: "Secrets never stored permanently",
-    desc: "DSO is a runtime-only injection engine. Nothing is written to disk, files, or databases. Secrets exist only in memory during container runtime.",
+    title: "Zero disk persistence",
+    desc: "Nothing written to disk, files, or databases. Secrets exist only in container memory.",
   },
   {
     icon: Clock,
     title: "Runtime-only injection",
-    desc: "Credentials are injected at container start from your secret provider. The source is always your provider — DSO is just the conduit.",
+    desc: "Credentials fetched from your provider at container start. DSO is a conduit, not a store.",
   },
   {
     icon: Trash2,
     title: "Automatic cleanup",
-    desc: "On container stop or rotation, all in-memory secrets are purged immediately. No lingering credentials in stopped containers.",
+    desc: "On container stop or rotation, in-memory secrets are purged immediately.",
   },
   {
     icon: Lock,
-    title: "Encrypted communication",
-    desc: "All communication between DSO and secret providers uses TLS with certificate verification. No plaintext secret transmission.",
+    title: "Encrypted in transit",
+    desc: "All provider communication uses TLS with certificate verification. No plaintext secrets.",
   },
   {
     icon: UserCheck,
     title: "Least privilege",
-    desc: "DSO requests only the specific secrets it needs, with the minimum permissions required. Provider IAM policies are respected.",
+    desc: "DSO requests only the secrets it needs, with minimum required permissions per provider IAM.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Rollback on failure",
+    desc: "If a new container fails health checks, DSO rolls back automatically to the last known good state.",
   },
 ];
 
@@ -55,8 +60,7 @@ export const SecurityGuarantees = () => {
             Security guarantees
           </h2>
           <p className="text-lg max-w-xl mx-auto" style={{ color: "#94A3B8" }}>
-            DSO was designed from the ground up with a security-first model.
-            These are not aspirations — they are hard architectural constraints.
+            Hard architectural constraints — not aspirations.
           </p>
         </motion.div>
 
@@ -69,7 +73,7 @@ export const SecurityGuarantees = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.08 }}
+                transition={{ delay: idx * 0.07 }}
                 whileHover={{ y: -4, transition: { duration: 0.15 } }}
                 className="p-6 rounded-2xl cursor-default transition-all duration-300"
                 style={{
@@ -90,7 +94,7 @@ export const SecurityGuarantees = () => {
                 }}
               >
                 <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
                   style={{
                     background: "rgba(0,230,192,0.1)",
                     border: "1px solid rgba(0,230,192,0.2)",
@@ -99,15 +103,12 @@ export const SecurityGuarantees = () => {
                   <Icon className="w-5 h-5" style={{ color: "#00E6C0" }} />
                 </div>
                 <h3
-                  className="font-semibold text-base mb-2"
+                  className="font-semibold text-sm mb-2"
                   style={{ color: "#F8FAFC" }}
                 >
                   {g.title}
                 </h3>
-                <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "#94A3B8" }}
-                >
+                <p className="text-sm leading-relaxed" style={{ color: "#94A3B8" }}>
                   {g.desc}
                 </p>
               </motion.div>

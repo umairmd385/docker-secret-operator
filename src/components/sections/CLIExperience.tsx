@@ -25,7 +25,7 @@ const COMMANDS = [
     ],
   },
   {
-    cmd: "docker dso rotate postgres-password",
+    cmd: "docker dso sync --secret postgres-password",
     lines: [
       { text: "  Fetching from aws-secrets-manager...", ok: false },
       { text: "✓ Secret fetched (version: v42)", ok: true },
@@ -34,11 +34,11 @@ const COMMANDS = [
     ],
   },
   {
-    cmd: "docker dso inspect",
+    cmd: "docker dso status",
     lines: [
       { text: "  Status:        running", ok: false },
       { text: "  Provider:      aws-secrets-manager", ok: false },
-      { text: "  Rotations:     12 (last: 3 seconds ago)", ok: false },
+      { text: "  Last sync:     3 seconds ago", ok: false },
       { text: "  Uptime:        47 days", ok: false },
     ],
   },
@@ -173,8 +173,7 @@ export const CLIExperience = () => {
             Built for operators
           </h2>
           <p className="text-lg max-w-xl mx-auto" style={{ color: "#94A3B8" }}>
-            Full control from the command line. One install command. Works with
-            your existing Docker workflow.
+            Full lifecycle control from the command line. Works with your existing Docker workflow.
           </p>
         </motion.div>
 
@@ -217,21 +216,16 @@ export const CLIExperience = () => {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {[
-                {
-                  cmd: "docker dso init",
-                  desc: "Initialize DSO config and detect your provider",
-                },
-                { cmd: "docker dso up", desc: "Start the rotation engine" },
-                {
-                  cmd: "docker dso rotate <secret>",
-                  desc: "Trigger a manual zero-downtime rotation",
-                },
-                {
-                  cmd: "docker dso inspect",
-                  desc: "View runtime status and audit trail",
-                },
+                { cmd: "docker dso setup", desc: "Interactive setup wizard" },
+                { cmd: "docker dso up", desc: "Deploy stack with secret injection" },
+                { cmd: "docker dso status", desc: "Show runtime operational status" },
+                { cmd: "docker dso sync --secret <name>", desc: "Trigger immediate synchronization" },
+                { cmd: "docker dso validate", desc: "Validate DSO configuration" },
+                { cmd: "docker dso diff", desc: "Show config vs deployed diff" },
+                { cmd: "docker dso logs", desc: "View DSO agent logs" },
+                { cmd: "docker dso secret set <path>", desc: "Store a secret in local vault" },
               ].map(({ cmd, desc }) => (
                 <div key={cmd} className="flex gap-4 items-start">
                   <code

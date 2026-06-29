@@ -76,19 +76,23 @@ echo 'export PATH="\$HOME/.local/bin:\$PATH"' >> ~/.bashrc && source ~/.bashrc
 
 Local Mode stores secrets in an AES-256 encrypted vault on your machine (\`~/.dso/vault.enc\`). No cloud account needed.
 
-### Step 2a — Run the Setup Wizard
+### Step 2a — Run Setup
 
 \`\`\`bash
 docker dso setup --mode local
 \`\`\`
 
-Or just run \`docker dso setup\` and choose **Local** when prompted.
+The setup engine runs through five stages automatically:
 
-**What the wizard does:**
-1. Generates \`./dso.yaml\` (local config skeleton)
-2. Tells you the next steps
+| Stage | What it does |
+|-------|-------------|
+| Detect | Discovers Docker version, OS capabilities, and your home directory |
+| Validate | Confirms Docker is reachable and local mode is supported |
+| Plan | Declares the config file and directory to create |
+| Preview | Prints the plan for review before writing anything |
+| Apply | Creates \`~/.dso/dso.yaml\` transactionally; rolls back on failure |
 
-**Expected output (end of wizard):**
+**Expected output (end of setup):**
 \`\`\`
 ╔════════════════════════════════════════════════════╗
 ║                    Setup Complete!                 ║
@@ -108,6 +112,8 @@ Or just run \`docker dso setup\` and choose **Local** when prompted.
   4. Check status:
      docker dso status
 \`\`\`
+
+> **Tip:** Run \`docker dso setup --dry-run\` to preview the plan without writing any files.
 
 ### Step 2b — Initialize the Vault
 
@@ -181,24 +187,28 @@ DSO reads your \`docker-compose.yml\`, resolves all \`dso://\` and \`dsofile://\
 # 1. Install
 curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | bash
 
-# 2. Run setup wizard
-docker dso setup --mode local
+# 2. Run setup (preview first if you like)
+docker dso setup --mode local --dry-run   # see what will happen
+docker dso setup --mode local             # apply it
 
-# 3. Initialize vault (as your regular user, NOT sudo)
+# 3. Run doctor to confirm setup is healthy
+docker dso doctor
+
+# 4. Initialize vault (as your regular user, NOT sudo)
 docker dso init
 
-# 4. Store secrets
+# 5. Store secrets
 docker dso secret set myapp/db_password
 docker dso secret set myapp/api_key
 
-# 5. Add dso:// references to your docker-compose.yml
+# 6. Add dso:// references to your docker-compose.yml
 #    (see Step 2d above)
 
-# 6. Deploy
+# 7. Deploy
 docker dso up -d
 
-# 7. Check health
-docker dso doctor
+# 8. Check status
+docker dso status
 \`\`\`
 
 ---
@@ -207,7 +217,7 @@ docker dso doctor
 
 Cloud Mode runs \`dso-agent\` as a long-lived systemd service. The agent watches your cloud provider for secret changes and automatically rotates containers when secrets change.
 
-### Step 2a — Run the Setup Wizard (Recommended)
+### Step 2a — Run Setup (Recommended)
 
 \`\`\`bash
 docker dso setup
@@ -227,20 +237,26 @@ docker dso setup --mode agent --provider huawei
 
 # Add non-root access so your user can run docker dso commands without sudo
 docker dso setup --mode agent --provider aws --enable-nonroot
+
+# Preview the plan without writing anything
+docker dso setup --mode agent --provider aws --dry-run
 \`\`\`
 
 > **Note:** If you run \`docker dso setup\` as a non-root user and it detects agent mode is needed, it automatically re-executes itself via \`sudo\`.
 
-**What the wizard does (agent mode):**
-1. Detects or prompts for cloud provider
-2. Generates \`/etc/dso/dso.yaml\` (config skeleton with provider section)
-3. Installs provider plugin binary to \`/usr/local/lib/dso/plugins/\`
-4. Internally calls \`docker dso bootstrap agent\` which:
-   - Creates \`/etc/dso/\`, \`/var/lib/dso/\`, \`/var/log/dso/\`, \`/run/dso/\` directories
-   - Writes \`/etc/systemd/system/dso-agent.service\`
-   - Starts the agent service
+**What the setup engine does (agent mode):**
 
-**Expected end of wizard:**
+| Stage | What it does |
+|-------|-------------|
+| Detect | Reads cloud provider metadata, checks systemd, confirms Docker and root privileges |
+| Validate | Confirms agent mode prerequisites are met |
+| Plan | Declares config file, directories, systemd unit, service enable/start operations |
+| Preview | Prints full plan for review |
+| Apply | Creates all declared resources transactionally; rolls back automatically on any failure |
+
+After apply, the engine enables and starts \`dso-agent.service\` via systemd.
+
+**Expected end of setup:**
 \`\`\`
 ╔════════════════════════════════════════════════════╗
 ║                    Setup Complete!                 ║
@@ -418,20 +434,26 @@ In cloud mode, secrets are injected from the provider — **no \`dso://\` URIs n
 # 1. Install (system-wide, with sudo)
 curl -fsSL https://raw.githubusercontent.com/docker-secret-operator/dso/main/scripts/install.sh | sudo bash
 
-# 2. Run setup wizard (auto-detects if on cloud VM, else prompts)
+# 2. Preview the setup plan before committing
+docker dso setup --dry-run
+
+# 3. Run setup (auto-detects provider if on cloud VM, else prompts)
 docker dso setup
 
-# 3. Edit /etc/dso/dso.yaml to add your secrets
+# 4. Validate the installation
+docker dso doctor
+
+# 5. Edit /etc/dso/dso.yaml to add your secrets
 sudo nano /etc/dso/dso.yaml
 
-# 4. Check agent is running
+# 6. Restart the agent after config changes
+sudo docker dso system restart
+
+# 7. Check agent is running
 sudo docker dso system status
 sudo docker dso system logs -f
 
-# 5. Check health
-docker dso doctor
-
-# 6. Deploy
+# 8. Deploy
 docker compose up -d
 \`\`\`
 
@@ -560,11 +582,22 @@ echo \$PATH | grep -o "\$HOME/.local/bin"
 docker dso secret set myapp/my_secret
 \`\`\`
 
+### Something looks wrong after setup
+
+\`\`\`bash
+# Run a full diagnostic — shows every check with pass/warn/fail status
+docker dso doctor --level full
+
+# The doctor describes the root cause and recovery steps for each failure.
+# Safe repairs (permissions, missing runtime dirs) are applied automatically.
+# Moderate repairs (service enable/start, config recreation) require confirmation.
+\`\`\`
+
 ### Cloud mode: agent socket missing
 
 \`\`\`bash
-# Run setup again to start the agent
-docker dso setup
+# Let doctor diagnose and repair the service automatically
+docker dso doctor
 
 # Or start the service manually
 sudo docker dso system enable

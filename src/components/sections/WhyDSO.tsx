@@ -2,132 +2,135 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { H2, PLead } from "@/components/ui/Typography";
+
+const ROWS = [
+  {
+    category: "Setup",
+    dso: "5 minutes",
+    manual: "Hours of scripting",
+    vault: "Days of infra setup",
+    infisical: "1–2 hours",
+  },
+  {
+    category: "Rotation ops",
+    dso: "Fully automated",
+    manual: "Manual restarts",
+    vault: "DevOps required",
+    infisical: "Platform managed",
+  },
+  {
+    category: "Downtime",
+    dso: "Zero",
+    manual: "30s+ per rotation",
+    vault: "Policy-dependent",
+    infisical: "Integration-dependent",
+  },
+  {
+    category: "Infrastructure",
+    dso: "Lightweight Docker agent",
+    manual: "Script runner / cron",
+    vault: "Separate Vault server",
+    infisical: "Cloud platform",
+  },
+  {
+    category: "Failure recovery",
+    dso: "Automatic (checkpoint)",
+    manual: "Manual investigation",
+    vault: "Ops intervention",
+    infisical: "Platform reliability",
+  },
+  {
+    category: "Learning curve",
+    dso: "Minimal (Docker users)",
+    manual: "Custom per team",
+    vault: "Days (complex)",
+    infisical: "Hours (web UI)",
+  },
+  {
+    category: "Cost",
+    dso: "Free / open source",
+    manual: "Dev time",
+    vault: "Free or $$$$",
+    infisical: "Free or $$$",
+  },
+];
 
 export const WhyDSO = () => {
-  const comparisons = [
-    {
-      category: "Setup Time",
-      dso: "5 minutes",
-      manual: "Hours of script development",
-      vault: "Days of infrastructure setup",
-      infisical: "1-2 hours with UI learning curve",
-    },
-    {
-      category: "Operational Burden",
-      dso: "Zero - fully automated",
-      manual: "High - manual restarts required",
-      vault: "Medium - requires DevOps expertise",
-      infisical: "Medium - requires platform management",
-    },
-    {
-      category: "Downtime Risk",
-      dso: "Zero with DSO",
-      manual: "30+ seconds per rotation",
-      vault: "Depends on rotation policy configuration",
-      infisical: "Depends on application integration",
-    },
-    {
-      category: "Infrastructure Overhead",
-      dso: "Lightweight Docker agent",
-      manual: "Script runner or cron job",
-      vault: "Separate Vault server(s) required",
-      infisical: "Cloud platform dependency",
-    },
-    {
-      category: "Failure Recovery",
-      dso: "Automatic checkpoint-based",
-      manual: "Manual investigation required",
-      vault: "Requires ops intervention",
-      infisical: "Depends on platform reliability",
-    },
-    {
-      category: "Learning Curve",
-      dso: "Simple for Docker users",
-      manual: "Varies - custom implementation",
-      vault: "Days - complex ecosystem",
-      infisical: "Hours - web UI based",
-    },
-    {
-      category: "Cost",
-      dso: "Free (open source)",
-      manual: "Development time investment",
-      vault: "Free self-hosted or $$$$ managed",
-      infisical: "Free or $$$ per seat",
-    },
-    {
-      category: "Scope",
-      dso: "Rotation only - does one thing well",
-      manual: "Rotation only - custom implementation",
-      vault: "Complete secret management platform",
-      infisical: "Secret management + UI + team features",
-    },
-  ];
-
   return (
-    <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
-        {/* Header */}
+    <section className="relative py-20 sm:py-28">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto"
         >
-          <H2 className="mb-4">Why DSO Over Alternatives?</H2>
-          <PLead className="text-tertiary">
-            Honest tradeoffs. DSO is lightweight rotation. Choose based on your needs.
-          </PLead>
+          <p
+            className="text-xs font-mono uppercase tracking-widest mb-4"
+            style={{ color: "#94A3B8" }}
+          >
+            Comparison
+          </p>
+          <h2
+            className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4"
+            style={{ color: "#F8FAFC" }}
+          >
+            DSO vs. alternatives
+          </h2>
+          <p className="text-lg" style={{ color: "#94A3B8" }}>
+            Lightweight rotation. Not a secret manager. Know the tradeoffs.
+          </p>
         </motion.div>
 
-        {/* Comparison Matrix */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="overflow-x-auto rounded-lg border border-border"
+          className="overflow-x-auto rounded-xl"
+          style={{ border: "1px solid rgba(255,255,255,0.08)" }}
         >
-          <table className="w-full">
+          <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border bg-surface/50">
-                <th className="text-left py-4 px-6 font-semibold text-foreground">
-                  Outcome
+              <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)" }}>
+                <th className="text-left py-4 px-5 font-semibold text-xs uppercase tracking-wider" style={{ color: "#94A3B8" }}>
+                  Category
                 </th>
-                <th className="text-left py-4 px-6 font-semibold text-accent">
+                <th className="text-left py-4 px-5 font-semibold text-xs uppercase tracking-wider" style={{ color: "#00E6C0" }}>
                   DSO
                 </th>
-                <th className="text-left py-4 px-6 font-semibold text-secondary">
+                <th className="text-left py-4 px-5 font-semibold text-xs uppercase tracking-wider" style={{ color: "#94A3B8" }}>
                   Manual Scripts
                 </th>
-                <th className="text-left py-4 px-6 font-semibold text-secondary">
-                  Vault
+                <th className="text-left py-4 px-5 font-semibold text-xs uppercase tracking-wider" style={{ color: "#94A3B8" }}>
+                  HashiCorp Vault
                 </th>
-                <th className="text-left py-4 px-6 font-semibold text-secondary">
+                <th className="text-left py-4 px-5 font-semibold text-xs uppercase tracking-wider" style={{ color: "#94A3B8" }}>
                   Infisical
                 </th>
               </tr>
             </thead>
             <tbody>
-              {comparisons.map((row, idx) => (
+              {ROWS.map((row, idx) => (
                 <tr
                   key={idx}
-                  className={`border-b border-border ${
-                    idx % 2 === 0 ? "bg-surface/20" : ""
-                  }`}
+                  style={{
+                    borderBottom: idx < ROWS.length - 1 ? "1px solid rgba(255,255,255,0.05)" : undefined,
+                    background: idx % 2 === 0 ? "rgba(255,255,255,0.01)" : "transparent",
+                  }}
                 >
-                  <td className="py-4 px-6 font-semibold text-foreground text-sm">
+                  <td className="py-3.5 px-5 font-medium" style={{ color: "#F8FAFC" }}>
                     {row.category}
                   </td>
-                  <td className="py-4 px-6 text-accent text-sm font-medium">
+                  <td className="py-3.5 px-5 font-medium" style={{ color: "#00E6C0" }}>
                     {row.dso}
                   </td>
-                  <td className="py-4 px-6 text-secondary text-sm">
+                  <td className="py-3.5 px-5" style={{ color: "#94A3B8" }}>
                     {row.manual}
                   </td>
-                  <td className="py-4 px-6 text-secondary text-sm">
+                  <td className="py-3.5 px-5" style={{ color: "#94A3B8" }}>
                     {row.vault}
                   </td>
-                  <td className="py-4 px-6 text-secondary text-sm">
+                  <td className="py-3.5 px-5" style={{ color: "#94A3B8" }}>
                     {row.infisical}
                   </td>
                 </tr>
@@ -136,16 +139,20 @@ export const WhyDSO = () => {
           </table>
         </motion.div>
 
-        {/* Honest Recommendation */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-3xl mx-auto p-8 rounded-lg border border-accent/20 bg-accent/5"
+          className="max-w-3xl mx-auto p-6 rounded-xl text-sm"
+          style={{
+            background: "rgba(0,230,192,0.04)",
+            border: "1px solid rgba(0,230,192,0.15)",
+            color: "#94A3B8",
+            lineHeight: "1.7",
+          }}
         >
-          <p className="text-foreground-alt leading-relaxed">
-            <span className="font-semibold text-foreground">Bottom line:</span> DSO is the simplest solution for Docker Compose teams that want automated zero-downtime secret rotation without operational overhead. It's not a secret manager replacement—it's a rotation tool that integrates with your existing secret management. If you're running Kubernetes, using Vault with rotation policies, or need team-based secret management, those solutions are better fits.
-          </p>
+          <span style={{ color: "#F8FAFC", fontWeight: 600 }}>Bottom line: </span>
+          DSO is the right tool for Docker Compose teams that want zero-downtime secret rotation without ops overhead. It is not a secret manager replacement. If you run Kubernetes, need team-based access controls, or require a full secret management platform, use a purpose-built solution.
         </motion.div>
       </div>
     </section>

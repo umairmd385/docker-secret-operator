@@ -155,7 +155,7 @@ export default function RootLayout({
       sameAs: [
         "https://github.com/docker-secret-operator/dso",
         "https://x.com/skycloudops",
-        "https://discord.gg/skycloudops",
+        "https://discord.gg/MqgFaVA6b",
         "https://www.linkedin.com/in/mdumair250801/",
       ],
       contactPoint: {

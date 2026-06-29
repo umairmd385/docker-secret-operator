@@ -8,7 +8,7 @@ const PROVIDERS = [
   {
     icon: Lock,
     name: "HashiCorp Vault",
-    desc: "Self-hosted or HCP Vault. The industry standard for enterprise secret management.",
+    desc: "Self-hosted or HCP Vault with full TLS and audit trail support.",
     badges: ["Rotation", "Injection", "Audit", "TLS"],
     href: "/deploy#vault",
     featured: false,
@@ -16,7 +16,7 @@ const PROVIDERS = [
   {
     icon: Cloud,
     name: "AWS Secrets Manager",
-    desc: "Native AWS secret management. Full IAM integration with automatic versioning.",
+    desc: "Native AWS integration with IAM-based access and automatic versioning.",
     badges: ["Rotation", "Injection", "IAM"],
     href: "/deploy#aws",
     featured: false,
@@ -24,7 +24,7 @@ const PROVIDERS = [
   {
     icon: Key,
     name: "Azure Key Vault",
-    desc: "Microsoft Azure's managed HSM and secret storage with Azure AD integration.",
+    desc: "Microsoft Azure managed secret storage with Azure AD RBAC.",
     badges: ["Rotation", "Injection", "RBAC"],
     href: "/deploy#azure",
     featured: false,
@@ -32,16 +32,16 @@ const PROVIDERS = [
   {
     icon: Globe,
     name: "Huawei Cloud CSMS",
-    desc: "Cloud Secret Management Service — enterprise-grade secret storage on Huawei Cloud.",
+    desc: "Cloud Secret Management Service for Huawei Cloud workloads.",
     badges: ["Rotation", "Injection", "Audit"],
     href: "/deploy#huawei",
     featured: true,
   },
   {
     icon: HardDrive,
-    name: "Local Secrets",
-    desc: "Encrypted local vault for development and air-gapped environments. No cloud required.",
-    badges: ["Injection", "Offline", "Dev-friendly"],
+    name: "Local Vault",
+    desc: "Encrypted local store for dev and air-gapped environments. No cloud needed.",
+    badges: ["Injection", "Offline", "Dev"],
     href: "/deploy#local",
     featured: false,
   },
@@ -80,8 +80,7 @@ export const ProviderEcosystem = () => {
             <span style={{ color: "#00E6C0" }}>secret provider</span>
           </h2>
           <p className="text-lg max-w-xl mx-auto" style={{ color: "#94A3B8" }}>
-            Swap providers without changing application code. DSO speaks to
-            each provider natively.
+            Swap providers without changing application code.
           </p>
         </motion.div>
 

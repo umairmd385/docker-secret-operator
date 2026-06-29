@@ -13,8 +13,11 @@ This guide covers operating DSO after initial setup, including monitoring, maint
 
 **Morning Health Check**:
 \`\`\`bash
-# Comprehensive environment validation
+# Comprehensive environment validation (all 17+ checks)
 docker dso doctor --level full
+
+# Machine-readable output for scripts and CI
+docker dso doctor --json
 
 # Current status snapshot
 docker dso status
@@ -32,7 +35,51 @@ docker dso doctor
 docker dso status --watch
 \`\`\`
 
-### 2. Monitoring (v3.5+)
+**Interpreting Doctor Output**:
+
+| Symbol | Meaning |
+|--------|---------|
+| ✓ PASS | Check passed |
+| ⚠ WARN | Non-critical issue; DSO may still function |
+| ✗ FAIL | Critical issue; action required |
+
+Each WARN or FAIL entry includes a **root cause** and ordered **recovery steps**.
+
+### 2. Automated Repair
+
+When \`docker dso doctor\` reports failures, the repair engine can apply fixes automatically based on their risk level:
+
+| Risk Level | Examples | Behaviour |
+|------------|----------|-----------|
+| Safe | Create missing runtime directory | Applied automatically without prompting |
+| Moderate | Enable service, remove stale locks | Displayed with a description; requires confirmation |
+| Destructive | Recreate config file | Displayed with a warning; requires explicit confirmation |
+
+**Run a repair**:
+\`\`\`bash
+# See what repairs are available (prints plan, does not apply)
+docker dso doctor --json | docker dso repair --dry-run
+
+# Apply repairs interactively (safe actions auto-applied; moderate/destructive prompt)
+docker dso repair
+
+# Apply all repairs without prompting (use with care — e.g. in automation)
+docker dso repair --yes
+\`\`\`
+
+After repair completes, Doctor runs automatically to verify the fixes. The repair report shows which actions were applied, which were declined, and whether the post-repair Doctor run is clean.
+
+**Repair coverage** (by check ID):
+
+| Category | Repaired automatically |
+|----------|----------------------|
+| Permissions | Socket mode (DSO-DOCTOR-004), config mode (DSO-DOCTOR-005, 009) |
+| Configuration | Create default config (DSO-DOCTOR-007), recreate empty config (DSO-DOCTOR-008) |
+| Runtime | Create runtime dir (DSO-DOCTOR-012), remove stale locks (DSO-DOCTOR-013) |
+| Service | Write unit file (DSO-DOCTOR-015), enable service (DSO-DOCTOR-016), start service (DSO-DOCTOR-017) |
+| Provider | Not automated — credential issues require manual intervention |
+
+### 3. Monitoring (v3.5+)
 
 **Setup Real-Time Monitoring**:
 \`\`\`bash
@@ -66,7 +113,7 @@ View details in status output:
 docker dso status --json | jq '.observability'
 \`\`\`
 
-### 3. Configuration Management
+### 4. Configuration Management
 
 **Regular Config Reviews**:
 \`\`\`bash

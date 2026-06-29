@@ -66,7 +66,7 @@ export const ROUTES = {
     githubReleases: "https://github.com/docker-secret-operator/dso/releases",
     twitter: "https://x.com/skycloudops",
     linkedin: "https://www.linkedin.com/in/mdumair250801/",
-    discord: "https://discord.gg/skycloudops",
+    discord: "https://discord.gg/MqgFaVA6b",
   },
 } as const;
 

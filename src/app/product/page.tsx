@@ -25,23 +25,20 @@ const USE_CASES = [
   {
     icon: Database,
     title: "Database Credentials",
-    description:
-      "Rotate database passwords without dropping connections. Services reconnect automatically with refreshed credentials.",
+    description: "Rotate DB passwords without dropping connections. Containers reconnect automatically.",
     example: "PostgreSQL, MySQL, MongoDB",
   },
   {
     icon: Key,
     title: "API Keys",
-    description:
-      "Keep API keys fresh by rotating automatically. Dependent services pick up new keys on next request.",
+    description: "Rotate API keys automatically. Services pick up fresh credentials on the next request.",
     example: "Third-party APIs, internal services",
   },
   {
     icon: Shield,
     title: "TLS Certificates",
-    description:
-      "Update SSL certificates before expiration. Traffic never interrupts during certificate rotation.",
-    example: "Mutual TLS, self-signed certificates",
+    description: "Update certificates before expiration. Traffic continues uninterrupted.",
+    example: "Mutual TLS, self-signed certs",
   },
 ];
 
@@ -49,38 +46,32 @@ const CAPABILITIES = [
   {
     icon: Zap,
     title: "Zero-Downtime Rotation",
-    description:
-      "Secrets rotate without interrupting healthy services or dropping connections.",
+    description: "Secrets rotate without interrupting services or dropping connections.",
   },
   {
     icon: RefreshCw,
     title: "Automatic Recovery",
-    description:
-      "Recover safely after interruptions, crashes, or failed health checks without manual intervention.",
+    description: "Checkpoint-based recovery after crashes or failed health checks. No ops required.",
   },
   {
     icon: Cloud,
-    title: "Multi-Provider Support",
-    description:
-      "AWS Secrets Manager, Azure Key Vault, HashiCorp Vault, Huawei Cloud CSMS, and local providers.",
+    title: "5 Providers",
+    description: "AWS, Azure, HashiCorp Vault, Huawei Cloud CSMS, and local encrypted vault.",
   },
   {
     icon: Container,
-    title: "Docker-Native Workflow",
-    description:
-      "Works seamlessly with Docker Compose and standalone Docker hosts. No orchestrator required.",
+    title: "Docker Native",
+    description: "Built for Docker Compose and standalone hosts. No Kubernetes, no orchestrator.",
   },
   {
     icon: Shield,
-    title: "Minimal Resource Overhead",
-    description:
-      "Under 50 MB RAM and 5% CPU during rotation. Negligible impact on running workloads.",
+    title: "~50 MB RAM",
+    description: "Lightweight footprint. Under 5% CPU during rotation. Negligible production impact.",
   },
   {
     icon: FileCheck,
-    title: "Free and Open Source",
-    description:
-      "Fully auditable source code on GitHub. No platform lock-in, no proprietary extensions.",
+    title: "Free & Open Source",
+    description: "Fully auditable on GitHub. No lock-in, no proprietary extensions.",
   },
 ];
 
@@ -175,16 +166,15 @@ export default function ProductPage() {
                 lineHeight: "1.05",
               }}
             >
-              What DSO does
+              Secret rotation
               <br />
-              <span style={{ color: "#00E6C0" }}>and why it matters</span>
+              <span style={{ color: "#00E6C0" }}>without downtime</span>
             </h1>
             <p
               className="text-lg sm:text-xl max-w-2xl mx-auto"
               style={{ color: "#94A3B8" }}
             >
-              Secret rotation without downtime. For Docker teams who want
-              automation without complexity.
+              A focused runtime engine for Docker teams. Automates credential rotation so you don&apos;t have to.
             </p>
           </motion.div>
         </section>
@@ -208,10 +198,10 @@ export default function ProductPage() {
                 className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4"
                 style={{ color: "#F8FAFC" }}
               >
-                What you can do with DSO
+                What DSO handles
               </h2>
               <p className="text-lg max-w-xl mx-auto" style={{ color: "#94A3B8" }}>
-                Zero-downtime secret rotation for containerized workloads.
+                Any credential that needs zero-downtime rotation in Docker workloads.
               </p>
             </motion.div>
 
@@ -298,10 +288,10 @@ export default function ProductPage() {
                 className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4"
                 style={{ color: "#F8FAFC" }}
               >
-                What you get with DSO
+                Core capabilities
               </h2>
               <p className="text-lg max-w-xl mx-auto" style={{ color: "#94A3B8" }}>
-                Operational guarantees you can count on in production.
+                Operational guarantees backed by architectural constraints.
               </p>
             </motion.div>
 
