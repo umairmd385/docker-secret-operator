@@ -11,7 +11,7 @@ export const H1 = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTML
     <h1
       ref={ref}
       className={cn(
-        "text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight",
+        "text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-foreground tracking-tighter leading-[0.95]",
         className
       )}
       {...props}

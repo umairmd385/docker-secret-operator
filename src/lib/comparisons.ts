@@ -209,7 +209,7 @@ Process takes 1-2 weeks for typical teams.
       },
       {
         question: "Is DSO production-ready?",
-        answer: "Yes, DSO is a CNCF Sandbox project and handles 100k+ container secrets in production. It's suitable for enterprise use.",
+        answer: "Yes, DSO is production-grade and handles 100k+ container secrets in production. It's suitable for enterprise use.",
       },
       {
         question: "What if we need features Vault has but DSO doesn't?",
@@ -275,7 +275,7 @@ DSO is the better choice if you need simple, secure Docker secret management. Va
       },
       {
         feature: "Community Activity",
-        dso: "Active (CNCF Sandbox)",
+        dso: "Active (open source)",
         competitor: "Maintenance mode",
         winner: "dso",
       },
@@ -291,7 +291,7 @@ DSO is the better choice if you need simple, secure Docker secret management. Va
       "Cloud provider support (AWS, Azure, Vault)",
       "Local Mode for dev environments",
       "Event-driven secret rotation",
-      "Active community (CNCF Sandbox)",
+      "Active open source community",
       "Zero-persistence security",
       "Future-proof technology stack",
     ],

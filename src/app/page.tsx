@@ -2,52 +2,66 @@ import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
 import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Hero } from "@/components/sections/Hero";
-import { ProblemSection } from "@/components/sections/ProblemSection";
-import { TerminalDemo } from "@/components/sections/TerminalDemo";
-import { ProductPreview } from "@/components/sections/ProductPreview";
-import { WhyDSOExists } from "@/components/sections/WhyDSOExists";
-import { BuiltForFailures } from "@/components/sections/BuiltForFailures";
-import { InstallationSimple } from "@/components/sections/InstallationSimple";
-import { TrustAndCTA } from "@/components/sections/TrustAndCTA";
+import { HeroNew } from "@/components/sections/HeroNew";
+import { MetricsStrip } from "@/components/sections/MetricsStrip";
+import { WhySecretsFail } from "@/components/sections/WhySecretsFail";
+import { HowDSOWorks } from "@/components/sections/HowDSOWorks";
+import { SecretLifecycle } from "@/components/sections/SecretLifecycle";
+import { KeyCapabilities } from "@/components/sections/KeyCapabilities";
+import { ProviderEcosystem } from "@/components/sections/ProviderEcosystem";
+import { CLIExperience } from "@/components/sections/CLIExperience";
+import { SecurityGuarantees } from "@/components/sections/SecurityGuarantees";
+import { FinalCTA } from "@/components/sections/FinalCTA";
 
 export const metadata = generatePageMetadata(PAGE_METADATA["/"], "/");
 
 export default function Home() {
   return (
-    <main className="flex-1 flex flex-col relative bg-background overflow-x-hidden">
-      {/* Premium Ambient Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-accent/10 via-background to-transparent opacity-30" />
+    <main className="relative overflow-x-hidden" style={{ background: "#05070A" }}>
+      {/* Global ambient background — fixed, behind all content */}
+      <div
+        className="fixed inset-0 z-0 pointer-events-none"
+        aria-hidden="true"
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "1000px",
+            height: "600px",
+            background:
+              "radial-gradient(ellipse at 50% 0%, rgba(0,230,192,0.06) 0%, transparent 65%)",
+            filter: "blur(40px)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            width: "700px",
+            height: "600px",
+            background:
+              "radial-gradient(ellipse at 100% 100%, rgba(109,93,246,0.05) 0%, transparent 60%)",
+            filter: "blur(60px)",
+          }}
+        />
       </div>
 
-      <div className="relative z-10 flex flex-col w-full space-y-0">
+      <div className="relative z-10">
         <Navbar />
-
-        {/* 1. Hero - Value proposition */}
-        <Hero />
-
-        {/* 2. Problem - Context (tightened) */}
-        <ProblemSection />
-
-        {/* 3. Terminal Demo - Proof of concept */}
-        <TerminalDemo />
-
-        {/* 4. Product Preview - How it works */}
-        <ProductPreview />
-
-        {/* 5. Why DSO Exists - Philosophy (not comparison) */}
-        <WhyDSOExists />
-
-        {/* 6. Built for Failures - Safety promise + link to Architecture */}
-        <BuiltForFailures />
-
-        {/* 7. Installation - Options (simplified) */}
-        <InstallationSimple />
-
-        {/* 8. Trust & CTA - Confidence + action */}
-        <TrustAndCTA />
-
+        <HeroNew />
+        <MetricsStrip />
+        <WhySecretsFail />
+        <HowDSOWorks />
+        <SecretLifecycle />
+        <KeyCapabilities />
+        <ProviderEcosystem />
+        <CLIExperience />
+        <SecurityGuarantees />
+        <FinalCTA />
         <Footer />
       </div>
     </main>

@@ -28,7 +28,7 @@ const links = {
   ],
   community: [
     { label: "Open Source", href: ROUTES.external.github },
-    { label: "CNCF Sandbox", href: "https://www.cncf.io/sandbox/" },
+    { label: "License", href: "https://github.com/docker-secret-operator/dso/blob/main/LICENSE" },
     { label: "Releases", href: "https://github.com/docker-secret-operator/dso/releases" },
     { label: "Roadmap", href: "https://github.com/docker-secret-operator/dso/issues?q=is%3Aissue+is%3Aopen+label%3Aroadmap" },
   ],
@@ -85,7 +85,7 @@ export const Footer = () => {
               Open Source
             </div>
             <p className="text-xs text-gray-600 leading-relaxed max-w-xs">
-              CNCF Sandbox project. Apache 2.0 licensed. Community-driven secret rotation for Docker.
+              Apache 2.0 licensed. Community-driven secret rotation for Docker.
             </p>
           </div>
         </div>
@@ -241,8 +241,6 @@ export const Footer = () => {
           <span>Open Source</span>
           <span className="hidden md:block w-1 h-1 rounded-full bg-gray-700" />
           <span>Docker Native</span>
-          <span className="hidden md:block w-1 h-1 rounded-full bg-gray-700" />
-          <span className="text-accent/60">CNCF Sandbox</span>
           <span className="hidden md:block w-1 h-1 rounded-full bg-gray-700" />
           <span>5 Providers</span>
         </div>

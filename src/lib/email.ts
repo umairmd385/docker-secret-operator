@@ -229,7 +229,7 @@ export async function sendVerificationEmail(email: string, subscriberId: string)
       <span>•</span>
       <span>Docker Native</span>
       <span>•</span>
-      <span>CNCF Sandbox</span>
+      
     </div>
 
     <div class="footer">
@@ -238,7 +238,7 @@ export async function sendVerificationEmail(email: string, subscriberId: string)
       </p>
       <p style="margin: 10px 0 0 0;">
         Docker Secret Operator<br>
-        CNCF Sandbox Project • Apache 2.0 Licensed
+        Apache 2.0 Licensed
       </p>
     </div>
   </div>
@@ -360,7 +360,7 @@ export async function sendWelcomeEmail(email: string): Promise<boolean> {
       <span>•</span>
       <span>Docker Native</span>
       <span>•</span>
-      <span>CNCF Sandbox</span>
+      
     </div>
 
     <div class="footer">
@@ -369,7 +369,7 @@ export async function sendWelcomeEmail(email: string): Promise<boolean> {
       </p>
       <p style="margin: 10px 0 0 0;">
         Docker Secret Operator<br>
-        CNCF Sandbox Project • Apache 2.0 Licensed
+        Apache 2.0 Licensed
       </p>
     </div>
   </div>
@@ -490,7 +490,7 @@ export function buildNewsletterTemplate(htmlContent: string, unsubscribeEmail: s
       <span style="display:inline-block; margin: 0 5px;">•</span>
       <span style="display:inline-block; margin: 0 5px;">Docker Native</span>
       <span style="display:inline-block; margin: 0 5px;">•</span>
-      <span style="display:inline-block; margin: 0 5px;">CNCF Sandbox</span>
+      
     </div>
 
     <div class="footer">
@@ -501,7 +501,7 @@ export function buildNewsletterTemplate(htmlContent: string, unsubscribeEmail: s
       </p>
       <p style="margin: 0;">
         Docker Secret Operator<br>
-        CNCF Sandbox Project • Apache 2.0 Licensed
+        Apache 2.0 Licensed
       </p>
     </div>
   </div>

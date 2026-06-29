@@ -43,8 +43,8 @@ export const OSSTrust = () => {
     },
     {
       icon: <Lock className="w-6 h-6" />,
-      title: "CNCF Sandbox",
-      description: "Incubating CNCF project. Community-driven development and governance.",
+      title: "Apache 2.0",
+      description: "Fully open source. Permissive license. Free for commercial use.",
     },
     {
       icon: <Code className="w-6 h-6" />,
@@ -70,7 +70,7 @@ export const OSSTrust = () => {
         >
           <H2 className="mb-4">Built on Trust</H2>
           <PLead className="text-tertiary">
-            DSO is open source, Docker native, CNCF incubating, and community-driven. Transparency at every level.
+            DSO is open source, Docker native, Apache 2.0 licensed, and community-driven. Transparency at every level.
           </PLead>
         </motion.div>
 

@@ -4,7 +4,7 @@
   "private": true,
   "license": "Apache-2.0",
   "scripts": {
-    "dev": "node scripts/generate-docs.js && next dev",
+    "dev": "node scripts/generate-docs.js && NODE_PATH=./node_modules next dev",
     "generate-docs": "node scripts/generate-docs.js",
     "build:docs": "vitepress build docs --outDir public/docs",
     "build": "npm run generate-docs && next build",

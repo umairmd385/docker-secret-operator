@@ -31,7 +31,7 @@ export const EcosystemConnections = () => {
     {
       category: "Standards & Community",
       items: [
-        { name: "CNCF", description: "Cloud Native Computing Foundation", link: "https://www.cncf.io/" },
+        { name: "Docker Hub", description: "Container image registry", link: "https://hub.docker.com/" },
         { name: "Docker Community", description: "Open source Docker initiatives", link: "https://www.docker.com/community/" },
       ]
     }

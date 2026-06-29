@@ -7,6 +7,22 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname),
   },
 
+  // Fix webpack module resolution when a parent directory has a package.json
+  // that causes enhanced-resolve to walk up and look in the wrong node_modules.
+  // The alias hard-pins tailwindcss to the project's own copy so css-loader
+  // never needs to traverse upward.
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...(config.resolve.alias as Record<string, string>),
+      tailwindcss: path.resolve(__dirname, "node_modules/tailwindcss"),
+    };
+    config.resolve.modules = [
+      path.resolve(__dirname, "node_modules"),
+      "node_modules",
+    ];
+    return config;
+  },
+
   images: {
     unoptimized: false, // ✅ Enable Next.js Image optimization
 

@@ -51,7 +51,7 @@ export default function CommunityPage() {
                 Open Source
               </h2>
               <p className="text-lg text-secondary">
-                Apache 2.0 licensed. CNCF Sandbox project. Fully auditable source code.
+                Apache 2.0 licensed. Fully auditable source code. Open source from day one.
               </p>
             </div>
 
@@ -73,10 +73,10 @@ export default function CommunityPage() {
                 },
                 {
                   icon: <Heart className="w-6 h-6" />,
-                  label: "CNCF",
-                  value: "Sandbox",
-                  description: "Graduated to CNCF Sandbox",
-                  link: "https://www.cncf.io/projects/",
+                  label: "Community",
+                  value: "Open Source",
+                  description: "Community-driven development",
+                  link: "https://github.com/docker-secret-operator/dso",
                 },
                 {
                   icon: <MessageSquare className="w-6 h-6" />,

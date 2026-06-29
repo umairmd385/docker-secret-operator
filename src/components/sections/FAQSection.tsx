@@ -27,7 +27,7 @@ export const FAQSection = () => {
     },
     {
       q: "Is it open source?",
-      a: "Yes. Apache 2.0 licensed. CNCF Sandbox project. Fully auditable code on GitHub.",
+      a: "Yes. Apache 2.0 licensed. Fully auditable code on GitHub.",
     },
     {
       q: "Can I use it in production?",

@@ -5,15 +5,17 @@
 
 :root {
   /* Legacy variables */
-  --background: #0d1117;
-  --foreground: #e2e8f0;
-  --surface: #161b22;
-  --surface2: #0a0d12;
-  --surface-hover: #1c2128;
-  --accent: #00e6c0;
+  --background: #05070A;
+  --foreground: #F8FAFC;
+  --surface: #0B1118;
+  --surface2: #080D13;
+  --surface-hover: #111827;
+  --accent: #00E6C0;
+  --accent-secondary: #6D5DF6;
+  --muted: #94A3B8;
   --accent-dim: rgba(0, 230, 192, 0.1);
-  --border: rgba(255, 255, 255, 0.1);
-  --border-soft: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.04);
 
   /* Branding theme variables (defaults to light mode) */
   --bg-background: #ffffff;
@@ -84,6 +86,8 @@ html.dark {
   --color-surface2: var(--surface2);
   --color-surface-hover: var(--surface-hover);
   --color-accent: var(--accent);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-muted: var(--muted);
   --color-accent-dim: var(--accent-dim);
   --color-border: var(--border);
   --color-border-soft: var(--border-soft);

@@ -83,12 +83,12 @@ export const PAGE_METADATA: Record<string, PageMetadataConfig> = {
   // HOMEPAGE
   "/": {
     title: "Docker Secret Operator | Zero-Persistence Secret Injection",
-    description: "Event-driven secret management for Docker & Kubernetes. Inject secrets at runtime without disk writes. CNCF Sandbox project, Apache 2.0 licensed.",
+    description: "Event-driven secret management for Docker & Kubernetes. Inject secrets at runtime without disk writes. Apache 2.0 licensed, open source.",
     keywords: [
       "docker secret management",
       "secret injection docker",
       "zero persistence secrets",
-      "CNCF sandbox project",
+      "docker secret rotation",
       "vault alternative",
     ],
     ogTitle: "Docker Secret Operator — Zero-Persistence Secret Injection",
@@ -96,7 +96,7 @@ export const PAGE_METADATA: Record<string, PageMetadataConfig> = {
     ogImage: "/og-image.png",
     twitterCard: "summary_large_image",
     twitterTitle: "Docker Secret Operator | Secret Management for Docker",
-    twitterDescription: "Zero-persistence secret injection for Docker containers. CNCF Sandbox project.",
+    twitterDescription: "Zero-persistence secret injection for Docker containers. Apache 2.0 open source.",
   },
 
   // TOP-LEVEL PAGES
@@ -167,10 +167,10 @@ export const PAGE_METADATA: Record<string, PageMetadataConfig> = {
   // GUIDE PAGES (static)
   "/docs/guide/what-is-dso": {
     title: "What is Docker Secret Operator (DSO)? | Overview & Features",
-    description: "Docker Secret Operator (DSO) is an open-source, CNCF Sandbox runtime secret injection daemon for Docker and Docker Compose. Zero-persistence secrets, automatic rotation, and crash recovery — no Kubernetes required.",
+    description: "Docker Secret Operator (DSO) is an open-source runtime secret injection daemon for Docker and Docker Compose. Zero-persistence secrets, automatic rotation, and crash recovery — no Kubernetes required.",
     keywords: ["what is docker secret operator", "dso overview", "docker secret injection", "runtime secret injection"],
     ogTitle: "What is Docker Secret Operator (DSO)?",
-    ogDescription: "Runtime secret injection and automatic rotation for Docker. CNCF Sandbox project.",
+    ogDescription: "Runtime secret injection and automatic rotation for Docker. Apache 2.0 open source.",
     ogImage: "/og-image.png",
     twitterCard: "summary",
   },

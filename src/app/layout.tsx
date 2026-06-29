@@ -11,10 +11,10 @@ export const metadata: Metadata = {
     google: "aca7dac2601cbebd",
   },
   title: {
-    default: "Docker Secret Operator (DSO) | CNCF Sandbox Project",
+    default: "Docker Secret Operator (DSO) | Zero-Downtime Secret Rotation",
     template: "%s | DSO",
   },
-  description: "Docker Secret Operator (DSO) - Secret operator for Docker & Kubernetes. Zero-persistence secret management with event-driven injection. CNCF sandbox project alternative to Vault. Apache 2.0 licensed.",
+  description: "Docker Secret Operator (DSO) - Secret operator for Docker & Kubernetes. Zero-persistence secret management with event-driven injection. Open source alternative to Vault. Apache 2.0 licensed.",
   keywords: [
     "docker secret operator",
     "secret operator docker",
@@ -31,8 +31,6 @@ export const metadata: Metadata = {
     "container security",
     "secret orchestration",
     "secret rotation",
-    "CNCF sandbox",
-    "CNCF project",
     "open source",
     "docker plugin",
     "AWS Secrets Manager integration",
@@ -59,7 +57,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Docker Secret Operator — Zero-Persistence Secret Injection",
-    description: "Event-driven secret management for Docker. Inject secrets at runtime without disk writes. CNCF Sandbox project.",
+    description: "Event-driven secret management for Docker. Inject secrets at runtime without disk writes. Apache 2.0 open source.",
     url: "https://dso.skycloudops.in",
     siteName: "Docker Secret Operator",
     images: [
@@ -84,7 +82,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Docker Secret Operator | Secret Management for Docker",
-    description: "Zero-persistence secret injection for Docker containers. CNCF Sandbox project.",
+    description: "Zero-persistence secret injection for Docker containers. Apache 2.0 open source.",
     images: ["/og-image.png"],
     creator: "@skycloudops",
     site: "@skycloudops",
@@ -117,7 +115,7 @@ export default function RootLayout({
       name: "Docker Secret Operator",
       applicationCategory: "DeveloperApplication",
       operatingSystem: ["Linux", "macOS", "Windows"],
-      description: "Event-driven, zero-persistence secret injection for standalone Docker environments. Open source, CNCF Sandbox project, Apache 2.0 licensed.",
+      description: "Event-driven, zero-persistence secret injection for standalone Docker environments. Open source, Apache 2.0 licensed.",
       url: "https://dso.skycloudops.in",
       image: "https://dso.skycloudops.in/dso-logo.png",
       license: "https://www.apache.org/licenses/LICENSE-2.0",
@@ -145,7 +143,7 @@ export default function RootLayout({
         "@type": "Organization",
         name: "DSO Open Source Community",
       },
-      keywords: "docker, secrets, secret-management, devops, security, zero-persistence, CNCF",
+      keywords: "docker, secrets, secret-management, devops, security, zero-persistence",
       version: "3.2",
     },
     {
@@ -208,7 +206,7 @@ export default function RootLayout({
       "@context": "https://schema.org",
       "@type": "SoftwareSourceCode",
       name: "Docker Secret Operator",
-      description: "Open source secret management operator for Docker. Zero-persistence, event-driven secret injection. CNCF Sandbox project.",
+      description: "Open source secret management operator for Docker. Zero-persistence, event-driven secret injection. Apache 2.0 licensed.",
       codeRepository: "https://github.com/docker-secret-operator/dso",
       programmingLanguage: ["Go", "Shell"],
       license: "https://www.apache.org/licenses/LICENSE-2.0",
@@ -218,7 +216,7 @@ export default function RootLayout({
         name: "Docker Secret Operator Community",
         url: "https://github.com/docker-secret-operator",
       },
-      keywords: "docker, secret-management, secret-operator, kubernetes, devops, cncf, security, vault-alternative",
+      keywords: "docker, secret-management, secret-operator, kubernetes, devops, security, vault-alternative",
     },
     {
       "@context": "https://schema.org",
@@ -229,7 +227,7 @@ export default function RootLayout({
           name: "What is Docker Secret Operator (DSO)?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Docker Secret Operator (DSO) is an open-source, CNCF Sandbox project that provides zero-persistence, event-driven secret injection for Docker containers. It allows you to securely inject secrets at runtime without ever writing them to disk.",
+            text: "Docker Secret Operator (DSO) is an open-source project that provides zero-persistence, event-driven secret injection for Docker containers. It allows you to securely inject secrets at runtime without ever writing them to disk.",
           },
         },
         {
