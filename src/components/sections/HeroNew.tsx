@@ -173,7 +173,7 @@ export const HeroNew = () => {
           transition={{ duration: 0.5 }}
           className="flex flex-wrap items-center justify-center gap-2 mb-10"
         >
-          {["Docker Native", "Open Source", "Apache 2.0"].map((label) => (
+          {["Docker Native", "Open Source", "Zero Downtime"].map((label) => (
             <span
               key={label}
               className="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider border"

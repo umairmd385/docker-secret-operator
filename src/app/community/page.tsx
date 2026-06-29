@@ -20,21 +20,34 @@ export const metadata = generatePageMetadata(
 
 export default function CommunityPage() {
   return (
-    <main className="flex-1 flex flex-col relative bg-background overflow-x-hidden">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-accent/10 via-background to-transparent opacity-30" />
+    <main className="relative overflow-x-hidden" style={{ background: "#05070A" }}>
+      <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+        <div style={{
+          position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
+          width: "900px", height: "500px",
+          background: "radial-gradient(ellipse at 50% 0%, rgba(0,230,192,0.06) 0%, transparent 65%)",
+          filter: "blur(40px)",
+        }} />
+        <div style={{
+          position: "absolute", bottom: 0, right: 0, width: "600px", height: "500px",
+          background: "radial-gradient(ellipse at 100% 100%, rgba(109,93,246,0.05) 0%, transparent 60%)",
+          filter: "blur(60px)",
+        }} />
       </div>
 
-      <div className="relative z-10 flex flex-col w-full space-y-0">
+      <div className="relative z-10">
         <Navbar />
 
         {/* Hero */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-            <h1 className="text-5xl sm:text-6xl font-bold text-foreground mb-6">
+        <section className="pt-36 pb-20 text-center px-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <div className="max-w-4xl mx-auto">
+            <p className="text-xs font-mono uppercase tracking-widest mb-5" style={{ color: "#94A3B8" }}>
+              Community
+            </p>
+            <h1 className="font-bold tracking-tighter mb-6" style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", color: "#F8FAFC", lineHeight: "1.05" }}>
               Community
             </h1>
-            <p className="text-xl text-secondary max-w-2xl mx-auto">
+            <p className="text-xl max-w-2xl mx-auto" style={{ color: "#94A3B8" }}>
               Small team. Public development. Transparent decisions. We ship frequently and listen to feedback.
             </p>
           </div>
@@ -43,45 +56,42 @@ export default function CommunityPage() {
         {/* Project Activity - Real metrics */}
         <ProjectActivity />
 
-        {/* GitHub & Project */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                Open Source
+        {/* Open Source */}
+        <section className="py-20 sm:py-28" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="text-center max-w-3xl mx-auto mb-14">
+              <p className="text-xs font-mono uppercase tracking-widest mb-4" style={{ color: "#94A3B8" }}>Open Source</p>
+              <h2 className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4" style={{ color: "#F8FAFC" }}>
+                Fully open. Fully auditable.
               </h2>
-              <p className="text-lg text-secondary">
-                Apache 2.0 licensed. Fully auditable source code. Open source from day one.
+              <p className="text-lg" style={{ color: "#94A3B8" }}>
+                Every line of code is public. No closed-source extensions, no proprietary agents.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
                 {
-                  icon: <Code className="w-6 h-6" />,
+                  icon: <Code className="w-5 h-5" />,
                   label: "GitHub",
-                  value: "Source Code",
                   description: "Public repository with full history",
                   link: "https://github.com/docker-secret-operator/dso",
                 },
                 {
-                  icon: <Package className="w-6 h-6" />,
+                  icon: <Package className="w-5 h-5" />,
                   label: "License",
-                  value: "Apache 2.0",
-                  description: "Free for commercial use",
+                  description: "Apache 2.0 — free for commercial use",
                   link: "https://github.com/docker-secret-operator/dso/blob/main/LICENSE",
                 },
                 {
-                  icon: <Heart className="w-6 h-6" />,
+                  icon: <Heart className="w-5 h-5" />,
                   label: "Community",
-                  value: "Open Source",
                   description: "Community-driven development",
                   link: "https://github.com/docker-secret-operator/dso",
                 },
                 {
-                  icon: <MessageSquare className="w-6 h-6" />,
+                  icon: <MessageSquare className="w-5 h-5" />,
                   label: "Discussions",
-                  value: "GitHub",
                   description: "Ideas, questions, and feedback",
                   link: "https://github.com/docker-secret-operator/dso/discussions",
                 },
@@ -91,18 +101,12 @@ export default function CommunityPage() {
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-6 rounded-lg border border-border bg-surface/30 hover:border-accent/30 hover:bg-surface/50 transition-all duration-300 group cursor-pointer"
+                  className="p-6 rounded-2xl transition-all duration-300 block no-underline hover:border-accent/30 hover:bg-accent/5"
+                  style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}
                 >
-                  <div className="text-accent mb-3 group-hover:scale-110 transition-transform duration-300">
-                    {item.icon}
-                  </div>
-                  <h3 className="font-semibold text-foreground text-sm mb-1">
-                    {item.label}
-                  </h3>
-                  <p className="text-lg font-bold text-accent mb-2">
-                    {item.value}
-                  </p>
-                  <p className="text-xs text-secondary">{item.description}</p>
+                  <div className="mb-4" style={{ color: "#00E6C0" }}>{item.icon}</div>
+                  <h3 className="font-semibold text-sm mb-1" style={{ color: "#F8FAFC" }}>{item.label}</h3>
+                  <p className="text-xs leading-relaxed" style={{ color: "#94A3B8" }}>{item.description}</p>
                 </a>
               ))}
             </div>
@@ -113,18 +117,19 @@ export default function CommunityPage() {
         <ReleaseTimeline />
 
         {/* Roadmap */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
+        <section className="py-20 sm:py-28" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
             <div className="text-center max-w-3xl mx-auto">
-              <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                What's Next
+              <p className="text-xs font-mono uppercase tracking-widest mb-4" style={{ color: "#94A3B8" }}>Roadmap</p>
+              <h2 className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4" style={{ color: "#F8FAFC" }}>
+                What&apos;s next
               </h2>
-              <p className="text-lg text-secondary">
-                Focused work on Docker secret rotation. Check GitHub Discussions for proposals and feedback.
+              <p className="text-lg" style={{ color: "#94A3B8" }}>
+                Focused work on Docker secret rotation. Check GitHub Discussions for proposals.
               </p>
             </div>
 
-            <div className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-5">
               {[
                 {
                   status: "Current Focus",
@@ -133,6 +138,7 @@ export default function CommunityPage() {
                     "Performance optimizations for rapid rotation",
                     "Enhanced observability and monitoring",
                   ],
+                  accent: true,
                 },
                 {
                   status: "Under Consideration",
@@ -141,19 +147,20 @@ export default function CommunityPage() {
                     "Expanded health check options",
                     "Improved logging and debugging",
                   ],
+                  accent: false,
                 },
-              ].map((section, idx) => (
-                <div key={idx} className="border-l-4 border-accent/30 pl-6 py-4">
-                  <h3 className="font-bold text-foreground text-lg mb-3">
-                    {section.status}
+              ].map((roadmapSection, idx) => (
+                <div key={idx} className="p-7 rounded-2xl" style={{
+                  background: roadmapSection.accent ? "rgba(0,230,192,0.04)" : "rgba(255,255,255,0.02)",
+                  border: roadmapSection.accent ? "1px solid rgba(0,230,192,0.2)" : "1px solid rgba(255,255,255,0.07)",
+                }}>
+                  <h3 className="font-bold text-base mb-5" style={{ color: roadmapSection.accent ? "#00E6C0" : "#F8FAFC" }}>
+                    {roadmapSection.status}
                   </h3>
-                  <ul className="space-y-2">
-                    {section.items.map((item, itemIdx) => (
-                      <li
-                        key={itemIdx}
-                        className="text-secondary flex items-start gap-3"
-                      >
-                        <span className="text-accent mt-1">•</span>
+                  <ul className="space-y-3">
+                    {roadmapSection.items.map((item, itemIdx) => (
+                      <li key={itemIdx} className="flex items-start gap-3 text-sm" style={{ color: "#94A3B8" }}>
+                        <span style={{ color: "#00E6C0", flexShrink: 0, marginTop: "2px" }}>•</span>
                         {item}
                       </li>
                     ))}
@@ -162,17 +169,18 @@ export default function CommunityPage() {
               ))}
             </div>
 
-            <div className="p-6 rounded-lg border border-accent/20 bg-accent/5 text-center">
-              <p className="text-secondary mb-4">
+            <div className="p-6 rounded-2xl text-center" style={{ background: "rgba(0,230,192,0.04)", border: "1px solid rgba(0,230,192,0.15)" }}>
+              <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>
                 Have a feature request? Open an issue or start a discussion on GitHub.
               </p>
               <a
                 href="https://github.com/docker-secret-operator/dso/discussions"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block px-6 py-2 bg-accent text-background font-semibold rounded-lg hover:bg-accent/90 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 hover:opacity-90"
+                style={{ background: "#00E6C0", color: "#05070A" }}
               >
-                Discussions →
+                GitHub Discussions →
               </a>
             </div>
           </div>
@@ -184,70 +192,60 @@ export default function CommunityPage() {
         {/* Ecosystem Connections */}
         <EcosystemConnections />
 
-        {/* How to Get Involved */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
+        {/* Get Involved */}
+        <section className="py-20 sm:py-28" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
             <div className="text-center max-w-3xl mx-auto">
-              <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                Get Involved
+              <p className="text-xs font-mono uppercase tracking-widest mb-4" style={{ color: "#94A3B8" }}>Contribute</p>
+              <h2 className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4" style={{ color: "#F8FAFC" }}>
+                Get involved
               </h2>
-              <p className="text-lg text-secondary">
+              <p className="text-lg" style={{ color: "#94A3B8" }}>
                 Code, documentation, bug reports, discussions. All contributions welcome.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="p-8 rounded-lg border border-border bg-surface/30">
-                <h3 className="text-xl font-bold text-foreground mb-4">
-                  Contribute Code
+            <div className="grid md:grid-cols-2 gap-5">
+              <div className="p-8 rounded-2xl" style={{ background: "rgba(0,230,192,0.03)", border: "1px solid rgba(0,230,192,0.12)" }}>
+                <h3 className="text-lg font-bold mb-5" style={{ color: "#F8FAFC" }}>
+                  Contribute code
                 </h3>
-                <ol className="space-y-3 text-secondary">
-                  <li className="flex gap-3">
-                    <span className="text-accent flex-shrink-0 font-bold">1.</span>
-                    <span>Fork on GitHub</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-accent flex-shrink-0 font-bold">2.</span>
-                    <span>Create a feature branch</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-accent flex-shrink-0 font-bold">3.</span>
-                    <span>Make changes + write tests</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-accent flex-shrink-0 font-bold">4.</span>
-                    <span>Submit pull request</span>
-                  </li>
+                <ol className="space-y-3">
+                  {["Fork on GitHub", "Create a feature branch", "Make changes + write tests", "Submit pull request"].map((step, i) => (
+                    <li key={i} className="flex gap-3 text-sm" style={{ color: "#94A3B8" }}>
+                      <span className="flex-shrink-0 font-bold font-mono" style={{ color: "#00E6C0" }}>{i + 1}.</span>
+                      {step}
+                    </li>
+                  ))}
                 </ol>
-                <div className="pt-6 border-t border-border/50 mt-6">
-                  <p className="text-sm text-tertiary">PRs reviewed promptly. Questions answered.</p>
-                </div>
+                <p className="text-xs mt-6 pt-5" style={{ color: "rgba(148,163,184,0.6)", borderTop: "1px solid rgba(255,255,255,0.06)" }}>PRs reviewed promptly. Questions answered.</p>
               </div>
 
-              <div className="p-8 rounded-lg border border-border bg-surface/30">
-                <h3 className="text-xl font-bold text-foreground mb-4">
-                  Other Ways to Help
+              <div className="p-8 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <h3 className="text-lg font-bold mb-5" style={{ color: "#F8FAFC" }}>
+                  Other ways to help
                 </h3>
-                <ul className="space-y-3 text-secondary">
-                  <li>• Report bugs on GitHub Issues</li>
-                  <li>• Improve documentation and examples</li>
-                  <li>• Test on different platforms</li>
-                  <li>• Propose features in Discussions</li>
-                  <li>• Security audits and feedback</li>
-                  <li>• Performance improvements</li>
+                <ul className="space-y-3">
+                  {["Report bugs on GitHub Issues", "Improve documentation and examples", "Test on different platforms", "Propose features in Discussions", "Security audits and feedback", "Performance improvements"].map((item, i) => (
+                    <li key={i} className="flex gap-3 text-sm" style={{ color: "#94A3B8" }}>
+                      <span style={{ color: "#00E6C0", flexShrink: 0 }}>•</span>
+                      {item}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
 
-            <div className="p-6 rounded-lg border border-accent/20 bg-accent/5 text-center">
-              <p className="text-secondary mb-4">
+            <div className="p-6 rounded-2xl text-center" style={{ background: "rgba(0,230,192,0.04)", border: "1px solid rgba(0,230,192,0.15)" }}>
+              <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>
                 See CONTRIBUTING.md for detailed guidelines and development setup.
               </p>
               <a
                 href="https://github.com/docker-secret-operator/dso/blob/main/CONTRIBUTING.md"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block px-6 py-2 bg-accent text-background font-semibold rounded-lg hover:bg-accent/90 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 hover:opacity-90"
+                style={{ background: "#00E6C0", color: "#05070A" }}
               >
                 Read Contributing Guide →
               </a>
@@ -255,48 +253,29 @@ export default function CommunityPage() {
           </div>
         </section>
 
-        {/* What We Value */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
+        {/* How We Work */}
+        <section className="py-20 sm:py-28" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
             <div className="text-center max-w-3xl mx-auto">
-              <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                How We Work
+              <p className="text-xs font-mono uppercase tracking-widest mb-4" style={{ color: "#94A3B8" }}>Values</p>
+              <h2 className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4" style={{ color: "#F8FAFC" }}>
+                How we work
               </h2>
-              <p className="text-lg text-secondary">
+              <p className="text-lg" style={{ color: "#94A3B8" }}>
                 Principles guiding our development and maintenance.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-4">
               {[
-                {
-                  title: "Focused Scope",
-                  description:
-                    "DSO solves zero-persistence secret injection for Docker. We stay focused on that mission, not trying to be everything.",
-                },
-                {
-                  title: "Code Quality",
-                  description:
-                    "Small team means every line matters. We prioritize readability, testability, and security.",
-                },
-                {
-                  title: "Fast Iteration",
-                  description:
-                    "29 releases in 2 months shows our responsiveness. We ship frequently and improve based on feedback.",
-                },
-                {
-                  title: "Transparent Development",
-                  description:
-                    "Roadmap is public. Decisions made in Issues and Discussions. You can see exactly what we're building.",
-                },
+                { title: "Focused scope", description: "DSO solves zero-persistence secret injection for Docker. We stay focused on that mission, not trying to be everything." },
+                { title: "Code quality", description: "Small team means every line matters. We prioritize readability, testability, and security." },
+                { title: "Fast iteration", description: "We ship frequently and improve based on feedback. Responsiveness over perfection." },
+                { title: "Transparent development", description: "Roadmap is public. Decisions made in Issues and Discussions. You can see exactly what we're building." },
               ].map((value, idx) => (
-                <div key={idx} className="p-6 rounded-lg border border-border bg-surface/30">
-                  <h3 className="text-lg font-bold text-foreground mb-2">
-                    {value.title}
-                  </h3>
-                  <p className="text-secondary text-sm leading-relaxed">
-                    {value.description}
-                  </p>
+                <div key={idx} className="p-6 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <h3 className="text-base font-bold mb-2" style={{ color: "#F8FAFC" }}>{value.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: "#94A3B8" }}>{value.description}</p>
                 </div>
               ))}
             </div>
@@ -304,42 +283,29 @@ export default function CommunityPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-12">
-            <div className="space-y-4">
-              <h2 className="text-4xl sm:text-5xl font-bold text-foreground">
-                What's Next?
-              </h2>
-              <p className="text-lg text-secondary max-w-2xl mx-auto">
-                Explore the codebase, open an issue, start a discussion, or read the roadmap.
-              </p>
-            </div>
+        <section className="py-20 sm:py-28">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter mb-4" style={{ color: "#F8FAFC" }}>
+              What&apos;s next?
+            </h2>
+            <p className="text-lg mb-10" style={{ color: "#94A3B8" }}>
+              Explore the codebase, open an issue, start a discussion, or read the roadmap.
+            </p>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-3xl mx-auto">
+            <div className="flex flex-wrap justify-center gap-3">
               {[
-                {
-                  label: "GitHub",
-                  href: "https://github.com/docker-secret-operator/dso",
-                },
-                {
-                  label: "Issues",
-                  href: "https://github.com/docker-secret-operator/dso/issues",
-                },
-                {
-                  label: "Discussions",
-                  href: "https://github.com/docker-secret-operator/dso/discussions",
-                },
-                {
-                  label: "Roadmap",
-                  href: "https://github.com/docker-secret-operator/dso/projects",
-                },
+                { label: "GitHub", href: "https://github.com/docker-secret-operator/dso" },
+                { label: "Issues", href: "https://github.com/docker-secret-operator/dso/issues" },
+                { label: "Discussions", href: "https://github.com/docker-secret-operator/dso/discussions" },
+                { label: "Roadmap", href: "https://github.com/docker-secret-operator/dso/projects" },
               ].map((link, idx) => (
                 <a
                   key={idx}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-4 rounded-lg border border-accent/30 bg-accent/5 hover:bg-accent/10 transition-all duration-300 font-semibold text-accent hover:text-accent/80"
+                  className="px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 hover:bg-accent/20"
+                  style={{ background: "rgba(0,230,192,0.08)", border: "1px solid rgba(0,230,192,0.25)", color: "#00E6C0" }}
                 >
                   {link.label} →
                 </a>
@@ -351,5 +317,6 @@ export default function CommunityPage() {
         <Footer />
       </div>
     </main>
+
   );
 }

@@ -34,7 +34,7 @@ export const OSSTrust = () => {
     {
       icon: <GitBranch className="w-6 h-6" />,
       title: "Open Source",
-      description: "Apache 2.0 licensed. Full source code auditable on GitHub. No closed-source extensions.",
+      description: "Fully auditable source code on GitHub. No closed-source extensions or proprietary agents.",
     },
     {
       icon: <Cloud className="w-6 h-6" />,
@@ -43,8 +43,8 @@ export const OSSTrust = () => {
     },
     {
       icon: <Lock className="w-6 h-6" />,
-      title: "Apache 2.0",
-      description: "Fully open source. Permissive license. Free for commercial use.",
+      title: "Zero Persistence",
+      description: "Secrets never written to disk. Runtime-only injection with automatic cleanup on stop.",
     },
     {
       icon: <Code className="w-6 h-6" />,
@@ -54,7 +54,7 @@ export const OSSTrust = () => {
     {
       icon: <Users className="w-6 h-6" />,
       title: "5 Providers",
-      description: "AWS, Azure, HashiCorp Vault, Local, and more. Provider-agnostic design.",
+      description: "AWS, Azure, HashiCorp Vault, Huawei Cloud CSMS, Local. Provider-agnostic design.",
     },
   ];
 
@@ -70,7 +70,7 @@ export const OSSTrust = () => {
         >
           <H2 className="mb-4">Built on Trust</H2>
           <PLead className="text-tertiary">
-            DSO is open source, Docker native, Apache 2.0 licensed, and community-driven. Transparency at every level.
+            Open source, Docker native, and community-driven. Transparency at every level.
           </PLead>
         </motion.div>
 

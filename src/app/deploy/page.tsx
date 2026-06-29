@@ -17,12 +17,13 @@ export const metadata = generatePageMetadata(
 
 export default function DeployPage() {
   return (
-    <main className="flex-1 flex flex-col relative bg-background overflow-x-hidden">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-accent/10 via-background to-transparent opacity-30" />
+    <main className="relative overflow-x-hidden" style={{ background: "#05070A" }}>
+      <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+        <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "900px", height: "500px", background: "radial-gradient(ellipse at 50% 0%, rgba(0,230,192,0.06) 0%, transparent 65%)", filter: "blur(40px)" }} />
+        <div style={{ position: "absolute", bottom: 0, right: 0, width: "600px", height: "500px", background: "radial-gradient(ellipse at 100% 100%, rgba(109,93,246,0.05) 0%, transparent 60%)", filter: "blur(60px)" }} />
       </div>
 
-      <div className="relative z-10 flex flex-col w-full space-y-0">
+      <div className="relative z-10">
         <Navbar />
 
         {/* Installation Trust - Verified Install First */}
@@ -32,54 +33,34 @@ export default function DeployPage() {
         <DeploymentPaths />
 
         {/* What Happens Next */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
+        <section className="py-20 sm:py-28" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
           <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
             <div className="text-center max-w-3xl mx-auto">
-              <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                What Happens Next?
+              <p className="text-xs font-mono uppercase tracking-widest mb-4" style={{ color: "#94A3B8" }}>After install</p>
+              <h2 className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4" style={{ color: "#F8FAFC" }}>
+                What happens next?
               </h2>
-              <p className="text-lg text-secondary">
+              <p className="text-lg" style={{ color: "#94A3B8" }}>
                 After installation, understand operations, recovery, and configuration.
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                {
-                  title: "Getting Started",
-                  description: "Quick start guide to deploy your first rotation.",
-                  href: "/docs/guide/getting-started",
-                },
-                {
-                  title: "Operations Guide",
-                  description: "Monitor rotations, configure notifications, and manage state.",
-                  href: "/docs/guide/operational-guide",
-                },
-                {
-                  title: "Recovery Procedures",
-                  description: "Handle failures, recover from crashes, and restore state.",
-                  href: "/docs/guide/RECOVERY_PROCEDURES",
-                },
-                {
-                  title: "CLI Reference",
-                  description: "Complete reference for all dso commands and options.",
-                  href: "/docs/cli",
-                },
+                { title: "Getting Started", description: "Quick start guide to deploy your first rotation.", href: "/docs/guide/getting-started" },
+                { title: "Operations Guide", description: "Monitor rotations, configure notifications, and manage state.", href: "/docs/guide/operational-guide" },
+                { title: "Recovery Procedures", description: "Handle failures, recover from crashes, and restore state.", href: "/docs/guide/RECOVERY_PROCEDURES" },
+                { title: "CLI Reference", description: "Complete reference for all dso commands and options.", href: "/docs/cli" },
               ].map((item, idx) => (
                 <a
                   key={idx}
                   href={item.href}
-                  className="p-6 rounded-lg border border-border bg-surface/30 hover:border-accent/30 hover:bg-surface/50 transition-all duration-300 flex flex-col gap-3 group"
+                  className="p-6 rounded-2xl flex flex-col gap-3 no-underline transition-all duration-300 hover:border-accent/30 hover:bg-accent/5"
+                  style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}
                 >
-                  <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-secondary flex-1">
-                    {item.description}
-                  </p>
-                  <span className="text-accent font-medium text-sm">
-                    Learn →
-                  </span>
+                  <h3 className="font-semibold text-sm" style={{ color: "#F8FAFC" }}>{item.title}</h3>
+                  <p className="text-sm flex-1 leading-relaxed" style={{ color: "#94A3B8" }}>{item.description}</p>
+                  <span className="text-sm font-medium" style={{ color: "#00E6C0" }}>Learn →</span>
                 </a>
               ))}
             </div>
@@ -89,5 +70,6 @@ export default function DeployPage() {
         <Footer />
       </div>
     </main>
+
   );
 }

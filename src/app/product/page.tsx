@@ -1,284 +1,551 @@
+"use client";
+
+import React from "react";
+import { motion } from "framer-motion";
 import { generatePageMetadata } from "@/lib/seo/metadata-helpers";
 import { PAGE_METADATA } from "@/lib/seo/metadata";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhyDSO } from "@/components/sections/WhyDSO";
+import {
+  Database,
+  Key,
+  Shield,
+  Zap,
+  RefreshCw,
+  Cloud,
+  Container,
+  FileCheck,
+  ArrowRight,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 
-export const metadata = generatePageMetadata(
+const USE_CASES = [
   {
-    ...PAGE_METADATA["/"],
-    title: "Product | Docker Secret Operator",
+    icon: Database,
+    title: "Database Credentials",
     description:
-      "Explore DSO's operational guarantees, capabilities, and how it compares to manual scripts, Infisical, and HashiCorp Vault.",
+      "Rotate database passwords without dropping connections. Services reconnect automatically with refreshed credentials.",
+    example: "PostgreSQL, MySQL, MongoDB",
   },
-  "/product"
-);
+  {
+    icon: Key,
+    title: "API Keys",
+    description:
+      "Keep API keys fresh by rotating automatically. Dependent services pick up new keys on next request.",
+    example: "Third-party APIs, internal services",
+  },
+  {
+    icon: Shield,
+    title: "TLS Certificates",
+    description:
+      "Update SSL certificates before expiration. Traffic never interrupts during certificate rotation.",
+    example: "Mutual TLS, self-signed certificates",
+  },
+];
+
+const CAPABILITIES = [
+  {
+    icon: Zap,
+    title: "Zero-Downtime Rotation",
+    description:
+      "Secrets rotate without interrupting healthy services or dropping connections.",
+  },
+  {
+    icon: RefreshCw,
+    title: "Automatic Recovery",
+    description:
+      "Recover safely after interruptions, crashes, or failed health checks without manual intervention.",
+  },
+  {
+    icon: Cloud,
+    title: "Multi-Provider Support",
+    description:
+      "AWS Secrets Manager, Azure Key Vault, HashiCorp Vault, Huawei Cloud CSMS, and local providers.",
+  },
+  {
+    icon: Container,
+    title: "Docker-Native Workflow",
+    description:
+      "Works seamlessly with Docker Compose and standalone Docker hosts. No orchestrator required.",
+  },
+  {
+    icon: Shield,
+    title: "Minimal Resource Overhead",
+    description:
+      "Under 50 MB RAM and 5% CPU during rotation. Negligible impact on running workloads.",
+  },
+  {
+    icon: FileCheck,
+    title: "Free and Open Source",
+    description:
+      "Fully auditable source code on GitHub. No platform lock-in, no proprietary extensions.",
+  },
+];
+
+const CHOOSE_DSO = [
+  "You run Docker Compose or standalone Docker hosts",
+  "You want fully automated rotation without ops overhead",
+  "You need zero-downtime guarantees",
+  "You prefer simple, focused tools over platforms",
+  "Your team knows Docker but not Vault or Infisical",
+];
+
+const CHOOSE_ALT = [
+  "You run Kubernetes (use native solutions instead)",
+  "You need a complete secret management platform",
+  "You require team-based access controls",
+  "You need audit compliance (SOC2, ISO, etc.)",
+  "You want a managed SaaS offering",
+];
+
+const NEXT = [
+  {
+    title: "Architecture",
+    description:
+      "How atomic swap, health checks, and checkpoint recovery work under the hood.",
+    href: "/architecture",
+  },
+  {
+    title: "Deploy",
+    description:
+      "Install DSO on Docker Compose, AWS, Azure, HashiCorp Vault, or local mode.",
+    href: "/deploy",
+  },
+  {
+    title: "Docs",
+    description: "CLI reference, configuration, operational guides, and troubleshooting.",
+    href: "/docs",
+  },
+];
 
 export default function ProductPage() {
   return (
-    <main className="flex-1 flex flex-col relative bg-background overflow-x-hidden">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-accent/10 via-background to-transparent opacity-30" />
+    <main className="relative overflow-x-hidden" style={{ background: "#05070A" }}>
+      <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "900px",
+            height: "500px",
+            background:
+              "radial-gradient(ellipse at 50% 0%, rgba(0,230,192,0.06) 0%, transparent 65%)",
+            filter: "blur(40px)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            width: "600px",
+            height: "500px",
+            background:
+              "radial-gradient(ellipse at 100% 100%, rgba(109,93,246,0.05) 0%, transparent 60%)",
+            filter: "blur(60px)",
+          }}
+        />
       </div>
 
-      <div className="relative z-10 flex flex-col w-full space-y-0">
+      <div className="relative z-10">
         <Navbar />
 
-        {/* Use Cases - Moved to top (concrete examples first) */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
-            <div className="text-center max-w-3xl mx-auto">
-              <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                What You Can Do With DSO
+        {/* Hero */}
+        <section className="pt-36 pb-24 text-center px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <p
+              className="text-xs font-mono uppercase tracking-widest mb-5"
+              style={{ color: "#94A3B8" }}
+            >
+              Product
+            </p>
+            <h1
+              className="font-bold tracking-tighter mb-6"
+              style={{
+                fontSize: "clamp(2.5rem, 6vw, 5rem)",
+                color: "#F8FAFC",
+                lineHeight: "1.05",
+              }}
+            >
+              What DSO does
+              <br />
+              <span style={{ color: "#00E6C0" }}>and why it matters</span>
+            </h1>
+            <p
+              className="text-lg sm:text-xl max-w-2xl mx-auto"
+              style={{ color: "#94A3B8" }}
+            >
+              Secret rotation without downtime. For Docker teams who want
+              automation without complexity.
+            </p>
+          </motion.div>
+        </section>
+
+        {/* Use Cases */}
+        <section className="py-20 sm:py-28">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-14"
+            >
+              <p
+                className="text-xs font-mono uppercase tracking-widest mb-4"
+                style={{ color: "#94A3B8" }}
+              >
+                Use Cases
+              </p>
+              <h2
+                className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4"
+                style={{ color: "#F8FAFC" }}
+              >
+                What you can do with DSO
               </h2>
-              <p className="text-lg text-secondary">
+              <p className="text-lg max-w-xl mx-auto" style={{ color: "#94A3B8" }}>
                 Zero-downtime secret rotation for containerized workloads.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  title: "Database Credentials",
-                  description:
-                    "Rotate database passwords without dropping connections. Services reconnect automatically with refreshed credentials.",
-                  example: "PostgreSQL, MySQL, MongoDB",
-                },
-                {
-                  title: "API Keys",
-                  description:
-                    "Keep API keys fresh by rotating automatically. Dependent services pick up new keys on next request.",
-                  example: "Third-party APIs, internal services",
-                },
-                {
-                  title: "TLS Certificates",
-                  description:
-                    "Update SSL certificates before expiration. Traffic never interrupts during certificate rotation.",
-                  example: "Mutual TLS, self-signed certificates",
-                },
-              ].map((useCase, idx) => (
-                <div
-                  key={idx}
-                  className="p-6 rounded-lg border border-border bg-surface/30 hover:border-accent/30 hover:bg-surface/50 transition-all duration-300"
-                >
-                  <h3 className="text-lg font-semibold text-foreground mb-3">
-                    {useCase.title}
-                  </h3>
-                  <p className="text-sm text-secondary mb-4 leading-relaxed">
-                    {useCase.description}
-                  </p>
-                  <p className="text-xs text-tertiary italic">
-                    Example: {useCase.example}
-                  </p>
-                </div>
-              ))}
+            <div className="grid md:grid-cols-3 gap-5">
+              {USE_CASES.map((uc, idx) => {
+                const Icon = uc.icon;
+                return (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    whileHover={{ y: -4, transition: { duration: 0.15 } }}
+                    className="p-7 rounded-2xl cursor-default"
+                    style={{
+                      background: "rgba(255,255,255,0.02)",
+                      border: "1px solid rgba(255,255,255,0.07)",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.borderColor = "rgba(0,230,192,0.3)";
+                      el.style.boxShadow = "0 8px 32px rgba(0,230,192,0.07)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.borderColor = "rgba(255,255,255,0.07)";
+                      el.style.boxShadow = "none";
+                    }}
+                  >
+                    <div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
+                      style={{
+                        background: "rgba(0,230,192,0.1)",
+                        border: "1px solid rgba(0,230,192,0.2)",
+                      }}
+                    >
+                      <Icon className="w-5 h-5" style={{ color: "#00E6C0" }} />
+                    </div>
+                    <h3
+                      className="font-semibold text-lg mb-3"
+                      style={{ color: "#F8FAFC" }}
+                    >
+                      {uc.title}
+                    </h3>
+                    <p
+                      className="text-sm leading-relaxed mb-4"
+                      style={{ color: "#94A3B8" }}
+                    >
+                      {uc.description}
+                    </p>
+                    <p
+                      className="text-xs font-mono"
+                      style={{ color: "rgba(0,230,192,0.6)" }}
+                    >
+                      {uc.example}
+                    </p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* What You Get - Operational Capabilities */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
-            <div className="text-center max-w-3xl mx-auto">
-              <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                What You Get With DSO
+        {/* Capabilities */}
+        <section
+          className="py-20 sm:py-28"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-14"
+            >
+              <p
+                className="text-xs font-mono uppercase tracking-widest mb-4"
+                style={{ color: "#94A3B8" }}
+              >
+                Capabilities
+              </p>
+              <h2
+                className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4"
+                style={{ color: "#F8FAFC" }}
+              >
+                What you get with DSO
               </h2>
-              <p className="text-lg text-secondary">
-                Operational capabilities you can count on.
+              <p className="text-lg max-w-xl mx-auto" style={{ color: "#94A3B8" }}>
+                Operational guarantees you can count on in production.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
-              {[
-                {
-                  icon: "✓",
-                  title: "Zero-Downtime Rotation",
-                  description: "Secrets rotate without interrupting healthy services or dropping connections.",
-                },
-                {
-                  icon: "✓",
-                  title: "Automatic Recovery",
-                  description: "Recover safely after interruptions, crashes, or failed health checks without manual intervention.",
-                },
-                {
-                  icon: "✓",
-                  title: "Multi-Provider Support",
-                  description: "Use AWS Secrets Manager, Azure Key Vault, HashiCorp Vault, Huawei Cloud, or local providers.",
-                },
-                {
-                  icon: "✓",
-                  title: "Docker-Native Workflow",
-                  description: "Works seamlessly with Docker Compose and standalone Docker hosts. No orchestrator required.",
-                },
-                {
-                  icon: "✓",
-                  title: "Minimal Resource Overhead",
-                  description: "Uses less than 50MB RAM and 5% CPU during rotation. Negligible impact on running workloads.",
-                },
-                {
-                  icon: "✓",
-                  title: "Open Source & Independent",
-                  description: "Apache 2.0 licensed. No platform lock-in. Full source code auditable on GitHub.",
-                },
-              ].map((capability, idx) => (
-                <div
-                  key={idx}
-                  className="p-6 rounded-lg border border-accent/30 bg-accent/5 hover:bg-accent/10 transition-all duration-300"
-                >
-                  <div className="flex items-start gap-3">
-                    <span className="text-accent text-lg font-semibold flex-shrink-0 mt-0.5">{capability.icon}</span>
-                    <div>
-                      <h3 className="text-sm font-semibold text-foreground mb-2">
-                        {capability.title}
-                      </h3>
-                      <p className="text-xs text-secondary leading-relaxed">
-                        {capability.description}
-                      </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {CAPABILITIES.map((cap, idx) => {
+                const Icon = cap.icon;
+                return (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.07 }}
+                    className="p-6 rounded-2xl"
+                    style={{
+                      background: "rgba(0,230,192,0.03)",
+                      border: "1px solid rgba(0,230,192,0.12)",
+                    }}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div
+                        className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                        style={{
+                          background: "rgba(0,230,192,0.1)",
+                          border: "1px solid rgba(0,230,192,0.2)",
+                        }}
+                      >
+                        <Icon className="w-4 h-4" style={{ color: "#00E6C0" }} />
+                      </div>
+                      <div>
+                        <h3
+                          className="font-semibold text-sm mb-1.5"
+                          style={{ color: "#F8FAFC" }}
+                        >
+                          {cap.title}
+                        </h3>
+                        <p
+                          className="text-xs leading-relaxed"
+                          style={{ color: "#94A3B8" }}
+                        >
+                          {cap.description}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
 
-            {/* Link to Architecture */}
-            <div className="text-center pt-8">
-              <p className="text-sm text-tertiary mb-3">
-                Want to understand how these guarantees are implemented?
-              </p>
+            <div className="text-center mt-10">
               <a
                 href="/architecture"
-                className="text-accent hover:text-accent/80 font-medium transition-colors"
+                className="text-sm font-medium transition-colors"
+                style={{ color: "#00E6C0" }}
               >
-                See Architecture →
+                How these guarantees are implemented →
               </a>
             </div>
           </div>
         </section>
 
-        {/* Why DSO - Comparison */}
-        <WhyDSO />
+        {/* Why DSO comparison */}
+        <section style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          <WhyDSO />
+        </section>
 
-        {/* Tradeoffs - Explicit guidance */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
-            <div className="text-center max-w-3xl mx-auto">
-              <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                Honest Tradeoffs
-              </h2>
-              <p className="text-lg text-secondary">
-                DSO is the right choice for some teams. Not for others. Be honest about fit.
+        {/* Honest Tradeoffs */}
+        <section
+          className="py-20 sm:py-28"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-14"
+            >
+              <p
+                className="text-xs font-mono uppercase tracking-widest mb-4"
+                style={{ color: "#94A3B8" }}
+              >
+                Fit
               </p>
-            </div>
+              <h2
+                className="text-4xl sm:text-5xl font-bold tracking-tighter mb-4"
+                style={{ color: "#F8FAFC" }}
+              >
+                Honest tradeoffs
+              </h2>
+              <p className="text-lg max-w-xl mx-auto" style={{ color: "#94A3B8" }}>
+                DSO is the right choice for some teams. Not for all. Be honest about fit.
+              </p>
+            </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {/* Use DSO */}
-              <div className="p-8 rounded-lg border border-green-500/30 bg-green-500/5 space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <span className="text-green-400 font-bold">✓</span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-foreground">Choose DSO If:</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Choose DSO */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="p-8 rounded-2xl space-y-5"
+                style={{
+                  background: "rgba(0,230,192,0.04)",
+                  border: "1px solid rgba(0,230,192,0.2)",
+                }}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <CheckCircle className="w-5 h-5" style={{ color: "#00E6C0" }} />
+                  <h3
+                    className="text-lg font-semibold"
+                    style={{ color: "#F8FAFC" }}
+                  >
+                    Choose DSO if
+                  </h3>
                 </div>
                 <ul className="space-y-3">
-                  {[
-                    "You run Docker Compose or standalone Docker hosts",
-                    "You want fully automated rotation without ops overhead",
-                    "You need zero-downtime guarantees",
-                    "You prefer simple, focused tools over platforms",
-                    "Your team knows Docker well but not Vault/Infisical",
-                  ].map((item, idx) => (
-                    <li key={idx} className="flex gap-3">
-                      <span className="text-green-400 font-bold flex-shrink-0">•</span>
-                      <span className="text-secondary text-sm">{item}</span>
+                  {CHOOSE_DSO.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="flex gap-3 text-sm"
+                      style={{ color: "#94A3B8" }}
+                    >
+                      <span
+                        className="flex-shrink-0 mt-0.5"
+                        style={{ color: "#00E6C0" }}
+                      >
+                        •
+                      </span>
+                      {item}
                     </li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
 
-              {/* Use alternatives */}
-              <div className="p-8 rounded-lg border border-border bg-surface/30 space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gray-500/20 flex items-center justify-center">
-                    <span className="text-gray-400 font-bold">→</span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-foreground">Consider Alternatives If:</h3>
+              {/* Consider alternatives */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="p-8 rounded-2xl space-y-5"
+                style={{
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <XCircle className="w-5 h-5" style={{ color: "#94A3B8" }} />
+                  <h3
+                    className="text-lg font-semibold"
+                    style={{ color: "#F8FAFC" }}
+                  >
+                    Consider alternatives if
+                  </h3>
                 </div>
                 <ul className="space-y-3">
-                  {[
-                    "You run Kubernetes (use native solutions instead)",
-                    "You need a complete secret management platform",
-                    "You require team-based access controls",
-                    "You need audit compliance (SOC2, ISO, etc.)",
-                    "You want a managed SaaS offering",
-                  ].map((item, idx) => (
-                    <li key={idx} className="flex gap-3">
-                      <span className="text-gray-400 font-bold flex-shrink-0">•</span>
-                      <span className="text-secondary text-sm">{item}</span>
+                  {CHOOSE_ALT.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="flex gap-3 text-sm"
+                      style={{ color: "#94A3B8" }}
+                    >
+                      <span className="flex-shrink-0 mt-0.5" style={{ color: "#6B7280" }}>
+                        •
+                      </span>
+                      {item}
                     </li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
 
-        {/* Next Steps CTA */}
-        <section className="relative py-20 sm:py-32 bg-background border-b border-border">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-12">
-            <div className="space-y-4">
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
+        {/* Next Steps */}
+        <section
+          className="py-20 sm:py-28"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-12"
+            >
+              <h2
+                className="text-3xl sm:text-4xl font-bold tracking-tighter mb-4"
+                style={{ color: "#F8FAFC" }}
+              >
                 Ready to get started?
               </h2>
-              <p className="text-lg text-secondary max-w-2xl mx-auto">
+              <p className="text-lg" style={{ color: "#94A3B8" }}>
                 Understand how DSO works, deploy it, or read the docs.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-              <a
-                href="/architecture"
-                className="p-8 rounded-lg border border-accent/30 bg-accent/5 hover:bg-accent/10 transition-all duration-300 group"
-              >
-                <h3 className="text-lg font-semibold text-foreground mb-3 group-hover:text-accent transition-colors">
-                  Architecture
-                </h3>
-                <p className="text-sm text-secondary mb-4">
-                  Learn how DSO's atomic swap, health checks, and checkpoint recovery work under the hood.
-                </p>
-                <span className="text-accent font-medium flex items-center gap-2">
-                  Learn →
-                </span>
-              </a>
-
-              <a
-                href="/deploy"
-                className="p-8 rounded-lg border border-accent/30 bg-accent/5 hover:bg-accent/10 transition-all duration-300 group"
-              >
-                <h3 className="text-lg font-semibold text-foreground mb-3 group-hover:text-accent transition-colors">
-                  Deploy
-                </h3>
-                <p className="text-sm text-secondary mb-4">
-                  Install DSO on Docker Compose, AWS, Azure, HashiCorp Vault, or local environments.
-                </p>
-                <span className="text-accent font-medium flex items-center gap-2">
-                  Deploy →
-                </span>
-              </a>
-
-              <a
-                href="/docs/getting-started"
-                className="p-8 rounded-lg border border-accent/30 bg-accent/5 hover:bg-accent/10 transition-all duration-300 group"
-              >
-                <h3 className="text-lg font-semibold text-foreground mb-3 group-hover:text-accent transition-colors">
-                  Docs
-                </h3>
-                <p className="text-sm text-secondary mb-4">
-                  CLI reference, configuration, operational guides, and troubleshooting.
-                </p>
-                <span className="text-accent font-medium flex items-center gap-2">
-                  Read →
-                </span>
-              </a>
+            <div className="grid md:grid-cols-3 gap-5">
+              {NEXT.map((item, idx) => (
+                <motion.a
+                  key={idx}
+                  href={item.href}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  whileHover={{ y: -4, transition: { duration: 0.15 } }}
+                  className="p-7 rounded-2xl text-left block no-underline group transition-all duration-300"
+                  style={{
+                    background: "rgba(0,230,192,0.04)",
+                    border: "1px solid rgba(0,230,192,0.15)",
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.borderColor = "rgba(0,230,192,0.4)";
+                    el.style.boxShadow = "0 8px 32px rgba(0,230,192,0.1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.borderColor = "rgba(0,230,192,0.15)";
+                    el.style.boxShadow = "none";
+                  }}
+                >
+                  <h3
+                    className="text-lg font-semibold mb-3"
+                    style={{ color: "#F8FAFC" }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    className="text-sm leading-relaxed mb-5"
+                    style={{ color: "#94A3B8" }}
+                  >
+                    {item.description}
+                  </p>
+                  <span
+                    className="inline-flex items-center gap-1 text-sm font-medium"
+                    style={{ color: "#00E6C0" }}
+                  >
+                    Explore
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
+                </motion.a>
+              ))}
             </div>
           </div>
         </section>
